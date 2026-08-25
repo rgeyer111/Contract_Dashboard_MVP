@@ -31,7 +31,8 @@ function responseFor(record: typeof contractsTable.$inferSelect) {
   return {
     id: record.id,
     filename: record.filename,
-    extraction: { contract: record.contract, confidence: record.confidence },
+    contract: record.contract,
+    confidence: record.confidence,
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString(),
   };

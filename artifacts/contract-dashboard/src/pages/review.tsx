@@ -218,9 +218,14 @@ export default function Review() {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const savedId = new URLSearchParams(window.location.search).get("id") ?? "";
-  const savedContractQuery = useGetContract(savedId);
+  const savedContractQuery = useGetContract(savedId, {
+    query: {
+      enabled: Boolean(savedId),
+      queryKey: [`/api/contracts/${savedId}`],
+    },
+  });
   const [storedExtraction] = useState(readStoredExtraction);
-  const [confidence] = useState<Record<ContractFieldKey, ExtractionConfidence>>(
+  const [confidence, setConfidence] = useState<Record<ContractFieldKey, ExtractionConfidence>>(
     () => storedExtraction?.extraction.confidence ?? emptyConfidence,
   );
 
@@ -236,6 +241,7 @@ export default function Review() {
     const saved = savedContractQuery.data;
     if (!saved) return;
     setFilename(saved.filename);
+    setConfidence(saved.confidence as Record<ContractFieldKey, ExtractionConfidence>);
     setDraft(reviewDraftFromExtraction({
       filename: saved.filename,
       extraction: {
