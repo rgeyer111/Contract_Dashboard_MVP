@@ -6,6 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import Home from '@/pages/home';
 import Dashboard from '@/pages/dashboard';
+import Review from '@/pages/review';
 import {
   Route,
   Switch,
@@ -21,6 +22,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/review" component={Review} />
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>

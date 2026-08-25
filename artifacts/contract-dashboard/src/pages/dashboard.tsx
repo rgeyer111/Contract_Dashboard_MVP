@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { 
   FileText, 
   Search, 
@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { demoContracts } from "@/lib/contracts";
 
 export default function Dashboard() {
+  const [, setLocation] = useLocation();
+
   return (
     <div className="min-h-[100dvh] w-full bg-muted/20 flex flex-col md:flex-row">
       {/* Sidebar */}
@@ -89,7 +91,7 @@ export default function Dashboard() {
               <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Welcome back, John</h1>
               <p className="text-muted-foreground mt-1 font-medium text-sm">Here's the status of your contract renewals this week.</p>
             </div>
-            <Button className="shrink-0 gap-2 shadow-sm font-semibold">
+            <Button onClick={() => setLocation('/review')} className="shrink-0 gap-2 shadow-sm font-semibold">
               <Plus className="h-4 w-4" />
               New Contract
             </Button>
