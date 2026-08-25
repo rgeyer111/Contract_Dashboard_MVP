@@ -65,3 +65,272 @@ export const ExtractContractResponse = zod.object({
 })
 
 
+/**
+ * @summary List saved contracts
+ */
+export const ListContractsResponseItem = zod.object({
+  "filename": zod.string(),
+  "contract": zod.object({
+  "vendor": zod.string(),
+  "contractNumber": zod.string(),
+  "contractName": zod.string(),
+  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "contractValue": zod.object({
+  "status": zod.enum(['stated', 'unknown']),
+  "amount": zod.number().nullish(),
+  "currency": zod.string().nullish()
+}),
+  "startDate": zod.string(),
+  "contractDuration": zod.string(),
+  "endDate": zod.string(),
+  "noticePeriod": zod.string(),
+  "noticeDeadline": zod.string(),
+  "negotiationBuffer": zod.string(),
+  "owner": zod.string(),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "confidence": zod.object({
+  "vendor": zod.enum(['High', 'Medium', 'Low']),
+  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
+  "contractName": zod.enum(['High', 'Medium', 'Low']),
+  "contractType": zod.enum(['High', 'Medium', 'Low']),
+  "contractValue": zod.enum(['High', 'Medium', 'Low']),
+  "startDate": zod.enum(['High', 'Medium', 'Low']),
+  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
+  "endDate": zod.enum(['High', 'Medium', 'Low']),
+  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
+  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
+  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
+  "owner": zod.enum(['High', 'Medium', 'Low']),
+  "status": zod.enum(['High', 'Medium', 'Low'])
+})
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+export const ListContractsResponse = zod.array(ListContractsResponseItem)
+
+
+/**
+ * @summary Save a confirmed contract
+ */
+export const CreateContractBody = zod.object({
+  "filename": zod.string(),
+  "contract": zod.object({
+  "vendor": zod.string(),
+  "contractNumber": zod.string(),
+  "contractName": zod.string(),
+  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "contractValue": zod.object({
+  "status": zod.enum(['stated', 'unknown']),
+  "amount": zod.number().nullish(),
+  "currency": zod.string().nullish()
+}),
+  "startDate": zod.string(),
+  "contractDuration": zod.string(),
+  "endDate": zod.string(),
+  "noticePeriod": zod.string(),
+  "noticeDeadline": zod.string(),
+  "negotiationBuffer": zod.string(),
+  "owner": zod.string(),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "confidence": zod.object({
+  "vendor": zod.enum(['High', 'Medium', 'Low']),
+  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
+  "contractName": zod.enum(['High', 'Medium', 'Low']),
+  "contractType": zod.enum(['High', 'Medium', 'Low']),
+  "contractValue": zod.enum(['High', 'Medium', 'Low']),
+  "startDate": zod.enum(['High', 'Medium', 'Low']),
+  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
+  "endDate": zod.enum(['High', 'Medium', 'Low']),
+  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
+  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
+  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
+  "owner": zod.enum(['High', 'Medium', 'Low']),
+  "status": zod.enum(['High', 'Medium', 'Low'])
+})
+})
+
+export const CreateContractResponse = zod.object({
+  "filename": zod.string(),
+  "contract": zod.object({
+  "vendor": zod.string(),
+  "contractNumber": zod.string(),
+  "contractName": zod.string(),
+  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "contractValue": zod.object({
+  "status": zod.enum(['stated', 'unknown']),
+  "amount": zod.number().nullish(),
+  "currency": zod.string().nullish()
+}),
+  "startDate": zod.string(),
+  "contractDuration": zod.string(),
+  "endDate": zod.string(),
+  "noticePeriod": zod.string(),
+  "noticeDeadline": zod.string(),
+  "negotiationBuffer": zod.string(),
+  "owner": zod.string(),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "confidence": zod.object({
+  "vendor": zod.enum(['High', 'Medium', 'Low']),
+  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
+  "contractName": zod.enum(['High', 'Medium', 'Low']),
+  "contractType": zod.enum(['High', 'Medium', 'Low']),
+  "contractValue": zod.enum(['High', 'Medium', 'Low']),
+  "startDate": zod.enum(['High', 'Medium', 'Low']),
+  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
+  "endDate": zod.enum(['High', 'Medium', 'Low']),
+  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
+  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
+  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
+  "owner": zod.enum(['High', 'Medium', 'Low']),
+  "status": zod.enum(['High', 'Medium', 'Low'])
+})
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Get a saved contract
+ */
+export const GetContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractResponse = zod.object({
+  "filename": zod.string(),
+  "contract": zod.object({
+  "vendor": zod.string(),
+  "contractNumber": zod.string(),
+  "contractName": zod.string(),
+  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "contractValue": zod.object({
+  "status": zod.enum(['stated', 'unknown']),
+  "amount": zod.number().nullish(),
+  "currency": zod.string().nullish()
+}),
+  "startDate": zod.string(),
+  "contractDuration": zod.string(),
+  "endDate": zod.string(),
+  "noticePeriod": zod.string(),
+  "noticeDeadline": zod.string(),
+  "negotiationBuffer": zod.string(),
+  "owner": zod.string(),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "confidence": zod.object({
+  "vendor": zod.enum(['High', 'Medium', 'Low']),
+  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
+  "contractName": zod.enum(['High', 'Medium', 'Low']),
+  "contractType": zod.enum(['High', 'Medium', 'Low']),
+  "contractValue": zod.enum(['High', 'Medium', 'Low']),
+  "startDate": zod.enum(['High', 'Medium', 'Low']),
+  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
+  "endDate": zod.enum(['High', 'Medium', 'Low']),
+  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
+  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
+  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
+  "owner": zod.enum(['High', 'Medium', 'Low']),
+  "status": zod.enum(['High', 'Medium', 'Low'])
+})
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Update a saved contract
+ */
+export const UpdateContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const UpdateContractBody = zod.object({
+  "filename": zod.string(),
+  "contract": zod.object({
+  "vendor": zod.string(),
+  "contractNumber": zod.string(),
+  "contractName": zod.string(),
+  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "contractValue": zod.object({
+  "status": zod.enum(['stated', 'unknown']),
+  "amount": zod.number().nullish(),
+  "currency": zod.string().nullish()
+}),
+  "startDate": zod.string(),
+  "contractDuration": zod.string(),
+  "endDate": zod.string(),
+  "noticePeriod": zod.string(),
+  "noticeDeadline": zod.string(),
+  "negotiationBuffer": zod.string(),
+  "owner": zod.string(),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "confidence": zod.object({
+  "vendor": zod.enum(['High', 'Medium', 'Low']),
+  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
+  "contractName": zod.enum(['High', 'Medium', 'Low']),
+  "contractType": zod.enum(['High', 'Medium', 'Low']),
+  "contractValue": zod.enum(['High', 'Medium', 'Low']),
+  "startDate": zod.enum(['High', 'Medium', 'Low']),
+  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
+  "endDate": zod.enum(['High', 'Medium', 'Low']),
+  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
+  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
+  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
+  "owner": zod.enum(['High', 'Medium', 'Low']),
+  "status": zod.enum(['High', 'Medium', 'Low'])
+})
+})
+
+export const UpdateContractResponse = zod.object({
+  "filename": zod.string(),
+  "contract": zod.object({
+  "vendor": zod.string(),
+  "contractNumber": zod.string(),
+  "contractName": zod.string(),
+  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "contractValue": zod.object({
+  "status": zod.enum(['stated', 'unknown']),
+  "amount": zod.number().nullish(),
+  "currency": zod.string().nullish()
+}),
+  "startDate": zod.string(),
+  "contractDuration": zod.string(),
+  "endDate": zod.string(),
+  "noticePeriod": zod.string(),
+  "noticeDeadline": zod.string(),
+  "negotiationBuffer": zod.string(),
+  "owner": zod.string(),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "confidence": zod.object({
+  "vendor": zod.enum(['High', 'Medium', 'Low']),
+  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
+  "contractName": zod.enum(['High', 'Medium', 'Low']),
+  "contractType": zod.enum(['High', 'Medium', 'Low']),
+  "contractValue": zod.enum(['High', 'Medium', 'Low']),
+  "startDate": zod.enum(['High', 'Medium', 'Low']),
+  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
+  "endDate": zod.enum(['High', 'Medium', 'Low']),
+  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
+  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
+  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
+  "owner": zod.enum(['High', 'Medium', 'Low']),
+  "status": zod.enum(['High', 'Medium', 'Low'])
+})
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+

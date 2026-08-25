@@ -213,3 +213,15 @@ export interface ContractExtractionResult {
   extraction: ContractExtractionResultExtraction;
 }
 
+export interface ContractSaveRequest {
+  filename: string;
+  contract: ContractReviewDraft;
+  confidence: ContractConfidence;
+}
+
+export type SavedContract = ContractSaveRequest & {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+

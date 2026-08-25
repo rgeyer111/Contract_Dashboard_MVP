@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import { 
   FileText, 
   Search, 
@@ -21,7 +22,12 @@ import {
   type ContractFieldKey,
   type ExtractedContractOutput,
 } from "@/lib/contracts";
-import type { ContractExtractionResult } from "@workspace/api-client-react";
+import {
+  useCreateContract,
+  useGetContract,
+  useUpdateContract,
+  type ContractExtractionResult,
+} from "@workspace/api-client-react";
 
 const extractionStorageKey = "contract-dashboard.extraction";
 
@@ -210,6 +216,9 @@ const ContractValueControl = ({ value, confidence, onChange }: { value: any, con
 
 export default function Review() {
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
+  const savedId = new URLSearchParams(window.location.search).get("id") ?? "";
+  const savedContractQuery = useGetContract(savedId);
   const [storedExtraction] = useState(readStoredExtraction);
   const [confidence] = useState<Record<ContractFieldKey, ExtractionConfidence>>(
     () => storedExtraction?.extraction.confidence ?? emptyConfidence,
@@ -220,6 +229,18 @@ export default function Review() {
       ? reviewDraftFromExtraction(storedExtraction)
       : { contractValue: { status: "unknown" }, owner: "John Doe", status: "Review Open" },
   );
+  const [filename, setFilename] = useState(storedExtraction?.filename ?? "confirmed-contract.pdf");
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = savedContractQuery.data;
+    if (!saved) return;
+    setFilename(saved.filename);
+    setDraft(reviewDraftFromExtraction({
+      filename: saved.filename,
+      extraction: { contract: saved.contract, confidence: saved.confidence },
+    }));
+  }, [savedContractQuery.data]);
 
   const updateField = (key: keyof Contract, value: any) => {
     setDraft(prev => ({ ...prev, [key]: value }));
@@ -238,10 +259,32 @@ export default function Review() {
 
   const isComplete = missingRequiredFields.length === 0;
 
-  const handleConfirm = () => {
+  const createContract = useCreateContract();
+  const updateContract = useUpdateContract();
+  const isSaving = createContract.isPending || updateContract.isPending;
+
+  const handleConfirm = async () => {
     if (!isComplete) return;
-    sessionStorage.removeItem(extractionStorageKey);
-    setLocation('/dashboard');
+    setSaveError(null);
+    const contract = draft as ContractExtractionResult["extraction"]["contract"];
+    const confidenceData = confidence as ContractExtractionResult["extraction"]["confidence"];
+    try {
+      if (savedId) {
+        await updateContract.mutateAsync({
+          id: savedId,
+          data: { filename, contract, confidence: confidenceData },
+        });
+      } else {
+        await createContract.mutateAsync({
+          data: { filename, contract, confidence: confidenceData },
+        });
+      }
+      await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
+      sessionStorage.removeItem(extractionStorageKey);
+      setLocation("/dashboard");
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : "We could not save this contract. Please try again.");
+    }
   };
 
   return (
@@ -324,18 +367,21 @@ export default function Review() {
                 <p className="text-muted-foreground mt-2 font-medium text-sm max-w-xl">
                    {storedExtraction
                      ? `Review the details extracted from ${storedExtraction.filename}. Complete all required fields to advance this record.`
+                     : savedContractQuery.data
+                       ? `Review and update ${savedContractQuery.data.filename}. Your changes are saved to the dashboard.`
                      : "No uploaded contract is currently open. Return to the dashboard to upload a PDF."}
                 </p>
               </div>
               <div className="flex flex-col items-end gap-2 shrink-0">
                 <Button 
                   onClick={handleConfirm} 
-                  disabled={!isComplete}
+                  disabled={!isComplete || isSaving || savedContractQuery.isLoading}
                   className="gap-2 shadow-md font-bold transition-all h-11 px-8 text-sm uppercase tracking-wide"
                 >
                   <Save className="h-4 w-4" />
                   Confirm contract
                 </Button>
+                {saveError && <span className="text-[11px] font-bold text-destructive">{saveError}</span>}
                 {!isComplete && (
                   <span className="text-[11px] font-bold text-destructive uppercase tracking-wider flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />

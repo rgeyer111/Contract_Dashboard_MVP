@@ -17,8 +17,7 @@ import {
   X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { demoContracts } from "@/lib/contracts";
-import { useExtractContract } from "@workspace/api-client-react";
+import { useExtractContract, useListContracts } from "@workspace/api-client-react";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -26,6 +25,8 @@ export default function Dashboard() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const contractsQuery = useListContracts();
+  const contracts = contractsQuery.data ?? [];
   const extraction = useExtractContract({
     mutation: {
       onSuccess: (result) => {
@@ -228,7 +229,7 @@ export default function Dashboard() {
               )}
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                <p className="text-xs font-medium text-muted-foreground">Your PDF is used only to create this review draft and isn’t saved.</p>
+                <p className="text-xs font-medium text-muted-foreground">Your PDF is used to create an editable review draft. Confirmed details are saved securely.</p>
                 <Button
                   type="button"
                   onClick={() => selectedFile && extraction.mutate({ data: { file: selectedFile } })}
@@ -253,7 +254,7 @@ export default function Dashboard() {
                 <div className="h-2 w-2 rounded-full bg-destructive animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
                 Critical Renewals
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">3</div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.filter((contract) => contract.contract.status === "At Risk").length}</div>
               <p className="text-sm font-medium text-muted-foreground relative z-10">Require attention within 30 days</p>
             </div>
             
@@ -266,7 +267,7 @@ export default function Dashboard() {
                 <Clock className="h-4 w-4 text-primary" />
                 Upcoming
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">12</div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.length}</div>
               <p className="text-sm font-medium text-muted-foreground relative z-10">Renewing in next 90 days</p>
             </div>
             
@@ -305,14 +306,15 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {demoContracts.map((contract) => {
+                    {contracts.map((saved) => {
+                      const contract = saved.contract;
                       const valueIsUnknown = contract.contractValue.status === 'unknown';
                       const value = valueIsUnknown
                         ? 'Unknown / not stated'
                         : `${contract.contractValue.currency === 'USD' ? '$' : ''}${contract.contractValue.amount?.toLocaleString()}/yr`;
                       const deadlineIsUrgent = contract.status === 'At Risk';
                       return (
-                        <tr key={contract.id} className="hover:bg-muted/30 transition-colors group">
+                        <tr key={saved.id} className="hover:bg-muted/30 transition-colors group cursor-pointer" onClick={() => setLocation(`/review?id=${saved.id}`)}>
                           <td className="px-6 py-4">
                             <div className="font-bold text-foreground text-sm">{contract.vendor}</div>
                             <div className="text-muted-foreground text-xs font-medium mt-0.5">{contract.contractName}</div>
@@ -337,7 +339,7 @@ export default function Dashboard() {
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={(event) => { event.stopPropagation(); setLocation(`/review?id=${saved.id}`); }}>
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </td>
@@ -346,6 +348,9 @@ export default function Dashboard() {
                     })}
                   </tbody>
                 </table>
+                {!contractsQuery.isLoading && contracts.length === 0 && (
+                  <div className="p-10 text-center text-sm font-medium text-muted-foreground">No confirmed contracts yet. Upload a PDF to get started.</div>
+                )}
               </div>
             </div>
           </div>

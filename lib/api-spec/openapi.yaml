@@ -11,7 +11,7 @@ tags:
   - name: health
     description: Health operations
   - name: contracts
-    description: Contract extraction operations
+    description: Contract extraction and persistence operations
 paths:
   /healthz:
     get:
@@ -58,6 +58,95 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "502":
           description: Extraction service failure
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts:
+    get:
+      operationId: listContracts
+      tags: [contracts]
+      summary: List saved contracts
+      responses:
+        "200":
+          description: Saved contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SavedContract"
+    post:
+      operationId: createContract
+      tags: [contracts]
+      summary: Save a confirmed contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractSaveRequest"
+      responses:
+        "201":
+          description: Saved contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedContract"
+        "400":
+          description: Invalid contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      operationId: getContract
+      tags: [contracts]
+      summary: Get a saved contract
+      responses:
+        "200":
+          description: Saved contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedContract"
+        "404":
+          description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateContract
+      tags: [contracts]
+      summary: Update a saved contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractSaveRequest"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedContract"
+        "400":
+          description: Invalid contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Contract not found
           content:
             application/json:
               schema:
@@ -182,4 +271,22 @@ components:
               $ref: "#/components/schemas/ContractReviewDraft"
             confidence:
               $ref: "#/components/schemas/ContractConfidence"
+    ContractSaveRequest:
+      type: object
+      required: [filename, contract, confidence]
+      properties:
+        filename: { type: string }
+        contract:
+          $ref: "#/components/schemas/ContractReviewDraft"
+        confidence:
+          $ref: "#/components/schemas/ContractConfidence"
+    SavedContract:
+      allOf:
+        - $ref: "#/components/schemas/ContractSaveRequest"
+        - type: object
+          required: [id, createdAt, updatedAt]
+          properties:
+            id: { type: string }
+            createdAt: { type: string, format: date-time }
+            updatedAt: { type: string, format: date-time }
 

@@ -1,5 +1,8 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import multer from "multer";
+import { desc, eq } from "drizzle-orm";
+import { db, contractsTable } from "@workspace/db";
+import { randomUUID } from "node:crypto";
 import {
   extractContractFromText,
   extractReadablePdfText,
@@ -12,6 +15,92 @@ const upload = multer({
 });
 
 const router: IRouter = Router();
+
+const contractFields = [
+  "vendor", "contractNumber", "contractName", "contractType", "contractValue",
+  "startDate", "contractDuration", "endDate", "noticePeriod", "noticeDeadline",
+  "negotiationBuffer", "owner", "status",
+] as const;
+
+function isContract(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function responseFor(record: typeof contractsTable.$inferSelect) {
+  return {
+    id: record.id,
+    filename: record.filename,
+    extraction: { contract: record.contract, confidence: record.confidence },
+    createdAt: record.createdAt.toISOString(),
+    updatedAt: record.updatedAt.toISOString(),
+  };
+}
+
+router.get("/contracts", async (_req: Request, res: Response): Promise<void> => {
+  const records = await db.select().from(contractsTable).orderBy(desc(contractsTable.updatedAt));
+  res.json(records.map(responseFor));
+});
+
+router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [record] = await db.select().from(contractsTable).where(eq(contractsTable.id, id));
+  if (!record) {
+    res.status(404).json({ error: "Contract not found." });
+    return;
+  }
+  res.json(responseFor(record));
+});
+
+router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
+  const body = req.body as { filename?: unknown; contract?: unknown; confidence?: unknown };
+  if (typeof body.filename !== "string" || !isContract(body.contract) || !isContract(body.confidence)) {
+    res.status(400).json({ error: "A filename, contract, and confidence are required." });
+    return;
+  }
+  const contract = body.contract;
+  const confidence = body.confidence;
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  if (contractFields.some((field) => !(field in contract))) {
+    res.status(400).json({ error: "The contract is missing required fields." });
+    return;
+  }
+  const [record] = await db
+    .update(contractsTable)
+    .set({
+      filename: body.filename.slice(0, 250),
+      contract,
+      confidence,
+      updatedAt: new Date(),
+    })
+    .where(eq(contractsTable.id, id))
+    .returning();
+  if (!record) {
+    res.status(404).json({ error: "Contract not found." });
+    return;
+  }
+  res.json(responseFor(record));
+});
+
+router.post("/contracts", async (req: Request, res: Response): Promise<void> => {
+  const body = req.body as { filename?: unknown; contract?: unknown; confidence?: unknown };
+  if (typeof body.filename !== "string" || !isContract(body.contract) || !isContract(body.confidence)) {
+    res.status(400).json({ error: "A filename, contract, and confidence are required." });
+    return;
+  }
+  const contract = body.contract;
+  const confidence = body.confidence;
+  if (contractFields.some((field) => !(field in contract))) {
+    res.status(400).json({ error: "The contract is missing required fields." });
+    return;
+  }
+  const [record] = await db.insert(contractsTable).values({
+    id: randomUUID(),
+    filename: body.filename.slice(0, 250),
+    contract,
+    confidence,
+  }).returning();
+  res.status(201).json(responseFor(record));
+});
 
 export function isPdf(file: Express.Multer.File): boolean {
   return file.mimetype === "application/pdf" && file.buffer.subarray(0, 5).toString() === "%PDF-";
