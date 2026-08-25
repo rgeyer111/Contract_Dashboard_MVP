@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Contract Dashboard"
+description = "A polished clickable MVP for teams to upload, review, and track contract renewal details in one clear workflow."
+version = "1.0.0"
+id = "artifacts/contract-dashboard"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21639
+
+[services.development]
+run = "pnpm --filter @workspace/contract-dashboard run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/contract-dashboard", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/contract-dashboard/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21639"
+BASE_PATH = "/"

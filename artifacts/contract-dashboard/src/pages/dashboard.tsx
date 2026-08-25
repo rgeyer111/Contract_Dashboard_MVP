@@ -1,0 +1,237 @@
+import { Link } from "wouter";
+import { 
+  FileText, 
+  Search, 
+  Bell, 
+  Settings, 
+  LogOut, 
+  Plus, 
+  AlertCircle,
+  Clock,
+  CheckCircle2,
+  MoreHorizontal
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export default function Dashboard() {
+  return (
+    <div className="min-h-[100dvh] w-full bg-muted/20 flex flex-col md:flex-row">
+      {/* Sidebar */}
+      <aside className="w-full md:w-64 bg-card border-r border-border flex flex-col sticky top-0 md:h-[100dvh] z-20 shadow-sm">
+        <div className="p-6 border-b flex items-center gap-3">
+          <div className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center shadow-inner">
+            <FileText className="h-4 w-4 text-primary-foreground" />
+          </div>
+          <span className="font-bold tracking-tight text-lg text-foreground">Contract Dash</span>
+        </div>
+        
+        <nav className="flex-1 p-4 space-y-1">
+          <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-md font-semibold text-sm transition-colors">
+            <FileText className="h-4 w-4" />
+            Contracts
+          </Link>
+          <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors cursor-not-allowed">
+            <Clock className="h-4 w-4" />
+            Renewals
+          </div>
+          <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors cursor-not-allowed">
+            <AlertCircle className="h-4 w-4" />
+            Action Items
+          </div>
+        </nav>
+        
+        <div className="p-4 border-t space-y-1">
+          <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors cursor-not-allowed">
+            <Settings className="h-4 w-4" />
+            Settings
+          </div>
+          <Link href="/" className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors">
+            <LogOut className="h-4 w-4" />
+            Log out
+          </Link>
+        </div>
+      </aside>
+      
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        {/* Header */}
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-10 shadow-sm">
+          <div className="flex items-center gap-4 w-full max-w-md">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input 
+                type="text" 
+                placeholder="Search contracts..." 
+                className="w-full h-9 pl-9 pr-4 rounded-md border bg-muted/30 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/70"
+                disabled
+              />
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <button className="relative p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors">
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-2 right-2 h-2 w-2 bg-destructive rounded-full border border-card"></span>
+            </button>
+            <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-xs tracking-wider">
+              JD
+            </div>
+          </div>
+        </header>
+        
+        {/* Scrollable Area */}
+        <div className="flex-1 overflow-auto p-6 lg:p-8 space-y-8 animate-in fade-in duration-500">
+          
+          {/* Page Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Welcome back, John</h1>
+              <p className="text-muted-foreground mt-1 font-medium text-sm">Here's the status of your contract renewals this week.</p>
+            </div>
+            <Button className="shrink-0 gap-2 shadow-sm font-semibold">
+              <Plus className="h-4 w-4" />
+              New Contract
+            </Button>
+          </div>
+          
+          {/* Metric Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1 */}
+            <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+              <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
+                <AlertCircle className="h-32 w-32 text-destructive" />
+              </div>
+              <div className="flex items-center gap-3 text-sm font-bold text-destructive mb-3 relative z-10">
+                <div className="h-2 w-2 rounded-full bg-destructive animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
+                Critical Renewals
+              </div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">3</div>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">Require attention within 30 days</p>
+            </div>
+            
+            {/* Card 2 */}
+            <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+              <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
+                <Clock className="h-32 w-32 text-primary" />
+              </div>
+              <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
+                <Clock className="h-4 w-4 text-primary" />
+                Upcoming
+              </div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">12</div>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">Renewing in next 90 days</p>
+            </div>
+            
+            {/* Card 3 */}
+            <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+              <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
+                <CheckCircle2 className="h-32 w-32 text-green-500" />
+              </div>
+              <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                Negotiated YTD
+              </div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">$1.2M</div>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">In total contract value saved</p>
+            </div>
+          </div>
+          
+          {/* Recent Contracts Section */}
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold tracking-tight">Requires Attention</h2>
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
+            </div>
+            
+            <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-muted/30 border-b text-muted-foreground text-xs uppercase tracking-wider">
+                    <tr>
+                      <th className="px-6 py-4 font-bold">Vendor</th>
+                      <th className="px-6 py-4 font-bold">Value</th>
+                      <th className="px-6 py-4 font-bold">Expiration</th>
+                      <th className="px-6 py-4 font-bold">Status</th>
+                      <th className="px-6 py-4 font-bold text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    <tr className="hover:bg-muted/30 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-foreground text-sm">Salesforce</div>
+                        <div className="text-muted-foreground text-xs font-medium mt-0.5">CRM Platform</div>
+                      </td>
+                      <td className="px-6 py-4 font-semibold text-foreground">$240,000/yr</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-destructive font-bold text-xs bg-destructive/5 w-fit px-2.5 py-1 rounded-md">
+                          <AlertCircle className="h-3.5 w-3.5" />
+                          Oct 15, 2024
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-bold text-destructive border border-destructive/20">
+                          At Risk
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-muted/30 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-foreground text-sm">AWS</div>
+                        <div className="text-muted-foreground text-xs font-medium mt-0.5">Cloud Infrastructure</div>
+                      </td>
+                      <td className="px-6 py-4 font-semibold text-foreground">$850,000/yr</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-amber-600 font-bold text-xs bg-amber-500/5 w-fit px-2.5 py-1 rounded-md">
+                          <Clock className="h-3.5 w-3.5" />
+                          Nov 01, 2024
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-600 border border-amber-500/20">
+                          Review Open
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-muted/30 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-foreground text-sm">Datadog</div>
+                        <div className="text-muted-foreground text-xs font-medium mt-0.5">Monitoring</div>
+                      </td>
+                      <td className="px-6 py-4 font-semibold text-foreground">$120,000/yr</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-muted-foreground font-bold text-xs bg-muted/50 w-fit px-2.5 py-1 rounded-md">
+                          Dec 12, 2024
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary border border-primary/20">
+                          In Negotiation
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </main>
+    </div>
+  );
+}
