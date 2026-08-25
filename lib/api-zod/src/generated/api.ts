@@ -60,7 +60,9 @@ export const ExtractContractResponse = zod.object({
   "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
   "owner": zod.enum(['High', 'Medium', 'Low']),
   "status": zod.enum(['High', 'Medium', 'Low'])
-})
+}),
+  "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
+  "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.')
 })
 })
 

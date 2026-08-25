@@ -203,9 +203,40 @@ export interface ContractReviewDraft {
   status: ContractReviewDraftStatus;
 }
 
+/**
+ * Whether the contract fields came from embedded PDF text or OCR.
+ */
+export type ContractExtractionResultExtractionSource = typeof ContractExtractionResultExtractionSource[keyof typeof ContractExtractionResultExtractionSource];
+
+
+export const ContractExtractionResultExtractionSource = {
+  text: 'text',
+  ocr: 'ocr',
+} as const;
+
+/**
+ * OCR legibility confidence; null when embedded PDF text was used.
+ * @nullable
+ */
+export type ContractExtractionResultExtractionOcrConfidence = typeof ContractExtractionResultExtractionOcrConfidence[keyof typeof ContractExtractionResultExtractionOcrConfidence] | null;
+
+
+export const ContractExtractionResultExtractionOcrConfidence = {
+  High: 'High',
+  Medium: 'Medium',
+  Low: 'Low',
+} as const;
+
 export type ContractExtractionResultExtraction = {
   contract: ContractReviewDraft;
   confidence: ContractConfidence;
+  /** Whether the contract fields came from embedded PDF text or OCR. */
+  source: ContractExtractionResultExtractionSource;
+  /**
+     * OCR legibility confidence; null when embedded PDF text was used.
+     * @nullable
+     */
+  ocrConfidence: ContractExtractionResultExtractionOcrConfidence;
 };
 
 export interface ContractExtractionResult {

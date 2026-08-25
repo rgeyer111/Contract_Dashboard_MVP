@@ -22,6 +22,8 @@ export * from './contractConfidenceStatus';
 export * from './contractConfidenceVendor';
 export * from './contractExtractionResult';
 export * from './contractExtractionResultExtraction';
+export * from './contractExtractionResultExtractionOcrConfidence';
+export * from './contractExtractionResultExtractionSource';
 export * from './contractExtractionUpload';
 export * from './contractReviewDraft';
 export * from './contractReviewDraftContractType';

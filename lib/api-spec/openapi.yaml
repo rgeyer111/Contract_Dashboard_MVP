@@ -266,11 +266,21 @@ components:
           required:
             - contract
             - confidence
+            - source
+            - ocrConfidence
           properties:
             contract:
               $ref: "#/components/schemas/ContractReviewDraft"
             confidence:
               $ref: "#/components/schemas/ContractConfidence"
+            source:
+              type: string
+              enum: [text, ocr]
+              description: Whether the contract fields came from embedded PDF text or OCR.
+            ocrConfidence:
+              type: ["string", "null"]
+              enum: [High, Medium, Low, null]
+              description: OCR legibility confidence; null when embedded PDF text was used.
     ContractSaveRequest:
       type: object
       required: [filename, contract, confidence]

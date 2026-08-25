@@ -238,7 +238,12 @@ export default function Review() {
     setFilename(saved.filename);
     setDraft(reviewDraftFromExtraction({
       filename: saved.filename,
-      extraction: { contract: saved.contract, confidence: saved.confidence },
+      extraction: {
+        contract: saved.contract,
+        confidence: saved.confidence,
+        source: "text",
+        ocrConfidence: null,
+      },
     }));
   }, [savedContractQuery.data]);
 
@@ -371,6 +376,15 @@ export default function Review() {
                        ? `Review and update ${savedContractQuery.data.filename}. Your changes are saved to the dashboard.`
                      : "No uploaded contract is currently open. Return to the dashboard to upload a PDF."}
                 </p>
+                {storedExtraction?.extraction.source === "ocr" && (
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-700">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    OCR used for this scan
+                    <span className="font-semibold text-amber-700/80">
+                      ({storedExtraction.extraction.ocrConfidence} legibility)
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="flex flex-col items-end gap-2 shrink-0">
                 <Button 

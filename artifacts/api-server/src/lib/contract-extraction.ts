@@ -1,6 +1,11 @@
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { ExtractContractResponse } from "@workspace/api-zod";
 import pdf from "pdf-parse";
+import { execFile } from "node:child_process";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
 
 const extractionConfidence = ["High", "Medium", "Low"] as const;
 const contractTypes = [
@@ -11,6 +16,9 @@ const contractTypes = [
 ] as const;
 
 type ExtractionConfidence = (typeof extractionConfidence)[number];
+export type ExtractionSource = "text" | "ocr";
+
+const execFileAsync = promisify(execFile);
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -93,7 +101,11 @@ export async function extractReadablePdfText(buffer: Buffer): Promise<string> {
   return result.text.replace(/\s+/g, " ").trim();
 }
 
-export async function extractContractFromText(text: string, filename: string) {
+export async function extractContractFromText(
+  text: string,
+  filename: string,
+  metadata: { source?: ExtractionSource; ocrConfidence?: ExtractionConfidence } = {},
+) {
   const response = await openai.chat.completions.create({
     model: "gpt-5.6-terra",
     max_completion_tokens: 8192,
@@ -128,6 +140,94 @@ confidence must contain every matching field and use High, Medium, or Low. High 
 
   return ExtractContractResponse.parse({
     filename,
-    extraction: normalizeExtraction(raw),
+    extraction: {
+      ...normalizeExtraction(raw),
+      source: metadata.source ?? "text",
+      ocrConfidence: metadata.ocrConfidence ?? null,
+    },
   });
+}
+
+function imageContent(data: Buffer) {
+  return {
+    type: "image_url" as const,
+    image_url: { url: `data:image/png;base64,${data.toString("base64")}` },
+  };
+}
+
+function parseOcrResponse(content: string): { text: string; confidence: ExtractionConfidence } {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(content);
+  } catch {
+    throw new Error("The OCR service returned an invalid result.");
+  }
+
+  const response = asRecord(raw);
+  const text = typeof response.text === "string" ? response.text.replace(/\s+/g, " ").trim() : "";
+  if (text.length < 50) {
+    throw new Error("The OCR service returned no usable contract text.");
+  }
+  return { text, confidence: safeConfidence(response.confidence) };
+}
+
+export async function extractScannedPdfText(buffer: Buffer): Promise<{
+  text: string;
+  confidence: ExtractionConfidence;
+}> {
+  const directory = await mkdtemp(join(tmpdir(), "contract-ocr-"));
+  const inputPath = join(directory, "contract.pdf");
+  const outputPrefix = join(directory, "page");
+
+  try {
+    await writeFile(inputPath, buffer);
+    await execFileAsync("pdftoppm", [
+      "-png",
+      "-r",
+      "150",
+      "-f",
+      "1",
+      "-l",
+      "10",
+      inputPath,
+      outputPrefix,
+    ]);
+
+    const { stdout } = await execFileAsync("find", [
+      directory,
+      "-maxdepth",
+      "1",
+      "-type",
+      "f",
+      "-name",
+      "page-*.png",
+      "-print",
+    ]);
+    const pagePaths = stdout.trim().split("\n").filter(Boolean).sort();
+    if (pagePaths.length === 0) {
+      throw new Error("The PDF renderer produced no pages.");
+    }
+
+    const pages = await Promise.all(pagePaths.map((pagePath) => readFile(pagePath)));
+    const content = [
+      {
+        type: "text" as const,
+        text: "OCR every supplied contract page in order. Return JSON with exactly two keys: text (the complete transcription, preserving wording and numbers) and confidence (High, Medium, or Low). Confidence describes OCR legibility only: High means clear text, Medium means some uncertain characters, and Low means substantial uncertainty. Do not summarize or extract contract fields.",
+      },
+      ...pages.map(imageContent),
+    ];
+    const response = await openai.chat.completions.create({
+      model: "gpt-5.6-terra",
+      max_completion_tokens: 16_384,
+      response_format: { type: "json_object" },
+      messages: [{ role: "user", content }],
+    });
+    const responseContent = response.choices[0]?.message.content;
+    if (!responseContent) {
+      throw new Error("The OCR service returned no usable result.");
+    }
+    return parseOcrResponse(responseContent);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 }

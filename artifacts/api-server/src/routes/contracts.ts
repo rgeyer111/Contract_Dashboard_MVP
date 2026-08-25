@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 import {
   extractContractFromText,
   extractReadablePdfText,
+  extractScannedPdfText,
 } from "../lib/contract-extraction";
 
 const maximumUploadBytes = 10 * 1024 * 1024;
@@ -122,25 +123,36 @@ router.post(
     }
 
     let text: string;
+    let source: "text" | "ocr" = "text";
+    let ocrConfidence: "High" | "Medium" | "Low" | undefined;
     try {
       text = await extractReadablePdfText(file.buffer);
     } catch (error) {
-      req.log.warn({ err: error }, "Unable to read uploaded PDF");
-      res.status(422).json({
-        error: "We could not read text from this PDF. Try a text-based contract PDF.",
-      });
-      return;
+      req.log.warn({ err: error }, "Unable to read embedded PDF text; trying OCR");
+      text = "";
     }
 
     if (text.length < 50) {
-      res.status(422).json({
-        error: "This PDF has no readable contract text. Try a text-based PDF instead.",
-      });
-      return;
+      try {
+        const ocr = await extractScannedPdfText(file.buffer);
+        text = ocr.text;
+        source = "ocr";
+        ocrConfidence = ocr.confidence;
+        req.log.info({ bytes: file.size, ocrConfidence }, "Scanned contract transcribed with OCR");
+      } catch (error) {
+        req.log.warn({ err: error }, "Unable to OCR scanned PDF");
+        res.status(422).json({
+          error: "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
+        });
+        return;
+      }
     }
 
     try {
-      const result = await extractContractFromText(text, file.originalname);
+      const result = await extractContractFromText(text, file.originalname, {
+        source,
+        ocrConfidence,
+      });
       req.log.info({ bytes: file.size }, "Contract extracted");
       res.json(result);
     } catch (error) {
