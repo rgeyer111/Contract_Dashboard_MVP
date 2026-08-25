@@ -16,7 +16,9 @@ import { Button } from "@/components/ui/button";
 import { 
   Contract, 
   contractFields, 
-  contractTypes
+  contractTypes,
+  demoExtractionConfidence,
+  type ExtractionConfidence,
 } from "@/lib/contracts";
 
 const FieldGroup = ({ title, children }: { title: string, children: React.ReactNode }) => (
@@ -33,13 +35,29 @@ const FieldGroup = ({ title, children }: { title: string, children: React.ReactN
 const isRequired = (key: string) => contractFields.find(f => f.key === key)?.requiredAtConfirmation;
 const getLabel = (key: string) => contractFields.find(f => f.key === key)?.label || key;
 
+const ConfidenceBadge = ({ confidence }: { confidence: ExtractionConfidence }) => {
+  const style = {
+    High: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
+    Medium: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+    Low: 'bg-destructive/10 text-destructive border-destructive/20',
+  }[confidence];
+
+  return (
+    <span className={`inline-flex items-center rounded-full border px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide ${style}`}>
+      {confidence}
+    </span>
+  );
+};
+
 const Field = ({ fieldKey, children }: { fieldKey: string, children: React.ReactNode }) => {
   const req = isRequired(fieldKey);
+  const confidence = demoExtractionConfidence[fieldKey as keyof typeof demoExtractionConfidence];
   return (
     <div className="space-y-2">
       <label className="text-xs font-semibold text-foreground flex items-center gap-1">
         {getLabel(fieldKey)}
         {req && <span className="text-destructive font-bold">*</span>}
+        {confidence && <ConfidenceBadge confidence={confidence} />}
       </label>
       {children}
     </div>
@@ -77,6 +95,7 @@ const ContractValueControl = ({ value, onChange }: { value: any, onChange: (v: a
         <label className="text-xs font-semibold text-foreground flex items-center gap-1">
           Contract Value Status
           <span className="text-destructive font-bold">*</span>
+          <ConfidenceBadge confidence={demoExtractionConfidence.contractValue} />
         </label>
         <div className="flex flex-wrap items-center gap-2">
           <button

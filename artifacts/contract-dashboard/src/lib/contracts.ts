@@ -5,6 +5,7 @@ export type ContractValue = {
 };
 
 export type ContractStatus = 'At Risk' | 'Review Open' | 'In Negotiation';
+export type ExtractionConfidence = 'High' | 'Medium' | 'Low';
 export const contractTypes = [
   'Maintenance',
   'Software License',
@@ -64,6 +65,30 @@ export const contractFields: ReadonlyArray<{
   { key: 'owner', label: 'Owner', requiredAtConfirmation: true },
   { key: 'status', label: 'Status', requiredAtConfirmation: false },
 ];
+
+export type ExtractedContractOutput = {
+  contract: Omit<Contract, 'id'>;
+  confidence: Record<ContractFieldKey, ExtractionConfidence>;
+};
+
+export const demoExtractionConfidence: Record<
+  ContractFieldKey,
+  ExtractionConfidence
+> = {
+  vendor: 'High',
+  contractNumber: 'Low',
+  contractName: 'High',
+  contractType: 'High',
+  contractValue: 'Low',
+  startDate: 'High',
+  contractDuration: 'Medium',
+  endDate: 'High',
+  noticePeriod: 'Medium',
+  noticeDeadline: 'Medium',
+  negotiationBuffer: 'Medium',
+  owner: 'Low',
+  status: 'High',
+};
 
 export const currentDemoUser = {
   id: 'john-doe',
