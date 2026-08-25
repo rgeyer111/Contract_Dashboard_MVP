@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Playwright runtime state
+/artifacts/contract-dashboard/test-results/.last-run.json
