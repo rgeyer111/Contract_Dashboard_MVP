@@ -4,5 +4,6 @@
 - [Contract taxonomy](contract-taxonomy.md) — MVP contract types are intentionally limited to four fixed categories.
 - [Extraction confidence](extraction-confidence.md) — extraction returns High, Medium, or Low confidence for every contract field.
 - [PDF extraction runtime](pdf-extraction-runtime.md) — keep server PDF parsing Node-safe; embedded text uses pdf-parse and scanned pages use the system renderer.
+- [OCR completeness](ocr-completeness.md) — do not call OCR complete unless every page finishes without a model output cutoff.
 - [Browser test runtime](browser-test-runtime.md) — Playwright may need explicitly exposed Nix graphics libraries before Chromium can launch.
 - [Video artifact registration](video-artifact-registration.md) — video compositions must be placed in a registered managed artifact before preview or delivery.

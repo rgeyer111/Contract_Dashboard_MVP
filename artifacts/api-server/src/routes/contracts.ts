@@ -126,6 +126,8 @@ router.post(
     let text: string;
     let source: "text" | "ocr" = "text";
     let ocrConfidence: "High" | "Medium" | "Low" | undefined;
+    let ocrPageCount: number | undefined;
+    let ocrPagesProcessed: number | undefined;
     try {
       text = await extractReadablePdfText(file.buffer);
     } catch (error) {
@@ -139,9 +141,28 @@ router.post(
         text = ocr.text;
         source = "ocr";
         ocrConfidence = ocr.confidence;
-        req.log.info({ bytes: file.size, ocrConfidence }, "Scanned contract transcribed with OCR");
+        ocrPageCount = ocr.pageCount;
+        ocrPagesProcessed = ocr.pagesProcessed;
+        req.log.info(
+          { bytes: file.size, ocrConfidence, ocrPageCount, ocrPagesProcessed },
+          "Scanned contract transcribed with OCR",
+        );
       } catch (error) {
         req.log.warn({ err: error }, "Unable to OCR scanned PDF");
+        if (
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
+          error.code === "OCR_INCOMPLETE"
+        ) {
+          res.status(422).json({
+            error:
+              error instanceof Error
+                ? error.message
+                : "We could not fully transcribe this scanned PDF. Split it into smaller files and try again.",
+          });
+          return;
+        }
         res.status(422).json({
           error: "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
         });
@@ -153,11 +174,27 @@ router.post(
       const result = await extractContractFromText(text, file.originalname, {
         source,
         ocrConfidence,
+        ...(source === "ocr" ? { ocrPageCount, ocrPagesProcessed } : {}),
       });
       req.log.info({ bytes: file.size }, "Contract extracted");
       res.json(result);
     } catch (error) {
       req.log.error({ err: error }, "Contract extraction failed");
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        error.code === "CONTRACT_TEXT_TOO_LONG"
+      ) {
+        const pageDetails =
+          source === "ocr" && ocrPageCount !== undefined
+            ? ` OCR completed all ${ocrPagesProcessed ?? ocrPageCount} of ${ocrPageCount} pages before stopping.`
+            : "";
+        res.status(422).json({
+          error: `${error instanceof Error ? error.message : "This contract is too large to process."}${pageDetails}`,
+        });
+        return;
+      }
       res.status(502).json({
         error: "We could not extract this contract right now. Please try again.",
       });

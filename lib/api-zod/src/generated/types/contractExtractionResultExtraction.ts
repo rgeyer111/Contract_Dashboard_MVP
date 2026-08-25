@@ -20,4 +20,16 @@ export type ContractExtractionResultExtraction = {
      * @nullable
      */
   ocrConfidence: ContractExtractionResultExtractionOcrConfidence;
+  /**
+     * Complete whole-number page count detected in the uploaded PDF; null when embedded PDF text was used.
+     * @minimum 1
+     * @nullable
+     */
+  ocrPageCount: number | null;
+  /**
+     * Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.
+     * @minimum 0
+     * @nullable
+     */
+  ocrPagesProcessed: number | null;
 };

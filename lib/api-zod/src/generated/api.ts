@@ -24,6 +24,11 @@ export const ExtractContractBody = zod.object({
   "file": zod.instanceof(File).describe('A PDF contract up to 10 MB.')
 })
 
+
+export const extractContractResponseExtractionOcrPagesProcessedMin = 0;
+
+
+
 export const ExtractContractResponse = zod.object({
   "filename": zod.string(),
   "extraction": zod.object({
@@ -62,7 +67,9 @@ export const ExtractContractResponse = zod.object({
   "status": zod.enum(['High', 'Medium', 'Low'])
 }),
   "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
-  "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.')
+  "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
+  "ocrPageCount": zod.number().min(1).nullable().describe('Complete whole-number page count detected in the uploaded PDF; null when embedded PDF text was used.'),
+  "ocrPagesProcessed": zod.number().min(extractContractResponseExtractionOcrPagesProcessedMin).nullable().describe('Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.')
 })
 })
 

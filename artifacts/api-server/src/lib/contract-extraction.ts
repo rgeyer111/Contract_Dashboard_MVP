@@ -19,6 +19,8 @@ type ExtractionConfidence = (typeof extractionConfidence)[number];
 export type ExtractionSource = "text" | "ocr";
 
 const execFileAsync = promisify(execFile);
+const ocrBatchSize = 1;
+const maximumExtractionTextCharacters = 250_000;
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -34,6 +36,28 @@ function safeConfidence(value: unknown): ExtractionConfidence {
   return extractionConfidence.includes(value as ExtractionConfidence)
     ? (value as ExtractionConfidence)
     : "Low";
+}
+
+export class ContractTextTooLongError extends Error {
+  readonly code = "CONTRACT_TEXT_TOO_LONG";
+
+  constructor(characterCount: number) {
+    super(
+      `This contract contains too much extracted text to process in one review (${characterCount.toLocaleString()} characters; the limit is ${maximumExtractionTextCharacters.toLocaleString()}). Split the PDF into smaller files and upload each part. No pages were omitted.`,
+    );
+    this.name = "ContractTextTooLongError";
+  }
+}
+
+export class OcrIncompleteError extends Error {
+  readonly code = "OCR_INCOMPLETE";
+
+  constructor(pageNumber: number, pageCount: number) {
+    super(
+      `We could not fully transcribe scanned page ${pageNumber} of ${pageCount}. Split the PDF around that page and upload the parts separately. No partial review draft was created.`,
+    );
+    this.name = "OcrIncompleteError";
+  }
 }
 
 export function normalizeExtraction(raw: unknown) {
@@ -104,8 +128,17 @@ export async function extractReadablePdfText(buffer: Buffer): Promise<string> {
 export async function extractContractFromText(
   text: string,
   filename: string,
-  metadata: { source?: ExtractionSource; ocrConfidence?: ExtractionConfidence } = {},
+  metadata: {
+    source?: ExtractionSource;
+    ocrConfidence?: ExtractionConfidence;
+    ocrPageCount?: number;
+    ocrPagesProcessed?: number;
+  } = {},
 ) {
+  if (text.length > maximumExtractionTextCharacters) {
+    throw new ContractTextTooLongError(text.length);
+  }
+
   const response = await openai.chat.completions.create({
     model: "gpt-5.6-terra",
     max_completion_tokens: 8192,
@@ -121,7 +154,7 @@ confidence must contain every matching field and use High, Medium, or Low. High 
       },
       {
         role: "user",
-        content: `Filename: ${filename}\n\nContract text:\n${text.slice(0, 60_000)}`,
+        content: `Filename: ${filename}\n\nContract text:\n${text}`,
       },
     ],
   });
@@ -144,6 +177,9 @@ confidence must contain every matching field and use High, Medium, or Low. High 
       ...normalizeExtraction(raw),
       source: metadata.source ?? "text",
       ocrConfidence: metadata.ocrConfidence ?? null,
+      ocrPageCount: metadata.source === "ocr" ? metadata.ocrPageCount ?? null : null,
+      ocrPagesProcessed:
+        metadata.source === "ocr" ? metadata.ocrPagesProcessed ?? null : null,
     },
   });
 }
@@ -165,7 +201,7 @@ function parseOcrResponse(content: string): { text: string; confidence: Extracti
 
   const response = asRecord(raw);
   const text = typeof response.text === "string" ? response.text.replace(/\s+/g, " ").trim() : "";
-  if (text.length < 50) {
+  if (!text) {
     throw new Error("The OCR service returned no usable contract text.");
   }
   return { text, confidence: safeConfidence(response.confidence) };
@@ -174,6 +210,8 @@ function parseOcrResponse(content: string): { text: string; confidence: Extracti
 export async function extractScannedPdfText(buffer: Buffer): Promise<{
   text: string;
   confidence: ExtractionConfidence;
+  pageCount: number;
+  pagesProcessed: number;
 }> {
   const directory = await mkdtemp(join(tmpdir(), "contract-ocr-"));
   const inputPath = join(directory, "contract.pdf");
@@ -181,52 +219,104 @@ export async function extractScannedPdfText(buffer: Buffer): Promise<{
 
   try {
     await writeFile(inputPath, buffer);
-    await execFileAsync("pdftoppm", [
-      "-png",
-      "-r",
-      "150",
-      "-f",
-      "1",
-      "-l",
-      "10",
-      inputPath,
-      outputPrefix,
-    ]);
-
-    const { stdout } = await execFileAsync("find", [
-      directory,
-      "-maxdepth",
-      "1",
-      "-type",
-      "f",
-      "-name",
-      "page-*.png",
-      "-print",
-    ]);
-    const pagePaths = stdout.trim().split("\n").filter(Boolean).sort();
-    if (pagePaths.length === 0) {
-      throw new Error("The PDF renderer produced no pages.");
+    const { stdout: pdfInfo } = await execFileAsync("pdfinfo", [inputPath]);
+    const pagesLine = pdfInfo
+      .split(/\r?\n/)
+      .find((line) => /^\s*Pages:\s*\d+\s*$/.test(line));
+    const pageCount = pagesLine ? Number(pagesLine.match(/\d+/)?.[0]) : NaN;
+    if (!Number.isSafeInteger(pageCount) || pageCount < 1) {
+      throw new Error("Unable to determine the complete page count for this PDF.");
     }
 
-    const pages = await Promise.all(pagePaths.map((pagePath) => readFile(pagePath)));
-    const content = [
-      {
-        type: "text" as const,
-        text: "OCR every supplied contract page in order. Return JSON with exactly two keys: text (the complete transcription, preserving wording and numbers) and confidence (High, Medium, or Low). Confidence describes OCR legibility only: High means clear text, Medium means some uncertain characters, and Low means substantial uncertainty. Do not summarize or extract contract fields.",
+    const transcriptions: string[] = [];
+    const confidences: ExtractionConfidence[] = [];
+
+    for (let startPage = 1; startPage <= pageCount; startPage += ocrBatchSize) {
+      const endPage = Math.min(startPage + ocrBatchSize - 1, pageCount);
+      await execFileAsync("pdftoppm", [
+        "-png",
+        "-r",
+        "150",
+        "-f",
+        String(startPage),
+        "-l",
+        String(endPage),
+        inputPath,
+        outputPrefix,
+      ]);
+
+      const { stdout } = await execFileAsync("find", [
+        directory,
+        "-maxdepth",
+        "1",
+        "-type",
+        "f",
+        "-name",
+        "page-*.png",
+        "-print",
+      ]);
+      const pagePaths = stdout
+        .trim()
+        .split("\n")
+        .filter(Boolean)
+        .filter((pagePath) => {
+          const match = /page-(\d+)\.png$/.exec(pagePath);
+          if (!match) return false;
+          const pageNumber = Number(match[1]);
+          return pageNumber >= startPage && pageNumber <= endPage;
+        })
+        .sort((left, right) => {
+          const leftNumber = Number(/page-(\d+)\.png$/.exec(left)?.[1]);
+          const rightNumber = Number(/page-(\d+)\.png$/.exec(right)?.[1]);
+          return leftNumber - rightNumber;
+        });
+      const expectedPageCount = endPage - startPage + 1;
+      if (pagePaths.length !== expectedPageCount) {
+        throw new Error(
+          `The PDF renderer did not produce every page in batch ${startPage}-${endPage}.`,
+        );
+      }
+
+      const pages = await Promise.all(pagePaths.map((pagePath) => readFile(pagePath)));
+      const content = [
+        {
+          type: "text" as const,
+          text: `OCR every supplied contract page in order. These are pages ${startPage}-${endPage} of ${pageCount}. Return JSON with exactly two keys: text (the complete transcription of every supplied page, preserving wording and numbers) and confidence (High, Medium, or Low). Confidence describes OCR legibility only: High means clear text, Medium means some uncertain characters, and Low means substantial uncertainty. Do not summarize or extract contract fields.`,
+        },
+        ...pages.map(imageContent),
+      ];
+      const response = await openai.chat.completions.create({
+        model: "gpt-5.6-terra",
+        max_completion_tokens: 16_384,
+        response_format: { type: "json_object" },
+        messages: [{ role: "user", content }],
+      });
+      const choice = response.choices[0];
+      const responseContent = choice?.message.content;
+      if (!responseContent) {
+        throw new Error("The OCR service returned no usable result.");
+      }
+      if (choice.finish_reason !== "stop") {
+        throw new OcrIncompleteError(startPage, pageCount);
+      }
+
+      const transcription = parseOcrResponse(responseContent);
+      transcriptions.push(`Page ${startPage}-${endPage}\n${transcription.text}`);
+      confidences.push(transcription.confidence);
+    }
+
+    const confidence = confidences.reduce<ExtractionConfidence>(
+      (lowest, current) => {
+        const rank = { High: 0, Medium: 1, Low: 2 } as const;
+        return rank[current] > rank[lowest] ? current : lowest;
       },
-      ...pages.map(imageContent),
-    ];
-    const response = await openai.chat.completions.create({
-      model: "gpt-5.6-terra",
-      max_completion_tokens: 16_384,
-      response_format: { type: "json_object" },
-      messages: [{ role: "user", content }],
-    });
-    const responseContent = response.choices[0]?.message.content;
-    if (!responseContent) {
-      throw new Error("The OCR service returned no usable result.");
+      "High",
+    );
+    const text = transcriptions.join("\n\n").replace(/\s+/g, " ").trim();
+    if (text.length < 50) {
+      throw new Error("The OCR service returned no usable contract text.");
     }
-    return parseOcrResponse(responseContent);
+    return { text, confidence, pageCount, pagesProcessed: pageCount };
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

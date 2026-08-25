@@ -17,12 +17,18 @@ const readableContractText =
 const ocrContractText =
   "This OCR transcription is long enough to continue through contract field extraction.";
 
-function mockExtractionResult(source: "text" | "ocr", ocrConfidence: "High" | "Medium" | "Low" | null) {
+function mockExtractionResult(
+  source: "text" | "ocr",
+  ocrConfidence: "High" | "Medium" | "Low" | null,
+  ocrPageCount: number | null = null,
+) {
   return {
     filename: "contract.pdf",
     extraction: {
       source,
       ocrConfidence,
+      ocrPageCount,
+      ocrPagesProcessed: ocrPageCount,
     },
   };
 }
@@ -41,9 +47,11 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
       mocks.extractScannedPdfText.mockResolvedValue({
         text: ocrContractText,
         confidence: ocrConfidence,
+        pageCount: 12,
+        pagesProcessed: 12,
       });
       mocks.extractContractFromText.mockResolvedValue(
-        mockExtractionResult("ocr", ocrConfidence),
+        mockExtractionResult("ocr", ocrConfidence, 12),
       );
 
       const response = await request(app)
@@ -61,7 +69,12 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
       expect(mocks.extractContractFromText).toHaveBeenCalledWith(
         ocrContractText,
         "contract.pdf",
-        { source: "ocr", ocrConfidence },
+        {
+          source: "ocr",
+          ocrConfidence,
+          ocrPageCount: 12,
+          ocrPagesProcessed: 12,
+        },
       );
     },
   );
@@ -83,6 +96,8 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
     expect(response.body.extraction).toMatchObject({
       source: "text",
       ocrConfidence: null,
+        ocrPageCount: null,
+        ocrPagesProcessed: null,
     });
     expect(mocks.extractScannedPdfText).not.toHaveBeenCalled();
     expect(mocks.extractContractFromText).toHaveBeenCalledWith(
@@ -110,5 +125,57 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
     });
     expect(response.body).not.toHaveProperty("extraction");
     expect(mocks.extractContractFromText).not.toHaveBeenCalled();
+  });
+
+  it("returns a page-specific 422 when OCR cannot complete a scanned page", async () => {
+    mocks.extractReadablePdfText.mockResolvedValue("");
+    mocks.extractScannedPdfText.mockRejectedValue(
+      Object.assign(
+        new Error(
+          "We could not fully transcribe scanned page 7 of 12. Split the PDF around that page and upload the parts separately. No partial review draft was created.",
+        ),
+        { code: "OCR_INCOMPLETE" },
+      ),
+    );
+
+    const response = await request(app)
+      .post("/api/contracts/extract")
+      .attach("file", pdfLike, {
+        filename: "dense-scan.pdf",
+        contentType: "application/pdf",
+      });
+
+    expect(response.status).toBe(422);
+    expect(response.body.error).toContain("page 7 of 12");
+    expect(response.body.error).toContain("Split the PDF around that page");
+    expect(mocks.extractContractFromText).not.toHaveBeenCalled();
+  });
+
+  it("returns a clear 422 when complete OCR text exceeds the safe review limit", async () => {
+    mocks.extractReadablePdfText.mockResolvedValue("");
+    mocks.extractScannedPdfText.mockResolvedValue({
+      text: ocrContractText,
+      confidence: "High",
+      pageCount: 12,
+      pagesProcessed: 12,
+    });
+    const oversizedTextError = Object.assign(
+      new Error(
+        "This contract contains too much extracted text to process in one review (250,001 characters; the limit is 250,000). Split the PDF into smaller files and upload each part. No pages were omitted.",
+      ),
+      { code: "CONTRACT_TEXT_TOO_LONG" },
+    );
+    mocks.extractContractFromText.mockRejectedValue(oversizedTextError);
+
+    const response = await request(app)
+      .post("/api/contracts/extract")
+      .attach("file", pdfLike, {
+        filename: "long-scan.pdf",
+        contentType: "application/pdf",
+      });
+
+    expect(response.status).toBe(422);
+    expect(response.body.error).toContain("Split the PDF into smaller files");
+    expect(response.body.error).toContain("OCR completed all 12 of 12 pages before stopping");
   });
 });

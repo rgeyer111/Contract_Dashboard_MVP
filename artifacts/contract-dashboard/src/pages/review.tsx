@@ -249,6 +249,8 @@ export default function Review() {
         confidence: saved.confidence,
         source: "text",
         ocrConfidence: null,
+        ocrPageCount: null,
+        ocrPagesProcessed: null,
       },
     }));
   }, [savedContractQuery.data]);

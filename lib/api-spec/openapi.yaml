@@ -51,7 +51,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "422":
-          description: Unreadable PDF
+          description: Unreadable PDF or extracted text exceeds the safe review limit
           content:
             application/json:
               schema:
@@ -268,6 +268,8 @@ components:
             - confidence
             - source
             - ocrConfidence
+            - ocrPageCount
+            - ocrPagesProcessed
           properties:
             contract:
               $ref: "#/components/schemas/ContractReviewDraft"
@@ -281,6 +283,14 @@ components:
               type: ["string", "null"]
               enum: [High, Medium, Low, null]
               description: OCR legibility confidence; null when embedded PDF text was used.
+            ocrPageCount:
+              type: ["number", "null"]
+              minimum: 1
+              description: Complete whole-number page count detected in the uploaded PDF; null when embedded PDF text was used.
+            ocrPagesProcessed:
+              type: ["number", "null"]
+              minimum: 0
+              description: Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.
     ContractSaveRequest:
       type: object
       required: [filename, contract, confidence]
