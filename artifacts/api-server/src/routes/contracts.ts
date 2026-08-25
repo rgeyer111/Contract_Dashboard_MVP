@@ -13,7 +13,7 @@ const upload = multer({
 
 const router: IRouter = Router();
 
-function isPdf(file: Express.Multer.File): boolean {
+export function isPdf(file: Express.Multer.File): boolean {
   return file.mimetype === "application/pdf" && file.buffer.subarray(0, 5).toString() === "%PDF-";
 }
 

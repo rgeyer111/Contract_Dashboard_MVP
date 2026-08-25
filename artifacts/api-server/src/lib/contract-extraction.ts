@@ -28,7 +28,7 @@ function safeConfidence(value: unknown): ExtractionConfidence {
     : "Low";
 }
 
-function normalizeExtraction(raw: unknown) {
+export function normalizeExtraction(raw: unknown) {
   const response = asRecord(raw);
   const contract = asRecord(response.contract);
   const confidence = asRecord(response.confidence);
