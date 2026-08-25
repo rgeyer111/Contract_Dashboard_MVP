@@ -7,6 +7,109 @@ import app from "../app";
 const pdfLike = (body: string | Buffer = "%PDF-1.7\nnot a readable PDF") =>
   Buffer.isBuffer(body) ? body : Buffer.from(body);
 
+const contract = {
+  vendor: "Regression Vendor",
+  contractNumber: "REG-2026-001",
+  contractName: "Regression Coverage",
+  contractType: "Software License",
+  contractValue: { status: "unknown", amount: null, currency: null },
+  startDate: "2026-01-01",
+  contractDuration: "12 months",
+  endDate: "2026-12-31",
+  noticePeriod: "60 days",
+  noticeDeadline: "",
+  negotiationBuffer: "30 days",
+  owner: "John Doe",
+  status: "Review Open",
+};
+
+const confidence = Object.fromEntries(
+  [
+    "vendor",
+    "contractNumber",
+    "contractName",
+    "contractType",
+    "contractValue",
+    "startDate",
+    "contractDuration",
+    "endDate",
+    "noticePeriod",
+    "noticeDeadline",
+    "negotiationBuffer",
+    "owner",
+    "status",
+  ].map((field) => [field, "High"]),
+);
+
+describe("saved contract persistence", () => {
+  it("lists, creates, reads, and updates a saved contract", async () => {
+    const filename = `saved-contract-regression-${Date.now()}.pdf`;
+    const createResponse = await request(app)
+      .post("/api/contracts")
+      .send({ filename, contract, confidence });
+
+    expect(createResponse.status).toBe(201);
+    expect(createResponse.body).toMatchObject({
+      id: expect.any(String),
+      filename,
+      contract,
+      confidence,
+    });
+    const id = createResponse.body.id as string;
+
+    const listResponse = await request(app).get("/api/contracts");
+    expect(listResponse.status).toBe(200);
+    expect(listResponse.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id,
+          filename,
+          contract,
+          confidence,
+        }),
+      ]),
+    );
+
+    const readResponse = await request(app).get(`/api/contracts/${id}`);
+    expect(readResponse.status).toBe(200);
+    expect(readResponse.body).toMatchObject({
+      id,
+      filename,
+      contract,
+      confidence,
+    });
+
+    const updatedContract = {
+      ...contract,
+      vendor: "Updated Regression Vendor",
+      contractName: "Updated Coverage",
+      owner: "John Doe",
+      contractValue: { status: "unknown", amount: null, currency: null },
+    };
+    const updateResponse = await request(app)
+      .put(`/api/contracts/${id}`)
+      .send({
+        filename: "updated-saved-contract.pdf",
+        contract: updatedContract,
+        confidence,
+      });
+
+    expect(updateResponse.status).toBe(200);
+    expect(updateResponse.body).toMatchObject({
+      id,
+      filename: "updated-saved-contract.pdf",
+      contract: updatedContract,
+      confidence,
+    });
+    expect(updateResponse.body.contract.contractValue).toEqual({
+      status: "unknown",
+      amount: null,
+      currency: null,
+    });
+    expect(updateResponse.body.contract.owner).toBe("John Doe");
+  });
+});
+
 describe("POST /api/contracts/extract upload guards", () => {
   it("rejects a missing upload", async () => {
     const response = await request(app).post("/api/contracts/extract");
