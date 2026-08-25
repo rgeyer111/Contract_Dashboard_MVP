@@ -20,6 +20,22 @@ export type Contract = {
   status: ContractStatus;
 };
 
+export const currentDemoUser = {
+  id: 'john-doe',
+  name: 'John Doe',
+  initials: 'JD',
+};
+
+export function createContractDraft(
+  contract: Omit<Contract, 'id' | 'owner'> & { id?: string; owner?: string },
+): Contract {
+  return {
+    ...contract,
+    id: contract.id ?? crypto.randomUUID(),
+    owner: contract.owner ?? currentDemoUser.name,
+  };
+}
+
 export const demoContracts: Contract[] = [
   {
     id: 'salesforce-crm',

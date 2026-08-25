@@ -1,1 +1,2 @@
 - [Contract value review](contract-value-review.md) — unknown contract values are allowed but must stay visibly flagged in red.
+- [Contract ownership](contract-ownership.md) — new contracts default to the uploader as owner.

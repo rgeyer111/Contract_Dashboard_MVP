@@ -151,6 +151,7 @@ export default function Dashboard() {
                     <tr>
                       <th className="px-6 py-4 font-bold">Vendor</th>
                       <th className="px-6 py-4 font-bold">Value</th>
+                      <th className="px-6 py-4 font-bold">Owner</th>
                       <th className="px-6 py-4 font-bold">Expiration</th>
                       <th className="px-6 py-4 font-bold">Status</th>
                       <th className="px-6 py-4 font-bold text-right">Actions</th>
@@ -172,6 +173,10 @@ export default function Dashboard() {
                           <td className={`px-6 py-4 font-semibold ${valueIsUnknown ? 'text-destructive' : 'text-foreground'}`}>
                             {value}
                             {valueIsUnknown && <div className="text-[10px] font-bold uppercase tracking-wide mt-1">Needs review</div>}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="font-semibold text-foreground text-xs">{contract.owner}</div>
+                            <div className="text-muted-foreground text-[10px] uppercase tracking-wide mt-1">Contract owner</div>
                           </td>
                           <td className="px-6 py-4">
                             <div className={`flex items-center gap-2 font-bold text-xs w-fit px-2.5 py-1 rounded-md ${deadlineIsUrgent ? 'text-destructive bg-destructive/5' : 'text-muted-foreground bg-muted/50'}`}>
