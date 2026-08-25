@@ -155,7 +155,11 @@ describe("POST /api/contracts/extract upload guards", () => {
         contentType: "application/pdf",
       });
     expect(response.status).toBe(422);
-    expect(response.body.error).toMatch(/could not read text/i);
+    expect(response.body).toEqual({
+      error:
+        "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
+    });
+    expect(response.body).not.toHaveProperty("extraction");
   });
 });
 
