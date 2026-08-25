@@ -17,9 +17,59 @@ import {
   Contract, 
   contractFields, 
   contractTypes,
-  demoExtractionConfidence,
   type ExtractionConfidence,
+  type ContractFieldKey,
+  type ExtractedContractOutput,
 } from "@/lib/contracts";
+import type { ContractExtractionResult } from "@workspace/api-client-react";
+
+const extractionStorageKey = "contract-dashboard.extraction";
+
+const emptyConfidence: Record<ContractFieldKey, ExtractionConfidence> = {
+  vendor: "Low",
+  contractNumber: "Low",
+  contractName: "Low",
+  contractType: "Low",
+  contractValue: "Low",
+  startDate: "Low",
+  contractDuration: "Low",
+  endDate: "Low",
+  noticePeriod: "Low",
+  noticeDeadline: "Low",
+  negotiationBuffer: "Low",
+  owner: "High",
+  status: "High",
+};
+
+function readStoredExtraction(): ContractExtractionResult | null {
+  try {
+    const saved = sessionStorage.getItem(extractionStorageKey);
+    if (!saved) return null;
+    const parsed = JSON.parse(saved) as ContractExtractionResult;
+    return parsed?.filename && parsed?.extraction?.contract && parsed?.extraction?.confidence
+      ? parsed
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function reviewDraftFromExtraction(extraction: ContractExtractionResult): Partial<Contract> {
+  const { contract } = extraction.extraction;
+  return {
+    ...contract,
+    contractType: contract.contractType as Contract["contractType"],
+    contractValue:
+      contract.contractValue.status === "stated"
+        ? {
+            status: "stated",
+            amount: contract.contractValue.amount ?? undefined,
+            currency: contract.contractValue.currency ?? undefined,
+          }
+        : { status: "unknown" },
+    status: contract.status as Contract["status"],
+  };
+}
 
 const FieldGroup = ({ title, children }: { title: string, children: React.ReactNode }) => (
   <div className="bg-card border rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md">
@@ -49,9 +99,8 @@ const ConfidenceBadge = ({ confidence }: { confidence: ExtractionConfidence }) =
   );
 };
 
-const Field = ({ fieldKey, children }: { fieldKey: string, children: React.ReactNode }) => {
+const Field = ({ fieldKey, confidence, children }: { fieldKey: string, confidence: ExtractionConfidence, children: React.ReactNode }) => {
   const req = isRequired(fieldKey);
-  const confidence = demoExtractionConfidence[fieldKey as keyof typeof demoExtractionConfidence];
   return (
     <div className="space-y-2">
       <label className="text-xs font-semibold text-foreground flex items-center gap-1">
@@ -87,7 +136,7 @@ const SelectInput = ({ value, onChange, options, required }: any) => (
   </select>
 );
 
-const ContractValueControl = ({ value, onChange }: { value: any, onChange: (v: any) => void }) => {
+const ContractValueControl = ({ value, confidence, onChange }: { value: any, confidence: ExtractionConfidence, onChange: (v: any) => void }) => {
   const isUnknown = value?.status === 'unknown';
   return (
     <div className="col-span-1 md:col-span-2 space-y-4">
@@ -95,7 +144,7 @@ const ContractValueControl = ({ value, onChange }: { value: any, onChange: (v: a
         <label className="text-xs font-semibold text-foreground flex items-center gap-1">
           Contract Value Status
           <span className="text-destructive font-bold">*</span>
-          <ConfidenceBadge confidence={demoExtractionConfidence.contractValue} />
+          <ConfidenceBadge confidence={confidence} />
         </label>
         <div className="flex flex-wrap items-center gap-2">
           <button
@@ -161,22 +210,16 @@ const ContractValueControl = ({ value, onChange }: { value: any, onChange: (v: a
 
 export default function Review() {
   const [, setLocation] = useLocation();
+  const [storedExtraction] = useState(readStoredExtraction);
+  const [confidence] = useState<Record<ContractFieldKey, ExtractionConfidence>>(
+    () => storedExtraction?.extraction.confidence ?? emptyConfidence,
+  );
 
-  const [draft, setDraft] = useState<Partial<Contract>>({
-    vendor: 'TechFlow Solutions',
-    contractNumber: '', 
-    contractName: 'Enterprise SaaS Agreement',
-    contractType: 'Software License',
-    contractValue: { status: 'unknown' },
-    startDate: 'Oct 01, 2023',
-    contractDuration: '24 months',
-    endDate: 'Oct 01, 2025',
-    noticePeriod: '60 days',
-    noticeDeadline: 'Aug 02, 2025',
-    negotiationBuffer: '30 days',
-    owner: 'John Doe',
-    status: 'Review Open',
-  });
+  const [draft, setDraft] = useState<Partial<Contract>>(() =>
+    storedExtraction
+      ? reviewDraftFromExtraction(storedExtraction)
+      : { contractValue: { status: "unknown" }, owner: "John Doe", status: "Review Open" },
+  );
 
   const updateField = (key: keyof Contract, value: any) => {
     setDraft(prev => ({ ...prev, [key]: value }));
@@ -197,6 +240,7 @@ export default function Review() {
 
   const handleConfirm = () => {
     if (!isComplete) return;
+    sessionStorage.removeItem(extractionStorageKey);
     setLocation('/dashboard');
   };
 
@@ -278,7 +322,9 @@ export default function Review() {
                   Review Extracted Contract
                 </h1>
                 <p className="text-muted-foreground mt-2 font-medium text-sm max-w-xl">
-                  Please review and confirm the extracted data below. Complete all required fields to advance this record.
+                   {storedExtraction
+                     ? `Review the details extracted from ${storedExtraction.filename}. Complete all required fields to advance this record.`
+                     : "No uploaded contract is currently open. Return to the dashboard to upload a PDF."}
                 </p>
               </div>
               <div className="flex flex-col items-end gap-2 shrink-0">
@@ -300,17 +346,26 @@ export default function Review() {
             </div>
 
             <div className="space-y-8">
+               {!storedExtraction && (
+                 <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-5 py-4 flex items-start gap-3">
+                   <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                   <div>
+                     <p className="text-sm font-extrabold text-destructive">No extraction draft available</p>
+                     <p className="text-xs font-semibold text-destructive/80 mt-1">Upload a text-based PDF from the dashboard to begin a live review.</p>
+                   </div>
+                 </div>
+               )}
               <FieldGroup title="General Information">
-                <Field fieldKey="vendor">
+                 <Field fieldKey="vendor" confidence={confidence.vendor}>
                   <TextInput value={draft.vendor} onChange={(v: string) => updateField('vendor', v)} required={isRequired('vendor')} />
                 </Field>
-                <Field fieldKey="contractNumber">
+                 <Field fieldKey="contractNumber" confidence={confidence.contractNumber}>
                   <TextInput value={draft.contractNumber} onChange={(v: string) => updateField('contractNumber', v)} required={isRequired('contractNumber')} placeholder="e.g. SF-2024-1234" />
                 </Field>
-                <Field fieldKey="contractName">
+                 <Field fieldKey="contractName" confidence={confidence.contractName}>
                   <TextInput value={draft.contractName} onChange={(v: string) => updateField('contractName', v)} required={isRequired('contractName')} />
                 </Field>
-                <Field fieldKey="contractType">
+                 <Field fieldKey="contractType" confidence={confidence.contractType}>
                   <SelectInput 
                     value={draft.contractType} 
                     onChange={(v: string) => updateField('contractType', v)} 
@@ -321,22 +376,22 @@ export default function Review() {
               </FieldGroup>
 
               <FieldGroup title="Timeline & Deadlines">
-                <Field fieldKey="startDate">
+                 <Field fieldKey="startDate" confidence={confidence.startDate}>
                   <TextInput value={draft.startDate} onChange={(v: string) => updateField('startDate', v)} required={isRequired('startDate')} placeholder="e.g. Oct 01, 2023" />
                 </Field>
-                <Field fieldKey="endDate">
+                 <Field fieldKey="endDate" confidence={confidence.endDate}>
                   <TextInput value={draft.endDate} onChange={(v: string) => updateField('endDate', v)} required={isRequired('endDate')} placeholder="e.g. Oct 01, 2025" />
                 </Field>
-                <Field fieldKey="contractDuration">
+                 <Field fieldKey="contractDuration" confidence={confidence.contractDuration}>
                   <TextInput value={draft.contractDuration} onChange={(v: string) => updateField('contractDuration', v)} required={isRequired('contractDuration')} placeholder="e.g. 24 months" />
                 </Field>
-                <Field fieldKey="noticePeriod">
+                 <Field fieldKey="noticePeriod" confidence={confidence.noticePeriod}>
                   <TextInput value={draft.noticePeriod} onChange={(v: string) => updateField('noticePeriod', v)} required={isRequired('noticePeriod')} placeholder="e.g. 60 days" />
                 </Field>
-                <Field fieldKey="negotiationBuffer">
+                 <Field fieldKey="negotiationBuffer" confidence={confidence.negotiationBuffer}>
                   <TextInput value={draft.negotiationBuffer} onChange={(v: string) => updateField('negotiationBuffer', v)} required={isRequired('negotiationBuffer')} placeholder="e.g. 30 days" />
                 </Field>
-                <Field fieldKey="noticeDeadline">
+                 <Field fieldKey="noticeDeadline" confidence={confidence.noticeDeadline}>
                   <TextInput value={draft.noticeDeadline} onChange={(v: string) => updateField('noticeDeadline', v)} required={isRequired('noticeDeadline')} placeholder="e.g. Aug 02, 2025" />
                 </Field>
               </FieldGroup>
@@ -344,15 +399,16 @@ export default function Review() {
               <FieldGroup title="Financials">
                 <ContractValueControl 
                   value={draft.contractValue} 
+                   confidence={confidence.contractValue}
                   onChange={(v: any) => updateField('contractValue', v)} 
                 />
               </FieldGroup>
 
               <FieldGroup title="Administration">
-                <Field fieldKey="owner">
+                 <Field fieldKey="owner" confidence={confidence.owner}>
                   <TextInput value={draft.owner} onChange={(v: string) => updateField('owner', v)} required={isRequired('owner')} />
                 </Field>
-                <Field fieldKey="status">
+                 <Field fieldKey="status" confidence={confidence.status}>
                   <SelectInput 
                     value={draft.status} 
                     onChange={(v: string) => updateField('status', v)} 

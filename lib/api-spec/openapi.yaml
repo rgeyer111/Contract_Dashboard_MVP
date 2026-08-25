@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: contracts
+    description: Contract extraction operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /contracts/extract:
+    post:
+      operationId: extractContract
+      tags: [contracts]
+      summary: Extract a contract review draft from a PDF
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ContractExtractionUpload"
+      responses:
+        "200":
+          description: Extracted contract review draft
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractExtractionResult"
+        "400":
+          description: Invalid upload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Unreadable PDF
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: Extraction service failure
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +71,115 @@ components:
           type: string
       required:
         - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    ContractExtractionUpload:
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          type: string
+          format: binary
+          description: A PDF contract up to 10 MB.
+    ContractValue:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [stated, unknown]
+        amount:
+          type: ["number", "null"]
+        currency:
+          type: ["string", "null"]
+    ContractConfidence:
+      type: object
+      required:
+        - vendor
+        - contractNumber
+        - contractName
+        - contractType
+        - contractValue
+        - startDate
+        - contractDuration
+        - endDate
+        - noticePeriod
+        - noticeDeadline
+        - negotiationBuffer
+        - owner
+        - status
+      properties:
+        vendor: { type: string, enum: [High, Medium, Low] }
+        contractNumber: { type: string, enum: [High, Medium, Low] }
+        contractName: { type: string, enum: [High, Medium, Low] }
+        contractType: { type: string, enum: [High, Medium, Low] }
+        contractValue: { type: string, enum: [High, Medium, Low] }
+        startDate: { type: string, enum: [High, Medium, Low] }
+        contractDuration: { type: string, enum: [High, Medium, Low] }
+        endDate: { type: string, enum: [High, Medium, Low] }
+        noticePeriod: { type: string, enum: [High, Medium, Low] }
+        noticeDeadline: { type: string, enum: [High, Medium, Low] }
+        negotiationBuffer: { type: string, enum: [High, Medium, Low] }
+        owner: { type: string, enum: [High, Medium, Low] }
+        status: { type: string, enum: [High, Medium, Low] }
+    ContractReviewDraft:
+      type: object
+      required:
+        - vendor
+        - contractNumber
+        - contractName
+        - contractType
+        - contractValue
+        - startDate
+        - contractDuration
+        - endDate
+        - noticePeriod
+        - noticeDeadline
+        - negotiationBuffer
+        - owner
+        - status
+      properties:
+        vendor: { type: string }
+        contractNumber: { type: string }
+        contractName: { type: string }
+        contractType:
+          type: string
+          enum: ["", Maintenance, Software License, Real Estate, Infrastructure]
+        contractValue:
+          $ref: "#/components/schemas/ContractValue"
+        startDate: { type: string }
+        contractDuration: { type: string }
+        endDate: { type: string }
+        noticePeriod: { type: string }
+        noticeDeadline: { type: string }
+        negotiationBuffer: { type: string }
+        owner: { type: string }
+        status:
+          type: string
+          enum: [At Risk, Review Open, In Negotiation]
+    ContractExtractionResult:
+      type: object
+      required:
+        - filename
+        - extraction
+      properties:
+        filename:
+          type: string
+        extraction:
+          type: object
+          required:
+            - contract
+            - confidence
+          properties:
+            contract:
+              $ref: "#/components/schemas/ContractReviewDraft"
+            confidence:
+              $ref: "#/components/schemas/ContractConfidence"
 

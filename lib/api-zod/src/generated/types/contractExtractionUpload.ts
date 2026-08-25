@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface ContractExtractionUpload {
+  /** A PDF contract up to 10 MB. */
+  file: Blob;
 }

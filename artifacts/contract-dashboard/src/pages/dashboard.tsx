@@ -1,3 +1,4 @@
+import { useState, type DragEvent, type ChangeEvent } from "react";
 import { Link, useLocation } from "wouter";
 import { 
   FileText, 
@@ -9,13 +10,67 @@ import {
   AlertCircle,
   Clock,
   CheckCircle2,
-  MoreHorizontal
+  MoreHorizontal,
+  Upload,
+  FileUp,
+  LoaderCircle,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { demoContracts } from "@/lib/contracts";
+import { useExtractContract } from "@workspace/api-client-react";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const extraction = useExtractContract({
+    mutation: {
+      onSuccess: (result) => {
+        sessionStorage.setItem("contract-dashboard.extraction", JSON.stringify(result));
+        setLocation("/review");
+      },
+      onError: (error) => {
+        setUploadError(
+          error instanceof Error
+            ? error.message
+            : "We could not extract this contract. Please try again.",
+        );
+      },
+    },
+  });
+
+  const chooseFile = (file: File | undefined) => {
+    if (!file) return;
+
+    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    if (!isPdf) {
+      setSelectedFile(null);
+      setUploadError("Choose a PDF contract to continue.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setSelectedFile(null);
+      setUploadError("PDF files must be 10 MB or smaller.");
+      return;
+    }
+
+    setSelectedFile(file);
+    setUploadError(null);
+  };
+
+  const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    chooseFile(event.dataTransfer.files[0]);
+  };
+
+  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+    chooseFile(event.target.files?.[0]);
+    event.currentTarget.value = "";
+  };
 
   return (
     <div className="min-h-[100dvh] w-full bg-muted/20 flex flex-col md:flex-row">
@@ -91,11 +146,101 @@ export default function Dashboard() {
               <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Welcome back, John</h1>
               <p className="text-muted-foreground mt-1 font-medium text-sm">Here's the status of your contract renewals this week.</p>
             </div>
-            <Button onClick={() => setLocation('/review')} className="shrink-0 gap-2 shadow-sm font-semibold">
+            <Button onClick={() => setUploadOpen(true)} className="shrink-0 gap-2 shadow-sm font-semibold">
               <Plus className="h-4 w-4" />
               New Contract
             </Button>
           </div>
+
+          {uploadOpen && (
+            <section className="bg-card border rounded-xl shadow-sm p-5 sm:p-6 animate-in fade-in slide-in-from-top-2 duration-300" aria-labelledby="upload-contract-heading">
+              <div className="flex items-start justify-between gap-4 mb-5">
+                <div>
+                  <div className="flex items-center gap-2 text-primary font-bold text-sm">
+                    <FileUp className="h-4 w-4" />
+                    New contract
+                  </div>
+                  <h2 id="upload-contract-heading" className="text-xl font-extrabold tracking-tight mt-1">Upload a PDF to extract its details</h2>
+                  <p className="text-sm text-muted-foreground font-medium mt-1">We’ll prepare an editable draft with confidence ratings for every field.</p>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    if (!extraction.isPending) {
+                      setUploadOpen(false);
+                      setSelectedFile(null);
+                      setUploadError(null);
+                    }
+                  }}
+                  disabled={extraction.isPending}
+                  aria-label="Close contract upload"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <input id="contract-pdf-file" type="file" accept="application/pdf,.pdf" className="sr-only" onChange={handleInput} />
+              <label
+                htmlFor="contract-pdf-file"
+                onDragEnter={(event) => {
+                  event.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragOver={(event) => event.preventDefault()}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleDrop}
+                className={`group flex flex-col items-center justify-center min-h-40 rounded-lg border-2 border-dashed px-6 py-8 text-center transition-all cursor-pointer ${
+                  isDragging
+                    ? "border-primary bg-primary/5 ring-4 ring-primary/10"
+                    : selectedFile
+                      ? "border-emerald-500/40 bg-emerald-500/5"
+                      : "border-border hover:border-primary/50 hover:bg-muted/30"
+                } ${extraction.isPending ? "pointer-events-none opacity-70" : ""}`}
+              >
+                {extraction.isPending ? (
+                  <>
+                    <LoaderCircle className="h-8 w-8 text-primary animate-spin mb-3" />
+                    <span className="font-extrabold text-sm">Reading and extracting your contract…</span>
+                    <span className="text-xs text-muted-foreground font-medium mt-1">This usually takes a few seconds.</span>
+                  </>
+                ) : selectedFile ? (
+                  <>
+                    <FileText className="h-8 w-8 text-emerald-600 mb-3" />
+                    <span className="font-extrabold text-sm text-foreground">{selectedFile.name}</span>
+                    <span className="text-xs text-muted-foreground font-medium mt-1">{(selectedFile.size / 1024 / 1024).toFixed(1)} MB · Ready to extract</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 text-primary mb-3 transition-transform group-hover:-translate-y-0.5" />
+                    <span className="font-extrabold text-sm">Drop a contract PDF here, or choose a file</span>
+                    <span className="text-xs text-muted-foreground font-medium mt-1">Text-based PDFs up to 10 MB</span>
+                  </>
+                )}
+              </label>
+
+              {uploadError && (
+                <div className="mt-4 flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm font-semibold text-destructive">
+                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>{uploadError}</span>
+                </div>
+              )}
+
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs font-medium text-muted-foreground">Your PDF is used only to create this review draft and isn’t saved.</p>
+                <Button
+                  type="button"
+                  onClick={() => selectedFile && extraction.mutate({ data: { file: selectedFile } })}
+                  disabled={!selectedFile || extraction.isPending}
+                  className="gap-2 font-bold"
+                >
+                  {extraction.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <FileUp className="h-4 w-4" />}
+                  Extract contract
+                </Button>
+              </div>
+            </section>
+          )}
           
           {/* Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
