@@ -5,13 +5,20 @@ export type ContractValue = {
 };
 
 export type ContractStatus = 'At Risk' | 'Review Open' | 'In Negotiation';
+export const contractTypes = [
+  'Maintenance',
+  'Software License',
+  'Real Estate',
+  'Infrastructure',
+] as const;
+export type ContractType = (typeof contractTypes)[number];
 
 export type Contract = {
   id: string;
   vendor: string;
   contractNumber: string;
   contractName: string;
-  contractType: string;
+  contractType: ContractType;
   contractValue: ContractValue;
   startDate: string;
   contractDuration: string;
