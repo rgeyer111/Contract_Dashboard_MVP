@@ -1,5 +1,5 @@
 kind = "video"
-previewPath = "/"
+previewPath = "/contract-walkthrough/"
 title = "Contract Dashboard — Product Walkthrough"
 description = "An animated product walkthrough showing the Contract Dashboard workflow from upload to confirmed extraction."
 version = "1.0.0"
@@ -9,7 +9,7 @@ videoAspectRatio = "16:9"
 
 [[services]]
 name = "web"
-paths = [ "/" ]
+paths = [ "/contract-walkthrough/" ]
 localPort = 21640
 
 [services.development]
@@ -26,4 +26,4 @@ to = "/index.html"
 
 [services.env]
 PORT = "21640"
-BASE_PATH = "/"
+BASE_PATH = "/contract-walkthrough/"
