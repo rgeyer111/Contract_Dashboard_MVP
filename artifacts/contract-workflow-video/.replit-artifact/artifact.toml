@@ -1,0 +1,28 @@
+kind = "video"
+previewPath = "/contract-workflow-video/"
+title = "Contract Dashboard — Product Walkthrough"
+description = "An animated product walkthrough showing the Contract Dashboard workflow from upload to confirmed extraction."
+version = "1.0.0"
+id = "artifacts/contract-workflow-video"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/contract-workflow-video/" ]
+localPort = 20587
+
+[services.development]
+run = "pnpm --filter @workspace/contract-workflow-video run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/contract-workflow-video", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/contract-workflow-video/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20587"
+BASE_PATH = "/contract-workflow-video/"
