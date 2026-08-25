@@ -12,6 +12,7 @@ import {
   MoreHorizontal
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { demoContracts } from "@/lib/contracts";
 
 export default function Dashboard() {
   return (
@@ -156,74 +157,41 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    <tr className="hover:bg-muted/30 transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-foreground text-sm">Salesforce</div>
-                        <div className="text-muted-foreground text-xs font-medium mt-0.5">CRM Platform</div>
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-foreground">$240,000/yr</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-destructive font-bold text-xs bg-destructive/5 w-fit px-2.5 py-1 rounded-md">
-                          <AlertCircle className="h-3.5 w-3.5" />
-                          Oct 15, 2024
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-bold text-destructive border border-destructive/20">
-                          At Risk
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-muted/30 transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-foreground text-sm">AWS</div>
-                        <div className="text-muted-foreground text-xs font-medium mt-0.5">Cloud Infrastructure</div>
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-foreground">$850,000/yr</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-amber-600 font-bold text-xs bg-amber-500/5 w-fit px-2.5 py-1 rounded-md">
-                          <Clock className="h-3.5 w-3.5" />
-                          Nov 01, 2024
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-600 border border-amber-500/20">
-                          Review Open
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-muted/30 transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-foreground text-sm">Datadog</div>
-                        <div className="text-muted-foreground text-xs font-medium mt-0.5">Monitoring</div>
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-foreground">$120,000/yr</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-muted-foreground font-bold text-xs bg-muted/50 w-fit px-2.5 py-1 rounded-md">
-                          Dec 12, 2024
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary border border-primary/20">
-                          In Negotiation
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
+                    {demoContracts.map((contract) => {
+                      const valueIsUnknown = contract.contractValue.status === 'unknown';
+                      const value = valueIsUnknown
+                        ? 'Unknown / not stated'
+                        : `${contract.contractValue.currency === 'USD' ? '$' : ''}${contract.contractValue.amount?.toLocaleString()}/yr`;
+                      const deadlineIsUrgent = contract.status === 'At Risk';
+                      return (
+                        <tr key={contract.id} className="hover:bg-muted/30 transition-colors group">
+                          <td className="px-6 py-4">
+                            <div className="font-bold text-foreground text-sm">{contract.vendor}</div>
+                            <div className="text-muted-foreground text-xs font-medium mt-0.5">{contract.contractName}</div>
+                          </td>
+                          <td className={`px-6 py-4 font-semibold ${valueIsUnknown ? 'text-destructive' : 'text-foreground'}`}>
+                            {value}
+                            {valueIsUnknown && <div className="text-[10px] font-bold uppercase tracking-wide mt-1">Needs review</div>}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className={`flex items-center gap-2 font-bold text-xs w-fit px-2.5 py-1 rounded-md ${deadlineIsUrgent ? 'text-destructive bg-destructive/5' : 'text-muted-foreground bg-muted/50'}`}>
+                              {deadlineIsUrgent && <AlertCircle className="h-3.5 w-3.5" />}
+                              {contract.endDate}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold border ${contract.status === 'At Risk' ? 'bg-destructive/10 text-destructive border-destructive/20' : contract.status === 'Review Open' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                              {contract.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
