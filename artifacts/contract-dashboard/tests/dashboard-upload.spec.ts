@@ -481,7 +481,7 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   const amendmentBase = makeContract({
     vendor: "Northstar Sourcing GmbH",
     contractNumber: "PARENT-001",
-    contractTitle: "Sourcing Agreement",
+    contractTitle: "Sourcing Agreement — C&A + 100%",
     contractType: "software_license",
     contractValue: { amount: 240000, currency: "USD", basis: "annual" },
   });
@@ -523,6 +523,7 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
       contract: amendmentContract,
     },
   ];
+  const specialSearch = "C&A + 100%";
   let listRequests = 0;
 
   await page.route("**/api/contracts", async (route) => {
@@ -606,8 +607,8 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByTestId("active-contract-count")).toHaveText("2");
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
 
-  await page.getByLabel("Search contracts").fill("Northstar");
-  await expect(page).toHaveURL(/\/dashboard\?search=Northstar$/);
+  await page.getByLabel("Search contracts").fill(specialSearch);
+  expect(new URL(page.url()).searchParams.get("search")).toBe(specialSearch);
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toBeVisible();
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
@@ -617,15 +618,17 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
   await expect(page.getByTestId("active-contract-count")).toHaveText("2");
 
-  await page.goto("/dashboard?search=Northstar");
-  await expect(page.getByLabel("Search contracts")).toHaveValue("Northstar");
+  await page.goto("/dashboard?search=C%26A%20%2B%20100%25");
+  await expect(page.getByLabel("Search contracts")).toHaveValue(specialSearch);
+  expect(new URL(page.url()).searchParams.get("search")).toBe(specialSearch);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
   await page.getByRole("button", { name: "Clear search" }).click();
 
-  await page.goto("/dashboard?documentType=amendment&search=Northstar");
+  await page.goto("/dashboard?documentType=amendment&search=C%26A%20%2B%20100%25");
   await expect(documentTypeFilter).toHaveValue("amendment");
-  await expect(page.getByLabel("Search contracts")).toHaveValue("Northstar");
+  await expect(page.getByLabel("Search contracts")).toHaveValue(specialSearch);
+  expect(new URL(page.url()).searchParams.get("search")).toBe(specialSearch);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
   await page.getByRole("button", { name: "Clear search" }).click();

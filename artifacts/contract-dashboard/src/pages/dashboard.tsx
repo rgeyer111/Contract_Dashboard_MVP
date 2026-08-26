@@ -54,6 +54,7 @@ function formatPeriod(value: unknown) {
 }
 
 const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
+const SEARCH_QUERY_PARAM = "search";
 
 function getDocumentTypeFromUrl() {
   const value = new URLSearchParams(window.location.search).get(DOCUMENT_TYPE_QUERY_PARAM);
@@ -62,7 +63,13 @@ function getDocumentTypeFromUrl() {
 
 function getSearchTermFromLocation(location: string) {
   const query = location.includes("?") ? location.slice(location.indexOf("?")) : "";
-  return new URLSearchParams(query).get("search") ?? "";
+  return new URLSearchParams(query).get(SEARCH_QUERY_PARAM) ?? "";
+}
+
+function replaceRegistryUrl(params: URLSearchParams) {
+  const url = new URL(window.location.href);
+  url.search = params.toString();
+  window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 export default function Dashboard() {
@@ -131,25 +138,19 @@ export default function Dashboard() {
     const nextQuery = params.toString();
     setDocumentTypeFilter(value);
     setShareStatus("idle");
-    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${window.location.hash}`;
-    window.history.replaceState(window.history.state, "", nextUrl);
+    replaceRegistryUrl(new URLSearchParams(nextQuery));
   };
 
   const updateSearchTerm = (value: string) => {
     const params = new URLSearchParams(window.location.search);
     if (value.trim()) {
-      params.set("search", value);
+      params.set(SEARCH_QUERY_PARAM, value);
     } else {
-      params.delete("search");
+      params.delete(SEARCH_QUERY_PARAM);
     }
     setSearchTerm(value);
     setShareStatus("idle");
-    const nextQuery = params.toString();
-    window.history.replaceState(
-      window.history.state,
-      "",
-      `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${window.location.hash}`,
-    );
+    replaceRegistryUrl(params);
   };
 
   const copyFilteredViewLink = async () => {
