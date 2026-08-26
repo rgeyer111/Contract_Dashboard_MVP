@@ -10,6 +10,7 @@ import {
   CONTRACT_EXTRACTION_PROMPT_VERSION,
   CONTRACT_EXTRACTION_SYSTEM_PROMPT,
 } from "./contract-extraction-prompt";
+import { computeContractDates } from "./contract-computation";
 
 const extractionConfidence = ["High", "Medium", "Low"] as const;
 const provenanceStatuses = ["found", "not_found", "ambiguous", "conflicting"] as const;
@@ -196,8 +197,7 @@ function contractValue(value: unknown) {
 
 export function normalizeExtraction(raw: unknown) {
   const fields = asRecord(asRecord(raw).fields);
-  return {
-    contract: {
+  const contract = {
       fields: {
         documentType: normalizeField(
           fields.documentType,
@@ -255,8 +255,14 @@ export function normalizeExtraction(raw: unknown) {
       assignment: {
         owner: "John Doe",
         negotiationBufferDays: 30,
+        negotiationBufferSource: "global_default" as const,
         status: "Review Open" as const,
       },
+    };
+  return {
+    contract: {
+      ...contract,
+      computed: computeContractDates(contract),
     },
   };
 }

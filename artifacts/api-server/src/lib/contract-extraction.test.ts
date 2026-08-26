@@ -106,6 +106,7 @@ describe("normalizeExtraction", () => {
     expect(result.contract.assignment).toEqual({
       owner: "John Doe",
       negotiationBufferDays: 30,
+      negotiationBufferSource: "global_default",
       status: "Review Open",
     });
     expect(Object.keys(result.contract.fields)).toHaveLength(18);

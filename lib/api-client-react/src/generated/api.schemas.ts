@@ -314,6 +314,18 @@ export interface ContractProvenance {
   billingFrequency: ProvenanceBillingFrequencyField;
 }
 
+/**
+ * Why this human-assigned buffer applies.
+ */
+export type ContractAssignmentNegotiationBufferSource = typeof ContractAssignmentNegotiationBufferSource[keyof typeof ContractAssignmentNegotiationBufferSource];
+
+
+export const ContractAssignmentNegotiationBufferSource = {
+  contract_override: 'contract_override',
+  contract_type_default: 'contract_type_default',
+  global_default: 'global_default',
+} as const;
+
 export type ContractAssignmentStatus = typeof ContractAssignmentStatus[keyof typeof ContractAssignmentStatus];
 
 
@@ -331,12 +343,50 @@ export interface ContractAssignment {
      * @maximum 365
      */
   negotiationBufferDays: number;
+  /** Why this human-assigned buffer applies. */
+  negotiationBufferSource: ContractAssignmentNegotiationBufferSource;
   status: ContractAssignmentStatus;
+}
+
+export type ContractComputedStatus = typeof ContractComputedStatus[keyof typeof ContractComputedStatus];
+
+
+export const ContractComputedStatus = {
+  green: 'green',
+  amber: 'amber',
+  red: 'red',
+  expired: 'expired',
+  blocked: 'blocked',
+} as const;
+
+export interface ContractComputedDates {
+  /**
+     * @nullable
+     * @pattern ^\d{4}-\d{2}-\d{2}$
+     */
+  exitDate: string | null;
+  /**
+     * @nullable
+     * @pattern ^\d{4}-\d{2}-\d{2}$
+     */
+  noticeDeadline: string | null;
+  /**
+     * @nullable
+     * @pattern ^\d{4}-\d{2}-\d{2}$
+     */
+  actionDate: string | null;
+  status: ContractComputedStatus;
+  /**
+     * @maxLength 300
+     * @nullable
+     */
+  reason: string | null;
 }
 
 export interface ContractReviewRecord {
   fields: ContractProvenance;
   assignment: ContractAssignment;
+  computed: ContractComputedDates;
 }
 
 /**

@@ -254,8 +254,8 @@ export default function Dashboard() {
                 <div className="h-2 w-2 rounded-full bg-destructive animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
                 Critical Renewals
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.filter((c) => c.contract.assignment.status === 'At Risk').length}</div>
-              <p className="text-sm font-medium text-muted-foreground relative z-10">Require attention within 30 days</p>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.filter((c) => c.contract.computed.status === 'red').length}</div>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">Past the legal notice deadline</p>
             </div>
             
             {/* Card 2 */}
@@ -300,7 +300,7 @@ export default function Dashboard() {
                       <th className="px-6 py-4 font-bold">Vendor</th>
                       <th className="px-6 py-4 font-bold">Value</th>
                       <th className="px-6 py-4 font-bold">Owner</th>
-                      <th className="px-6 py-4 font-bold">Expiration</th>
+                       <th className="px-6 py-4 font-bold">Deadlines</th>
                       <th className="px-6 py-4 font-bold">Status</th>
                       <th className="px-6 py-4 font-bold text-right">Actions</th>
                     </tr>
@@ -316,9 +316,9 @@ export default function Dashboard() {
                         ? 'Unknown / not stated'
                         : `${val.currency === 'USD' ? '$' : ''}${val.amount?.toLocaleString()} ${val.basis.replace(/_/g, ' ')}`;
                       const owner = contract.assignment.owner || 'Unassigned';
-                      const endDate = contract.fields.initialTermEndDate.value || 'Unknown End Date';
-                      const status = contract.assignment.status;
-                      const deadlineIsUrgent = status === 'At Risk';
+                      const endDate = contract.computed.noticeDeadline || 'Not computable';
+                      const status = contract.computed.status;
+                      const deadlineIsUrgent = status === 'red';
                       
                       return (
                         <tr key={saved.id} className="hover:bg-muted/30 transition-colors group cursor-pointer" onClick={() => setLocation(`/review?id=${saved.id}`)}>
@@ -335,15 +335,17 @@ export default function Dashboard() {
                             <div className="text-muted-foreground text-[10px] uppercase tracking-wide mt-1">Contract owner</div>
                           </td>
                           <td className="px-6 py-4">
-                            <div className={`flex items-center gap-2 font-bold text-xs w-fit px-2.5 py-1 rounded-md ${deadlineIsUrgent ? 'text-destructive bg-destructive/5' : 'text-muted-foreground bg-muted/50'}`}>
+                            <div className={`flex flex-col items-start gap-0.5 font-bold text-xs w-fit px-2.5 py-1 rounded-md whitespace-nowrap ${deadlineIsUrgent ? 'text-destructive bg-destructive/5' : 'text-muted-foreground bg-muted/50'}`}>
                               {deadlineIsUrgent && <AlertCircle className="h-3.5 w-3.5" />}
-                              {endDate}
+                              <span>Notice {endDate}</span>
+                              {contract.computed.actionDate && <span className="font-medium">Act {contract.computed.actionDate}</span>}
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold border ${status === 'At Risk' ? 'bg-destructive/10 text-destructive border-destructive/20' : status === 'Review Open' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold border ${status === 'red' ? 'bg-destructive/10 text-destructive border-destructive/20' : status === 'amber' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : status === 'green' ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20' : 'bg-muted text-muted-foreground border-border'}`}>
                               {status}
                             </span>
+                            {contract.computed.reason && <div className="mt-1 max-w-56 text-[10px] font-semibold text-destructive normal-case">{contract.computed.reason}</div>}
                           </td>
                           <td className="px-6 py-4 text-right">
                             <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={(event) => { event.stopPropagation(); setLocation(`/review?id=${saved.id}`); }}>

@@ -188,6 +188,11 @@ export const extractContractResponseExtractionContractAssignmentNegotiationBuffe
 export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMax = 365;
 export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf = 1;
 
+export const extractContractResponseExtractionContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractComputedReasonMax = 300;
+
 
 export const extractContractResponseExtractionOcrPagesProcessedMin = 0;
 
@@ -406,7 +411,15 @@ export const ExtractContractResponse = zod.object({
   "assignment": zod.object({
   "owner": zod.string().min(1),
   "negotiationBufferDays": zod.number().min(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMin).max(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMax).multipleOf(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(extractContractResponseExtractionContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(extractContractResponseExtractionContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(extractContractResponseExtractionContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(extractContractResponseExtractionContractComputedReasonMax).nullable()
 })
 }),
   "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
@@ -583,6 +596,11 @@ export const listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax = 
 export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const listContractsResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractComputedReasonMax = 300;
 
 
 
@@ -798,7 +816,15 @@ export const ListContractsResponseItem = zod.object({
   "assignment": zod.object({
   "owner": zod.string().min(1),
   "negotiationBufferDays": zod.number().min(listContractsResponseOneContractAssignmentNegotiationBufferDaysMin).max(listContractsResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(listContractsResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(listContractsResponseOneContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(listContractsResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(listContractsResponseOneContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(listContractsResponseOneContractComputedReasonMax).nullable()
 })
 })
 }).and(zod.object({
@@ -975,6 +1001,11 @@ export const createContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
 export const createContractBodyContractAssignmentNegotiationBufferDaysMin = 0;
 export const createContractBodyContractAssignmentNegotiationBufferDaysMax = 365;
 export const createContractBodyContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const createContractBodyContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractComputedReasonMax = 300;
 
 
 
@@ -1190,7 +1221,15 @@ export const CreateContractBody = zod.object({
   "assignment": zod.object({
   "owner": zod.string().min(1),
   "negotiationBufferDays": zod.number().min(createContractBodyContractAssignmentNegotiationBufferDaysMin).max(createContractBodyContractAssignmentNegotiationBufferDaysMax).multipleOf(createContractBodyContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(createContractBodyContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(createContractBodyContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(createContractBodyContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(createContractBodyContractComputedReasonMax).nullable()
 })
 })
 })
@@ -1358,6 +1397,11 @@ export const createContractResponseOneContractFieldsBillingFrequencyOneNoteMax =
 export const createContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const createContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const createContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const createContractResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractComputedReasonMax = 300;
 
 
 
@@ -1573,7 +1617,15 @@ export const CreateContractResponse = zod.object({
   "assignment": zod.object({
   "owner": zod.string().min(1),
   "negotiationBufferDays": zod.number().min(createContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(createContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(createContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(createContractResponseOneContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(createContractResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(createContractResponseOneContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(createContractResponseOneContractComputedReasonMax).nullable()
 })
 })
 }).and(zod.object({
@@ -1753,6 +1805,11 @@ export const getContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 50
 export const getContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const getContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const getContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const getContractResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractComputedReasonMax = 300;
 
 
 
@@ -1968,7 +2025,15 @@ export const GetContractResponse = zod.object({
   "assignment": zod.object({
   "owner": zod.string().min(1),
   "negotiationBufferDays": zod.number().min(getContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(getContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(getContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(getContractResponseOneContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(getContractResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(getContractResponseOneContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(getContractResponseOneContractComputedReasonMax).nullable()
 })
 })
 }).and(zod.object({
@@ -2148,6 +2213,11 @@ export const updateContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
 export const updateContractBodyContractAssignmentNegotiationBufferDaysMin = 0;
 export const updateContractBodyContractAssignmentNegotiationBufferDaysMax = 365;
 export const updateContractBodyContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const updateContractBodyContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractComputedReasonMax = 300;
 
 
 
@@ -2363,7 +2433,15 @@ export const UpdateContractBody = zod.object({
   "assignment": zod.object({
   "owner": zod.string().min(1),
   "negotiationBufferDays": zod.number().min(updateContractBodyContractAssignmentNegotiationBufferDaysMin).max(updateContractBodyContractAssignmentNegotiationBufferDaysMax).multipleOf(updateContractBodyContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(updateContractBodyContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(updateContractBodyContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(updateContractBodyContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(updateContractBodyContractComputedReasonMax).nullable()
 })
 })
 })
@@ -2531,6 +2609,11 @@ export const updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax =
 export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const updateContractResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractComputedReasonMax = 300;
 
 
 
@@ -2746,7 +2829,15 @@ export const UpdateContractResponse = zod.object({
   "assignment": zod.object({
   "owner": zod.string().min(1),
   "negotiationBufferDays": zod.number().min(updateContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(updateContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(updateContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(updateContractResponseOneContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(updateContractResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(updateContractResponseOneContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(updateContractResponseOneContractComputedReasonMax).nullable()
 })
 })
 }).and(zod.object({

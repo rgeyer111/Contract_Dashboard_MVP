@@ -12,6 +12,7 @@ import {
   extractReadablePdfText,
   extractScannedPdfText,
 } from "../lib/contract-extraction";
+import { computeContractDates } from "../lib/contract-computation";
 
 const maximumUploadBytes = 10 * 1024 * 1024;
 const upload = multer({
@@ -103,10 +104,42 @@ function sanitizeChangedFields(
   return { ...incoming, fields };
 }
 
+function withComputedDates(value: Record<string, unknown>) {
+  const assignment = isRecord(value.assignment) ? value.assignment : {};
+  const contract = {
+    ...value,
+    assignment: {
+      ...assignment,
+      negotiationBufferSource:
+        assignment.negotiationBufferSource === "contract_override" ||
+        assignment.negotiationBufferSource === "contract_type_default"
+          ? assignment.negotiationBufferSource
+          : "global_default",
+    },
+  };
+  return {
+    ...contract,
+    computed: computeContractDates(
+      contract as unknown as {
+        fields: Record<string, unknown>;
+        assignment: { negotiationBufferDays: number };
+      },
+    ),
+  };
+}
+
 function upgradeContract(value: unknown) {
+  if (isRecord(value) && isRecord(value.fields) && isRecord(value.assignment)) {
+    const upgraded = withComputedDates(value);
+    const upgradedCanonical = CreateContractBody.safeParse({
+      filename: "legacy-upgrade.pdf",
+      contract: upgraded,
+    });
+    if (upgradedCanonical.success) return upgradedCanonical.data.contract;
+  }
   const canonical = CreateContractBody.safeParse({ filename: "legacy-upgrade.pdf", contract: value });
   if (canonical.success) {
-    return canonical.data.contract;
+    return withComputedDates(canonical.data.contract as unknown as Record<string, unknown>);
   }
   const legacy = isRecord(value) ? value : {};
   const legacyType = {
@@ -128,7 +161,7 @@ function upgradeContract(value: unknown) {
       : null;
   const notice = parseLegacyPeriod(legacy.noticePeriod);
 
-  return {
+  return withComputedDates({
     fields: {
       documentType: missing(),
       documentLanguage: missing(),
@@ -154,11 +187,12 @@ function upgradeContract(value: unknown) {
     assignment: {
       owner: typeof legacy.owner === "string" && legacy.owner ? legacy.owner : "John Doe",
       negotiationBufferDays: parseLegacyPeriod(legacy.negotiationBuffer)?.amount ?? 30,
+      negotiationBufferSource: "global_default",
       status: ["At Risk", "Review Open", "In Negotiation"].includes(String(legacy.status))
         ? legacy.status
         : "Review Open",
     },
-  };
+  });
 }
 
 function responseFor(record: typeof contractsTable.$inferSelect) {
@@ -198,9 +232,11 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(404).json({ error: "Contract not found." });
     return;
   }
-  const contract = sanitizeChangedFields(
-    parsed.data.contract as unknown as Record<string, unknown>,
-    upgradeContract(existing.contract) as unknown as Record<string, unknown>,
+  const contract = withComputedDates(
+    sanitizeChangedFields(
+      parsed.data.contract as unknown as Record<string, unknown>,
+      upgradeContract(existing.contract) as unknown as Record<string, unknown>,
+    ),
   );
   if (!enforceProvenanceConsistency(contract)) {
     res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
@@ -233,10 +269,11 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
     res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
+  const contract = withComputedDates(parsed.data.contract as unknown as Record<string, unknown>);
   const [record] = await db.insert(contractsTable).values({
     id: randomUUID(),
     filename: parsed.data.filename.slice(0, 250),
-    contract: parsed.data.contract,
+    contract,
     confidence: {},
   }).returning();
   res.status(201).json(responseFor(record));

@@ -36,8 +36,16 @@ export function createEmptyContractReviewRecord(): ContractReviewRecord {
     assignment: {
       owner: '',
       negotiationBufferDays: 30,
+      negotiationBufferSource: 'global_default',
       status: 'Review Open',
-    }
+    },
+    computed: {
+      exitDate: null,
+      noticeDeadline: null,
+      actionDate: null,
+      status: 'blocked',
+      reason: 'blocked — not enough contract data to compute dates',
+    },
   };
 }
 

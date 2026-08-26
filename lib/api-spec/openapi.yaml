@@ -389,21 +389,39 @@ components:
         billingFrequency: { $ref: "#/components/schemas/ProvenanceBillingFrequencyField" }
     ContractAssignment:
       type: object
-      required: [owner, negotiationBufferDays, status]
+      required: [owner, negotiationBufferDays, negotiationBufferSource, status]
       properties:
         owner: { type: string, minLength: 1 }
         negotiationBufferDays: { type: number, minimum: 0, maximum: 365, multipleOf: 1 }
+        negotiationBufferSource:
+          type: string
+          enum: [contract_override, contract_type_default, global_default]
+          description: Why this human-assigned buffer applies.
         status:
           type: string
           enum: [At Risk, Review Open, In Negotiation]
+    ContractComputedStatus:
+      type: string
+      enum: [green, amber, red, expired, blocked]
+    ContractComputedDates:
+      type: object
+      required: [exitDate, noticeDeadline, actionDate, status, reason]
+      properties:
+        exitDate: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
+        noticeDeadline: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
+        actionDate: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
+        status: { $ref: "#/components/schemas/ContractComputedStatus" }
+        reason: { type: ["string", "null"], maxLength: 300 }
     ContractReviewRecord:
       type: object
-      required: [fields, assignment]
+      required: [fields, assignment, computed]
       properties:
         fields:
           $ref: "#/components/schemas/ContractProvenance"
         assignment:
           $ref: "#/components/schemas/ContractAssignment"
+        computed:
+          $ref: "#/components/schemas/ContractComputedDates"
     ContractExtractionResult:
       type: object
       required:

@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ContractAssignmentNegotiationBufferSource } from './contractAssignmentNegotiationBufferSource';
 import type { ContractAssignmentStatus } from './contractAssignmentStatus';
 
 export interface ContractAssignment {
@@ -15,5 +16,7 @@ export interface ContractAssignment {
      * @maximum 365
      */
   negotiationBufferDays: number;
+  /** Why this human-assigned buffer applies. */
+  negotiationBufferSource: ContractAssignmentNegotiationBufferSource;
   status: ContractAssignmentStatus;
 }

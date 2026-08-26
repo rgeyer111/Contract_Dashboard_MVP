@@ -517,9 +517,19 @@ export default function Review() {
                     <input 
                       type="number" 
                       value={draft.assignment.negotiationBufferDays} 
-                      onChange={e => updateAssignment('negotiationBufferDays', parseInt(e.target.value) || 0)}
+                      onChange={e => {
+                        updateAssignment('negotiationBufferDays', parseInt(e.target.value) || 0);
+                        updateAssignment('negotiationBufferSource', 'contract_override');
+                      }}
                       className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80"
                     />
+                    <p className={`text-[11px] font-bold ${draft.assignment.negotiationBufferSource === 'contract_override' ? 'text-primary' : 'text-muted-foreground'}`}>
+                      {draft.assignment.negotiationBufferSource === 'contract_override'
+                        ? 'Contract override'
+                        : draft.assignment.negotiationBufferSource === 'contract_type_default'
+                          ? 'Inherited from contract type'
+                          : 'Inherited global default'}
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-foreground flex items-center gap-1">
@@ -536,6 +546,21 @@ export default function Review() {
                     </select>
                   </div>
                   <div className="col-span-1 md:col-span-3">
+                    <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-lg border bg-muted/20 p-4">
+                      {[
+                        ['Exit date', draft.computed.exitDate],
+                        ['Legal notice deadline', draft.computed.noticeDeadline],
+                        ['Start negotiation', draft.computed.actionDate],
+                      ].map(([label, value]) => (
+                        <div key={label}>
+                          <div className="text-[10px] uppercase tracking-wide font-bold text-muted-foreground">{label}</div>
+                          <div className="mt-1 text-sm font-extrabold">{value || 'Not computable'}</div>
+                        </div>
+                      ))}
+                      {draft.computed.reason && (
+                        <p className="sm:col-span-3 text-xs font-semibold text-destructive">{draft.computed.reason}</p>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground font-medium">
                       These settings dictate how this contract is tracked internally and are not extracted from the document itself. 
                       The <strong className="text-foreground">Owner</strong> will receive notices based on the negotiation buffer.

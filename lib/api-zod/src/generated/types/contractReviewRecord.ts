@@ -6,9 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ContractAssignment } from './contractAssignment';
+import type { ContractComputedDates } from './contractComputedDates';
 import type { ContractProvenance } from './contractProvenance';
 
 export interface ContractReviewRecord {
   fields: ContractProvenance;
   assignment: ContractAssignment;
+  computed: ContractComputedDates;
 }

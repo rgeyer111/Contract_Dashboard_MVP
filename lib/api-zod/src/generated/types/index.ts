@@ -7,7 +7,10 @@
  */
 
 export * from './contractAssignment';
+export * from './contractAssignmentNegotiationBufferSource';
 export * from './contractAssignmentStatus';
+export * from './contractComputedDates';
+export * from './contractComputedStatus';
 export * from './contractExtractionResult';
 export * from './contractExtractionResultExtraction';
 export * from './contractExtractionResultExtractionOcrConfidence';
