@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+.contract-cockpit {
+  --ink: #162b2b;
+  --ink-soft: #4e6260;
+  --paper: #f5f7f1;
+  --panel: #fbfcf8;
+  --line: #dbe4dc;
+  --teal: #176b67;
+  --teal-pale: #e1f0ed;
+  --coral: #c95143;
+  --coral-pale: #fbe9e4;
+  --gold: #a57926;
+  --gold-pale: #f7efd9;
+  font-family: 'Manrope', sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+.contract-cockpit * { box-sizing: border-box; }
+.mono { font-family: 'DM Mono', monospace; }
+.cockpit-grid { background-image: linear-gradient(to right, rgba(22,43,43,.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(22,43,43,.035) 1px, transparent 1px); background-size: 28px 28px; }
+.row-hover { transition: background-color .18s ease, transform .18s ease; }
+.row-hover:hover { background: #f1f7f1; }
+.side-link { transition: background-color .18s ease, color .18s ease; }
+.side-link:hover { background: #edf3ec; color: var(--teal); }
+.side-link.active { background: var(--teal); color: #f9fffa; box-shadow: 0 7px 18px rgba(23,107,103,.18); }
+.hairline { border-color: var(--line); }
+.pulse-dot { animation: pulse-dot 2.4s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100% { opacity:1 } 50% { opacity:.48 } }
+@media (max-width: 760px) {
+  .contract-cockpit aside { display:none; }
+  .mobile-nav { display:flex !important; }
+}
