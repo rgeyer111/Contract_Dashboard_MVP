@@ -5,10 +5,17 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ContractFamily } from './contractFamily';
 import type { ContractSaveRequest } from './contractSaveRequest';
+import type { SavedContractDocumentType } from './savedContractDocumentType';
 
-export type SavedContract = ContractSaveRequest & {
+export type SavedContract = ContractSaveRequest & ({
   id: string;
+  /** @nullable */
+  parentContractId: string | null;
+  /** @nullable */
+  documentType: SavedContractDocumentType;
+  family: ContractFamily;
   createdAt: Date;
   updatedAt: Date;
-};
+});

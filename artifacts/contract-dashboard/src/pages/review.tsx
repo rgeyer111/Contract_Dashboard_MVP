@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import {
   useCreateContract,
   useGetContract,
+  useListContracts,
   useUpdateContract,
   type ContractExtractionResult,
   type ContractReviewRecord,
@@ -244,12 +245,15 @@ export default function Review() {
   );
   
   const [filename, setFilename] = useState(storedExtraction?.filename ?? "confirmed-contract.pdf");
+  const [parentContractId, setParentContractId] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const contractsQuery = useListContracts();
 
   useEffect(() => {
     if (savedContractQuery.data) {
       setFilename(savedContractQuery.data.filename);
       setDraft(savedContractQuery.data.contract);
+      setParentContractId(savedContractQuery.data.parentContractId ?? null);
     }
   }, [savedContractQuery.data]);
 
@@ -295,11 +299,11 @@ export default function Review() {
       if (savedId) {
         await updateContract.mutateAsync({
           id: savedId,
-          data: { filename, contract: draft },
+          data: { filename, parentContractId, contract: draft },
         });
       } else {
         await createContract.mutateAsync({
-          data: { filename, contract: draft },
+          data: { filename, parentContractId, contract: draft },
         });
       }
       await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
@@ -443,6 +447,27 @@ export default function Review() {
                    </div>
                  </div>
                )}
+
+              <FieldGroup title="Contract Family">
+                <div>
+                  <label className="text-sm font-extrabold text-foreground">Parent agreement</label>
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">For an amendment or renewal, select the agreement this document changes. Leave blank for a standalone or parent agreement.</p>
+                  <select
+                    value={parentContractId ?? ""}
+                    onChange={(event) => setParentContractId(event.target.value || null)}
+                    className="mt-3 h-10 w-full rounded-md border border-input bg-background px-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  >
+                    <option value="">No parent — this is a root agreement</option>
+                    {(contractsQuery.data ?? [])
+                      .filter((candidate) => candidate.id !== savedId && !candidate.parentContractId)
+                      .map((candidate) => (
+                        <option key={candidate.id} value={candidate.id}>
+                          {candidate.contract.fields.vendorLegalName.value || "Unknown vendor"} — {candidate.contract.fields.contractTitle.value || candidate.filename}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </FieldGroup>
 
               <FieldGroup title="Document Identification">
                 <ReviewField label="Document Type" field={draft.fields.documentType}>

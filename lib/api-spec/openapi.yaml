@@ -535,15 +535,49 @@ components:
       required: [filename, contract]
       properties:
         filename: { type: string }
+        parentContractId: { type: ["string", "null"] }
         contract:
           $ref: "#/components/schemas/ContractReviewRecord"
+    ContractFamilyDocument:
+      type: object
+      required: [id, filename, documentType, effectiveDate, isParent, isCurrent, fieldValues]
+      properties:
+        id: { type: string }
+        filename: { type: string }
+        documentType:
+          type: ["string", "null"]
+          enum: [master_agreement, order_form, sow, amendment, renewal_letter, termination_notice, quote_or_proposal, unknown, null]
+        effectiveDate: { type: ["string", "null"] }
+        isParent: { type: boolean }
+        isCurrent: { type: boolean }
+        fieldValues:
+          type: object
+          additionalProperties: true
+    ContractFamily:
+      type: object
+      required: [id, documentCount, effectiveContract, documents]
+      properties:
+        id: { type: string }
+        documentCount: { type: number, minimum: 1, multipleOf: 1 }
+        effectiveContract:
+          $ref: "#/components/schemas/ContractReviewRecord"
+        documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContractFamilyDocument"
     SavedContract:
       allOf:
         - $ref: "#/components/schemas/ContractSaveRequest"
         - type: object
-          required: [id, createdAt, updatedAt]
+          required: [id, parentContractId, documentType, family, createdAt, updatedAt]
           properties:
             id: { type: string }
+            parentContractId: { type: ["string", "null"] }
+            documentType:
+              type: ["string", "null"]
+              enum: [master_agreement, order_form, sow, amendment, renewal_letter, termination_notice, quote_or_proposal, unknown, null]
+            family:
+              $ref: "#/components/schemas/ContractFamily"
             createdAt: { type: string, format: date-time }
             updatedAt: { type: string, format: date-time }
 

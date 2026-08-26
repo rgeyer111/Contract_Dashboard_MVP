@@ -9,5 +9,7 @@ import type { ContractReviewRecord } from './contractReviewRecord';
 
 export interface ContractSaveRequest {
   filename: string;
+  /** @nullable */
+  parentContractId?: string | null;
   contract: ContractReviewRecord;
 }

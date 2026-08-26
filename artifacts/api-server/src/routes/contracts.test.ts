@@ -312,4 +312,62 @@ describe("saved contract persistence", () => {
       }
     }
   });
+
+  it("replays amendments by effective date without blanking untouched fields", async () => {
+    let parentId: string | undefined;
+    let amendmentId: string | undefined;
+    const suffix = Date.now();
+    const amendment = {
+      ...contract,
+      fields: {
+        ...Object.fromEntries(Object.keys(contract.fields).map((key) => [key, { ...missing }])),
+        documentType: found("amendment"),
+        documentLanguage: found("en"),
+        contractTitle: found("Regression Price Amendment"),
+        contractNumber: found(`AMD-${suffix}`),
+        effectiveDate: found("2026-06-01"),
+        contractValue: found({ amount: 280000, currency: "USD", basis: "annual" }),
+      },
+    };
+
+    try {
+      const parent = await request(app)
+        .post("/api/contracts")
+        .send({ filename: `family-parent-${suffix}.pdf`, parentContractId: null, contract });
+      expect(parent.status).toBe(201);
+      parentId = parent.body.id;
+
+      const child = await request(app)
+        .post("/api/contracts")
+        .send({ filename: `family-amendment-${suffix}.pdf`, parentContractId: parentId, contract: amendment });
+      expect(child.status).toBe(201);
+      amendmentId = child.body.id;
+
+      const family = await request(app).get(`/api/contracts/${parentId}`);
+      expect(family.status).toBe(200);
+      expect(family.body.family.documentCount).toBe(2);
+      expect(family.body.family.documents.map((document: { id: string }) => document.id)).toEqual([
+        parentId,
+        amendmentId,
+      ]);
+      expect(family.body.family.effectiveContract.fields.contractValue.value).toEqual({
+        amount: 280000,
+        currency: "USD",
+        basis: "annual",
+      });
+      expect(family.body.family.effectiveContract.fields.noticePeriod.value).toEqual(
+        contract.fields.noticePeriod.value,
+      );
+      expect(family.body.family.effectiveContract.fields.vendorLegalName.value).toBe(
+        "Regression Vendor GmbH",
+      );
+      expect(family.body.family.documents[1].fieldValues.contractValue).toMatchObject({
+        value: amendment.fields.contractValue.value,
+        sourceFilename: `family-amendment-${suffix}.pdf`,
+      });
+    } finally {
+      if (amendmentId) await db.delete(contractsTable).where(eq(contractsTable.id, amendmentId));
+      if (parentId) await db.delete(contractsTable).where(eq(contractsTable.id, parentId));
+    }
+  });
 });

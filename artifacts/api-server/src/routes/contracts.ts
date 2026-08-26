@@ -212,11 +212,82 @@ function upgradeContract(value: unknown) {
   });
 }
 
-function responseFor(record: typeof contractsTable.$inferSelect) {
+function documentEffectiveDate(record: typeof contractsTable.$inferSelect) {
+  const contract = upgradeContract(record.contract) as Record<string, any>;
+  const value = contract.fields?.effectiveDate?.value;
+  return typeof value === "string" ? value : null;
+}
+
+function familyRootId(record: typeof contractsTable.$inferSelect, byId: Map<string, typeof contractsTable.$inferSelect>) {
+  const visited = new Set<string>();
+  let current = record;
+  while (current.parentContractId && byId.has(current.parentContractId) && !visited.has(current.id)) {
+    visited.add(current.id);
+    current = byId.get(current.parentContractId)!;
+  }
+  return current.id;
+}
+
+function familyFor(record: typeof contractsTable.$inferSelect, records: Array<typeof contractsTable.$inferSelect>) {
+  const byId = new Map(records.map((candidate) => [candidate.id, candidate]));
+  const rootId = familyRootId(record, byId);
+  const members = records
+    .filter((candidate) => familyRootId(candidate, byId) === rootId)
+    .sort((left, right) => {
+      const leftDate = documentEffectiveDate(left) ?? "9999-12-31";
+      const rightDate = documentEffectiveDate(right) ?? "9999-12-31";
+      return leftDate.localeCompare(rightDate) || left.createdAt.getTime() - right.createdAt.getTime();
+    });
+  const root = byId.get(rootId)!;
+  const effective = upgradeContract(root.contract) as Record<string, any>;
+  const fieldKeys = ["vendorLegalName", "contractValue", "noticePeriod", "renewalMechanism", "initialTermEndDate"];
+
+  for (const member of members) {
+    if (member.id === rootId) continue;
+    const memberContract = upgradeContract(member.contract) as Record<string, any>;
+    for (const [key, field] of Object.entries(memberContract.fields ?? {})) {
+      if (isRecord(field) && field.value !== null && field.status !== "not_found") {
+        effective.fields[key] = field;
+      }
+    }
+  }
+  const effectiveContract = withComputedDates(effective);
+  const currentId = members.at(-1)?.id ?? rootId;
+
+  return {
+    id: rootId,
+    documentCount: members.length,
+    effectiveContract,
+    documents: members.map((member) => {
+      const contract = upgradeContract(member.contract) as Record<string, any>;
+      return {
+        id: member.id,
+        filename: member.filename,
+        documentType: member.documentType ?? contract.fields?.documentType?.value ?? null,
+        effectiveDate: documentEffectiveDate(member),
+        isParent: member.id === rootId,
+        isCurrent: member.id === currentId,
+        fieldValues: Object.fromEntries(
+          fieldKeys.map((key) => [key, {
+            value: contract.fields?.[key]?.value ?? null,
+            sourceDocumentId: member.id,
+            sourceFilename: member.filename,
+          }]),
+        ),
+      };
+    }),
+  };
+}
+
+function responseFor(record: typeof contractsTable.$inferSelect, records: Array<typeof contractsTable.$inferSelect>) {
+  const contract = upgradeContract(record.contract) as Record<string, any>;
   return {
     id: record.id,
     filename: record.filename,
-    contract: upgradeContract(record.contract),
+    parentContractId: record.parentContractId,
+    documentType: record.documentType ?? contract.fields?.documentType?.value ?? null,
+    family: familyFor(record, records),
+    contract,
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString(),
   };
@@ -235,9 +306,21 @@ async function hasExistingSourceHash(hash: string) {
   });
 }
 
+async function validateParentContractId(parentContractId: string | null | undefined, currentId?: string) {
+  if (!parentContractId) return null;
+  if (parentContractId === currentId) return "A contract cannot be its own parent.";
+  const [parent] = await db.select({ id: contractsTable.id }).from(contractsTable).where(eq(contractsTable.id, parentContractId));
+  return parent ? null : "The selected parent contract was not found.";
+}
+
+function contractDocumentType(contract: Record<string, any>) {
+  const value = contract.fields?.documentType?.value;
+  return typeof value === "string" ? value : null;
+}
+
 router.get("/contracts", async (_req: Request, res: Response): Promise<void> => {
   const records = await db.select().from(contractsTable).orderBy(desc(contractsTable.updatedAt));
-  res.json(records.map(responseFor));
+  res.json(records.map((record) => responseFor(record, records)));
 });
 
 router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
@@ -247,7 +330,8 @@ router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(404).json({ error: "Contract not found." });
     return;
   }
-  res.json(responseFor(record));
+  const records = await db.select().from(contractsTable);
+  res.json(responseFor(record, records));
 });
 
 router.post("/contracts/:id/alert/dismiss", async (req: Request, res: Response): Promise<void> => {
@@ -273,7 +357,8 @@ router.post("/contracts/:id/alert/dismiss", async (req: Request, res: Response):
     .set({ contract: { ...contract, alert: dismissed }, updatedAt: new Date() })
     .where(eq(contractsTable.id, id))
     .returning();
-  res.json(responseFor(record));
+  const records = await db.select().from(contractsTable);
+  res.json(responseFor(record, records));
 });
 
 router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
@@ -298,10 +383,17 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
+  const parentError = await validateParentContractId(parsed.data.parentContractId, id);
+  if (parentError) {
+    res.status(400).json({ error: parentError });
+    return;
+  }
   const [record] = await db
     .update(contractsTable)
     .set({
       filename: parsed.data.filename.slice(0, 250),
+      parentContractId: parsed.data.parentContractId ?? null,
+      documentType: contractDocumentType(contract),
       contract,
       confidence: {},
       updatedAt: new Date(),
@@ -312,7 +404,8 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(404).json({ error: "Contract not found." });
     return;
   }
-  res.json(responseFor(record));
+  const records = await db.select().from(contractsTable);
+  res.json(responseFor(record, records));
 });
 
 router.post("/contracts", async (req: Request, res: Response): Promise<void> => {
@@ -333,14 +426,22 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
     res.status(409).json({ error: "This contract has already been saved. Duplicate skipped." });
     return;
   }
+  const parentError = await validateParentContractId(parsed.data.parentContractId);
+  if (parentError) {
+    res.status(400).json({ error: parentError });
+    return;
+  }
   const contract = withComputedDates(parsed.data.contract as unknown as Record<string, unknown>);
   const [record] = await db.insert(contractsTable).values({
     id: randomUUID(),
     filename: parsed.data.filename.slice(0, 250),
+    parentContractId: parsed.data.parentContractId ?? null,
+    documentType: contractDocumentType(contract),
     contract,
     confidence: {},
   }).returning();
-  res.status(201).json(responseFor(record));
+  const records = await db.select().from(contractsTable);
+  res.status(201).json(responseFor(record, records));
 });
 
 export function isPdf(file: Express.Multer.File): boolean {
