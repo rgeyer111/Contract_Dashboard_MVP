@@ -82,6 +82,82 @@ test("shows upload success and API error states", async ({ page }) => {
   await expect(page.getByText("This PDF has no readable contract text.")).toBeVisible();
 });
 
+test("shows OCR scan warnings for every legibility level but not embedded text", async ({ page }) => {
+  const contract = {
+    vendor: "Acme",
+    contractNumber: "AC-100",
+    contractName: "Support",
+    contractType: "Maintenance",
+    contractValue: { status: "unknown", amount: null, currency: null },
+    startDate: "2026-01-01",
+    contractDuration: "12 months",
+    endDate: "2026-12-31",
+    noticePeriod: "60 days",
+    noticeDeadline: "",
+    negotiationBuffer: "30 days",
+    owner: "John Doe",
+    status: "Review Open",
+  };
+  const confidence = Object.fromEntries(
+    [
+      "vendor", "contractNumber", "contractName", "contractType",
+      "contractValue", "startDate", "contractDuration", "endDate",
+      "noticePeriod", "noticeDeadline", "negotiationBuffer", "owner", "status",
+    ].map((key) => [key, "High"]),
+  );
+  let source: "text" | "ocr" = "ocr";
+  let ocrConfidence: "High" | "Medium" | "Low" = "High";
+
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/extract", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        filename: "scan.pdf",
+        extraction: { contract, confidence, source, ocrConfidence: source === "ocr" ? ocrConfidence : null },
+      }),
+    });
+  });
+
+  await page.goto("/dashboard");
+  for (const level of ["High", "Medium", "Low"] as const) {
+    source = "ocr";
+    ocrConfidence = level;
+    await page.getByRole("button", { name: "New Contract" }).click();
+    await page.locator("#contract-pdf-file").setInputFiles({
+      name: `${level.toLowerCase()}-scan.pdf`,
+      mimeType: "application/pdf",
+      buffer: Buffer.from("%PDF-1.7\nscanned contract"),
+    });
+    await page.getByRole("button", { name: "Extract contract" }).click();
+    await expect(page).toHaveURL(/\/review$/);
+    const warning = page.getByRole("alert");
+    await expect(warning).toContainText("OCR used for this scan");
+    await expect(warning).toContainText(`${level} legibility`);
+    await expect(warning).toBeVisible();
+    await page.goto("/dashboard");
+  }
+
+  source = "text";
+  await page.getByRole("button", { name: "New Contract" }).click();
+  await page.locator("#contract-pdf-file").setInputFiles({
+    name: "embedded-text.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF-1.7\nembedded contract text"),
+  });
+  await page.getByRole("button", { name: "Extract contract" }).click();
+  await expect(page).toHaveURL(/\/review$/);
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(page.getByText("OCR used for this scan")).toHaveCount(0);
+});
+
 test("keeps a confirmed contract available after reload and update", async ({ page }) => {
   const confidence = Object.fromEntries(
     [
@@ -169,9 +245,14 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   await expect(page.getByText("Northstar Sourcing", { exact: true })).toBeVisible();
   await page.getByText("Northstar Sourcing", { exact: true }).click();
   await expect(page).toHaveURL(/\/review\?id=saved-northstar-contract$/);
-  await expect(page.getByDisplayValue("Northstar Sourcing")).toBeVisible();
+  const vendorInput = page
+    .locator("label")
+    .filter({ hasText: "Vendor" })
+    .locator("..")
+    .locator("input");
+  await expect(vendorInput).toBeVisible();
 
-  await page.getByDisplayValue("Northstar Sourcing").fill("Northstar Sourcing GmbH");
+  await vendorInput.fill("Northstar Sourcing GmbH");
   await page.getByRole("button", { name: "Confirm contract" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   expect(updatePayload).toEqual({
