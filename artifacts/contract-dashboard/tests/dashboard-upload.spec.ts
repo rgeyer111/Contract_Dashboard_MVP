@@ -180,6 +180,52 @@ test("shows upload success and API error states", async ({ page }) => {
   await expect(page.getByText("This PDF has no readable contract text.")).toBeVisible();
 });
 
+test("shows invalid file feedback and queues a valid PDF without extracting", async ({ page }) => {
+  let extractionRequests = 0;
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/extract", async (route) => {
+    extractionRequests += 1;
+    await route.fulfill({
+      status: 500,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "Extraction should not be called in this test." }),
+    });
+  });
+
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "New Contract" }).click();
+  const fileInput = page.locator("#contract-pdf-file");
+
+  await fileInput.setInputFiles({
+    name: "notes.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("not a PDF"),
+  });
+  await expect(page.getByText("Only PDF files up to 10 MB can be added.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Extract contract" })).toBeDisabled();
+
+  await page.getByRole("button", { name: "Close contract upload" }).click();
+  await expect(page.getByRole("heading", { name: "Upload a PDF to extract its details" })).toHaveCount(0);
+
+  await page.getByRole("button", { name: "New Contract" }).click();
+  await expect(page.getByText("Only PDF files up to 10 MB can be added.")).toHaveCount(0);
+  await fileInput.setInputFiles({
+    name: "valid.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF-1.7\nvalid contract"),
+  });
+  await expect(page.getByText("valid.pdf")).toBeVisible();
+  await expect(page.getByText("Only PDF files up to 10 MB can be added.")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Extract contract" })).toBeEnabled();
+  expect(extractionRequests).toBe(0);
+});
+
 test("shows OCR scan warnings for every legibility level but not embedded text", async ({ page }) => {
   const contract = makeContract();
   let source: "text" | "ocr" = "ocr";

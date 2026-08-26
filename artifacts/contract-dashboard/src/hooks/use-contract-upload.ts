@@ -64,7 +64,6 @@ export function useContractUpload(navigate: (path: string) => void) {
 
   const chooseFilesFromDrop = (files: FileList | File[]) => {
     chooseFiles(Array.from(files));
-    setUploadError(null);
   };
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
