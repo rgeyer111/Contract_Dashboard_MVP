@@ -600,11 +600,21 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
 
   await page.getByLabel("Search contracts").fill("Northstar");
+  await expect(page).toHaveURL(/\/dashboard\?search=Northstar$/);
+  await expect(page.getByRole("button", { name: "Copy filtered view link" })).toBeVisible();
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear search" }).click();
+  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
   await expect(page.getByTestId("active-contract-count")).toHaveText("2");
+
+  await page.goto("/dashboard?search=Northstar");
+  await expect(page.getByLabel("Search contracts")).toHaveValue("Northstar");
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await page.getByRole("button", { name: "Clear search" }).click();
 
   const scrollerMetrics = await page.locator("table").evaluate((table) => {
     const scroller = table.parentElement;

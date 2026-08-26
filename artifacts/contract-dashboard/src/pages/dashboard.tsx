@@ -59,6 +59,11 @@ function getDocumentTypeFilterFromLocation(location: string) {
   return documentTypeOptions.includes(value as typeof documentTypeOptions[number]) ? value ?? "" : "";
 }
 
+function getSearchTermFromLocation(location: string) {
+  const query = location.includes("?") ? location.slice(location.indexOf("?")) : "";
+  return new URLSearchParams(query).get("search") ?? "";
+}
+
 export default function Dashboard() {
   const [location, setLocation] = useLocation();
   const isActionItemsPage = location.split("?")[0] === "/action-items";
@@ -69,7 +74,7 @@ export default function Dashboard() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dismissingId, setDismissingId] = useState<string | null>(null);
   const [dismissReason, setDismissReason] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(() => getSearchTermFromLocation(window.location.search));
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
   const [documentTypeFilter, setDocumentTypeFilter] = useState(() => getDocumentTypeFilterFromLocation(window.location.search));
   const queryClient = useQueryClient();
@@ -104,8 +109,7 @@ export default function Dashboard() {
   const extraction = useExtractContract();
 
   const updateDocumentTypeFilter = (value: string) => {
-    const query = location.includes("?") ? location.slice(location.indexOf("?")) : "";
-    const params = new URLSearchParams(query);
+    const params = new URLSearchParams(window.location.search);
     if (value) {
       params.set("documentType", value);
     } else {
@@ -115,6 +119,19 @@ export default function Dashboard() {
     setDocumentTypeFilter(value);
     setShareStatus("idle");
     setLocation(`${location.split("?")[0]}${nextQuery ? `?${nextQuery}` : ""}`);
+  };
+
+  const updateSearchTerm = (value: string) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value.trim()) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+    setSearchTerm(value);
+    setShareStatus("idle");
+    const nextQuery = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`);
   };
 
   const copyFilteredViewLink = async () => {
@@ -234,7 +251,7 @@ export default function Dashboard() {
               <input 
                 type="text" 
                 value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
+                onChange={(event) => updateSearchTerm(event.target.value)}
                 placeholder="Search contracts..."
                 className="w-full h-9 pl-9 pr-4 rounded-md border bg-muted/30 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/70"
                 aria-label="Search contracts"
@@ -243,7 +260,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   aria-label="Clear search"
-                  onClick={() => setSearchTerm("")}
+                  onClick={() => updateSearchTerm("")}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -510,7 +527,7 @@ export default function Dashboard() {
                     Clear type
                    </Button>
                  )}
-                  {documentTypeFilter && (
+                  {(documentTypeFilter || searchTerm.trim()) && (
                     <Button
                       type="button"
                       variant="outline"
