@@ -33,6 +33,7 @@ const reviewerEdited = (value: unknown) => ({
   clause: null,
   quote: null,
   note: "Reviewer-supplied value; original extraction evidence was cleared.",
+  reviewed: false,
 });
 const contract = {
   fields: {
@@ -164,6 +165,72 @@ describe("saved contract persistence", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.error).toMatch(/provenance is inconsistent/i);
+  });
+
+  it("preserves source provenance when only reviewer resolution changes", async () => {
+    const filename = `review-resolution-${crypto.randomUUID()}.pdf`;
+    let id: string | undefined;
+    try {
+      const created = await request(app)
+        .post("/api/contracts")
+        .send({ filename, contract });
+      expect(created.status).toBe(201);
+      id = created.body.id;
+
+      const spoofedProvenance = {
+        ...contract,
+        fields: {
+          ...contract.fields,
+          vendorLegalName: {
+            ...contract.fields.vendorLegalName,
+            status: "ambiguous",
+            confidence: "low",
+            page: null,
+            clause: null,
+            quote: null,
+            note: "Client attempted to replace source provenance.",
+            reviewed: true,
+          },
+        },
+      };
+      const updated = await request(app)
+        .put(`/api/contracts/${id}`)
+        .send({ filename, contract: spoofedProvenance });
+
+      expect(updated.status).toBe(200);
+      expect(updated.body.contract.fields.vendorLegalName).toMatchObject({
+        value: "Regression Vendor GmbH",
+        status: "found",
+        confidence: "high",
+        page: 1,
+        quote: "Verbatim source evidence.",
+        reviewed: true,
+      });
+      expect(updated.body.contract.fields.vendorLegalName.note).toBeNull();
+
+      const reviewerSupplied = {
+        ...spoofedProvenance,
+        fields: {
+          ...spoofedProvenance.fields,
+          vendorLegalName: {
+            ...spoofedProvenance.fields.vendorLegalName,
+            value: "Reviewer Supplied Vendor GmbH",
+            reviewed: true,
+          },
+        },
+      };
+      const edited = await request(app)
+        .put(`/api/contracts/${id}`)
+        .send({ filename, contract: reviewerSupplied });
+
+      expect(edited.status).toBe(200);
+      expect(edited.body.contract.fields.vendorLegalName).toEqual({
+        ...reviewerEdited("Reviewer Supplied Vendor GmbH"),
+        reviewed: true,
+      });
+    } finally {
+      if (id) await db.delete(contractsTable).where(eq(contractsTable.id, id));
+    }
   });
 
   it("persists a dismissed alert and its reason", async () => {

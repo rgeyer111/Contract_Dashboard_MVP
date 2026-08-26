@@ -63,6 +63,7 @@ function parseLegacyPeriod(value: unknown) {
 }
 
 const reviewerEditNote = "Reviewer-supplied value; original extraction evidence was cleared.";
+const provenanceKeys = ["status", "confidence", "page", "clause", "quote", "note"] as const;
 
 function valuesMatch(left: unknown, right: unknown) {
   return JSON.stringify(left) === JSON.stringify(right);
@@ -88,7 +89,21 @@ function sanitizeChangedFields(
     Object.entries(incomingFields).map(([key, rawField]) => {
       const field = isRecord(rawField) ? rawField : {};
       const previousField = isRecord(previousFields[key]) ? previousFields[key] : {};
-      if (valuesMatch(field.value, previousField.value)) return [key, rawField];
+      if (valuesMatch(field.value, previousField.value)) {
+        const previousProvenance = Object.fromEntries(
+          provenanceKeys
+            .filter((provenanceKey) => provenanceKey in previousField)
+            .map((provenanceKey) => [provenanceKey, previousField[provenanceKey]]),
+        );
+        return [
+          key,
+          {
+            ...field,
+            ...previousProvenance,
+            reviewed: field.reviewed === true,
+          },
+        ];
+      }
       return [
         key,
         {
@@ -99,6 +114,7 @@ function sanitizeChangedFields(
           clause: null,
           quote: null,
           note: reviewerEditNote,
+          reviewed: field.reviewed === true,
         },
       ];
     }),

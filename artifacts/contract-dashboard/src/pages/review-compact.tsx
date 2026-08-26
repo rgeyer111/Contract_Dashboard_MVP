@@ -412,6 +412,13 @@ function FieldEditor({
 }
 
 function StatusPill({ field }: { field: AnyField }) {
+  if (field.note === reviewerEditNote) {
+    return (
+      <span className="inline-flex items-center rounded-full border border-violet-500/20 bg-violet-500/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-violet-700">
+        reviewer supplied
+      </span>
+    );
+  }
   if (field.reviewed) {
     return (
       <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary">
