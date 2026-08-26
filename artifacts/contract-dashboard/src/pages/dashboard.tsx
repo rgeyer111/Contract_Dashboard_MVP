@@ -21,6 +21,8 @@ import {
   Check,
   Bookmark,
   Pin,
+  ChevronUp,
+  ChevronDown,
   Pencil,
   Trash2,
   Save,
@@ -36,6 +38,7 @@ import {
   useListContracts,
   useListRegistryViews,
   usePinRegistryView,
+  useReorderRegistryViews,
   useUpdateRegistryView,
   type ContractExtractionResult,
   type RegistryViewSaveRequestDocumentType,
@@ -115,6 +118,7 @@ export default function Dashboard() {
   const [editingViewName, setEditingViewName] = useState("");
   const [deletingViewId, setDeletingViewId] = useState<string | null>(null);
   const [savedViewError, setSavedViewError] = useState<string | null>(null);
+  const [savedViewMoveStatus, setSavedViewMoveStatus] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
@@ -188,6 +192,15 @@ export default function Dashboard() {
         await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
       },
       onError: () => setSavedViewError("This view's pin state could not be updated. Please try again."),
+    },
+  });
+  const reorderRegistryViews = useReorderRegistryViews({
+    mutation: {
+      onSuccess: async () => {
+        setSavedViewError(null);
+        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
+      },
+      onError: () => setSavedViewError("This view order could not be saved. Please try again."),
     },
   });
   const deleteRegistryView = useDeleteRegistryView({
@@ -311,6 +324,24 @@ export default function Dashboard() {
       id: view.id,
       data: { pinned: !view.isPinned },
     });
+  };
+
+  const movePinnedView = (viewId: string, direction: "up" | "down") => {
+    const pinnedViews = savedViews.filter((view) => view.isPinned);
+    const currentIndex = pinnedViews.findIndex((view) => view.id === viewId);
+    const nextIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+    if (currentIndex < 0 || nextIndex < 0 || nextIndex >= pinnedViews.length || reorderRegistryViews.isPending) {
+      return;
+    }
+    const reordered = [...pinnedViews];
+    const [movedView] = reordered.splice(currentIndex, 1);
+    reordered.splice(nextIndex, 0, movedView);
+    const successMessage = `${movedView.name} moved ${direction}. Position ${nextIndex + 1} of ${pinnedViews.length}.`;
+    setSavedViewMoveStatus(null);
+    reorderRegistryViews.mutate(
+      { data: { orderedIds: reordered.map((item) => item.id) } },
+      { onSuccess: () => setSavedViewMoveStatus(successMessage) },
+    );
   };
 
   const chooseFiles = (files: File[]) => {
@@ -734,6 +765,7 @@ export default function Dashboard() {
             )}
 
             {savedViewError && <p role="alert" className="rounded-md border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm font-semibold text-destructive">{savedViewError}</p>}
+            <p className="sr-only" role="status" aria-live="polite">{savedViewMoveStatus}</p>
 
             <div className="rounded-xl border bg-card shadow-sm">
               {registryViewsQuery.isLoading ? (
@@ -751,6 +783,8 @@ export default function Dashboard() {
                 <div className="divide-y">
                   {savedViews.map((view) => {
                     const isActive = view.search === searchTerm && (view.documentType ?? "") === documentTypeFilter;
+                    const pinnedViews = savedViews.filter((item) => item.isPinned);
+                    const pinnedIndex = pinnedViews.findIndex((item) => item.id === view.id);
                     return (
                       <div key={view.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                         {editingViewId === view.id ? (
@@ -818,6 +852,32 @@ export default function Dashboard() {
                             >
                               <Pin className={`h-3.5 w-3.5 ${view.isPinned ? "fill-current text-amber-600 dark:text-amber-300" : "text-muted-foreground"}`} />
                             </Button>
+                            {view.isPinned && (
+                              <>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  aria-label={`Move ${view.name} up${pinnedIndex <= 0 ? " (already first)" : ""}`}
+                                  title="Move saved view up"
+                                  disabled={pinnedIndex <= 0 || reorderRegistryViews.isPending}
+                                  onClick={() => movePinnedView(view.id, "up")}
+                                >
+                                  <ChevronUp className="h-3.5 w-3.5" />
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  aria-label={`Move ${view.name} down${pinnedIndex === pinnedViews.length - 1 ? " (already last)" : ""}`}
+                                  title="Move saved view down"
+                                  disabled={pinnedIndex === pinnedViews.length - 1 || reorderRegistryViews.isPending}
+                                  onClick={() => movePinnedView(view.id, "down")}
+                                >
+                                  <ChevronDown className="h-3.5 w-3.5" />
+                                </Button>
+                              </>
+                            )}
                             <Button type="button" variant="ghost" size="icon" aria-label={`Rename saved view ${view.name}`} title="Rename saved view" onClick={() => startRename(view)}>
                               <Pencil className="h-3.5 w-3.5" />
                             </Button>

@@ -55,6 +55,7 @@ export * from './provenanceRenewalMechanismField';
 export * from './provenanceRenewalMechanismFieldValue';
 export * from './provenanceStringField';
 export * from './registryViewPinRequest';
+export * from './registryViewReorderRequest';
 export * from './registryViewSaveRequest';
 export * from './registryViewSaveRequestDocumentType';
 export * from './savedContract';

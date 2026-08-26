@@ -133,4 +133,131 @@ describe("saved registry views", () => {
       .send({ pinned: "yes" });
     expect(invalidPinResponse.status).toBe(400);
   });
+
+  it("reorders every pinned view without changing its saved filters or pin state", async () => {
+    const originalListResponse = await request(app).get("/api/registry-views");
+    const originalPinnedIds = originalListResponse.body
+      .filter((view: { isPinned: boolean }) => view.isPinned)
+      .map((view: { id: string }) => view.id);
+    const views = await Promise.all(
+      [
+        ["Review first", "first", "master_agreement"],
+        ["Review second", "second", "sow"],
+        ["Review third", "third", null],
+      ].map(([name, search, documentType]) =>
+        request(app)
+          .post("/api/registry-views")
+          .send({ name, search, documentType }),
+      ),
+    );
+    views.forEach((response) => expect(response.status).toBe(201));
+
+    const ids = views.map((response) => response.body.id as string);
+    createdIds.push(...ids);
+    for (const id of ids) {
+      const response = await request(app)
+        .patch(`/api/registry-views/${id}/pin`)
+        .send({ pinned: true });
+      expect(response.status).toBe(200);
+    }
+    const desiredIds = [ids[2], ids[0], ids[1], ...originalPinnedIds];
+
+    try {
+      const reorderResponse = await request(app)
+        .patch("/api/registry-views/order")
+        .send({ orderedIds: desiredIds });
+      expect(reorderResponse.status).toBe(200);
+      expect(
+        reorderResponse.body
+          .filter((view: { id: string }) => ids.includes(view.id))
+          .map((view: { id: string }) => view.id),
+      ).toEqual([ids[2], ids[0], ids[1]]);
+      expect(reorderResponse.body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: ids[0],
+            name: "Review first",
+            search: "first",
+            documentType: "master_agreement",
+            isPinned: true,
+          }),
+          expect.objectContaining({
+            id: ids[1],
+            name: "Review second",
+            search: "second",
+            documentType: "sow",
+            isPinned: true,
+          }),
+          expect.objectContaining({
+            id: ids[2],
+            name: "Review third",
+            search: "third",
+            documentType: null,
+            isPinned: true,
+          }),
+        ]),
+      );
+
+      const persistedResponse = await request(app).get("/api/registry-views");
+      expect(
+        persistedResponse.body
+          .filter((view: { id: string }) => ids.includes(view.id))
+          .map((view: { id: string }) => view.id),
+      ).toEqual([ids[2], ids[0], ids[1]]);
+
+      const incompleteResponse = await request(app)
+        .patch("/api/registry-views/order")
+        .send({ orderedIds: desiredIds.slice(0, -1) });
+      expect(incompleteResponse.status).toBe(400);
+
+      const duplicateResponse = await request(app)
+        .patch("/api/registry-views/order")
+        .send({ orderedIds: [...desiredIds.slice(0, -1), desiredIds[0]] });
+      expect(duplicateResponse.status).toBe(400);
+    } finally {
+      for (const id of ids) {
+        await request(app)
+          .patch(`/api/registry-views/${id}/pin`)
+          .send({ pinned: false });
+      }
+      if (originalPinnedIds.length > 0) {
+        await request(app)
+          .patch("/api/registry-views/order")
+          .send({ orderedIds: originalPinnedIds });
+      }
+    }
+  });
+
+  it("assigns distinct shared positions when views are pinned concurrently", async () => {
+    const createResponses = await Promise.all(
+      ["Concurrent first", "Concurrent second", "Concurrent third"].map((name) =>
+        request(app)
+          .post("/api/registry-views")
+          .send({ name, search: "", documentType: null }),
+      ),
+    );
+    createResponses.forEach((response) => expect(response.status).toBe(201));
+    const ids = createResponses.map((response) => response.body.id as string);
+    createdIds.push(...ids);
+
+    const pinResponses = await Promise.all(
+      ids.map((id) =>
+        request(app)
+          .patch(`/api/registry-views/${id}/pin`)
+          .send({ pinned: true }),
+      ),
+    );
+    pinResponses.forEach((response) => expect(response.status).toBe(200));
+
+    const records = await db
+      .select({
+        id: registryViewsTable.id,
+        pinnedOrder: registryViewsTable.pinnedOrder,
+      })
+      .from(registryViewsTable);
+    const createdRecords = records.filter((record) => ids.includes(record.id));
+    expect(createdRecords).toHaveLength(ids.length);
+    expect(createdRecords.every((record) => record.pinnedOrder !== null)).toBe(true);
+    expect(new Set(createdRecords.map((record) => record.pinnedOrder)).size).toBe(ids.length);
+  });
 });

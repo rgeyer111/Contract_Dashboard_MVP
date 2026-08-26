@@ -27,6 +27,7 @@ import type {
   ErrorResponse,
   HealthStatus,
   RegistryViewPinRequest,
+  RegistryViewReorderRequest,
   RegistryViewSaveRequest,
   SavedContract,
   SavedRegistryView
@@ -498,6 +499,77 @@ export const usePinRegistryView = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getPinRegistryViewMutationOptions(options));
+    }
+
+export const getReorderRegistryViewsUrl = () => {
+
+
+
+
+  return `/api/registry-views/order`
+}
+
+/**
+ * @summary Reorder pinned registry views
+ */
+export const reorderRegistryViews = async (registryViewReorderRequest: RegistryViewReorderRequest, options?: Parameters<typeof customFetch>[1]): Promise<SavedRegistryView[]> => {
+
+  return customFetch<SavedRegistryView[]>(getReorderRegistryViewsUrl(),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(registryViewReorderRequest)
+  }
+);}
+
+
+
+
+
+export const getReorderRegistryViewsMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reorderRegistryViews>>, TError,{data: BodyType<RegistryViewReorderRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reorderRegistryViews>>, TError,{data: BodyType<RegistryViewReorderRequest>}, TContext> => {
+
+const mutationKey = ['reorderRegistryViews'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reorderRegistryViews>>, {data: BodyType<RegistryViewReorderRequest>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  reorderRegistryViews(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReorderRegistryViewsMutationResult = NonNullable<Awaited<ReturnType<typeof reorderRegistryViews>>>
+    export type ReorderRegistryViewsMutationBody = BodyType<RegistryViewReorderRequest>
+    export type ReorderRegistryViewsMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Reorder pinned registry views
+ */
+export const useReorderRegistryViews = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reorderRegistryViews>>, TError,{data: BodyType<RegistryViewReorderRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reorderRegistryViews>>,
+        TError,
+        {data: BodyType<RegistryViewReorderRequest>},
+        TContext
+      > => {
+      return useMutation(getReorderRegistryViewsMutationOptions(options));
     }
 
 export const getExtractContractUrl = () => {

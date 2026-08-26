@@ -149,6 +149,36 @@ export const PinRegistryViewResponse = zod.object({
 
 
 /**
+ * @summary Reorder pinned registry views
+ */
+export const reorderRegistryViewsBodyOrderedIdsMax = 1000;
+
+
+
+export const ReorderRegistryViewsBody = zod.object({
+  "orderedIds": zod.array(zod.string()).min(1).max(reorderRegistryViewsBodyOrderedIdsMax)
+})
+
+export const reorderRegistryViewsResponseOneNameMax = 100;
+
+export const reorderRegistryViewsResponseOneSearchMax = 200;
+
+
+
+export const ReorderRegistryViewsResponseItem = zod.object({
+  "name": zod.string().min(1).max(reorderRegistryViewsResponseOneNameMax),
+  "search": zod.string().max(reorderRegistryViewsResponseOneSearchMax),
+  "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+}).and(zod.object({
+  "id": zod.string(),
+  "isPinned": zod.boolean(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+export const ReorderRegistryViewsResponse = zod.array(ReorderRegistryViewsResponseItem)
+
+
+/**
  * @summary Extract a contract review draft from a PDF
  */
 export const extractContractBodyFilesMax = 20;

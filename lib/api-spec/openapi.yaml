@@ -146,6 +146,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /registry-views/order:
+    patch:
+      operationId: reorderRegistryViews
+      tags: [contracts]
+      summary: Reorder pinned registry views
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistryViewReorderRequest"
+      responses:
+        "200":
+          description: Registry views in their current order
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SavedRegistryView"
+        "400":
+          description: Invalid pinned view order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /contracts/extract:
     post:
       operationId: extractContract
@@ -342,6 +368,16 @@ components:
       properties:
         pinned:
           type: boolean
+    RegistryViewReorderRequest:
+      type: object
+      required: [orderedIds]
+      properties:
+        orderedIds:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          items:
+            type: string
     SavedRegistryView:
       allOf:
         - $ref: "#/components/schemas/RegistryViewSaveRequest"

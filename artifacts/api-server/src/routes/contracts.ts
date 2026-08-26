@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import multer from "multer";
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq, isNotNull, sql } from "drizzle-orm";
 import { db, contractsTable, registryViewsTable } from "@workspace/db";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
@@ -9,6 +9,7 @@ import {
   UpdateContractBody,
   CreateRegistryViewBody,
   PinRegistryViewBody,
+  ReorderRegistryViewsBody,
   UpdateRegistryViewBody,
 } from "@workspace/api-zod";
 import {
@@ -276,6 +277,7 @@ function contractDocumentType(contract: Record<string, any>) {
 router.get("/registry-views", async (_req: Request, res: Response): Promise<void> => {
   const records = await db.select().from(registryViewsTable).orderBy(
     asc(sql`CASE WHEN ${registryViewsTable.pinnedAt} IS NULL THEN 1 ELSE 0 END`),
+    asc(registryViewsTable.pinnedOrder),
     asc(registryViewsTable.pinnedAt),
     desc(registryViewsTable.updatedAt),
     asc(registryViewsTable.id),
@@ -337,15 +339,86 @@ router.patch("/registry-views/:id/pin", async (req: Request, res: Response): Pro
     return;
   }
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const [record] = await db.update(registryViewsTable)
-    .set({ pinnedAt: parsed.data.pinned ? new Date() : null })
-    .where(eq(registryViewsTable.id, id))
-    .returning();
+  const record = await db.transaction(async (tx) => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('registry_views_pinned_order'))`);
+    const [existing] = await tx.select({
+      id: registryViewsTable.id,
+      pinnedAt: registryViewsTable.pinnedAt,
+      pinnedOrder: registryViewsTable.pinnedOrder,
+    }).from(registryViewsTable).where(eq(registryViewsTable.id, id));
+    if (!existing) return null;
+
+    let pinnedOrder = existing.pinnedOrder;
+    if (parsed.data.pinned && existing.pinnedAt === null) {
+      const [result] = await tx
+        .select({ maxOrder: sql<number>`COALESCE(MAX(${registryViewsTable.pinnedOrder}), -1)` })
+        .from(registryViewsTable)
+        .where(isNotNull(registryViewsTable.pinnedAt));
+      pinnedOrder = Number(result?.maxOrder ?? -1) + 1;
+    }
+    const [updated] = await tx.update(registryViewsTable)
+      .set({
+        pinnedAt: parsed.data.pinned ? (existing.pinnedAt ?? new Date()) : null,
+        pinnedOrder: parsed.data.pinned ? pinnedOrder : null,
+      })
+      .where(eq(registryViewsTable.id, id))
+      .returning();
+    return updated;
+  });
   if (!record) {
     res.status(404).json({ error: "Registry view not found." });
     return;
   }
   res.json(registryViewResponse(record));
+});
+
+router.patch("/registry-views/order", async (req: Request, res: Response): Promise<void> => {
+  const parsed = ReorderRegistryViewsBody.safeParse(req.body);
+  if (!parsed.success || new Set(parsed.data.orderedIds).size !== parsed.data.orderedIds.length) {
+    res.status(400).json({ error: "A complete, unique order for pinned views is required." });
+    return;
+  }
+
+  const records = await db.transaction(async (tx) => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('registry_views_pinned_order'))`);
+    const pinnedViews = await tx
+      .select({ id: registryViewsTable.id })
+      .from(registryViewsTable)
+      .where(isNotNull(registryViewsTable.pinnedAt));
+    const pinnedIds = new Set(pinnedViews.map((view) => view.id));
+    if (
+      parsed.data.orderedIds.length !== pinnedIds.size ||
+      parsed.data.orderedIds.some((id) => !pinnedIds.has(id))
+    ) {
+      return null;
+    }
+
+    for (const [index, id] of parsed.data.orderedIds.entries()) {
+      await tx
+        .update(registryViewsTable)
+        .set({ pinnedOrder: -(index + 1) })
+        .where(eq(registryViewsTable.id, id));
+    }
+    for (const [index, id] of parsed.data.orderedIds.entries()) {
+      await tx
+        .update(registryViewsTable)
+        .set({ pinnedOrder: index })
+        .where(eq(registryViewsTable.id, id));
+    }
+
+    return tx.select().from(registryViewsTable).orderBy(
+      asc(sql`CASE WHEN ${registryViewsTable.pinnedAt} IS NULL THEN 1 ELSE 0 END`),
+      asc(registryViewsTable.pinnedOrder),
+      asc(registryViewsTable.pinnedAt),
+      desc(registryViewsTable.updatedAt),
+      asc(registryViewsTable.id),
+    );
+  });
+  if (!records) {
+    res.status(400).json({ error: "The order must include every pinned view exactly once." });
+    return;
+  }
+  res.json(records.map(registryViewResponse));
 });
 
 router.delete("/registry-views/:id", async (req: Request, res: Response): Promise<void> => {

@@ -46,6 +46,14 @@ export interface RegistryViewPinRequest {
   pinned: boolean;
 }
 
+export interface RegistryViewReorderRequest {
+  /**
+     * @minItems 1
+     * @maxItems 1000
+     */
+  orderedIds: string[];
+}
+
 export type SavedRegistryView = RegistryViewSaveRequest & {
   id: string;
   isPinned: boolean;
