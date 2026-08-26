@@ -1,4 +1,7 @@
-import { ContractReviewRecord, ProvenanceMetadata } from "@workspace/api-client-react";
+import {
+  ContractReviewRecord,
+  ProvenanceMetadata,
+} from "@workspace/api-client-react";
 
 export function createEmptyProvenanceMetadata(): ProvenanceMetadata {
   return {

@@ -240,10 +240,13 @@ function familyFor(record: typeof contractsTable.$inferSelect, records: Array<ty
     });
   const root = byId.get(rootId)!;
   const effective = upgradeContract(root.contract) as Record<string, any>;
+  const storedRoot = isRecord(root.contract) ? root.contract : {};
+  const previousFamilyAlert = isRecord(storedRoot.familyAlert)
+    ? storedRoot.familyAlert
+    : effective.alert;
   const fieldKeys = ["vendorLegalName", "contractValue", "noticePeriod", "renewalMechanism", "initialTermEndDate"];
 
   for (const member of members) {
-    if (member.id === rootId) continue;
     const memberContract = upgradeContract(member.contract) as Record<string, any>;
     for (const [key, field] of Object.entries(memberContract.fields ?? {})) {
       if (isRecord(field) && field.value !== null && field.status !== "not_found") {
@@ -251,7 +254,10 @@ function familyFor(record: typeof contractsTable.$inferSelect, records: Array<ty
       }
     }
   }
-  const effectiveContract = withComputedDates(effective);
+  const effectiveContract = withComputedDates({
+    ...effective,
+    alert: previousFamilyAlert,
+  });
   const currentId = members.at(-1)?.id ?? rootId;
 
   return {
@@ -309,8 +315,21 @@ async function hasExistingSourceHash(hash: string) {
 async function validateParentContractId(parentContractId: string | null | undefined, currentId?: string) {
   if (!parentContractId) return null;
   if (parentContractId === currentId) return "A contract cannot be its own parent.";
-  const [parent] = await db.select({ id: contractsTable.id }).from(contractsTable).where(eq(contractsTable.id, parentContractId));
-  return parent ? null : "The selected parent contract was not found.";
+  if (currentId) {
+    const [dependent] = await db
+      .select({ id: contractsTable.id })
+      .from(contractsTable)
+      .where(eq(contractsTable.parentContractId, currentId))
+      .limit(1);
+    if (dependent) return "A root agreement with related documents cannot be reparented.";
+  }
+  const [parent] = await db
+    .select({ id: contractsTable.id, parentContractId: contractsTable.parentContractId })
+    .from(contractsTable)
+    .where(eq(contractsTable.id, parentContractId));
+  if (!parent) return "The selected parent contract was not found.";
+  if (parent.parentContractId) return "Related documents must link directly to a root agreement.";
+  return null;
 }
 
 function contractDocumentType(contract: Record<string, any>) {
@@ -346,19 +365,30 @@ router.post("/contracts/:id/alert/dismiss", async (req: Request, res: Response):
     res.status(404).json({ error: "Contract not found." });
     return;
   }
-  const contract = upgradeContract(existing.contract) as unknown as Record<string, unknown>;
-  const alert = isRecord(contract.alert) ? contract.alert : null;
+  const records = await db.select().from(contractsTable);
+  const family = familyFor(existing, records);
+  const alert = isRecord(family.effectiveContract.alert) ? family.effectiveContract.alert : null;
   if (!alert) {
     res.status(400).json({ error: "This contract has no actionable alert." });
     return;
   }
   const dismissed = { ...alert, state: "dismissed", dismissedReason: reason };
-  const [record] = await db.update(contractsTable)
-    .set({ contract: { ...contract, alert: dismissed }, updatedAt: new Date() })
-    .where(eq(contractsTable.id, id))
+  const root = records.find((record) => record.id === family.id)!;
+  const rootContract = upgradeContract(root.contract) as unknown as Record<string, unknown>;
+  await db.update(contractsTable)
+    .set({
+      contract: {
+        ...rootContract,
+        alert: dismissed,
+        familyAlert: dismissed,
+      },
+      updatedAt: new Date(),
+    })
+    .where(eq(contractsTable.id, root.id))
     .returning();
-  const records = await db.select().from(contractsTable);
-  res.json(responseFor(record, records));
+  const updatedRecords = await db.select().from(contractsTable);
+  const updatedRecord = updatedRecords.find((record) => record.id === id)!;
+  res.json(responseFor(updatedRecord, updatedRecords));
 });
 
 router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
@@ -373,17 +403,26 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(404).json({ error: "Contract not found." });
     return;
   }
-  const contract = withComputedDates(
-    sanitizeChangedFields(
+  const storedContract = isRecord(existing.contract) ? existing.contract : {};
+  const changedContract = sanitizeChangedFields(
       parsed.data.contract as unknown as Record<string, unknown>,
       upgradeContract(existing.contract) as unknown as Record<string, unknown>,
-    ),
-  );
+    );
+  const contract = withComputedDates({
+    ...changedContract,
+    ...(isRecord(storedContract.familyAlert)
+      ? { familyAlert: storedContract.familyAlert }
+      : {}),
+  });
   if (!enforceProvenanceConsistency(contract)) {
     res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
-  const parentError = await validateParentContractId(parsed.data.parentContractId, id);
+  const parentContractId =
+    parsed.data.parentContractId === undefined
+      ? existing.parentContractId
+      : parsed.data.parentContractId;
+  const parentError = await validateParentContractId(parentContractId, id);
   if (parentError) {
     res.status(400).json({ error: parentError });
     return;
@@ -392,7 +431,7 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     .update(contractsTable)
     .set({
       filename: parsed.data.filename.slice(0, 250),
-      parentContractId: parsed.data.parentContractId ?? null,
+      parentContractId,
       documentType: contractDocumentType(contract),
       contract,
       confidence: {},

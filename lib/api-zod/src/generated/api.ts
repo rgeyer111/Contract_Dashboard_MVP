@@ -2610,8 +2610,6 @@ export const CreateContractResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
-
-
 /**
  * @summary Get a saved contract
  */
@@ -3478,7 +3476,6 @@ export const GetContractResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
-
 
 /**
  * @summary Update a saved contract
@@ -4769,8 +4766,6 @@ export const UpdateContractResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
-
-
 /**
  * @summary Dismiss a contract alert
  */
@@ -5645,5 +5640,3 @@ export const DismissContractAlertResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
-
-
