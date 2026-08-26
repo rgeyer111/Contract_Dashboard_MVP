@@ -357,6 +357,8 @@ export const extractContractResponseExtractionContractAssignmentNegotiationBuffe
 export const extractContractResponseExtractionContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractComputedDaysRemainingMultipleOf = 1;
+
 export const extractContractResponseExtractionContractComputedReasonMax = 300;
 
 export const extractContractResponseExtractionContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -612,6 +614,7 @@ export const ExtractContractResponse = zod.object({
   "exitDate": zod.string().regex(extractContractResponseExtractionContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(extractContractResponseExtractionContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(extractContractResponseExtractionContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(extractContractResponseExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(extractContractResponseExtractionContractComputedReasonMax).nullable()
 }),
@@ -810,6 +813,8 @@ export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMult
 export const listContractsResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractComputedDaysRemainingMultipleOf = 1;
+
 export const listContractsResponseOneContractComputedReasonMax = 300;
 
 export const listContractsResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -1061,6 +1066,7 @@ export const ListContractsResponseItem = zod.object({
   "exitDate": zod.string().regex(listContractsResponseOneContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(listContractsResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(listContractsResponseOneContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(listContractsResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(listContractsResponseOneContractComputedReasonMax).nullable()
 }),
@@ -1260,6 +1266,8 @@ export const createContractBodyContractAssignmentNegotiationBufferDaysMultipleOf
 export const createContractBodyContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractComputedDaysRemainingMultipleOf = 1;
+
 export const createContractBodyContractComputedReasonMax = 300;
 
 export const createContractBodyContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -1511,6 +1519,7 @@ export const CreateContractBody = zod.object({
   "exitDate": zod.string().regex(createContractBodyContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(createContractBodyContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(createContractBodyContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(createContractBodyContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(createContractBodyContractComputedReasonMax).nullable()
 }),
@@ -1700,6 +1709,8 @@ export const createContractResponseOneContractAssignmentNegotiationBufferDaysMul
 export const createContractResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractComputedDaysRemainingMultipleOf = 1;
+
 export const createContractResponseOneContractComputedReasonMax = 300;
 
 export const createContractResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -1951,6 +1962,7 @@ export const CreateContractResponse = zod.object({
   "exitDate": zod.string().regex(createContractResponseOneContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(createContractResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(createContractResponseOneContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(createContractResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(createContractResponseOneContractComputedReasonMax).nullable()
 }),
@@ -2153,6 +2165,8 @@ export const getContractResponseOneContractAssignmentNegotiationBufferDaysMultip
 export const getContractResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractComputedDaysRemainingMultipleOf = 1;
+
 export const getContractResponseOneContractComputedReasonMax = 300;
 
 export const getContractResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -2404,6 +2418,7 @@ export const GetContractResponse = zod.object({
   "exitDate": zod.string().regex(getContractResponseOneContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(getContractResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(getContractResponseOneContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(getContractResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(getContractResponseOneContractComputedReasonMax).nullable()
 }),
@@ -2606,6 +2621,8 @@ export const updateContractBodyContractAssignmentNegotiationBufferDaysMultipleOf
 export const updateContractBodyContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractComputedDaysRemainingMultipleOf = 1;
+
 export const updateContractBodyContractComputedReasonMax = 300;
 
 export const updateContractBodyContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -2857,6 +2874,7 @@ export const UpdateContractBody = zod.object({
   "exitDate": zod.string().regex(updateContractBodyContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(updateContractBodyContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(updateContractBodyContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(updateContractBodyContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(updateContractBodyContractComputedReasonMax).nullable()
 }),
@@ -3046,6 +3064,8 @@ export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMul
 export const updateContractResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractComputedDaysRemainingMultipleOf = 1;
+
 export const updateContractResponseOneContractComputedReasonMax = 300;
 
 export const updateContractResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -3297,6 +3317,7 @@ export const UpdateContractResponse = zod.object({
   "exitDate": zod.string().regex(updateContractResponseOneContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(updateContractResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(updateContractResponseOneContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(updateContractResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(updateContractResponseOneContractComputedReasonMax).nullable()
 }),
@@ -3507,6 +3528,8 @@ export const dismissContractAlertResponseOneContractAssignmentNegotiationBufferD
 export const dismissContractAlertResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const dismissContractAlertResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const dismissContractAlertResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractComputedDaysRemainingMultipleOf = 1;
+
 export const dismissContractAlertResponseOneContractComputedReasonMax = 300;
 
 export const dismissContractAlertResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -3758,6 +3781,7 @@ export const DismissContractAlertResponse = zod.object({
   "exitDate": zod.string().regex(dismissContractAlertResponseOneContractComputedExitDateRegExp).nullable(),
   "noticeDeadline": zod.string().regex(dismissContractAlertResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
   "actionDate": zod.string().regex(dismissContractAlertResponseOneContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(dismissContractAlertResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(dismissContractAlertResponseOneContractComputedReasonMax).nullable()
 }),

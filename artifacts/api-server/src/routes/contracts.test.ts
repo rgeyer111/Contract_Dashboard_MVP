@@ -72,6 +72,7 @@ const contract = {
     exitDate: "2026-12-31",
     noticeDeadline: "2026-11-01",
     actionDate: "2026-10-02",
+    daysRemaining: 37,
     status: "green",
     reason: null,
   },

@@ -634,11 +634,15 @@ components:
       enum: [green, amber, red, expired, blocked]
     ContractComputedDates:
       type: object
-      required: [exitDate, noticeDeadline, actionDate, status, reason]
+      required: [exitDate, noticeDeadline, actionDate, daysRemaining, status, reason]
       properties:
         exitDate: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
         noticeDeadline: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
         actionDate: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
+        daysRemaining:
+          type: ["number", "null"]
+          multipleOf: 1
+          description: Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.
         status: { $ref: "#/components/schemas/ContractComputedStatus" }
         reason: { type: ["string", "null"], maxLength: 300 }
     ContractAlertState:

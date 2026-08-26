@@ -48,6 +48,7 @@ export function createEmptyContractReviewRecord(): ContractReviewRecord {
       exitDate: null,
       noticeDeadline: null,
       actionDate: null,
+      daysRemaining: null,
       status: 'blocked',
       reason: 'blocked — not enough contract data to compute dates',
     },

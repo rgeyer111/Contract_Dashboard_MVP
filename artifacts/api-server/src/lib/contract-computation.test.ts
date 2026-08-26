@@ -26,14 +26,36 @@ describe("computeContractDates", () => {
       exitDate: "2026-12-31",
       noticeDeadline: "2026-09-30",
       actionDate: "2026-08-01",
+      daysRemaining: 92,
       status: "green",
       reason: null,
     });
   });
 
+  it("keeps a 45-day buffer additive and counts down to the action date", () => {
+    const result = computeContractDates(
+      {
+        ...contract(),
+        assignment: { negotiationBufferDays: 45 },
+      },
+      new Date("2026-08-01T12:00:00Z"),
+    );
+
+    expect(result).toMatchObject({
+      exitDate: "2026-12-31",
+      noticeDeadline: "2026-09-30",
+      actionDate: "2026-08-16",
+      daysRemaining: 15,
+      status: "green",
+    });
+  });
+
   it("turns amber at the action date and red after the legal deadline", () => {
-    expect(computeContractDates(contract(), new Date("2026-08-01T12:00:00Z")).status).toBe("amber");
-    expect(computeContractDates(contract(), new Date("2026-10-01T12:00:00Z")).status).toBe("red");
+    const actionDay = computeContractDates(contract(), new Date("2026-08-01T12:00:00Z"));
+    const overdue = computeContractDates(contract(), new Date("2026-10-01T12:00:00Z"));
+    expect(actionDay).toMatchObject({ status: "amber", daysRemaining: 0 });
+    expect(overdue.status).toBe("red");
+    expect(overdue.daysRemaining).toBeLessThan(0);
   });
 
   it("refuses to invent a date for an unknown anchor", () => {
@@ -46,6 +68,7 @@ describe("computeContractDates", () => {
     expect(result.status).toBe("blocked");
     expect(result.reason).toMatch(/anchor unclear/i);
     expect(result.noticeDeadline).toBeNull();
+    expect(result.daysRemaining).toBeNull();
   });
 
   it("explains how to unblock a missing notice clause", () => {
@@ -59,6 +82,7 @@ describe("computeContractDates", () => {
       exitDate: null,
       noticeDeadline: null,
       actionDate: null,
+      daysRemaining: null,
     });
     expect(result.reason).toMatch(/no notice clause.*add or confirm/i);
   });

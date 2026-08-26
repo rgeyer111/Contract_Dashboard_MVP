@@ -69,6 +69,7 @@ const makeContract = ({
     exitDate: "2026-12-31",
     noticeDeadline: "2026-11-01",
     actionDate: "2026-10-02",
+    daysRemaining: 37,
     status: "green",
     reason: null,
   },
@@ -159,6 +160,12 @@ test("shows upload success and API error states", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Resolve the open decisions" })).toBeVisible();
   await expect(page.getByText(/acme\.pdf/)).toBeVisible();
   await expect(page.getByText("Embedded text extraction", { exact: true })).toBeVisible();
+  const negotiationBuffer = page.getByLabel("Negotiation buffer (days)");
+  await expect(negotiationBuffer).toHaveValue("30");
+  await expect(page.getByText("Inherited global default", { exact: true })).toBeVisible();
+  await negotiationBuffer.fill("45");
+  await expect(negotiationBuffer).toHaveValue("45");
+  await expect(page.getByText("Contract override", { exact: true })).toBeVisible();
 
   await page.goto("/dashboard");
   responseMode = "error";
@@ -240,19 +247,11 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
     createdAt: "2026-01-01T00:00:00.000Z",
     updatedAt: "2026-01-01T00:00:00.000Z",
   };
-  let createPayload: Record<string, unknown> | undefined;
   let updatePayload: Record<string, unknown> | undefined;
 
   await page.route("**/api/contracts", async (route) => {
     if (route.request().method() === "GET") {
       return route.fulfill({ json: [savedResponse(saved)] });
-    }
-    if (route.request().method() === "POST") {
-      const body = request.postDataJSON() as Record<string, unknown>;
-      createPayload = body;
-      saved.filename = body.filename;
-      saved.contract = body.contract;
-      return route.fulfill({ status: 201, json: savedResponse(saved) });
     }
     return route.continue();
   });
@@ -261,32 +260,23 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
       return route.fulfill({ json: savedResponse(saved) });
     }
     if (route.request().method() === "PUT") {
-      const body = request.postDataJSON() as Record<string, unknown>;
-      savedContract = {
-        ...savedContract,
-        ...body,
-        updatedAt: "2026-08-25T00:01:00.000Z",
+      const body = route.request().postDataJSON() as {
+        filename: string;
+        contract: ReturnType<typeof makeContract>;
       };
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(currentSavedResponse()),
-      });
-      return;
+      updatePayload = body;
+      saved.filename = body.filename;
+      saved.contract = body.contract;
+      saved.updatedAt = "2026-08-25T00:01:00.000Z";
+      return route.fulfill({ status: 200, json: savedResponse(saved) });
     }
 
     await route.continue();
   });
 
   await page.goto("/dashboard");
-  await page.getByRole("button", { name: "New Contract" }).click();
-  await page.locator("#contract-pdf-file").setInputFiles({
-    name: "acme.pdf",
-    mimeType: "application/pdf",
-    buffer: Buffer.from("%PDF-1.7\ncontract text"),
-  });
-  await page.getByRole("button", { name: "Extract contract" }).click();
-  await expect(page).toHaveURL(/\/review$/);
+  await page.getByRole("button", { name: "Northstar Sourcing", exact: true }).click();
+  await expect(page).toHaveURL(/\/review\?id=saved-northstar-contract$/);
 
   const vendorIssue = page
     .getByRole("heading", { name: "Vendor legal name", exact: true })
@@ -355,14 +345,14 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
     if (request.method() === "GET") {
       const current = currentSavedResponse();
       await route.fulfill({
-        status: current ? 200 : 404,
+        status: 200,
         contentType: "application/json",
-        body: JSON.stringify(current ?? { error: "Contract not found." }),
+        body: JSON.stringify(current ? [current] : []),
       });
       return;
     }
 
-    if (request.method() === "PUT") {
+    if (request.method() === "POST") {
       const body = request.postDataJSON() as Record<string, unknown>;
       savedContract = {
         id: contractId,
@@ -549,7 +539,8 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(amendmentRow).toContainText("USD 240,000 · annual");
   await expect(amendmentRow).toContainText("2027-12-31");
   await expect(amendmentRow).toContainText("manual renewal");
-  await expect(amendmentRow).toContainText("90 days before term end");
+  await expect(amendmentRow).toContainText("37 days until action");
+  await expect(amendmentRow).toContainText("2027-09-02");
   await expect(amendmentRow).toContainText("2027-10-02");
   await expect(amendmentRow).toContainText("Avery Stone");
   await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);

@@ -16,6 +16,7 @@ export type ComputedContractDates = {
   exitDate: string | null;
   noticeDeadline: string | null;
   actionDate: string | null;
+  daysRemaining: number | null;
   status: "green" | "amber" | "red" | "expired" | "blocked";
   reason: string | null;
 };
@@ -61,7 +62,14 @@ function addDays(date: Date, days: number) {
 }
 
 function blocked(reason: string): ComputedContractDates {
-  return { exitDate: null, noticeDeadline: null, actionDate: null, status: "blocked", reason };
+  return {
+    exitDate: null,
+    noticeDeadline: null,
+    actionDate: null,
+    daysRemaining: null,
+    status: "blocked",
+    reason,
+  };
 }
 
 const timingFieldNames = [
@@ -213,12 +221,14 @@ export function computeContractDates(
   }
   const noticeDeadline = addPeriod(anchorDate, notice, -1);
   const actionDate = addDays(noticeDeadline, -(contract.assignment.negotiationBufferDays ?? 0));
+  const daysRemaining = Math.round((actionDate.getTime() - today.getTime()) / DAY_MS);
   const status = statusFor(today, actionDate, noticeDeadline, exitDate, renewal);
 
   return {
     exitDate: formatDate(exitDate),
     noticeDeadline: formatDate(noticeDeadline),
     actionDate: formatDate(actionDate),
+    daysRemaining,
     status,
     reason:
       status === "expired"

@@ -558,6 +558,21 @@ export default function ReviewCompact() {
     }));
   };
 
+  const updateNegotiationBuffer = (value: string) => {
+    const parsed = Number.parseInt(value, 10);
+    const negotiationBufferDays = Number.isFinite(parsed)
+      ? Math.max(0, Math.min(365, parsed))
+      : 0;
+    setDraft((previous) => ({
+      ...previous,
+      assignment: {
+        ...previous.assignment,
+        negotiationBufferDays,
+        negotiationBufferSource: "contract_override",
+      },
+    }));
+  };
+
   const openIssues = useMemo(
     () => issueDefinitions.filter((issue) => !resolvedKeys.has(issue.key) && isIssue(getField(draft, issue.key))),
     [draft, resolvedKeys],
@@ -875,7 +890,29 @@ export default function ReviewCompact() {
                   <div className="mt-3 space-y-2 text-xs">
                     <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Owner</span><span className="font-extrabold">{draft.assignment.owner || "Unassigned"}</span></div>
                     <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Status</span><span className="font-extrabold">{draft.assignment.status}</span></div>
-                    <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Buffer</span><span className="font-extrabold">{draft.assignment.negotiationBufferDays} days</span></div>
+                  </div>
+                  <label className="mt-4 block text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
+                    Negotiation buffer (days)
+                    <input
+                      type="number"
+                      min={0}
+                      max={365}
+                      step={1}
+                      value={draft.assignment.negotiationBufferDays}
+                      onChange={(event) => updateNegotiationBuffer(event.target.value)}
+                      className="mt-1.5 h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </label>
+                  <div className={`mt-2 inline-flex rounded-full border px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${
+                    draft.assignment.negotiationBufferSource === "contract_override"
+                      ? "border-primary/20 bg-primary/10 text-primary"
+                      : "border-border bg-muted text-muted-foreground"
+                  }`}>
+                    {draft.assignment.negotiationBufferSource === "contract_override"
+                      ? "Contract override"
+                      : draft.assignment.negotiationBufferSource === "contract_type_default"
+                        ? "Inherited from contract type"
+                        : "Inherited global default"}
                   </div>
                   <select value={draft.assignment.status} onChange={(event) => updateAssignment("status", event.target.value)} className="mt-4 h-9 w-full rounded-md border border-input bg-background px-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-primary/20">
                     {assignmentStatusOptions.map((option) => <option key={option} value={option}>{option}</option>)}

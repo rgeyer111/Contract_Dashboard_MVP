@@ -431,6 +431,11 @@ export interface ContractComputedDates {
      * @pattern ^\d{4}-\d{2}-\d{2}$
      */
   actionDate: string | null;
+  /**
+     * Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.
+     * @nullable
+     */
+  daysRemaining: number | null;
   status: ContractComputedStatus;
   /**
      * @maxLength 300

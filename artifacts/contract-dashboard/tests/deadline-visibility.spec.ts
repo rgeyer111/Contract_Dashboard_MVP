@@ -1,5 +1,11 @@
 import { expect, test } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/registry-views", async (route) => {
+    await route.fulfill({ json: [] });
+  });
+});
+
 const blockedDates = {
   exitDate: "2099-01-11",
   noticeDeadline: "2099-02-22",
@@ -28,6 +34,7 @@ const makeContract = (
     exitDate: string;
     noticeDeadline: string;
     actionDate: string;
+    daysRemaining: number | null;
     status: "blocked" | "expired";
     reason: string;
   },
@@ -70,11 +77,13 @@ const makeContract = (
 test("hides blocked dates in registry and review while preserving expired history", async ({ page }) => {
   const blockedContract = makeContract("Blocked Vendor", {
     ...blockedDates,
+    daysRemaining: null,
     status: "blocked",
     reason: "blocked — missing a trusted contract timing anchor",
   });
   const expiredContract = makeContract("Expired Vendor", {
     ...expiredDates,
+    daysRemaining: -1,
     status: "expired",
     reason: "expired — historical dates retained for reference",
   });
@@ -124,15 +133,17 @@ test("hides blocked dates in registry and review while preserving expired histor
 
   const blockedRow = page.getByRole("row").filter({ hasText: "Blocked Vendor" });
   await expect(blockedRow).toHaveCount(1);
-  await expect(blockedRow).toContainText("Deadline not computable");
+  await expect(blockedRow).toContainText("Action date unavailable");
+  await expect(blockedRow).toContainText("Legal deadline not computable");
   await expect(blockedRow).not.toContainText(blockedDates.exitDate);
   await expect(blockedRow).not.toContainText(blockedDates.noticeDeadline);
   await expect(blockedRow).not.toContainText(blockedDates.actionDate);
 
   const expiredRow = page.getByRole("row").filter({ hasText: "Expired Vendor" });
   await expect(expiredRow).toHaveCount(1);
+  await expect(expiredRow).toContainText("1 day past action date");
   await expect(expiredRow).toContainText(expiredDates.noticeDeadline);
-  await expect(expiredRow).not.toContainText(expiredDates.actionDate);
+  await expect(expiredRow).toContainText(expiredDates.actionDate);
   await expect(expiredRow).toContainText(expiredContract.computed.reason);
 
   await page.goto("/review?id=blocked-deadline");

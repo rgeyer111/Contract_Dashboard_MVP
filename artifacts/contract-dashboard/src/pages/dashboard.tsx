@@ -75,6 +75,14 @@ function formatPeriod(value: unknown) {
     .join(" · ") || "Notice terms not stated";
 }
 
+function formatDaysRemaining(value: number | null) {
+  if (value === null) return "Action date unavailable";
+  if (value === 0) return "Action starts today";
+  if (value > 0) return `${value} day${value === 1 ? "" : "s"} until action`;
+  const overdueDays = Math.abs(value);
+  return `${overdueDays} day${overdueDays === 1 ? "" : "s"} past action date`;
+}
+
 const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
 const SEARCH_QUERY_PARAM = "search";
 
@@ -988,9 +996,16 @@ export default function Dashboard() {
                             : status === 'green'
                               ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20'
                               : 'bg-muted text-muted-foreground border-border';
+                       const statusRowClass = status === 'red'
+                         ? 'bg-destructive/[0.035]'
+                         : status === 'amber'
+                           ? 'bg-amber-500/[0.045]'
+                           : status === 'expired'
+                             ? 'bg-orange-500/[0.035]'
+                             : '';
                       
                       return (
-                         <tr key={saved.id} className="hover:bg-muted/30 transition-colors group">
+                         <tr key={saved.id} className={`${statusRowClass} hover:bg-muted/30 transition-colors group`}>
                           <td className="px-6 py-4">
                              <div>
                                 <div className="flex flex-wrap items-center gap-2">
@@ -1008,9 +1023,14 @@ export default function Dashboard() {
                              <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{formatContractType(contract.fields.renewalMechanism.value)}</div>
                           </td>
                           <td className="px-6 py-4">
-                             <div className="text-xs font-bold text-foreground">{formatPeriod(contract.fields.noticePeriod.value)}</div>
-                             <div className={`mt-1 text-[10px] font-semibold ${isBlocked ? "text-destructive" : "text-muted-foreground"}`}>
-                               Deadline {isBlocked ? "not computable" : contract.computed.noticeDeadline || "not computable"}
+                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>
+                                {formatDaysRemaining(contract.computed.daysRemaining)}
+                              </div>
+                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">
+                                Act {isBlocked ? "not computable" : contract.computed.actionDate || "not computable"}
+                              </div>
+                              <div className={`mt-0.5 text-[10px] font-semibold ${isBlocked ? "text-destructive" : "text-muted-foreground"}`}>
+                                Legal deadline {isBlocked ? "not computable" : contract.computed.noticeDeadline || "not computable"}
                              </div>
                           </td>
                            <td className="px-6 py-4">
