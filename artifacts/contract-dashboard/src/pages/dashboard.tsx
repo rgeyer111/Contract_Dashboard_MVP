@@ -445,38 +445,41 @@ export default function Dashboard() {
           {!isActionItemsPage && <div className="space-y-4 pt-4">
              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-xl font-bold tracking-tight">Contract Registry</h2>
-               <div className="flex flex-wrap items-center gap-2">
-                 <label htmlFor="agreement-type-filter" className="sr-only">Filter by agreement type</label>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <label htmlFor="document-type-filter" className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  Document type
+                </label>
+                <div className="flex flex-wrap items-center gap-2">
                  <select
-                   id="agreement-type-filter"
-                   aria-label="Filter by agreement type"
+                  id="document-type-filter"
+                  aria-label="Filter by document type"
                    value={documentTypeFilter}
                    onChange={(event) => setDocumentTypeFilter(event.target.value)}
                    className="h-9 rounded-md border border-input bg-background px-3 text-xs font-semibold capitalize outline-none focus:ring-2 focus:ring-primary/20"
                  >
-                   <option value="">All agreement types</option>
+                  <option value="">All document types</option>
                    {documentTypeOptions.map((option) => (
                      <option key={option} value={option}>{formatDocumentType(option)}</option>
                    ))}
                  </select>
-                 {(documentTypeFilter || searchTerm) && (
+                {documentTypeFilter && (
                    <Button
                      type="button"
                      variant="ghost"
                      size="sm"
-                     onClick={() => {
-                       setDocumentTypeFilter("");
-                       setSearchTerm("");
-                     }}
+                    onClick={() => setDocumentTypeFilter("")}
+                    aria-label="Clear document type filter"
+                    title="Clear document type filter"
                      className="gap-1.5 text-primary hover:text-primary/80 font-semibold"
                    >
                      <X className="h-3.5 w-3.5" />
-                     Clear filters
+                    Clear type
                    </Button>
                  )}
                  {!documentTypeFilter && !searchTerm && (
                    <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
                  )}
+                </div>
                </div>
             </div>
              {(documentTypeFilter || searchTerm) && (

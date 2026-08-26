@@ -290,7 +290,6 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   await expect(page).toHaveURL(/\/dashboard$/);
   expect(createPayload).toEqual({
     filename: "northstar.pdf",
-    parentContractId: null,
     contract,
   });
   await expect(page.getByText("Northstar Sourcing", { exact: true })).toBeVisible();
@@ -312,7 +311,6 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   await expect(page).toHaveURL(/\/dashboard$/);
   expect(updatePayload).toEqual({
     filename: "northstar.pdf",
-    parentContractId: null,
     contract: {
       ...contract,
       fields: {
@@ -567,13 +565,13 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);
   await expect(page.getByTestId("contract-family-history")).toHaveCount(0);
 
-  const typeFilter = page.getByLabel("Filter by agreement type");
-  await expect(typeFilter).toBeVisible();
-  await typeFilter.selectOption("amendment");
+  const documentTypeFilter = page.getByRole("combobox", { name: "Filter by document type" });
+  await expect(documentTypeFilter).toBeVisible();
+  await documentTypeFilter.selectOption("amendment");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
-  await page.getByRole("button", { name: "Clear filters" }).click();
+  await page.getByRole("button", { name: "Clear document type filter" }).click();
   await expect(page.getByTestId("active-contract-count")).toHaveText("2");
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
 
@@ -594,6 +592,14 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   });
   expect(scrollerMetrics.overflowX).toBe("auto");
   expect(scrollerMetrics.scrollWidth).toBeGreaterThan(scrollerMetrics.clientWidth);
+
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await expect(documentTypeFilter).toBeVisible();
+  await documentTypeFilter.selectOption("master_agreement");
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Clear document type filter" }).click();
 
   await page.reload();
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
