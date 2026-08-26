@@ -59,6 +59,7 @@ const makeContract = (
   },
   assignment: {
     owner: "John Doe",
+    ownerEmail: "john.doe@example.com",
     negotiationBufferDays: 30,
     negotiationBufferSource: "global_default",
     status: "Review Open",
@@ -77,9 +78,32 @@ test("hides blocked dates in registry and review while preserving expired histor
     status: "expired",
     reason: "expired — historical dates retained for reference",
   });
+  const savedContract = (id: string, filename: string, contract: ReturnType<typeof makeContract>) => ({
+    id,
+    filename,
+    parentContractId: null,
+    documentType: "master_agreement",
+    contract,
+    family: {
+      id,
+      documentCount: 1,
+      effectiveContract: contract,
+      documents: [
+        {
+          id,
+          filename,
+          documentType: "master_agreement",
+          effectiveDate: contract.fields.effectiveDate.value,
+          isParent: true,
+          isCurrent: true,
+          fieldValues: {},
+        },
+      ],
+    },
+  });
   const savedContracts = [
-    { id: "blocked-deadline", filename: "blocked.pdf", contract: blockedContract },
-    { id: "expired-deadline", filename: "expired.pdf", contract: expiredContract },
+    savedContract("blocked-deadline", "blocked.pdf", blockedContract),
+    savedContract("expired-deadline", "expired.pdf", expiredContract),
   ];
 
   await page.route("**/api/contracts", async (route) => {
@@ -100,35 +124,38 @@ test("hides blocked dates in registry and review while preserving expired histor
 
   const blockedRow = page.getByRole("row").filter({ hasText: "Blocked Vendor" });
   await expect(blockedRow).toHaveCount(1);
-  await expect(blockedRow).toContainText("Deadline unavailable");
+  await expect(blockedRow).toContainText("Deadline not computable");
   await expect(blockedRow).not.toContainText(blockedDates.exitDate);
   await expect(blockedRow).not.toContainText(blockedDates.noticeDeadline);
   await expect(blockedRow).not.toContainText(blockedDates.actionDate);
-  await expect(blockedRow.getByText(/^Notice /)).toHaveCount(0);
-  await expect(blockedRow.getByText(/^Act /)).toHaveCount(0);
 
   const expiredRow = page.getByRole("row").filter({ hasText: "Expired Vendor" });
   await expect(expiredRow).toHaveCount(1);
   await expect(expiredRow).toContainText(expiredDates.noticeDeadline);
-  await expect(expiredRow).toContainText(expiredDates.actionDate);
+  await expect(expiredRow).not.toContainText(expiredDates.actionDate);
   await expect(expiredRow).toContainText(expiredContract.computed.reason);
 
   await page.goto("/review?id=blocked-deadline");
   const blockedPanel = page
-    .getByText("No dates are shown until the contract timing can be trusted.", { exact: true })
-    .locator("xpath=../..");
+    .getByText("Renewal timeline", { exact: true })
+    .locator("xpath=ancestor::section");
   await expect(blockedPanel).toContainText("Deadline unavailable");
+  await expect(blockedPanel).toContainText(blockedContract.computed.reason);
   await expect(blockedPanel.getByText("Exit date", { exact: true })).toHaveCount(0);
-  await expect(blockedPanel.getByText("Legal notice deadline", { exact: true })).toHaveCount(0);
+  await expect(blockedPanel.getByText("Legal notice", { exact: true })).toHaveCount(0);
   await expect(blockedPanel.getByText("Start negotiation", { exact: true })).toHaveCount(0);
   await expect(blockedPanel).not.toContainText(blockedDates.exitDate);
   await expect(blockedPanel).not.toContainText(blockedDates.noticeDeadline);
   await expect(blockedPanel).not.toContainText(blockedDates.actionDate);
 
   await page.goto("/review?id=expired-deadline");
-  const expiredPanel = page.getByText("Exit date", { exact: true }).locator("xpath=../..");
-  await expect(expiredPanel).toContainText(expiredDates.exitDate);
-  await expect(expiredPanel).toContainText(expiredDates.noticeDeadline);
-  await expect(expiredPanel).toContainText(expiredDates.actionDate);
-  await expect(expiredPanel).toContainText(expiredContract.computed.reason);
+  const expiredPanel = page
+    .getByText("Renewal timeline", { exact: true })
+    .locator("xpath=ancestor::section");
+  await expect(expiredPanel).toContainText("11.01.2020");
+  await expect(expiredPanel).toContainText("22.02.2020");
+  await expect(expiredPanel).toContainText("03.03.2020");
+  await expect(expiredPanel.getByText("Exit date", { exact: true })).toBeVisible();
+  await expect(expiredPanel.getByText("Legal notice", { exact: true })).toBeVisible();
+  await expect(expiredPanel.getByText("Start negotiation", { exact: true })).toBeVisible();
 });

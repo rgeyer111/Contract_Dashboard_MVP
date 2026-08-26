@@ -50,6 +50,7 @@ const makeContract = ({
   },
   assignment: {
     owner: "John Doe",
+    ownerEmail: "john.doe@example.com",
     negotiationBufferDays: 30,
     negotiationBufferSource: "global_default",
     status: "Review Open",
@@ -71,6 +72,28 @@ const reviewerEdited = (value: unknown) => ({
   clause: null,
   quote: null,
   note: "Reviewer-supplied value; original extraction evidence was cleared.",
+});
+
+const savedResponse = <T extends { id: string; filename: string; contract: ReturnType<typeof makeContract> }>(saved: T) => ({
+  ...saved,
+  parentContractId: null,
+  documentType: "master_agreement",
+  family: {
+    id: saved.id,
+    documentCount: 1,
+    effectiveContract: saved.contract,
+    documents: [
+      {
+        id: saved.id,
+        filename: saved.filename,
+        documentType: "master_agreement",
+        effectiveDate: saved.contract.fields.effectiveDate.value,
+        isParent: true,
+        isCurrent: true,
+        fieldValues: {},
+      },
+    ],
+  },
 });
 
 test("shows upload success and API error states", async ({ page }) => {
@@ -123,8 +146,9 @@ test("shows upload success and API error states", async ({ page }) => {
   await expect(page.getByText("acme.pdf")).toBeVisible();
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page).toHaveURL(/\/review$/);
-  await expect(page.getByRole("heading", { name: "Review Contract Details" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Resolve the open decisions" })).toBeVisible();
   await expect(page.getByText(/acme\.pdf/)).toBeVisible();
+  await expect(page.getByText("Embedded text extraction", { exact: true })).toBeVisible();
 
   await page.goto("/dashboard");
   responseMode = "error";
@@ -179,11 +203,7 @@ test("shows OCR scan warnings for every legibility level but not embedded text",
     });
     await page.getByRole("button", { name: "Extract contract" }).click();
     await expect(page).toHaveURL(/\/review$/);
-    const warning = page
-      .locator("div.mt-4.inline-flex")
-      .filter({ hasText: "OCR used for this scan" });
-    await expect(warning).toContainText("OCR used for this scan");
-    await expect(warning).toContainText(`${level} legibility`);
+    await expect(page.getByText(`OCR · ${level} legibility`, { exact: true })).toBeVisible();
     await page.goto("/dashboard");
   }
 
@@ -196,7 +216,8 @@ test("shows OCR scan warnings for every legibility level but not embedded text",
   });
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page).toHaveURL(/\/review$/);
-  await expect(page.getByText(/OCR used for this scan/)).toHaveCount(0);
+  await expect(page.getByText("Embedded text extraction", { exact: true })).toBeVisible();
+  await expect(page.getByText(/^OCR · /)).toHaveCount(0);
 });
 
 test("keeps a confirmed contract available after reload and update", async ({ page }) => {
@@ -207,6 +228,7 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
     contractType: "software_license",
     contractValue: { amount: 240000, currency: "USD", basis: "annual" },
   });
+  contract.fields.vendorLegalName = reviewerEdited("Northstar Sourcing");
   const saved = {
     id: "saved-northstar-contract",
     filename: "northstar.pdf",
@@ -219,20 +241,20 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
 
   await page.route("**/api/contracts", async (route) => {
     if (route.request().method() === "GET") {
-      return route.fulfill({ json: [saved] });
+      return route.fulfill({ json: [savedResponse(saved)] });
     }
     if (route.request().method() === "POST") {
       const body = route.request().postDataJSON();
       createPayload = body;
       saved.filename = body.filename;
       saved.contract = body.contract;
-      return route.fulfill({ status: 201, json: saved });
+      return route.fulfill({ status: 201, json: savedResponse(saved) });
     }
     return route.continue();
   });
   await page.route("**/api/contracts/saved-northstar-contract", async (route) => {
     if (route.request().method() === "GET") {
-      return route.fulfill({ json: saved });
+      return route.fulfill({ json: savedResponse(saved) });
     }
     if (route.request().method() === "PUT") {
       const body = route.request().postDataJSON();
@@ -240,7 +262,7 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
       saved.filename = body.filename;
       saved.contract = body.contract;
       saved.updatedAt = "2026-01-02T00:00:00.000Z";
-      return route.fulfill({ json: saved });
+      return route.fulfill({ json: savedResponse(saved) });
     }
     return route.continue();
   });
@@ -263,11 +285,12 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   }, saved);
   await page.reload();
 
-  await expect(page.getByRole("button", { name: "Confirm contract" })).toBeEnabled();
-  await page.getByRole("button", { name: "Confirm contract" }).click();
+  await expect(page.getByRole("button", { name: "Confirm review" })).toBeEnabled();
+  await page.getByRole("button", { name: "Confirm review" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   expect(createPayload).toEqual({
     filename: "northstar.pdf",
+    parentContractId: null,
     contract,
   });
   await expect(page.getByText("Northstar Sourcing", { exact: true })).toBeVisible();
@@ -276,19 +299,28 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   await expect(page.getByText("Northstar Sourcing", { exact: true })).toBeVisible();
   await page.getByText("Northstar Sourcing", { exact: true }).click();
   await expect(page).toHaveURL(/\/review\?id=saved-northstar-contract$/);
-  const vendorInput = page.getByPlaceholder("e.g. Acme Corp LLC");
+  const vendorIssue = page
+    .getByRole("heading", { name: "Vendor legal name", exact: true })
+    .locator("xpath=ancestor::article");
+  const vendorInput = vendorIssue.getByPlaceholder("Enter a value");
   await expect(vendorInput).toBeVisible();
+  await expect(vendorIssue.getByText("reviewer supplied", { exact: true })).toBeVisible();
 
   await vendorInput.fill("Northstar Sourcing GmbH");
-  await page.getByRole("button", { name: "Confirm contract" }).click();
+  await vendorIssue.getByRole("button", { name: "Resolve" }).click();
+  await page.getByRole("button", { name: "Confirm review" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   expect(updatePayload).toEqual({
     filename: "northstar.pdf",
+    parentContractId: null,
     contract: {
       ...contract,
       fields: {
         ...contract.fields,
-        vendorLegalName: reviewerEdited("Northstar Sourcing GmbH"),
+        vendorLegalName: {
+          ...reviewerEdited("Northstar Sourcing GmbH"),
+          reviewed: true,
+        },
       },
     },
   });
@@ -302,6 +334,16 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   const contractId = "saved-contract-regression";
   let savedContract: Record<string, unknown> | null = null;
   const contract = makeContract();
+  contract.fields.vendorLegalName = reviewerEdited("Acme");
+
+  const currentSavedResponse = () => {
+    if (!savedContract) return null;
+    return savedResponse(savedContract as {
+      id: string;
+      filename: string;
+      contract: ReturnType<typeof makeContract>;
+    });
+  };
 
   await page.route("**/api/contracts/extract", async (route) => {
     await route.fulfill({
@@ -324,10 +366,11 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
     const request = route.request();
 
     if (request.method() === "GET") {
+      const current = currentSavedResponse();
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(savedContract ? [savedContract] : []),
+        body: JSON.stringify(current ? [current] : []),
       });
       return;
     }
@@ -343,7 +386,7 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
       await route.fulfill({
         status: 201,
         contentType: "application/json",
-        body: JSON.stringify(savedContract),
+        body: JSON.stringify(currentSavedResponse()),
       });
       return;
     }
@@ -353,10 +396,11 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await page.route(`**/api/contracts/${contractId}`, async (route) => {
     const request = route.request();
     if (request.method() === "GET") {
+      const current = currentSavedResponse();
       await route.fulfill({
-        status: savedContract ? 200 : 404,
+        status: current ? 200 : 404,
         contentType: "application/json",
-        body: JSON.stringify(savedContract ?? { error: "Contract not found." }),
+        body: JSON.stringify(current ?? { error: "Contract not found." }),
       });
       return;
     }
@@ -371,7 +415,7 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(savedContract),
+        body: JSON.stringify(currentSavedResponse()),
       });
       return;
     }
@@ -389,29 +433,42 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page).toHaveURL(/\/review$/);
 
-  const vendorInput = page.getByPlaceholder("e.g. Acme Corp LLC");
+  const vendorIssue = page
+    .getByRole("heading", { name: "Vendor legal name", exact: true })
+    .locator("xpath=ancestor::article");
+  const vendorInput = vendorIssue.getByPlaceholder("Enter a value");
+  await expect(vendorIssue.getByText("reviewer supplied", { exact: true })).toBeVisible();
   await vendorInput.fill("Edited Acme");
-  await page.getByRole("button", { name: "Confirm contract" }).click();
+  await page.getByRole("button", { name: "Confirm review" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByText("Edited Acme")).toBeVisible();
 
   await page.reload();
   await expect(page.getByText("Edited Acme")).toBeVisible();
-  const unknownValue = page.getByText("Unknown / not stated");
+  const unknownValue = page
+    .getByRole("row")
+    .filter({ hasText: "Edited Acme" })
+    .locator("div.text-destructive")
+    .filter({ hasText: "Value not stated" })
+    .first();
   await expect(unknownValue).toBeVisible();
   await expect(unknownValue).toHaveClass(/text-destructive/);
   await expect(page.getByText("John Doe", { exact: true })).toBeVisible();
 
-  await page.getByRole("row").filter({ hasText: "Edited Acme" }).click();
+  await page
+    .getByRole("row")
+    .filter({ hasText: "Edited Acme" })
+    .getByRole("button", { name: "Edited Acme", exact: true })
+    .click();
   await expect(page).toHaveURL(new RegExp(`/review\\?id=${contractId}$`));
   await expect(vendorInput).toHaveValue("Edited Acme");
   const contractValueField = page
-    .getByText("Contract Value", { exact: true })
-    .locator("xpath=../..");
+    .getByRole("heading", { name: "Contract value", exact: true })
+    .locator("xpath=ancestor::article");
   await expect(contractValueField.getByText("not found", { exact: true })).toHaveClass(
     /text-destructive/,
   );
-  await expect(page.getByPlaceholder("e.g. John Doe")).toHaveValue("John Doe");
+  await expect(page.getByText("John Doe", { exact: true })).toBeVisible();
 });
 
 test("keeps standalone contract rows reachable on narrow screens", async ({ page }) => {
