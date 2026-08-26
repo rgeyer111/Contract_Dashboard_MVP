@@ -21,6 +21,7 @@ export * from './contractExtractionUpload';
 export * from './contractProvenance';
 export * from './contractReviewRecord';
 export * from './contractSaveRequest';
+export * from './contractSourceFile';
 export * from './contractValueValue';
 export * from './contractValueValueBasis';
 export * from './dismissAlertRequest';

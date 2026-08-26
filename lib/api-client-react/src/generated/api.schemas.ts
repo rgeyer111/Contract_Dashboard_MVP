@@ -14,8 +14,12 @@ export interface ErrorResponse {
 }
 
 export interface ContractExtractionUpload {
-  /** A PDF contract up to 10 MB. */
-  file: Blob;
+  /**
+     * One or more PDF contracts up to 10 MB each.
+     * @minItems 1
+     * @maxItems 20
+     */
+  files: Blob[];
 }
 
 export type ProvenanceMetadataStatus = typeof ProvenanceMetadataStatus[keyof typeof ProvenanceMetadataStatus];
@@ -425,11 +429,23 @@ export interface DismissAlertRequest {
   reason: string;
 }
 
+export interface ContractSourceFile {
+  id: string;
+  name: string;
+  /** @nullable */
+  modifiedAt: string | null;
+  /** @minimum 0 */
+  size: number;
+  /** @pattern ^[a-f0-9]{64}$ */
+  hash: string;
+}
+
 export interface ContractReviewRecord {
   fields: ContractProvenance;
   assignment: ContractAssignment;
   computed: ContractComputedDates;
   alert: ContractAlert | null;
+  source?: ContractSourceFile;
 }
 
 /**

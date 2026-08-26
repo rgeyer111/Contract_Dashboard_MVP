@@ -10,3 +10,4 @@
 - [OpenAPI code generation](openapi-code-generation.md) — express date-only and integer constraints without Orval/Zod coercion or unsupported helpers.
 - [Contract deadline arithmetic](contract-deadline-arithmetic.md) — compute dates server-side; negotiation buffer is extra runway before the legal notice deadline.
 - [Contract alert lifecycle](contract-alert-lifecycle.md) — blocked/expired contracts have no alert; dismissal survives only while alert inputs remain unchanged.
+- [Contract ingestion sources](contract-ingestion-sources.md) — ingestion is source-agnostic; deduplicate by SHA-256 bytes and never by filename.

@@ -147,7 +147,7 @@ export const getExtractContractUrl = () => {
  */
 export const extractContract = async (contractExtractionUpload: ContractExtractionUpload, options?: Parameters<typeof customFetch>[1]): Promise<ContractExtractionResult> => {
     const formData = new FormData();
-formData.append(`file`, contractExtractionUpload.file);
+contractExtractionUpload.files.forEach(value => formData.append(`files`, value));
 
   return customFetch<ContractExtractionResult>(getExtractContractUrl(),
   {

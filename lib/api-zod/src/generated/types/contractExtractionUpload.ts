@@ -7,6 +7,10 @@
  */
 
 export interface ContractExtractionUpload {
-  /** A PDF contract up to 10 MB. */
-  file: Blob;
+  /**
+     * One or more PDF contracts up to 10 MB each.
+     * @minItems 1
+     * @maxItems 20
+     */
+  files: Blob[];
 }

@@ -20,8 +20,12 @@ export const HealthCheckResponse = zod.object({
 /**
  * @summary Extract a contract review draft from a PDF
  */
+export const extractContractBodyFilesMax = 20;
+
+
+
 export const ExtractContractBody = zod.object({
-  "file": zod.instanceof(File).describe('A PDF contract up to 10 MB.')
+  "files": zod.array(zod.instanceof(File)).min(1).max(extractContractBodyFilesMax).describe('One or more PDF contracts up to 10 MB each.')
 })
 
 export const extractContractResponseExtractionContractFieldsDocumentTypeOnePageMultipleOf = 1;
@@ -199,6 +203,10 @@ export const extractContractResponseExtractionContractAlertOneActionDateRegExp =
 export const extractContractResponseExtractionContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractAlertOneDismissedReasonMax = 300;
 
+export const extractContractResponseExtractionContractSourceSizeMin = 0;
+export const extractContractResponseExtractionContractSourceSizeMultipleOf = 1;
+
+export const extractContractResponseExtractionContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 export const extractContractResponseExtractionOcrPagesProcessedMin = 0;
 
@@ -435,7 +443,14 @@ export const ExtractContractResponse = zod.object({
   "noticeDeadline": zod.string().regex(extractContractResponseExtractionContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(extractContractResponseExtractionContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(extractContractResponseExtractionContractSourceSizeMin).multipleOf(extractContractResponseExtractionContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(extractContractResponseExtractionContractSourceHashRegExp)
+}).optional()
 }),
   "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
   "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
@@ -623,6 +638,10 @@ export const listContractsResponseOneContractAlertOneActionDateRegExp = new RegE
 export const listContractsResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractAlertOneDismissedReasonMax = 300;
 
+export const listContractsResponseOneContractSourceSizeMin = 0;
+export const listContractsResponseOneContractSourceSizeMultipleOf = 1;
+
+export const listContractsResponseOneContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const ListContractsResponseItem = zod.object({
@@ -855,7 +874,14 @@ export const ListContractsResponseItem = zod.object({
   "noticeDeadline": zod.string().regex(listContractsResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(listContractsResponseOneContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(listContractsResponseOneContractSourceSizeMin).multipleOf(listContractsResponseOneContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(listContractsResponseOneContractSourceHashRegExp)
+}).optional()
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -1043,6 +1069,10 @@ export const createContractBodyContractAlertOneActionDateRegExp = new RegExp('^\
 export const createContractBodyContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractAlertOneDismissedReasonMax = 300;
 
+export const createContractBodyContractSourceSizeMin = 0;
+export const createContractBodyContractSourceSizeMultipleOf = 1;
+
+export const createContractBodyContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const CreateContractBody = zod.object({
@@ -1275,7 +1305,14 @@ export const CreateContractBody = zod.object({
   "noticeDeadline": zod.string().regex(createContractBodyContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(createContractBodyContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(createContractBodyContractSourceSizeMin).multipleOf(createContractBodyContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(createContractBodyContractSourceHashRegExp)
+}).optional()
 })
 })
 
@@ -1454,6 +1491,10 @@ export const createContractResponseOneContractAlertOneActionDateRegExp = new Reg
 export const createContractResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractAlertOneDismissedReasonMax = 300;
 
+export const createContractResponseOneContractSourceSizeMin = 0;
+export const createContractResponseOneContractSourceSizeMultipleOf = 1;
+
+export const createContractResponseOneContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const CreateContractResponse = zod.object({
@@ -1686,7 +1727,14 @@ export const CreateContractResponse = zod.object({
   "noticeDeadline": zod.string().regex(createContractResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(createContractResponseOneContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(createContractResponseOneContractSourceSizeMin).multipleOf(createContractResponseOneContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(createContractResponseOneContractSourceHashRegExp)
+}).optional()
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -1877,6 +1925,10 @@ export const getContractResponseOneContractAlertOneActionDateRegExp = new RegExp
 export const getContractResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractAlertOneDismissedReasonMax = 300;
 
+export const getContractResponseOneContractSourceSizeMin = 0;
+export const getContractResponseOneContractSourceSizeMultipleOf = 1;
+
+export const getContractResponseOneContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const GetContractResponse = zod.object({
@@ -2109,7 +2161,14 @@ export const GetContractResponse = zod.object({
   "noticeDeadline": zod.string().regex(getContractResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(getContractResponseOneContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(getContractResponseOneContractSourceSizeMin).multipleOf(getContractResponseOneContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(getContractResponseOneContractSourceHashRegExp)
+}).optional()
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -2300,6 +2359,10 @@ export const updateContractBodyContractAlertOneActionDateRegExp = new RegExp('^\
 export const updateContractBodyContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractAlertOneDismissedReasonMax = 300;
 
+export const updateContractBodyContractSourceSizeMin = 0;
+export const updateContractBodyContractSourceSizeMultipleOf = 1;
+
+export const updateContractBodyContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const UpdateContractBody = zod.object({
@@ -2532,7 +2595,14 @@ export const UpdateContractBody = zod.object({
   "noticeDeadline": zod.string().regex(updateContractBodyContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(updateContractBodyContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(updateContractBodyContractSourceSizeMin).multipleOf(updateContractBodyContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(updateContractBodyContractSourceHashRegExp)
+}).optional()
 })
 })
 
@@ -2711,6 +2781,10 @@ export const updateContractResponseOneContractAlertOneActionDateRegExp = new Reg
 export const updateContractResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractAlertOneDismissedReasonMax = 300;
 
+export const updateContractResponseOneContractSourceSizeMin = 0;
+export const updateContractResponseOneContractSourceSizeMultipleOf = 1;
+
+export const updateContractResponseOneContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const UpdateContractResponse = zod.object({
@@ -2943,7 +3017,14 @@ export const UpdateContractResponse = zod.object({
   "noticeDeadline": zod.string().regex(updateContractResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(updateContractResponseOneContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(updateContractResponseOneContractSourceSizeMin).multipleOf(updateContractResponseOneContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(updateContractResponseOneContractSourceHashRegExp)
+}).optional()
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -3142,6 +3223,10 @@ export const dismissContractAlertResponseOneContractAlertOneActionDateRegExp = n
 export const dismissContractAlertResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const dismissContractAlertResponseOneContractAlertOneDismissedReasonMax = 300;
 
+export const dismissContractAlertResponseOneContractSourceSizeMin = 0;
+export const dismissContractAlertResponseOneContractSourceSizeMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const DismissContractAlertResponse = zod.object({
@@ -3374,7 +3459,14 @@ export const DismissContractAlertResponse = zod.object({
   "noticeDeadline": zod.string().regex(dismissContractAlertResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
   "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
   "dismissedReason": zod.string().max(dismissContractAlertResponseOneContractAlertOneDismissedReasonMax).nullable()
-}),zod.null()])
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(dismissContractAlertResponseOneContractSourceSizeMin).multipleOf(dismissContractAlertResponseOneContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(dismissContractAlertResponseOneContractSourceHashRegExp)
+}).optional()
 })
 }).and(zod.object({
   "id": zod.string(),

@@ -37,6 +37,7 @@ import {
 } from "@/lib/contracts";
 
 const extractionStorageKey = "contract-dashboard.extraction";
+const extractionQueueStorageKey = "contract-dashboard.extraction-queue";
 
 function readStoredExtraction(): ContractExtractionResult | null {
   try {
@@ -48,6 +49,16 @@ function readStoredExtraction(): ContractExtractionResult | null {
       : null;
   } catch {
     return null;
+  }
+}
+
+function readExtractionQueue(): ContractExtractionResult[] {
+  try {
+    const saved = sessionStorage.getItem(extractionQueueStorageKey);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return Array.isArray(parsed) ? parsed.filter((item) => item?.filename && item?.extraction?.contract) : [];
+  } catch {
+    return [];
   }
 }
 
@@ -292,8 +303,18 @@ export default function Review() {
         });
       }
       await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
-      sessionStorage.removeItem(extractionStorageKey);
-      setLocation("/dashboard");
+      const queue = readExtractionQueue();
+      const next = queue.shift();
+      if (next) {
+        sessionStorage.setItem(extractionStorageKey, JSON.stringify(next));
+        sessionStorage.setItem(extractionQueueStorageKey, JSON.stringify(queue));
+        setLocation("/review?batch=next");
+        window.setTimeout(() => window.location.reload(), 0);
+      } else {
+        sessionStorage.removeItem(extractionStorageKey);
+        sessionStorage.removeItem(extractionQueueStorageKey);
+        setLocation("/dashboard");
+      }
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : "We could not save this contract. Please try again.");
     }

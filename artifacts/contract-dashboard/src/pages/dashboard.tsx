@@ -20,12 +20,13 @@ import {
   Ban
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts } from "@workspace/api-client-react";
+import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const [uploadOpen, setUploadOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [runLog, setRunLog] = useState<Array<{ name: string; state: "processing" | "ready" | "duplicate" | "failed"; message?: string }>>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dismissingId, setDismissingId] = useState<string | null>(null);
@@ -43,49 +44,64 @@ export default function Dashboard() {
       },
     },
   });
-  const extraction = useExtractContract({
-    mutation: {
-      onSuccess: (result) => {
-        sessionStorage.setItem("contract-dashboard.extraction", JSON.stringify(result));
-        setLocation("/review");
-      },
-      onError: (error) => {
-        setUploadError(
-          error instanceof Error
-            ? error.message
-            : "We could not extract this contract. Please try again.",
-        );
-      },
-    },
-  });
+  const extraction = useExtractContract();
 
-  const chooseFile = (file: File | undefined) => {
-    if (!file) return;
-
-    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-    if (!isPdf) {
-      setSelectedFile(null);
-      setUploadError("Choose a PDF contract to continue.");
-      return;
+  const chooseFiles = (files: File[]) => {
+    const validFiles = files.filter((file) => {
+      const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+      return isPdf && file.size <= 10 * 1024 * 1024;
+    });
+    if (validFiles.length !== files.length) {
+      setUploadError("Only PDF files up to 10 MB can be added.");
+    } else {
+      setUploadError(null);
     }
-    if (file.size > 10 * 1024 * 1024) {
-      setSelectedFile(null);
-      setUploadError("PDF files must be 10 MB or smaller.");
-      return;
-    }
+    setSelectedFiles(validFiles.slice(0, 20));
+    setRunLog([]);
+  };
 
-    setSelectedFile(file);
+  const processFiles = async () => {
+    const results: ContractExtractionResult[] = [];
+    const batchHashes = new Set<string>();
+    setUploadError(null);
+    for (const file of selectedFiles) {
+      setRunLog((current) => [...current, { name: file.name, state: "processing" }]);
+      try {
+        const result = await extraction.mutateAsync({ data: { files: [file] } });
+        const hash = result.extraction.contract.source?.hash;
+        if (hash && batchHashes.has(hash)) {
+          setRunLog((current) => current.map((entry) => entry.name === file.name ? { ...entry, state: "duplicate", message: "Duplicate skipped" } : entry));
+          continue;
+        }
+        if (hash) batchHashes.add(hash);
+        results.push(result);
+        setRunLog((current) => current.map((entry) => entry.name === file.name ? { ...entry, state: "ready", message: "Ready for review" } : entry));
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Could not process this PDF.";
+        const duplicate = /duplicate|already been uploaded/i.test(message);
+        setRunLog((current) => current.map((entry) => entry.name === file.name ? { ...entry, state: duplicate ? "duplicate" : "failed", message: duplicate ? "Duplicate skipped" : message } : entry));
+      }
+    }
+    if (results.length > 0) {
+      sessionStorage.setItem("contract-dashboard.extraction", JSON.stringify(results[0]));
+      sessionStorage.setItem("contract-dashboard.extraction-queue", JSON.stringify(results.slice(1)));
+      setLocation("/review");
+    }
+  };
+
+  const chooseFilesFromDrop = (files: FileList | File[]) => {
+    chooseFiles(Array.from(files));
     setUploadError(null);
   };
 
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
     setIsDragging(false);
-    chooseFile(event.dataTransfer.files[0]);
+    chooseFilesFromDrop(event.dataTransfer.files);
   };
 
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    chooseFile(event.target.files?.[0]);
+    if (event.target.files) chooseFilesFromDrop(event.target.files);
     event.currentTarget.value = "";
   };
 
@@ -187,7 +203,8 @@ export default function Dashboard() {
                   onClick={() => {
                     if (!extraction.isPending) {
                       setUploadOpen(false);
-                      setSelectedFile(null);
+                      setSelectedFiles([]);
+                      setRunLog([]);
                       setUploadError(null);
                     }
                   }}
@@ -198,7 +215,7 @@ export default function Dashboard() {
                 </Button>
               </div>
 
-              <input id="contract-pdf-file" type="file" accept="application/pdf,.pdf" className="sr-only" onChange={handleInput} />
+               <input id="contract-pdf-file" type="file" multiple accept="application/pdf,.pdf" className="sr-only" onChange={handleInput} />
               <label
                 htmlFor="contract-pdf-file"
                 onDragEnter={(event) => {
@@ -211,7 +228,7 @@ export default function Dashboard() {
                 className={`group flex flex-col items-center justify-center min-h-40 rounded-lg border-2 border-dashed px-6 py-8 text-center transition-all cursor-pointer ${
                   isDragging
                     ? "border-primary bg-primary/5 ring-4 ring-primary/10"
-                    : selectedFile
+                    : selectedFiles.length
                       ? "border-emerald-500/40 bg-emerald-500/5"
                       : "border-border hover:border-primary/50 hover:bg-muted/30"
                 } ${extraction.isPending ? "pointer-events-none opacity-70" : ""}`}
@@ -222,17 +239,17 @@ export default function Dashboard() {
                     <span className="font-extrabold text-sm">Reading and extracting your contract...</span>
                     <span className="text-xs text-muted-foreground font-medium mt-1">This usually takes a few seconds.</span>
                   </>
-                ) : selectedFile ? (
+                ) : selectedFiles.length ? (
                   <>
                     <FileText className="h-8 w-8 text-emerald-600 mb-3" />
-                    <span className="font-extrabold text-sm text-foreground">{selectedFile.name}</span>
-                    <span className="text-xs text-muted-foreground font-medium mt-1">{(selectedFile.size / 1024 / 1024).toFixed(1)} MB · Ready to extract</span>
+                    <span className="font-extrabold text-sm text-foreground">{selectedFiles.length} PDF{selectedFiles.length === 1 ? "" : "s"} selected</span>
+                    <span className="text-xs text-muted-foreground font-medium mt-1">{selectedFiles.map((file) => file.name).join(" · ")}</span>
                   </>
                 ) : (
                   <>
                     <Upload className="h-8 w-8 text-primary mb-3 transition-transform group-hover:-translate-y-0.5" />
                     <span className="font-extrabold text-sm">Drop a contract PDF here, or choose a file</span>
-                    <span className="text-xs text-muted-foreground font-medium mt-1">Text-based PDFs up to 10 MB</span>
+                   <span className="text-xs text-muted-foreground font-medium mt-1">Select up to 20 PDFs · 10 MB each</span>
                   </>
                 )}
               </label>
@@ -243,13 +260,31 @@ export default function Dashboard() {
                   <span>{uploadError}</span>
                 </div>
               )}
+              {runLog.length > 0 && (
+                <div className="mt-4 rounded-lg border bg-muted/20 p-4">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-extrabold uppercase tracking-wide">Ingest run</span>
+                    <span className="text-xs font-semibold text-muted-foreground">{runLog.filter((entry) => entry.state !== "processing").length}/{runLog.length} complete</span>
+                  </div>
+                  <div className="space-y-2">
+                    {runLog.map((entry) => (
+                      <div key={entry.name} className="flex items-center justify-between gap-3 text-xs">
+                        <span className="min-w-0 truncate font-semibold">{entry.name}</span>
+                        <span className={`shrink-0 font-bold ${entry.state === "ready" ? "text-emerald-600" : entry.state === "duplicate" || entry.state === "failed" ? "text-destructive" : "text-primary"}`}>
+                          {entry.state === "processing" ? "Processing…" : entry.message}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                 <p className="text-xs font-medium text-muted-foreground">Your PDF is used to create an editable review draft. Confirmed details are saved securely.</p>
                 <Button
                   type="button"
-                  onClick={() => selectedFile && extraction.mutate({ data: { file: selectedFile } })}
-                  disabled={!selectedFile || extraction.isPending}
+                   onClick={processFiles}
+                   disabled={!selectedFiles.length || extraction.isPending}
                   className="gap-2 font-bold"
                 >
                   {extraction.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <FileUp className="h-4 w-4" />}

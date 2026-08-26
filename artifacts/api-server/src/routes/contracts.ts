@@ -3,6 +3,7 @@ import multer from "multer";
 import { desc, eq } from "drizzle-orm";
 import { db, contractsTable } from "@workspace/db";
 import { randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import {
   CreateContractBody,
   UpdateContractBody,
@@ -13,6 +14,7 @@ import {
   extractScannedPdfText,
 } from "../lib/contract-extraction";
 import { computeContractDates, computeContractAlert } from "../lib/contract-computation";
+import { UploadSource } from "../lib/contract-source";
 
 const maximumUploadBytes = 10 * 1024 * 1024;
 const upload = multer({
@@ -220,6 +222,19 @@ function responseFor(record: typeof contractsTable.$inferSelect) {
   };
 }
 
+function uploadedHash(buffer: Buffer) {
+  return createHash("sha256").update(buffer).digest("hex");
+}
+
+async function hasExistingSourceHash(hash: string) {
+  const records = await db.select({ contract: contractsTable.contract }).from(contractsTable);
+  return records.some((record) => {
+    const contract = isRecord(record.contract) ? record.contract : {};
+    const source = isRecord(contract.source) ? contract.source : {};
+    return source.hash === hash;
+  });
+}
+
 router.get("/contracts", async (_req: Request, res: Response): Promise<void> => {
   const records = await db.select().from(contractsTable).orderBy(desc(contractsTable.updatedAt));
   res.json(records.map(responseFor));
@@ -310,6 +325,14 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
     res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
+  const sourceHash =
+    isRecord(parsed.data.contract.source) && typeof parsed.data.contract.source.hash === "string"
+      ? parsed.data.contract.source.hash
+      : null;
+  if (sourceHash && await hasExistingSourceHash(sourceHash)) {
+    res.status(409).json({ error: "This contract has already been saved. Duplicate skipped." });
+    return;
+  }
   const contract = withComputedDates(parsed.data.contract as unknown as Record<string, unknown>);
   const [record] = await db.insert(contractsTable).values({
     id: randomUUID(),
@@ -326,21 +349,42 @@ export function isPdf(file: Express.Multer.File): boolean {
 
 router.post(
   "/contracts/extract",
-  upload.single("file"),
+  upload.fields([
+    { name: "files", maxCount: 20 },
+    { name: "file", maxCount: 1 },
+  ]),
   async (req: Request, res: Response): Promise<void> => {
-    const file = req.file;
+    const uploadedFiles = Array.isArray(req.files)
+      ? req.files
+      : Object.values(req.files ?? {}).flat();
+    const file = uploadedFiles[0];
     if (!file) {
-      res.status(400).json({ error: "Choose one PDF contract to continue." });
+      res.status(400).json({ error: "Choose one PDF contract or more to continue." });
       return;
     }
 
-    if (!isPdf(file)) {
+    if (uploadedFiles.some((candidate) => !isPdf(candidate))) {
       res.status(400).json({ error: "Only valid PDF files can be uploaded." });
       return;
     }
 
+    const uploadSource = new UploadSource(
+      uploadedFiles.map((candidate) => ({
+        originalname: candidate.originalname,
+        size: candidate.size,
+        buffer: candidate.buffer,
+        id: uploadedHash(candidate.buffer),
+        hash: uploadedHash(candidate.buffer),
+      })),
+    );
+    const sourceFiles = await uploadSource.list();
+    if (await hasExistingSourceHash(sourceFiles[0].hash!)) {
+      res.status(409).json({ error: "This contract has already been uploaded. Duplicate skipped." });
+      return;
+    }
+
     let text: string;
-    let source: "text" | "ocr" = "text";
+    let extractionSource: "text" | "ocr" = "text";
     let ocrConfidence: "High" | "Medium" | "Low" | undefined;
     let ocrPageCount: number | undefined;
     let ocrPagesProcessed: number | undefined;
@@ -355,7 +399,7 @@ router.post(
       try {
         const ocr = await extractScannedPdfText(file.buffer);
         text = ocr.text;
-        source = "ocr";
+        extractionSource = "ocr";
         ocrConfidence = ocr.confidence;
         ocrPageCount = ocr.pageCount;
         ocrPagesProcessed = ocr.pagesProcessed;
@@ -388,11 +432,17 @@ router.post(
 
     try {
       const result = await extractContractFromText(text, file.originalname, {
-        source,
+        source: extractionSource,
         ocrConfidence,
-        ...(source === "ocr" ? { ocrPageCount, ocrPagesProcessed } : {}),
+        ...(extractionSource === "ocr" ? { ocrPageCount, ocrPagesProcessed } : {}),
       });
-      req.log.info({ bytes: file.size }, "Contract extracted");
+      if (result.extraction.contract) {
+        result.extraction.contract.source = {
+          ...sourceFiles[0],
+          hash: sourceFiles[0].hash!,
+        };
+      }
+      req.log.info({ bytes: file.size, hash: sourceFiles[0].hash }, "Contract extracted");
       res.json(result);
     } catch (error) {
       req.log.error({ err: error }, "Contract extraction failed");
@@ -403,7 +453,7 @@ router.post(
         error.code === "CONTRACT_TEXT_TOO_LONG"
       ) {
         const pageDetails =
-          source === "ocr" && ocrPageCount !== undefined
+          extractionSource === "ocr" && ocrPageCount !== undefined
             ? ` OCR completed all ${ocrPagesProcessed ?? ocrPageCount} of ${ocrPageCount} pages before stopping.`
             : "";
         res.status(422).json({

@@ -9,10 +9,12 @@ import type { ContractAlert } from './contractAlert';
 import type { ContractAssignment } from './contractAssignment';
 import type { ContractComputedDates } from './contractComputedDates';
 import type { ContractProvenance } from './contractProvenance';
+import type { ContractSourceFile } from './contractSourceFile';
 
 export interface ContractReviewRecord {
   fields: ContractProvenance;
   assignment: ContractAssignment;
   computed: ContractComputedDates;
   alert: ContractAlert | null;
+  source?: ContractSourceFile;
 }
