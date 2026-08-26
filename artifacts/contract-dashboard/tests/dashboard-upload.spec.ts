@@ -155,7 +155,7 @@ test("shows upload success and API error states", async ({ page }) => {
     mimeType: "application/pdf",
     buffer: Buffer.from("%PDF-1.7\ncontract text"),
   });
-  await expect(page.getByText("acme.pdf")).toBeVisible();
+  await expect(page.getByTitle("acme.pdf", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page).toHaveURL(/\/review$/);
   await expect(page.getByRole("heading", { name: "Resolve the open decisions" })).toBeVisible();
@@ -220,10 +220,87 @@ test("shows invalid file feedback and queues a valid PDF without extracting", as
     mimeType: "application/pdf",
     buffer: Buffer.from("%PDF-1.7\nvalid contract"),
   });
-  await expect(page.getByText("valid.pdf")).toBeVisible();
+  await expect(page.getByTitle("valid.pdf", { exact: true })).toBeVisible();
   await expect(page.getByText("Only PDF files up to 10 MB can be added.")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Extract contract" })).toBeEnabled();
   expect(extractionRequests).toBe(0);
+});
+
+test("removes one queued PDF without removing the other", async ({ page }) => {
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/extract", async (route) => {
+    if (route.request().method() !== "POST") return route.continue();
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        filename: "remaining.pdf",
+        extraction: {
+          contract: makeContract({ vendor: "Remaining Vendor" }),
+          source: "text",
+          ocrConfidence: null,
+          ocrPageCount: null,
+          ocrPagesProcessed: null,
+        },
+      }),
+    });
+  });
+
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "New Contract" }).click();
+  await page.locator("#contract-pdf-file").setInputFiles([
+    {
+      name: "mistaken.pdf",
+      mimeType: "application/pdf",
+      buffer: Buffer.from("%PDF-1.7\nmistaken contract"),
+    },
+    {
+      name: "remaining.pdf",
+      mimeType: "application/pdf",
+      buffer: Buffer.from("%PDF-1.7\nremaining contract"),
+    },
+  ]);
+
+  await expect(page.getByText("2 PDFs selected", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Remove mistaken.pdf" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Remove remaining.pdf" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Remove mistaken.pdf" }).click();
+  await expect(page.getByText("1 PDF selected", { exact: true })).toBeVisible();
+  await expect(page.getByText("mistaken.pdf", { exact: true })).toHaveCount(0);
+  await expect(page.getByTitle("remaining.pdf", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Extract contract" })).toBeEnabled();
+
+  await page.getByRole("button", { name: "Extract contract" }).click();
+  await expect(page).toHaveURL(/\/review$/);
+  await expect(page.getByText(/remaining\.pdf/)).toBeVisible();
+});
+
+test("disables extraction after every queued PDF is removed", async ({ page }) => {
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "New Contract" }).click();
+  await page.locator("#contract-pdf-file").setInputFiles({
+    name: "only-file.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF-1.7\nonly contract"),
+  });
+  await page.getByRole("button", { name: "Remove only-file.pdf" }).click();
+
+  await expect(page.getByRole("button", { name: "Extract contract" })).toBeDisabled();
 });
 
 test("shows OCR scan warnings for every legibility level but not embedded text", async ({ page }) => {

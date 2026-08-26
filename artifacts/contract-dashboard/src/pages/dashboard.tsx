@@ -71,6 +71,7 @@ export default function Dashboard() {
     uploadError,
     extraction,
     setIsDragging,
+    removeFile,
     handleDrop,
     handleInput,
     processFiles,
@@ -326,6 +327,33 @@ export default function Dashboard() {
                   </>
                 )}
               </label>
+
+              {selectedFiles.length > 0 && !extraction.isPending && (
+                <div className="mt-4 space-y-2" aria-label="Selected contract files">
+                  {selectedFiles.map((file, index) => (
+                    <div
+                      key={`${file.name}-${file.lastModified}-${index}`}
+                      className="flex items-center justify-between gap-3 rounded-md border bg-background px-3 py-2"
+                    >
+                      <div className="flex min-w-0 items-center gap-2">
+                        <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span className="truncate text-sm font-semibold" title={file.name}>{file.name}</span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 shrink-0"
+                        onClick={() => removeFile(index)}
+                        aria-label={`Remove ${file.name}`}
+                        title={`Remove ${file.name}`}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {uploadError && (
                 <div className="mt-4 flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm font-semibold text-destructive">

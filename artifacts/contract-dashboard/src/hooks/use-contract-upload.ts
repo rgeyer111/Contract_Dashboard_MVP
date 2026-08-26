@@ -66,6 +66,10 @@ export function useContractUpload(navigate: (path: string) => void) {
     chooseFiles(Array.from(files));
   };
 
+  const removeFile = (index: number) => {
+    setSelectedFiles((current) => current.filter((_, fileIndex) => fileIndex !== index));
+  };
+
   const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
     setIsDragging(false);
@@ -92,6 +96,7 @@ export function useContractUpload(navigate: (path: string) => void) {
     extraction,
     setIsDragging,
     chooseFilesFromDrop,
+    removeFile,
     handleDrop,
     handleInput,
     processFiles,
