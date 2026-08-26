@@ -84,13 +84,15 @@ export default function Dashboard() {
   const documentTypeCounts = getDocumentTypeCounts(contracts);
 
   useEffect(() => {
-    const handlePopState = () => {
+    const syncFiltersFromUrl = () => {
+      setSearchTerm(getSearchTermFromLocation(window.location.search));
       setDocumentTypeFilter(getDocumentTypeFromUrl());
       setShareStatus("idle");
     };
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+    syncFiltersFromUrl();
+    window.addEventListener("popstate", syncFiltersFromUrl);
+    return () => window.removeEventListener("popstate", syncFiltersFromUrl);
+  }, [location]);
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
   const filteredContracts = contracts.filter((saved) => {
@@ -143,7 +145,11 @@ export default function Dashboard() {
     setSearchTerm(value);
     setShareStatus("idle");
     const nextQuery = params.toString();
-    window.history.replaceState(null, "", `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`);
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${window.location.hash}`,
+    );
   };
 
   const copyFilteredViewLink = async () => {

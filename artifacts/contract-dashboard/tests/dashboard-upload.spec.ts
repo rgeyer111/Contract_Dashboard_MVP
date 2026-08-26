@@ -623,6 +623,18 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
   await page.getByRole("button", { name: "Clear search" }).click();
 
+  await page.goto("/dashboard?documentType=amendment&search=Northstar");
+  await expect(documentTypeFilter).toHaveValue("amendment");
+  await expect(page.getByLabel("Search contracts")).toHaveValue("Northstar");
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await page.getByRole("button", { name: "Clear search" }).click();
+  await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
+  await expect(documentTypeFilter).toHaveValue("amendment");
+  await expect(page.getByLabel("Search contracts")).toHaveValue("");
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+
   const scrollerMetrics = await page.locator("table").evaluate((table) => {
     const scroller = table.parentElement;
     return {
