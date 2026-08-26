@@ -1,9 +1,9 @@
 ---
 name: Shared test data
-description: Development database behavior when browser regression tests persist contract fixtures.
+description: Development database behavior when regression tests persist contract fixtures.
 ---
 
-Browser regression tests that post contracts through the shared development API can leave fixture records in the development registry, making the dashboard appear to contain duplicate business data.
+Regression tests that post contracts through the shared development API can leave fixture records in the development registry, making the dashboard appear to contain duplicate business data.
 
 **Why:** The tests exercise real persistence and their generated filenames make the leftovers look like repeated contracts rather than test artifacts.
 

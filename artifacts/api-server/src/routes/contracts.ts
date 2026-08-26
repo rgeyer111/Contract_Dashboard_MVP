@@ -67,7 +67,7 @@ function parseLegacyPeriod(value: unknown) {
 }
 
 const reviewerEditNote = "Reviewer-supplied value; original extraction evidence was cleared.";
-const provenanceKeys = ["status", "confidence", "page", "clause", "quote", "note"] as const;
+const provenanceKeys = ["status", "confidence", "page", "clause", "quote", "note", "originalValue"] as const;
 
 function valuesMatch(left: unknown, right: unknown) {
   return JSON.stringify(left) === JSON.stringify(right);
@@ -108,6 +108,10 @@ function sanitizeChangedFields(
           },
         ];
       }
+      const retainedOriginalValue =
+        key === "contractType"
+          ? (previousField.originalValue ?? previousField.value ?? null)
+          : undefined;
       return [
         key,
         {
@@ -119,6 +123,7 @@ function sanitizeChangedFields(
           quote: null,
           note: reviewerEditNote,
           reviewed: field.reviewed === true,
+          ...(key === "contractType" ? { originalValue: retainedOriginalValue } : {}),
         },
       ];
     }),

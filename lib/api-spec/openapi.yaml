@@ -470,6 +470,9 @@ components:
             value:
               type: ["string", "null"]
               enum: [maintenance, software_license, saas_subscription, real_estate, infrastructure, professional_services, data_services, equipment_lease, other, null]
+            originalValue:
+              type: ["string", "null"]
+              enum: [maintenance, software_license, saas_subscription, real_estate, infrastructure, professional_services, data_services, equipment_lease, other, null]
     PeriodValue:
       type: object
       required: [amount, unit]

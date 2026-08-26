@@ -146,6 +146,7 @@ test("shows upload success and API error states", async ({ page }) => {
   });
 
   await page.goto("/dashboard");
+  await expect(page.getByTestId("contract-registry-empty")).toContainText("Upload a PDF to get started");
   await page.getByRole("button", { name: "New Contract" }).click();
   await expect(page.getByRole("heading", { name: "Upload a PDF to extract its details" })).toBeVisible();
 
@@ -448,6 +449,74 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await expect(page.getByText("John Doe", { exact: true })).toBeVisible();
 });
 
+test("sorts the register by urgency and persists auditable contract-type corrections", async ({ page }) => {
+  const urgentContract = makeContract({ vendor: "Urgent Vendor", contractTitle: "Urgent renewal" });
+  urgentContract.computed.daysRemaining = 5;
+  urgentContract.computed.actionDate = "2026-08-31";
+  urgentContract.computed.noticeDeadline = "2026-09-30";
+
+  const laterContract = makeContract({ vendor: "Later Vendor", contractTitle: "Later renewal" });
+  laterContract.computed.daysRemaining = 40;
+  laterContract.computed.actionDate = "2026-10-05";
+  laterContract.computed.noticeDeadline = "2026-11-04";
+
+  const blockedContract = makeContract({ vendor: "Blocked Vendor", contractTitle: "Blocked renewal" }) as any;
+  blockedContract.computed = {
+    exitDate: null,
+    noticeDeadline: null,
+    actionDate: null,
+    daysRemaining: null,
+    status: "blocked",
+    reason: "blocked — missing a trusted timing anchor",
+  };
+
+  const savedContracts = [
+    { id: "blocked-register-contract", filename: "blocked.pdf", contract: blockedContract, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z" },
+    { id: "later-register-contract", filename: "later.pdf", contract: laterContract, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z" },
+    { id: "urgent-register-contract", filename: "urgent.pdf", contract: urgentContract, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z" },
+  ];
+  let updatePayload: any;
+
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: savedContracts.map((saved) => savedResponse(saved)) });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/urgent-register-contract", async (route) => {
+    if (route.request().method() !== "PUT") {
+      await route.continue();
+      return;
+    }
+    updatePayload = route.request().postDataJSON();
+    urgentContract.fields.contractType = {
+      ...updatePayload.contract.fields.contractType,
+      status: "ambiguous",
+      confidence: "low",
+      page: null,
+      clause: null,
+      quote: null,
+      note: "Reviewer-supplied value; original extraction evidence was cleared.",
+      reviewed: true,
+      originalValue: "maintenance",
+    } as any;
+    await route.fulfill({ json: savedResponse(savedContracts[2]) });
+  });
+
+  await page.goto("/dashboard");
+
+  const rows = page.locator('[data-testid^="contract-registry-row-"]');
+  await expect(rows).toHaveCount(3);
+  await expect(rows.nth(0)).toContainText("Urgent Vendor");
+  await expect(rows.nth(1)).toContainText("Later Vendor");
+  await expect(rows.nth(2)).toContainText("Blocked Vendor");
+
+  await page.getByTestId("contract-type-select-urgent-register-contract").selectOption("saas_subscription");
+  await expect.poll(() => updatePayload?.contract?.fields?.contractType?.value).toBe("saas_subscription");
+  await expect(page.getByText("Edited · extracted maintenance", { exact: true })).toBeVisible();
+});
+
 test("keeps standalone contract rows reachable on narrow screens", async ({ page }) => {
   const rootId = "saved-family-parent";
   const amendmentId = "saved-family-amendment";
@@ -517,16 +586,24 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto("/dashboard");
 
-  const headers = page.locator("table thead th");
-  await expect(headers).toHaveCount(5);
+  const headers = page.locator("table thead tr").last().locator("th");
+  await expect(headers).toHaveCount(13);
   await expect(headers).toHaveText([
-    "Contract / commercial context",
-    "Renewal",
-    "Notice runway",
+    "Vendor",
+    "Contract type",
+    "End date",
+    "Renewal mechanism",
+    "Notice period",
+    "Value",
+    "Action date",
+    "Notice deadline",
+    "Days remaining",
+    "Status",
+    "Status reason",
     "Owner",
-    "Signal",
+    "Negotiation buffer",
   ]);
-  for (const removedHeader of ["Contract family", "Family / commercial context", "Type", "Value", "Notice / action", "Actions"]) {
+  for (const removedHeader of ["Contract family", "Family / commercial context", "Notice / action", "Actions"]) {
     await expect(headers.filter({ hasText: new RegExp(`^${removedHeader}$`) })).toHaveCount(0);
   }
 
@@ -537,11 +614,11 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(agreementRow).toContainText("USD 120,000 · annual");
   await expect(amendmentRow).toContainText("Sourcing Agreement");
   await expect(amendmentRow).toContainText("USD 240,000 · annual");
-  await expect(amendmentRow).toContainText("2027-12-31");
+  await expect(amendmentRow).toContainText("31.12.2027");
   await expect(amendmentRow).toContainText("manual renewal");
   await expect(amendmentRow).toContainText("37 days until action");
-  await expect(amendmentRow).toContainText("2027-09-02");
-  await expect(amendmentRow).toContainText("2027-10-02");
+  await expect(amendmentRow).toContainText("02.09.2027");
+  await expect(amendmentRow).toContainText("02.10.2027");
   await expect(amendmentRow).toContainText("Avery Stone");
   await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);
   await expect(page.getByTestId("contract-family-history")).toHaveCount(0);
@@ -688,7 +765,7 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   const reloadedAmendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
   await expect(reloadedAmendmentRow).toHaveCount(1);
   await expect(reloadedAmendmentRow).toContainText("USD 240,000 · annual");
-  await expect(reloadedAmendmentRow).toContainText("2027-10-02");
+  await expect(reloadedAmendmentRow).toContainText("02.10.2027");
   await expect(reloadedAmendmentRow).toContainText("Avery Stone");
   expect(listRequests).toBeGreaterThanOrEqual(2);
 

@@ -188,9 +188,29 @@ export const ProvenanceContractTypeFieldValue = {
   other: 'other',
 } as const;
 
+/**
+ * @nullable
+ */
+export type ProvenanceContractTypeFieldOriginalValue = typeof ProvenanceContractTypeFieldOriginalValue[keyof typeof ProvenanceContractTypeFieldOriginalValue] | null;
+
+
+export const ProvenanceContractTypeFieldOriginalValue = {
+  maintenance: 'maintenance',
+  software_license: 'software_license',
+  saas_subscription: 'saas_subscription',
+  real_estate: 'real_estate',
+  infrastructure: 'infrastructure',
+  professional_services: 'professional_services',
+  data_services: 'data_services',
+  equipment_lease: 'equipment_lease',
+  other: 'other',
+} as const;
+
 export type ProvenanceContractTypeField = ProvenanceMetadata & {
   /** @nullable */
   value: ProvenanceContractTypeFieldValue;
+  /** @nullable */
+  originalValue?: ProvenanceContractTypeFieldOriginalValue;
 };
 
 export type PeriodValueUnit = typeof PeriodValueUnit[keyof typeof PeriodValueUnit];

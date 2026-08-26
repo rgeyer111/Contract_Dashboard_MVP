@@ -1,4 +1,4 @@
-import { useEffect, useState, type DragEvent, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type DragEvent, type ChangeEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
@@ -39,12 +39,13 @@ import {
   useListRegistryViews,
   usePinRegistryView,
   useReorderRegistryViews,
+  useUpdateContract,
   useUpdateRegistryView,
   type ContractExtractionResult,
   type RegistryViewSaveRequestDocumentType,
   type SavedRegistryView,
 } from "@workspace/api-client-react";
-import { documentTypeOptions, getDocumentTypeCounts, getSavedContractDocumentType } from "@/lib/contracts";
+import { contractTypeOptions, documentTypeOptions, getDocumentTypeCounts, getSavedContractDocumentType } from "@/lib/contracts";
 
 function formatContractType(value: string | null) {
   return value ? value.replace(/_/g, " ") : "Type not stated";
@@ -81,6 +82,38 @@ function formatDaysRemaining(value: number | null) {
   if (value > 0) return `${value} day${value === 1 ? "" : "s"} until action`;
   const overdueDays = Math.abs(value);
   return `${overdueDays} day${overdueDays === 1 ? "" : "s"} past action date`;
+}
+
+function formatRegistryDate(value: string | null | undefined) {
+  if (!value) return "Not stated";
+  const [year, month, day] = value.split("-");
+  return year && month && day ? `${day}.${month}.${year}` : value;
+}
+
+function formatLabel(value: string | null | undefined, fallback = "Not stated") {
+  return value ? value.replace(/_/g, " ") : fallback;
+}
+
+function statusClasses(status: string) {
+  return status === "red"
+    ? "bg-destructive/10 text-destructive border-destructive/20"
+    : status === "expired"
+      ? "bg-orange-500/10 text-orange-700 border-orange-500/20"
+      : status === "amber"
+        ? "bg-amber-500/10 text-amber-700 border-amber-500/20"
+        : status === "green"
+          ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
+          : "bg-destructive/10 text-destructive border-destructive/20";
+}
+
+function statusRowClasses(status: string) {
+  return status === "red"
+    ? "bg-destructive/[0.035]"
+    : status === "amber"
+      ? "bg-amber-500/[0.045]"
+      : status === "expired" || status === "blocked"
+        ? "bg-orange-500/[0.035]"
+        : "";
 }
 
 const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
@@ -127,6 +160,9 @@ export default function Dashboard() {
   const [deletingViewId, setDeletingViewId] = useState<string | null>(null);
   const [savedViewError, setSavedViewError] = useState<string | null>(null);
   const [savedViewMoveStatus, setSavedViewMoveStatus] = useState<string | null>(null);
+  const [savingContractTypeId, setSavingContractTypeId] = useState<string | null>(null);
+  const [contractTypeErrorId, setContractTypeErrorId] = useState<string | null>(null);
+  const [contractTypeSaveError, setContractTypeSaveError] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
@@ -159,6 +195,19 @@ export default function Dashboard() {
     ].filter(Boolean).join(" ").toLowerCase();
     return searchableText.includes(normalizedSearch);
   });
+  const sortedFilteredContracts = useMemo(
+    () => [...filteredContracts].sort((left, right) => {
+      const leftDays = left.contract.computed.daysRemaining;
+      const rightDays = right.contract.computed.daysRemaining;
+      if (leftDays === null && rightDays !== null) return 1;
+      if (leftDays !== null && rightDays === null) return -1;
+      if (leftDays !== null && rightDays !== null && leftDays !== rightDays) return leftDays - rightDays;
+      const leftVendor = left.contract.fields.vendorLegalName.value || left.filename;
+      const rightVendor = right.contract.fields.vendorLegalName.value || right.filename;
+      return leftVendor.localeCompare(rightVendor);
+    }),
+    [filteredContracts],
+  );
   const alerts = contracts.filter((saved) => saved.contract.alert);
   const openAlerts = alerts.filter((saved) => saved.contract.alert?.state !== "dismissed");
   const dismissAlert = useDismissContractAlert({
@@ -167,6 +216,20 @@ export default function Dashboard() {
         setDismissingId(null);
         setDismissReason("");
         await queryClient.invalidateQueries({ queryKey: getListContractsQueryKey() });
+      },
+    },
+  });
+  const updateContract = useUpdateContract({
+    mutation: {
+      onSuccess: async () => {
+        setSavingContractTypeId(null);
+        setContractTypeErrorId(null);
+        setContractTypeSaveError(null);
+        await queryClient.invalidateQueries({ queryKey: getListContractsQueryKey() });
+      },
+      onError: () => {
+        setSavingContractTypeId(null);
+        setContractTypeSaveError("Contract type could not be saved. Please try again.");
       },
     },
   });
@@ -221,6 +284,30 @@ export default function Dashboard() {
       onError: () => setSavedViewError("This view could not be deleted. Please try again."),
     },
   });
+
+  const saveContractType = (saved: typeof contracts[number], value: typeof contractTypeOptions[number]) => {
+    if (value === saved.contract.fields.contractType.value || updateContract.isPending) return;
+    setSavingContractTypeId(saved.id);
+    setContractTypeErrorId(saved.id);
+    setContractTypeSaveError(null);
+    updateContract.mutate({
+      id: saved.id,
+      data: {
+        filename: saved.filename,
+        contract: {
+          ...saved.contract,
+          fields: {
+            ...saved.contract.fields,
+            contractType: {
+              ...saved.contract.fields.contractType,
+              value,
+              reviewed: true,
+            },
+          },
+        },
+      },
+    });
+  };
 
   const updateDocumentTypeFilter = (value: string) => {
     const params = new URLSearchParams(window.location.search);
@@ -963,95 +1050,127 @@ export default function Dashboard() {
                </p>
              )}
             
-            <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
+             <div data-testid="contract-registry" className="bg-card border rounded-xl shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[860px] text-sm text-left">
-                  <thead className="bg-muted/30 border-b text-muted-foreground text-xs uppercase tracking-wider">
+                 <table className="w-full min-w-[1780px] text-sm text-left">
+                   <thead className="border-b text-xs uppercase tracking-wider">
+                     <tr className="border-b bg-muted/20 text-[10px] font-extrabold tracking-[0.14em]">
+                       <th colSpan={6} className="border-r border-border px-4 py-2.5 text-left text-primary">Extracted contract details</th>
+                       <th colSpan={5} className="border-r border-border bg-primary/[0.035] px-4 py-2.5 text-left text-primary">Computed runway</th>
+                       <th colSpan={2} className="bg-amber-500/[0.04] px-4 py-2.5 text-left text-amber-700 dark:text-amber-300">Assigned ownership</th>
+                     </tr>
                     <tr>
-                       <th className="px-6 py-4 font-bold">Contract / commercial context</th>
-                      <th className="px-6 py-4 font-bold">Renewal</th>
-                      <th className="px-6 py-4 font-bold">Notice runway</th>
-                      <th className="px-6 py-4 font-bold">Owner</th>
-                      <th className="px-6 py-4 font-bold">Signal</th>
+                       <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Vendor</th>
+                       <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Contract type</th>
+                       <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">End date</th>
+                       <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Renewal mechanism</th>
+                       <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Notice period</th>
+                       <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Value</th>
+                       <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Action date</th>
+                       <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Notice deadline</th>
+                       <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Days remaining</th>
+                       <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Status</th>
+                       <th className="border-r border-border bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Status reason</th>
+                       <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">Owner</th>
+                       <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">Negotiation buffer</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                      {filteredContracts.map((saved) => {
+                     {sortedFilteredContracts.map((saved) => {
                        const contract = saved.contract;
-                      const vendor = contract.fields.vendorLegalName.value || 'Unknown Vendor';
-                      const title = contract.fields.contractTitle.value || 'Untitled Contract';
-                      const val = contract.fields.contractValue.value;
-                      const valueIsUnknown = !val;
-                      const contractType = formatContractType(contract.fields.contractType.value);
-                      const valueStr = formatContractValue(val);
-                      const owner = contract.assignment.owner || 'Unassigned';
-                      const status = contract.computed.status;
-                      const isBlocked = status === 'blocked';
-                      const statusClass = status === 'red'
-                        ? 'bg-destructive/10 text-destructive border-destructive/20'
-                        : status === 'expired'
-                          ? 'bg-orange-500/10 text-orange-700 border-orange-500/20'
-                          : status === 'amber'
-                            ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-                            : status === 'green'
-                              ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20'
-                              : 'bg-muted text-muted-foreground border-border';
-                       const statusRowClass = status === 'red'
-                         ? 'bg-destructive/[0.035]'
-                         : status === 'amber'
-                           ? 'bg-amber-500/[0.045]'
-                           : status === 'expired'
-                             ? 'bg-orange-500/[0.035]'
-                             : '';
-                      
-                      return (
-                         <tr key={saved.id} className={`${statusRowClass} hover:bg-muted/30 transition-colors group`}>
-                          <td className="px-6 py-4">
-                             <div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="font-bold text-foreground text-sm hover:text-primary">{vendor}</button>
-                                </div>
-                                 <div className="text-muted-foreground text-xs font-medium mt-0.5">{title}</div>
-                                 <div className={`mt-1 text-[10px] font-bold capitalize ${valueIsUnknown ? "text-destructive" : "text-muted-foreground"}`}>
-                                   {contractType} <span className="mx-1 text-muted-foreground/60">·</span> {valueStr}
-                                 </div>
-                                 {valueIsUnknown && <div className="text-[10px] font-bold uppercase tracking-wide text-destructive">Needs review</div>}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                             <div className="text-xs font-extrabold text-foreground">{contract.fields.initialTermEndDate.value || "Date not stated"}</div>
-                             <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{formatContractType(contract.fields.renewalMechanism.value)}</div>
-                          </td>
-                          <td className="px-6 py-4">
-                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>
-                                {formatDaysRemaining(contract.computed.daysRemaining)}
-                              </div>
-                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">
-                                Act {isBlocked ? "not computable" : contract.computed.actionDate || "not computable"}
-                              </div>
-                              <div className={`mt-0.5 text-[10px] font-semibold ${isBlocked ? "text-destructive" : "text-muted-foreground"}`}>
-                                Legal deadline {isBlocked ? "not computable" : contract.computed.noticeDeadline || "not computable"}
-                             </div>
-                          </td>
-                           <td className="px-6 py-4">
-                             <div className="font-semibold text-foreground text-xs">{owner}</div>
-                             <div className="text-muted-foreground text-[10px] uppercase tracking-wide mt-1">Contract owner</div>
+                       const vendor = contract.fields.vendorLegalName.value || "Unknown vendor";
+                       const title = contract.fields.contractTitle.value || saved.filename;
+                       const value = contract.fields.contractValue.value;
+                       const valueIsUnknown = !value;
+                       const status = contract.computed.status;
+                       const isBlocked = status === "blocked";
+                       const isContractTypeSaving = savingContractTypeId === saved.id;
+                       const statusReason = contract.computed.reason
+                         || (status === "green"
+                           ? "Within action runway"
+                           : status === "amber"
+                             ? "Action window approaching"
+                             : status === "red"
+                               ? "Past legal notice deadline"
+                               : status === "expired"
+                                 ? "Contract end date has passed"
+                                 : "Dates blocked — review required");
+                       return (
+                         <tr key={saved.id} data-testid={`contract-registry-row-${saved.id}`} className={`${statusRowClasses(status)} hover:bg-muted/30 transition-colors`}>
+                           <td className="max-w-[190px] bg-muted/[0.12] px-4 py-3 align-top">
+                             <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="block max-w-full truncate text-left text-xs font-extrabold text-foreground hover:text-primary" title={vendor}>{vendor}</button>
+                             <div className="mt-1 max-w-full truncate text-[10px] font-medium text-muted-foreground" title={title}>{title}</div>
                            </td>
-                           <td className="px-6 py-4">
-                             <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold border ${statusClass}`}>
-                               {status}
-                             </span>
-                             {contract.computed.reason && <div className="mt-1 max-w-56 text-[10px] font-semibold text-destructive normal-case">{contract.computed.reason}</div>}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                           <td className="bg-muted/[0.12] px-4 py-3 align-top">
+                             <select
+                               data-testid={`contract-type-select-${saved.id}`}
+                               aria-label={`Contract type for ${vendor}`}
+                               value={contract.fields.contractType.value || ""}
+                               disabled={isContractTypeSaving || updateContract.isPending}
+                               onChange={(event) => saveContractType(saved, event.target.value as typeof contractTypeOptions[number])}
+                               className="h-8 w-[150px] rounded-md border border-input bg-background px-2 text-xs font-bold capitalize outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-wait disabled:opacity-60"
+                             >
+                               {!contract.fields.contractType.value && <option value="" disabled>Select type</option>}
+                               {contractTypeOptions.map((option) => <option key={option} value={option}>{formatContractType(option)}</option>)}
+                             </select>
+                             {contract.fields.contractType.originalValue && (
+                               <div className="mt-1 max-w-[150px] truncate text-[10px] font-semibold text-amber-700 dark:text-amber-300" title={`Originally extracted as ${formatContractType(contract.fields.contractType.originalValue)}`}>
+                                 Edited · extracted {formatContractType(contract.fields.contractType.originalValue)}
+                               </div>
+                             )}
+                             {isContractTypeSaving && <div className="mt-1 text-[10px] font-bold text-primary">Saving…</div>}
+                             {contractTypeErrorId === saved.id && contractTypeSaveError && !isContractTypeSaving && <div className="mt-1 max-w-[150px] text-[10px] font-bold text-destructive">{contractTypeSaveError}</div>}
+                           </td>
+                           <td className="bg-muted/[0.12] px-4 py-3 align-top">
+                             <div className="text-xs font-extrabold text-foreground">{formatRegistryDate(contract.fields.initialTermEndDate.value)}</div>
+                             <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Contract end</div>
+                           </td>
+                           <td className="bg-muted/[0.12] px-4 py-3 align-top">
+                             <div className="max-w-[150px] text-xs font-bold capitalize text-foreground">{formatLabel(contract.fields.renewalMechanism.value)}</div>
+                             <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Extracted rule</div>
+                           </td>
+                           <td className="bg-muted/[0.12] px-4 py-3 align-top">
+                             <div className="max-w-[170px] text-xs font-bold text-foreground">{formatPeriod(contract.fields.noticePeriod.value)}</div>
+                           </td>
+                           <td className="border-r border-border bg-muted/[0.12] px-4 py-3 align-top">
+                             <div className={`max-w-[150px] text-xs font-extrabold ${valueIsUnknown ? "text-destructive" : "text-foreground"}`}>{formatContractValue(value)}</div>
+                             {valueIsUnknown && <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-destructive">Needs review</div>}
+                           </td>
+                           <td className="bg-primary/[0.02] px-4 py-3 align-top">
+                             <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? "Not computable" : formatRegistryDate(contract.computed.actionDate)}</div>
+                             <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Negotiation start</div>
+                           </td>
+                           <td className="bg-primary/[0.02] px-4 py-3 align-top">
+                             <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? "Not computable" : formatRegistryDate(contract.computed.noticeDeadline)}</div>
+                             <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Legal deadline</div>
+                           </td>
+                           <td className="bg-primary/[0.02] px-4 py-3 align-top">
+                             <div className={`whitespace-nowrap text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? "—" : formatDaysRemaining(contract.computed.daysRemaining)}</div>
+                             <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{isBlocked ? "Not computable" : "Until action"}</div>
+                           </td>
+                           <td className="bg-primary/[0.02] px-4 py-3 align-top">
+                             <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider ${statusClasses(status)}`}>{status}</span>
+                           </td>
+                           <td className="max-w-[240px] border-r border-border bg-primary/[0.02] px-4 py-3 align-top">
+                             <div className={`max-w-[230px] truncate text-xs font-semibold ${status === "green" ? "text-muted-foreground" : "text-destructive"}`} title={statusReason}>{statusReason}</div>
+                           </td>
+                           <td className="bg-amber-500/[0.025] px-4 py-3 align-top">
+                             <div className={`text-xs font-bold ${contract.assignment.owner ? "text-foreground" : "text-destructive"}`}>{contract.assignment.owner || "Unassigned"}</div>
+                             <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Assigned owner</div>
+                           </td>
+                           <td className="bg-amber-500/[0.025] px-4 py-3 align-top">
+                             <div className="whitespace-nowrap text-xs font-extrabold text-foreground">{contract.assignment.negotiationBufferDays} days</div>
+                             <div className="mt-1 text-[10px] font-semibold capitalize text-muted-foreground">{formatLabel(contract.assignment.negotiationBufferSource, "Default")}</div>
+                           </td>
+                         </tr>
+                       );
+                     })}
                   </tbody>
                 </table>
                  {!contractsQuery.isLoading && filteredContracts.length === 0 && (
-                   <div className="p-10 text-center text-sm font-medium text-muted-foreground">
+                    <div data-testid="contract-registry-empty" className="p-10 text-center text-sm font-medium text-muted-foreground">
                      {contracts.length === 0
-                       ? "No confirmed contracts yet. Upload a PDF to get started."
+                        ? "No confirmed contracts yet. Upload a PDF to get started."
                        : "No contracts match the current filters."}
                    </div>
                 )}

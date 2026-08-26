@@ -234,6 +234,49 @@ describe("saved contract persistence", () => {
     }
   });
 
+  it("retains the originally extracted contract type across reviewer corrections", async () => {
+    const filename = `contract-type-correction-${crypto.randomUUID()}.pdf`;
+    let id: string | undefined;
+    try {
+      const created = await request(app)
+        .post("/api/contracts")
+        .send({ filename, contract });
+      expect(created.status).toBe(201);
+      id = created.body.id;
+
+      const firstCorrection = structuredClone(created.body.contract);
+      firstCorrection.fields.contractType.value = "saas_subscription";
+      firstCorrection.fields.contractType.reviewed = true;
+      const firstUpdate = await request(app)
+        .put(`/api/contracts/${id}`)
+        .send({ filename, contract: firstCorrection });
+
+      expect(firstUpdate.status).toBe(200);
+      expect(firstUpdate.body.contract.fields.contractType).toMatchObject({
+        value: "saas_subscription",
+        originalValue: "software_license",
+        status: "ambiguous",
+        confidence: "low",
+        reviewed: true,
+      });
+
+      const secondCorrection = structuredClone(firstUpdate.body.contract);
+      secondCorrection.fields.contractType.value = "maintenance";
+      const secondUpdate = await request(app)
+        .put(`/api/contracts/${id}`)
+        .send({ filename, contract: secondCorrection });
+
+      expect(secondUpdate.status).toBe(200);
+      expect(secondUpdate.body.contract.fields.contractType).toMatchObject({
+        value: "maintenance",
+        originalValue: "software_license",
+        reviewed: true,
+      });
+    } finally {
+      if (id) await db.delete(contractsTable).where(eq(contractsTable.id, id));
+    }
+  });
+
   it("persists a dismissed alert and its reason", async () => {
     const filename = `dismiss-alert-${crypto.randomUUID()}.pdf`;
     const created = await request(app).post("/api/contracts").send({ filename, contract });

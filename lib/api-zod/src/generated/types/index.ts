@@ -38,6 +38,7 @@ export * from './periodValueUnit';
 export * from './provenanceBillingFrequencyField';
 export * from './provenanceBillingFrequencyFieldValue';
 export * from './provenanceContractTypeField';
+export * from './provenanceContractTypeFieldOriginalValue';
 export * from './provenanceContractTypeFieldValue';
 export * from './provenanceContractValueField';
 export * from './provenanceDateField';

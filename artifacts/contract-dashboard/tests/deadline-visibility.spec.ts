@@ -133,8 +133,7 @@ test("hides blocked dates in registry and review while preserving expired histor
 
   const blockedRow = page.getByRole("row").filter({ hasText: "Blocked Vendor" });
   await expect(blockedRow).toHaveCount(1);
-  await expect(blockedRow).toContainText("Action date unavailable");
-  await expect(blockedRow).toContainText("Legal deadline not computable");
+  await expect(blockedRow.getByText("Not computable", { exact: true })).toHaveCount(3);
   await expect(blockedRow).not.toContainText(blockedDates.exitDate);
   await expect(blockedRow).not.toContainText(blockedDates.noticeDeadline);
   await expect(blockedRow).not.toContainText(blockedDates.actionDate);
@@ -142,8 +141,8 @@ test("hides blocked dates in registry and review while preserving expired histor
   const expiredRow = page.getByRole("row").filter({ hasText: "Expired Vendor" });
   await expect(expiredRow).toHaveCount(1);
   await expect(expiredRow).toContainText("1 day past action date");
-  await expect(expiredRow).toContainText(expiredDates.noticeDeadline);
-  await expect(expiredRow).toContainText(expiredDates.actionDate);
+  await expect(expiredRow).toContainText("22.02.2020");
+  await expect(expiredRow).toContainText("03.03.2020");
   await expect(expiredRow).toContainText(expiredContract.computed.reason);
 
   await page.goto("/review?id=blocked-deadline");

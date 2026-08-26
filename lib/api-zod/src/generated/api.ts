@@ -455,7 +455,8 @@ export const ExtractContractResponse = zod.object({
   "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -907,7 +908,8 @@ export const ListContractsResponseItem = zod.object({
   "note": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -1360,7 +1362,8 @@ export const CreateContractBody = zod.object({
   "note": zod.string().max(createContractBodyContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -1803,7 +1806,8 @@ export const CreateContractResponse = zod.object({
   "note": zod.string().max(createContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -2259,7 +2263,8 @@ export const GetContractResponse = zod.object({
   "note": zod.string().max(getContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -2715,7 +2720,8 @@ export const UpdateContractBody = zod.object({
   "note": zod.string().max(updateContractBodyContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -3158,7 +3164,8 @@ export const UpdateContractResponse = zod.object({
   "note": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -3622,7 +3629,8 @@ export const DismissContractAlertResponse = zod.object({
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
   "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
