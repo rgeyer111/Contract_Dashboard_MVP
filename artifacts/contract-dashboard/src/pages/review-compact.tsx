@@ -4,7 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
   Bell,
-  BriefcaseBusiness,
   CalendarClock,
   Check,
   CheckCircle2,
@@ -13,7 +12,6 @@ import {
   ChevronUp,
   CircleHelp,
   FileText,
-  GitBranch,
   Layers3,
   LogOut,
   Save,
@@ -27,7 +25,6 @@ import { Button } from "@/components/ui/button";
 import {
   useCreateContract,
   useGetContract,
-  useListContracts,
   useUpdateContract,
   type ContractExtractionResult,
   type ContractReviewRecord,
@@ -502,13 +499,11 @@ export default function ReviewCompact() {
       queryKey: [`/api/contracts/${savedId}`],
     },
   });
-  const contractsQuery = useListContracts();
   const [storedExtraction] = useState(readStoredExtraction);
   const [draft, setDraft] = useState<ContractReviewRecord>(() =>
     storedExtraction ? storedExtraction.extraction.contract : createEmptyContractReviewRecord(),
   );
   const [filename, setFilename] = useState(storedExtraction?.filename ?? "confirmed-contract.pdf");
-  const [parentContractId, setParentContractId] = useState<string | null>(null);
   const [resolvedKeys, setResolvedKeys] = useState<Set<FieldKey>>(new Set());
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -517,7 +512,6 @@ export default function ReviewCompact() {
     if (savedContractQuery.data) {
       setFilename(savedContractQuery.data.filename);
       setDraft(savedContractQuery.data.contract);
-      setParentContractId(savedContractQuery.data.parentContractId ?? null);
       setResolvedKeys(new Set());
     }
   }, [savedContractQuery.data]);
@@ -594,11 +588,11 @@ export default function ReviewCompact() {
       if (savedId) {
         await updateContract.mutateAsync({
           id: savedId,
-          data: { filename, parentContractId, contract: draft },
+          data: { filename, contract: draft },
         });
       } else {
         await createContract.mutateAsync({
-          data: { filename, parentContractId, contract: draft },
+          data: { filename, contract: draft },
         });
       }
       await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
@@ -684,11 +678,6 @@ export default function ReviewCompact() {
                 </button>
                 <div className="flex flex-wrap items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.16em] text-primary">
                   <span>Contract review</span>
-                  {savedContractQuery.data?.family.documentCount && (
-                    <span className="inline-flex items-center gap-1 rounded-full border bg-card px-2 py-1 text-muted-foreground">
-                      <GitBranch className="h-3 w-3" /> {savedContractQuery.data.family.documentCount} documents
-                    </span>
-                  )}
                 </div>
                 <h1 className="mt-2 flex items-center gap-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
                   <ShieldCheck className="h-7 w-7 text-primary" /> Resolve the open decisions
@@ -879,24 +868,6 @@ export default function ReviewCompact() {
                       <div className="col-span-2 border-t pt-3"><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Exit date</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.exitDate)}</div></div>
                     </div>
                   )}
-                </section>
-
-                <section className="rounded-xl border bg-card p-5 shadow-sm">
-                  <div className="flex items-center gap-2 text-sm font-extrabold"><BriefcaseBusiness className="h-4 w-4 text-primary" /> Family context</div>
-                  <label className="mt-4 block text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-                    Parent agreement
-                    <select value={parentContractId ?? ""} onChange={(event) => setParentContractId(event.target.value || null)} className="mt-1.5 h-10 w-full rounded-md border border-input bg-background px-3 text-xs font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20">
-                      <option value="">No parent · root agreement</option>
-                      {(contractsQuery.data ?? [])
-                        .filter((candidate) => candidate.id !== savedId && !candidate.parentContractId)
-                        .map((candidate) => (
-                          <option key={candidate.id} value={candidate.id}>
-                            {candidate.contract.fields.vendorLegalName.value || "Unknown vendor"} · {candidate.contract.fields.contractTitle.value || candidate.filename}
-                          </option>
-                        ))}
-                    </select>
-                  </label>
-                  <p className="mt-2 text-[11px] font-medium leading-relaxed text-muted-foreground">Amendments and renewals stay linked while the registry shows the effective family values.</p>
                 </section>
 
                 <section className="rounded-xl border bg-card p-5 shadow-sm">

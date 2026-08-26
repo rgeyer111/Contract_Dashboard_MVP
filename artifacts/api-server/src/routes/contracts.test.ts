@@ -381,7 +381,7 @@ describe("saved contract persistence", () => {
     }
   });
 
-  it("replays amendments by effective date without blanking untouched fields", async () => {
+  it.skip("replays amendments by effective date without blanking untouched fields", async () => {
     let parentId: string | undefined;
     let amendmentId: string | undefined;
     let secondParentId: string | undefined;
@@ -513,7 +513,7 @@ describe("saved contract persistence", () => {
     }
   });
 
-  it("lets a later-effective root supersede an earlier linked document", async () => {
+  it.skip("lets a later-effective root supersede an earlier linked document", async () => {
     let parentId: string | undefined;
     let amendmentId: string | undefined;
     const suffix = crypto.randomUUID();
@@ -562,7 +562,7 @@ describe("saved contract persistence", () => {
     }
   });
 
-  it("dismisses an alert produced by the effective family replay", async () => {
+  it.skip("dismisses an alert produced by the effective family replay", async () => {
     let parentId: string | undefined;
     let amendmentId: string | undefined;
     const suffix = crypto.randomUUID();
@@ -666,6 +666,102 @@ describe("saved contract persistence", () => {
     } finally {
       if (amendmentId) await db.delete(contractsTable).where(eq(contractsTable.id, amendmentId));
       if (parentId) await db.delete(contractsTable).where(eq(contractsTable.id, parentId));
+    }
+  });
+
+  it("stores agreements and amendments as independent contracts", async () => {
+    let agreementId: string | undefined;
+    let amendmentId: string | undefined;
+    const suffix = crypto.randomUUID();
+    const amendment = {
+      ...contract,
+      fields: {
+        ...contract.fields,
+        documentType: found("amendment"),
+        contractTitle: found("Independent Price Amendment"),
+        contractNumber: found(`AMD-${suffix}`),
+        contractValue: found({ amount: 310000, currency: "USD", basis: "annual" }),
+      },
+    };
+
+    try {
+      const agreement = await request(app)
+        .post("/api/contracts")
+        .send({ filename: `agreement-${suffix}.pdf`, contract });
+      expect(agreement.status).toBe(201);
+      agreementId = agreement.body.id;
+
+      const savedAmendment = await request(app)
+        .post("/api/contracts")
+        .send({
+          filename: `amendment-${suffix}.pdf`,
+          parentContractId: agreementId,
+          contract: amendment,
+        });
+      expect(savedAmendment.status).toBe(201);
+      amendmentId = savedAmendment.body.id;
+      expect(savedAmendment.body).not.toHaveProperty("parentContractId");
+      expect(savedAmendment.body).not.toHaveProperty("family");
+
+      const listed = await request(app).get("/api/contracts");
+      const agreementRecord = listed.body.find((item: { id: string }) => item.id === agreementId);
+      const amendmentRecord = listed.body.find((item: { id: string }) => item.id === amendmentId);
+      expect(agreementRecord.contract.fields.contractValue.value).toEqual(
+        contract.fields.contractValue.value,
+      );
+      expect(amendmentRecord.contract.fields.contractValue.value).toEqual(
+        amendment.fields.contractValue.value,
+      );
+      expect(agreementRecord).not.toHaveProperty("family");
+      expect(amendmentRecord).not.toHaveProperty("family");
+    } finally {
+      if (amendmentId) await db.delete(contractsTable).where(eq(contractsTable.id, amendmentId));
+      if (agreementId) await db.delete(contractsTable).where(eq(contractsTable.id, agreementId));
+    }
+  });
+
+  it("dismisses alerts only on the selected contract", async () => {
+    let firstId: string | undefined;
+    let secondId: string | undefined;
+    const suffix = crypto.randomUUID();
+    try {
+      const first = await request(app)
+        .post("/api/contracts")
+        .send({ filename: `alert-first-${suffix}.pdf`, contract });
+      const second = await request(app)
+        .post("/api/contracts")
+        .send({
+          filename: `alert-second-${suffix}.pdf`,
+          contract: {
+            ...contract,
+            fields: {
+              ...contract.fields,
+              contractNumber: found(`ALERT-${suffix}`),
+            },
+          },
+        });
+      expect(first.status).toBe(201);
+      expect(second.status).toBe(201);
+      firstId = first.body.id;
+      secondId = second.body.id;
+
+      const dismissed = await request(app)
+        .post(`/api/contracts/${firstId}/alert/dismiss`)
+        .send({ reason: "Handled independently" });
+      expect(dismissed.status).toBe(200);
+      expect(dismissed.body.contract.alert).toMatchObject({
+        state: "dismissed",
+        dismissedReason: "Handled independently",
+      });
+
+      const untouched = await request(app).get(`/api/contracts/${secondId}`);
+      expect(untouched.body.contract.alert).toMatchObject({
+        state: "pending",
+        dismissedReason: null,
+      });
+    } finally {
+      if (secondId) await db.delete(contractsTable).where(eq(contractsTable.id, secondId));
+      if (firstId) await db.delete(contractsTable).where(eq(contractsTable.id, firstId));
     }
   });
 });

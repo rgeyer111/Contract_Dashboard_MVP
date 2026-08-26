@@ -1,4 +1,4 @@
-import { Fragment, useState, type DragEvent, type ChangeEvent } from "react";
+import { useState, type DragEvent, type ChangeEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
@@ -17,9 +17,6 @@ import {
   X,
   Mail,
   Ban,
-  ChevronDown,
-  ChevronRight,
-  GitBranch,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
@@ -59,13 +56,11 @@ export default function Dashboard() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dismissingId, setDismissingId] = useState<string | null>(null);
   const [dismissReason, setDismissReason] = useState("");
-  const [expandedFamilies, setExpandedFamilies] = useState<Set<string>>(new Set());
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
-  const familyRoots = contracts.filter((saved) => saved.family.id === saved.id);
-  const alerts = familyRoots.filter((saved) => saved.family.effectiveContract.alert);
-  const openAlerts = alerts.filter((saved) => saved.family.effectiveContract.alert?.state !== "dismissed");
+  const alerts = contracts.filter((saved) => saved.contract.alert);
+  const openAlerts = alerts.filter((saved) => saved.contract.alert?.state !== "dismissed");
   const dismissAlert = useDismissContractAlert({
     mutation: {
       onSuccess: async () => {
@@ -350,7 +345,7 @@ export default function Dashboard() {
                 <Clock className="h-4 w-4 text-primary" />
                 Upcoming
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">{familyRoots.length}</div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.length}</div>
               <p className="text-sm font-medium text-muted-foreground relative z-10">Total Active Contracts</p>
             </div>
             
@@ -378,8 +373,8 @@ export default function Dashboard() {
             </div>
             <div className="grid gap-3">
               {alerts.map((saved) => {
-                const alert = saved.family.effectiveContract.alert!;
-                const vendor = saved.family.effectiveContract.fields.vendorLegalName.value || 'Unknown Vendor';
+                const alert = saved.contract.alert!;
+                const vendor = saved.contract.fields.vendorLegalName.value || 'Unknown Vendor';
                 const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(`Contract action: ${vendor}`)}&body=${encodeURIComponent(`Hi ${alert.owner},\n\n${vendor} needs attention.\nStart action by: ${alert.actionDate}\nLegal notice deadline: ${alert.noticeDeadline}\n\nOpen contract: ${window.location.origin}/review?id=${saved.id}`)}`;
                 return (
                   <article key={saved.id} className={`rounded-xl border bg-card px-4 py-3 shadow-sm ${alert.state === 'dismissed' ? 'opacity-60' : ''}`}>
@@ -425,7 +420,7 @@ export default function Dashboard() {
                 <table className="w-full min-w-[860px] text-sm text-left">
                   <thead className="bg-muted/30 border-b text-muted-foreground text-xs uppercase tracking-wider">
                     <tr>
-                      <th className="px-6 py-4 font-bold">Family / commercial context</th>
+                       <th className="px-6 py-4 font-bold">Contract / commercial context</th>
                       <th className="px-6 py-4 font-bold">Renewal</th>
                       <th className="px-6 py-4 font-bold">Notice runway</th>
                       <th className="px-6 py-4 font-bold">Owner</th>
@@ -433,8 +428,8 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {familyRoots.map((saved) => {
-                      const contract = saved.family.effectiveContract;
+                     {contracts.map((saved) => {
+                       const contract = saved.contract;
                       const vendor = contract.fields.vendorLegalName.value || 'Unknown Vendor';
                       const title = contract.fields.contractTitle.value || 'Untitled Contract';
                       const val = contract.fields.contractValue.value;
@@ -454,52 +449,18 @@ export default function Dashboard() {
                               ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20'
                               : 'bg-muted text-muted-foreground border-border';
                       
-                      const isExpanded = expandedFamilies.has(saved.family.id);
-                      const familyDocuments = saved.family.documents;
-                      const formatHistoryValue = (key: string, value: unknown) => {
-                        if (key === "contractValue" && value && typeof value === "object") {
-                          const item = value as { amount?: number; currency?: string };
-                          return `${item.currency ?? ""} ${item.amount?.toLocaleString() ?? ""}`.trim();
-                        }
-                        if (key === "noticePeriod" && value && typeof value === "object") {
-                          const item = value as { amount?: number; unit?: string };
-                          return `${item.amount ?? ""} ${item.unit ?? ""}`.trim();
-                        }
-                        return String(value ?? "");
-                      };
-
                       return (
-                        <Fragment key={saved.id}>
-                        <tr className="hover:bg-muted/30 transition-colors group">
+                         <tr key={saved.id} className="hover:bg-muted/30 transition-colors group">
                           <td className="px-6 py-4">
-                            <div className="flex items-start gap-2">
-                              <button
-                                type="button"
-                                className="mt-0.5 rounded p-0.5 text-muted-foreground hover:bg-muted disabled:opacity-30"
-                                disabled={saved.family.documentCount === 1}
-                                aria-label={isExpanded ? "Collapse contract family" : "Expand contract family"}
-                                onClick={() => setExpandedFamilies((current) => {
-                                  const next = new Set(current);
-                                  if (next.has(saved.family.id)) next.delete(saved.family.id);
-                                  else next.add(saved.family.id);
-                                  return next;
-                                })}
-                              >
-                                {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                              </button>
-                              <div>
+                             <div>
                                 <div className="flex flex-wrap items-center gap-2">
                                   <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="font-bold text-foreground text-sm hover:text-primary">{vendor}</button>
-                                  <span className="inline-flex items-center gap-1 rounded-full border bg-muted/50 px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
-                                    <GitBranch className="h-3 w-3" />{saved.family.documentCount} document{saved.family.documentCount === 1 ? "" : "s"}
-                                  </span>
                                 </div>
                                  <div className="text-muted-foreground text-xs font-medium mt-0.5">{title}</div>
                                  <div className={`mt-1 text-[10px] font-bold capitalize ${valueIsUnknown ? "text-destructive" : "text-muted-foreground"}`}>
                                    {contractType} <span className="mx-1 text-muted-foreground/60">·</span> {valueStr}
                                  </div>
                                  {valueIsUnknown && <div className="text-[10px] font-bold uppercase tracking-wide text-destructive">Needs review</div>}
-                              </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">
@@ -523,103 +484,11 @@ export default function Dashboard() {
                              {contract.computed.reason && <div className="mt-1 max-w-56 text-[10px] font-semibold text-destructive normal-case">{contract.computed.reason}</div>}
                           </td>
                         </tr>
-                        {isExpanded && (
-                          <tr className="bg-muted/20">
-                             <td colSpan={5} className="px-8 py-5">
-                               <div className="space-y-4" data-testid="contract-family-history">
-                                <div className="flex items-center justify-between">
-                                  <div>
-                                    <h3 className="text-sm font-extrabold">Contract family history</h3>
-                                    <p className="text-xs font-medium text-muted-foreground">Replayed by effective date. An amendment changes only fields it explicitly addresses.</p>
-                                  </div>
-                                </div>
-                                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                                   {(["contractValue", "noticePeriod", "vendorLegalName", "renewalMechanism", "initialTermEndDate"] as const).map((key) => {
-                                    const history = familyDocuments
-                                      .map((document) => {
-                                         const field = document.fieldValues[key] as {
-                                           value?: unknown;
-                                           sourceFilename?: string;
-                                           provenance?: "document" | "reviewer_supplied";
-                                         } | undefined;
-                                         return field?.value == null ? null : {
-                                           document,
-                                           field,
-                                           sourceFilename: field.sourceFilename || document.filename,
-                                         };
-                                      })
-                                       .filter(Boolean) as Array<{
-                                         document: typeof familyDocuments[number];
-                                          field: {
-                                            value?: unknown;
-                                            sourceFilename?: string;
-                                            provenance?: "document" | "reviewer_supplied";
-                                          };
-                                         sourceFilename: string;
-                                       }>;
-                                     if (history.length === 0) return null;
-                                    return (
-                                       <div key={key} data-testid={`family-history-${key}`} className="rounded-lg border bg-card p-3">
-                                        <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{key.replace(/([A-Z])/g, " $1")}</div>
-                                        <div className="mt-2 space-y-2">
-                                          {history.map(({ document, field, sourceFilename }, index) => (
-                                            <div key={document.id} className="flex items-start gap-2 text-xs">
-                                              <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${index === history.length - 1 ? "bg-primary" : "bg-muted-foreground/40"}`} />
-                                               <div className="min-w-0">
-                                                <div className={index === history.length - 1 ? "font-extrabold" : "font-semibold line-through decoration-muted-foreground/50"}>{formatHistoryValue(key, field.value)}</div>
-                                                 <div className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5">
-                                                   <span className={`shrink-0 text-[9px] font-bold uppercase tracking-wide ${index === history.length - 1 ? "text-primary" : "text-muted-foreground"}`}>
-                                                     {index === history.length - 1 ? "Current" : "Superseded"}
-                                                   </span>
-                                                    {field.provenance === "reviewer_supplied" && (
-                                                      <span className="shrink-0 rounded-full border border-violet-500/20 bg-violet-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-violet-700">
-                                                        Reviewer supplied
-                                                      </span>
-                                                    )}
-                                                   <button
-                                                     type="button"
-                                                     aria-label={`Open ${sourceFilename}`}
-                                                     onClick={() => setLocation(`/review?id=${document.id}`)}
-                                                     className="min-w-0 break-all text-left text-[10px] font-semibold text-primary hover:underline"
-                                                   >
-                                                     {sourceFilename}
-                                                   </button>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                                <div className="space-y-2">
-                                  {familyDocuments.map((document, index) => (
-                                   <button key={document.id} data-testid={`family-document-${document.id}`} type="button" onClick={() => setLocation(`/review?id=${document.id}`)} className="flex w-full flex-col gap-3 rounded-lg border bg-card px-4 py-3 text-left hover:border-primary/30 hover:bg-primary/[0.02] sm:flex-row sm:items-center sm:justify-between">
-                                     <div className="flex min-w-0 items-center gap-3">
-                                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-extrabold text-primary">{index + 1}</span>
-                                       <div className="min-w-0">
-                                         <div className="break-all text-xs font-extrabold">{document.filename}</div>
-                                          <div className="mt-0.5 text-[10px] font-semibold text-muted-foreground">{document.documentType?.replace(/_/g, " ") ?? "unknown type"} · Effective {document.effectiveDate ?? "date unknown"}</div>
-                                        </div>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        {document.isParent && <span className="rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase">Parent</span>}
-                                        {document.isCurrent && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold uppercase text-primary">Current</span>}
-                                      </div>
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                        </Fragment>
                       );
                     })}
                   </tbody>
                 </table>
-                {!contractsQuery.isLoading && familyRoots.length === 0 && (
+                {!contractsQuery.isLoading && contracts.length === 0 && (
                   <div className="p-10 text-center text-sm font-medium text-muted-foreground">No confirmed contracts yet. Upload a PDF to get started.</div>
                 )}
               </div>

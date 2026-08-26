@@ -414,7 +414,7 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await expect(page.getByPlaceholder("e.g. John Doe")).toHaveValue("John Doe");
 });
 
-test("keeps the family registry schema and effective values reachable on narrow screens", async ({ page }) => {
+test("keeps standalone contract rows reachable on narrow screens", async ({ page }) => {
   const rootId = "saved-family-parent";
   const amendmentId = "saved-family-amendment";
   const parentContract = makeContract({
@@ -423,17 +423,17 @@ test("keeps the family registry schema and effective values reachable on narrow 
     contractTitle: "Original Support Agreement",
     contractValue: { amount: 120000, currency: "USD", basis: "annual" },
   });
-  const effectiveBase = makeContract({
+  const amendmentBase = makeContract({
     vendor: "Northstar Sourcing GmbH",
     contractNumber: "PARENT-001",
     contractTitle: "Sourcing Agreement",
     contractType: "software_license",
     contractValue: { amount: 240000, currency: "USD", basis: "annual" },
   });
-  const effectiveContract = {
-    ...effectiveBase,
+  const amendmentContract = {
+    ...amendmentBase,
     fields: {
-      ...effectiveBase.fields,
+      ...amendmentBase.fields,
       vendorLegalName: reviewerEdited("Northstar Sourcing GmbH"),
       initialTermEndDate: provenance("2027-12-31"),
       renewalMechanism: provenance("manual_renewal"),
@@ -445,84 +445,27 @@ test("keeps the family registry schema and effective values reachable on narrow 
       }),
     },
     assignment: {
-      ...effectiveBase.assignment,
+      ...amendmentBase.assignment,
       owner: "Avery Stone",
     },
     computed: {
-      ...effectiveBase.computed,
+      ...amendmentBase.computed,
       noticeDeadline: "2027-10-02",
       actionDate: "2027-09-02",
     },
-  };
-  const familyField = (
-    value: unknown,
-    sourceDocumentId: string,
-    sourceFilename: string,
-    fieldProvenance: "document" | "reviewer_supplied" = "document",
-  ) => ({
-    value,
-    sourceDocumentId,
-    sourceFilename,
-    provenance: fieldProvenance,
-  });
-  const family = {
-    id: rootId,
-    documentCount: 2,
-    effectiveContract,
-    documents: [
-      {
-        id: rootId,
-        filename: "parent-agreement.pdf",
-        documentType: "master_agreement",
-        effectiveDate: "2026-01-01",
-        isParent: true,
-        isCurrent: false,
-        fieldValues: {
-          vendorLegalName: familyField("Legacy Parent Vendor", rootId, "parent-agreement.pdf"),
-          contractValue: familyField({ amount: 120000, currency: "USD", basis: "annual" }, rootId, "parent-agreement.pdf"),
-          noticePeriod: familyField({ amount: 60, unit: "days", anchor: "term_end", purpose: "non_renewal" }, rootId, "parent-agreement.pdf"),
-          renewalMechanism: familyField("auto_renew", rootId, "parent-agreement.pdf"),
-          initialTermEndDate: familyField("2026-12-31", rootId, "parent-agreement.pdf"),
-        },
-      },
-      {
-        id: amendmentId,
-        filename: "commercial-amendment.pdf",
-        documentType: "amendment",
-        effectiveDate: "2027-01-01",
-        isParent: false,
-        isCurrent: true,
-        fieldValues: {
-          vendorLegalName: familyField(
-            "Northstar Sourcing GmbH",
-            amendmentId,
-            "commercial-amendment.pdf",
-            "reviewer_supplied",
-          ),
-          contractValue: familyField({ amount: 240000, currency: "USD", basis: "annual" }, amendmentId, "commercial-amendment.pdf"),
-          noticePeriod: familyField({ amount: 90, unit: "days", anchor: "term_end", purpose: "non_renewal" }, amendmentId, "commercial-amendment.pdf"),
-          renewalMechanism: familyField("manual_renewal", amendmentId, "commercial-amendment.pdf"),
-          initialTermEndDate: familyField("2027-12-31", amendmentId, "commercial-amendment.pdf"),
-        },
-      },
-    ],
   };
   const savedContracts = [
     {
       id: rootId,
       filename: "parent-agreement.pdf",
-      parentContractId: null,
       documentType: "master_agreement",
       contract: parentContract,
-      family,
     },
     {
       id: amendmentId,
       filename: "commercial-amendment.pdf",
-      parentContractId: rootId,
       documentType: "amendment",
-      contract: effectiveContract,
-      family,
+      contract: amendmentContract,
     },
   ];
   let listRequests = 0;
@@ -542,53 +485,30 @@ test("keeps the family registry schema and effective values reachable on narrow 
   const headers = page.locator("table thead th");
   await expect(headers).toHaveCount(5);
   await expect(headers).toHaveText([
-    "Family / commercial context",
+    "Contract / commercial context",
     "Renewal",
     "Notice runway",
     "Owner",
     "Signal",
   ]);
-  for (const removedHeader of ["Contract family", "Type", "Value", "Notice / action", "Actions"]) {
+  for (const removedHeader of ["Contract family", "Family / commercial context", "Type", "Value", "Notice / action", "Actions"]) {
     await expect(headers.filter({ hasText: new RegExp(`^${removedHeader}$`) })).toHaveCount(0);
   }
 
-  const registryRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
-  await expect(registryRow).toHaveCount(1);
-  await expect(registryRow).toContainText("2 documents");
-  await expect(registryRow).toContainText("Sourcing Agreement");
-  await expect(registryRow).toContainText("software license");
-  await expect(registryRow).toContainText("USD 240,000 · annual");
-  await expect(registryRow).toContainText("2027-12-31");
-  await expect(registryRow).toContainText("manual renewal");
-  await expect(registryRow).toContainText("90 days before term end");
-  await expect(registryRow).toContainText("2027-10-02");
-  await expect(registryRow).toContainText("Avery Stone");
-  await expect(registryRow).not.toContainText("Legacy Parent Vendor");
-
-  await registryRow.getByRole("button", { name: "Expand contract family" }).click();
-  const history = page.getByTestId("contract-family-history");
-  await expect(history).toBeVisible();
-  await expect(history.getByRole("heading", { name: "Contract family history" })).toBeVisible();
-  for (const key of ["contractValue", "noticePeriod", "vendorLegalName", "renewalMechanism", "initialTermEndDate"]) {
-    const fieldHistory = page.getByTestId(`family-history-${key}`);
-    await expect(fieldHistory).toBeVisible();
-    await expect(fieldHistory.getByText("Current", { exact: true })).toBeVisible();
-    await expect(fieldHistory.getByText("Superseded", { exact: true })).toBeVisible();
-    await expect(fieldHistory).toContainText("commercial-amendment.pdf");
-    await expect(fieldHistory).toContainText("parent-agreement.pdf");
-  }
-  await expect(page.getByTestId(`family-document-${rootId}`).getByText("Parent", { exact: true })).toBeVisible();
-  await expect(page.getByTestId(`family-document-${amendmentId}`).getByText("Current", { exact: true })).toBeVisible();
-  const vendorHistory = page.getByTestId("family-history-vendorLegalName");
-  await expect(vendorHistory.getByText("Reviewer supplied", { exact: true })).toBeVisible();
-  await expect(vendorHistory).toContainText("commercial-amendment.pdf");
-  await expect(vendorHistory).not.toContainText("Verbatim source evidence.");
-  const historyMetrics = await history.evaluate((element) => ({
-    width: element.getBoundingClientRect().width,
-    height: element.getBoundingClientRect().height,
-  }));
-  expect(historyMetrics.width).toBeGreaterThan(0);
-  expect(historyMetrics.height).toBeGreaterThan(0);
+  const agreementRow = page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" });
+  const amendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
+  await expect(agreementRow).toHaveCount(1);
+  await expect(amendmentRow).toHaveCount(1);
+  await expect(agreementRow).toContainText("USD 120,000 · annual");
+  await expect(amendmentRow).toContainText("Sourcing Agreement");
+  await expect(amendmentRow).toContainText("USD 240,000 · annual");
+  await expect(amendmentRow).toContainText("2027-12-31");
+  await expect(amendmentRow).toContainText("manual renewal");
+  await expect(amendmentRow).toContainText("90 days before term end");
+  await expect(amendmentRow).toContainText("2027-10-02");
+  await expect(amendmentRow).toContainText("Avery Stone");
+  await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);
+  await expect(page.getByTestId("contract-family-history")).toHaveCount(0);
 
   const scrollerMetrics = await page.locator("table").evaluate((table) => {
     const scroller = table.parentElement;
@@ -602,16 +522,12 @@ test("keeps the family registry schema and effective values reachable on narrow 
   expect(scrollerMetrics.scrollWidth).toBeGreaterThan(scrollerMetrics.clientWidth);
 
   await page.reload();
-  const reloadedRegistryRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
-  await expect(reloadedRegistryRow).toHaveCount(1);
-  await expect(reloadedRegistryRow).toContainText("2 documents");
-  await expect(reloadedRegistryRow).toContainText("USD 240,000 · annual");
-  await expect(reloadedRegistryRow).toContainText("2027-10-02");
-  await expect(reloadedRegistryRow).toContainText("Avery Stone");
-  await reloadedRegistryRow.getByRole("button", { name: "Expand contract family" }).click();
-  const reloadedVendorHistory = page.getByTestId("family-history-vendorLegalName");
-  await expect(reloadedVendorHistory.getByText("Reviewer supplied", { exact: true })).toBeVisible();
-  await expect(reloadedVendorHistory).toContainText("commercial-amendment.pdf");
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
+  const reloadedAmendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
+  await expect(reloadedAmendmentRow).toHaveCount(1);
+  await expect(reloadedAmendmentRow).toContainText("USD 240,000 · annual");
+  await expect(reloadedAmendmentRow).toContainText("2027-10-02");
+  await expect(reloadedAmendmentRow).toContainText("Avery Stone");
   expect(listRequests).toBeGreaterThanOrEqual(2);
 
   await page.goto("/action-items");

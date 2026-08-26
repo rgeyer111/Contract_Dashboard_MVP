@@ -504,48 +504,7 @@ export interface ContractExtractionResult {
 
 export interface ContractSaveRequest {
   filename: string;
-  /** @nullable */
-  parentContractId?: string | null;
   contract: ContractReviewRecord;
-}
-
-/**
- * @nullable
- */
-export type ContractFamilyDocumentDocumentType = typeof ContractFamilyDocumentDocumentType[keyof typeof ContractFamilyDocumentDocumentType] | null;
-
-
-export const ContractFamilyDocumentDocumentType = {
-  master_agreement: 'master_agreement',
-  order_form: 'order_form',
-  sow: 'sow',
-  amendment: 'amendment',
-  renewal_letter: 'renewal_letter',
-  termination_notice: 'termination_notice',
-  quote_or_proposal: 'quote_or_proposal',
-  unknown: 'unknown',
-} as const;
-
-export type ContractFamilyDocumentFieldValues = { [key: string]: unknown };
-
-export interface ContractFamilyDocument {
-  id: string;
-  filename: string;
-  /** @nullable */
-  documentType: ContractFamilyDocumentDocumentType;
-  /** @nullable */
-  effectiveDate: string | null;
-  isParent: boolean;
-  isCurrent: boolean;
-  fieldValues: ContractFamilyDocumentFieldValues;
-}
-
-export interface ContractFamily {
-  id: string;
-  /** @minimum 1 */
-  documentCount: number;
-  effectiveContract: ContractReviewRecord;
-  documents: ContractFamilyDocument[];
 }
 
 /**
@@ -565,14 +524,11 @@ export const SavedContractDocumentType = {
   unknown: 'unknown',
 } as const;
 
-export type SavedContract = ContractSaveRequest & ({
+export type SavedContract = ContractSaveRequest & {
   id: string;
   /** @nullable */
-  parentContractId: string | null;
-  /** @nullable */
   documentType: SavedContractDocumentType;
-  family: ContractFamily;
   createdAt: string;
   updatedAt: string;
-});
+};
 
