@@ -21,6 +21,7 @@ import {
   Check,
   Bookmark,
   Pin,
+  RotateCcw,
   ChevronUp,
   ChevronDown,
   Pencil,
@@ -75,6 +76,7 @@ export default function Dashboard() {
     handleDrop,
     handleInput,
     processFiles,
+    retryFile,
     resetUpload,
   } = upload;
   const {
@@ -345,6 +347,7 @@ export default function Dashboard() {
                         size="icon"
                         className="h-8 w-8 shrink-0"
                         onClick={() => removeFile(index)}
+                        disabled={runLog.length > 0}
                         aria-label={`Remove ${file.name}`}
                         title={`Remove ${file.name}`}
                       >
@@ -369,11 +372,27 @@ export default function Dashboard() {
                   </div>
                   <div className="space-y-2">
                     {runLog.map((entry) => (
-                      <div key={entry.name} className="flex items-center justify-between gap-3 text-xs">
+                      <div key={entry.id} className="flex items-center justify-between gap-3 text-xs">
                         <span className="min-w-0 truncate font-semibold">{entry.name}</span>
-                        <span className={`shrink-0 font-bold ${entry.state === "ready" ? "text-emerald-600" : entry.state === "duplicate" || entry.state === "failed" ? "text-destructive" : "text-primary"}`}>
-                          {entry.state === "processing" ? "Processing…" : entry.message}
-                        </span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span className={`font-bold ${entry.state === "ready" ? "text-emerald-600" : entry.state === "duplicate" || entry.state === "failed" ? "text-destructive" : "text-primary"}`}>
+                            {entry.state === "processing" ? "Processing…" : entry.message}
+                          </span>
+                          {entry.state === "failed" && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="h-7 gap-1 px-2 text-xs"
+                              onClick={() => retryFile(entry.id)}
+                              disabled={extraction.isPending}
+                              aria-label={`Retry ${entry.name}`}
+                            >
+                              <RotateCcw className="h-3 w-3" />
+                              Retry
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -384,8 +403,8 @@ export default function Dashboard() {
                 <p className="text-xs font-medium text-muted-foreground">Your PDF is used to create an editable review draft. Confirmed details are saved securely.</p>
                 <Button
                   type="button"
-                   onClick={processFiles}
-                   disabled={!selectedFiles.length || extraction.isPending}
+                   onClick={() => processFiles()}
+                   disabled={!selectedFiles.length || extraction.isPending || runLog.length > 0}
                   className="gap-2 font-bold"
                 >
                   {extraction.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <FileUp className="h-4 w-4" />}

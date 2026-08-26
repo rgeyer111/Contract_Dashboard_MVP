@@ -180,6 +180,112 @@ test("shows upload success and API error states", async ({ page }) => {
   await expect(page.getByText("This PDF has no readable contract text.")).toBeVisible();
 });
 
+test("retries only a failed PDF and preserves the review queue", async ({ page }) => {
+  const requestCounts = new Map<string, number>();
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/extract", async (route) => {
+    if (route.request().method() !== "POST") return route.continue();
+    const body = route.request().postDataBuffer()?.toString("latin1") ?? "";
+    const filename = body.match(/filename="([^"]+)"/)?.[1] ?? "";
+    const count = (requestCounts.get(filename) ?? 0) + 1;
+    requestCounts.set(filename, count);
+
+    if (filename === "duplicate.pdf") {
+      await route.fulfill({
+        status: 409,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "This contract has already been uploaded. Duplicate skipped." }),
+      });
+      return;
+    }
+    if (filename === "retry.pdf" && count === 1) {
+      await route.fulfill({
+        status: 422,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "The extraction service is temporarily unavailable." }),
+      });
+      return;
+    }
+
+    const contract = makeContract({
+      vendor: filename === "retry.pdf" ? "Retry Vendor" : "Ready Vendor",
+      contractNumber: filename === "retry.pdf" ? "RETRY-200" : "READY-100",
+    });
+    Object.assign(contract, {
+      source: {
+        id: filename,
+        hash: filename === "retry.pdf" ? "retry-hash" : "ready-hash",
+        filename,
+        size: 100,
+        type: "application/pdf",
+      },
+    });
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        filename,
+        extraction: {
+          contract,
+          source: "text",
+          ocrConfidence: null,
+          ocrPageCount: null,
+          ocrPagesProcessed: null,
+        },
+      }),
+    });
+  });
+
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "New Contract" }).click();
+  await page.locator("#contract-pdf-file").setInputFiles([
+    {
+      name: "ready.pdf",
+      mimeType: "application/pdf",
+      buffer: Buffer.from("%PDF-1.7\nready contract"),
+    },
+    {
+      name: "duplicate.pdf",
+      mimeType: "application/pdf",
+      buffer: Buffer.from("%PDF-1.7\nduplicate contract"),
+    },
+    {
+      name: "retry.pdf",
+      mimeType: "application/pdf",
+      buffer: Buffer.from("%PDF-1.7\nretry contract"),
+    },
+  ]);
+
+  await page.getByRole("button", { name: "Extract contract" }).click();
+  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page.getByText("3/3 complete", { exact: true })).toBeVisible();
+  await expect(page.getByText("Ready for review", { exact: true })).toBeVisible();
+  await expect(page.getByText("Duplicate skipped", { exact: true })).toBeVisible();
+  await expect(page.getByText(/The extraction service is temporarily unavailable\./)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Retry retry.pdf" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Extract contract" })).toBeDisabled();
+
+  await page.getByRole("button", { name: "Retry retry.pdf" }).click();
+  await expect(page).toHaveURL(/\/review$/);
+  await expect(page.getByText(/ready\.pdf/)).toBeVisible();
+
+  expect(Object.fromEntries(requestCounts)).toEqual({
+    "ready.pdf": 1,
+    "duplicate.pdf": 1,
+    "retry.pdf": 2,
+  });
+  await expect.poll(() => page.evaluate(() => {
+    const queue = JSON.parse(sessionStorage.getItem("contract-dashboard.extraction-queue") ?? "[]");
+    return queue.map((entry: { filename: string }) => entry.filename);
+  })).toEqual(["retry.pdf"]);
+});
+
 test("shows invalid file feedback and queues a valid PDF without extracting", async ({ page }) => {
   let extractionRequests = 0;
   await page.route("**/api/contracts", async (route) => {

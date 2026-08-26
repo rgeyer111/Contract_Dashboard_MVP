@@ -1,20 +1,26 @@
-import { useState, type ChangeEvent, type DragEvent } from "react";
+import { useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import {
   useExtractContract,
   type ContractExtractionResult,
 } from "@workspace/api-client-react";
 
 export type UploadRunEntry = {
+  id: string;
   name: string;
   state: "processing" | "ready" | "duplicate" | "failed";
   message?: string;
 };
+
+function fileId(file: File, index: number) {
+  return `${index}:${file.name}:${file.size}:${file.lastModified}`;
+}
 
 export function useContractUpload(navigate: (path: string) => void) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [runLog, setRunLog] = useState<UploadRunEntry[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const successfulExtractions = useRef(new Map<string, ContractExtractionResult>());
   const extraction = useExtractContract();
 
   const chooseFiles = (files: File[]) => {
@@ -25,37 +31,59 @@ export function useContractUpload(navigate: (path: string) => void) {
     setUploadError(validFiles.length !== files.length ? "Only PDF files up to 10 MB can be added." : null);
     setSelectedFiles(validFiles.slice(0, 20));
     setRunLog([]);
+    successfulExtractions.current.clear();
   };
 
-  const processFiles = async () => {
-    const results: ContractExtractionResult[] = [];
-    const batchHashes = new Set<string>();
+  const processFiles = async (retryId?: string) => {
+    const filesToProcess = selectedFiles
+      .map((file, index) => ({ file, id: fileId(file, index) }))
+      .filter(({ id }) => retryId ? id === retryId : runLog.length === 0);
+    if (!filesToProcess.length) return;
+
     setUploadError(null);
-    for (const file of selectedFiles) {
-      setRunLog((current) => [...current, { name: file.name, state: "processing" }]);
+    let nextRunLog: UploadRunEntry[] = runLog.length > 0
+      ? runLog.map((entry) => filesToProcess.some(({ id }) => id === entry.id)
+        ? { ...entry, state: "processing" as const, message: undefined }
+        : entry)
+      : selectedFiles.map((file, index) => ({
+        id: fileId(file, index),
+        name: file.name,
+        state: "processing" as const,
+      }));
+    setRunLog(nextRunLog);
+
+    for (const { file, id } of filesToProcess) {
       try {
         const result = await extraction.mutateAsync({ data: { files: [file] } });
         const hash = result.extraction.contract.source?.hash;
-        if (hash && batchHashes.has(hash)) {
-          setRunLog((current) => current.map((entry) => entry.name === file.name
+        const alreadyExtracted = [...successfulExtractions.current.values()]
+          .some((entry) => entry.extraction.contract.source?.hash === hash);
+        if (hash && alreadyExtracted) {
+          successfulExtractions.current.delete(id);
+          nextRunLog = nextRunLog.map((entry) => entry.id === id
             ? { ...entry, state: "duplicate", message: "Duplicate skipped" }
-            : entry));
-          continue;
+            : entry);
+        } else {
+          successfulExtractions.current.set(id, result);
+          nextRunLog = nextRunLog.map((entry) => entry.id === id
+            ? { ...entry, state: "ready", message: "Ready for review" }
+            : entry);
         }
-        if (hash) batchHashes.add(hash);
-        results.push(result);
-        setRunLog((current) => current.map((entry) => entry.name === file.name
-          ? { ...entry, state: "ready", message: "Ready for review" }
-          : entry));
       } catch (error) {
         const message = error instanceof Error ? error.message : "Could not process this PDF.";
         const duplicate = /duplicate|already been uploaded/i.test(message);
-        setRunLog((current) => current.map((entry) => entry.name === file.name
+        if (duplicate) successfulExtractions.current.delete(id);
+        nextRunLog = nextRunLog.map((entry) => entry.id === id
           ? { ...entry, state: duplicate ? "duplicate" : "failed", message: duplicate ? "Duplicate skipped" : message }
-          : entry));
+          : entry);
       }
+      setRunLog(nextRunLog);
     }
-    if (results.length > 0) {
+
+    const results = selectedFiles
+      .map((file, index) => successfulExtractions.current.get(fileId(file, index)))
+      .filter((result): result is ContractExtractionResult => Boolean(result));
+    if (results.length > 0 && !nextRunLog.some((entry) => entry.state === "failed" || entry.state === "processing")) {
       sessionStorage.setItem("contract-dashboard.extraction", JSON.stringify(results[0]));
       sessionStorage.setItem("contract-dashboard.extraction-queue", JSON.stringify(results.slice(1)));
       navigate("/review");
@@ -100,6 +128,7 @@ export function useContractUpload(navigate: (path: string) => void) {
     handleDrop,
     handleInput,
     processFiles,
+    retryFile: (id: string) => processFiles(id),
     resetUpload,
   };
 }
