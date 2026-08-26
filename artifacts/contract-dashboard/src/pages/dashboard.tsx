@@ -328,8 +328,8 @@ export default function Dashboard() {
           )}
           
           {!isActionItemsPage && <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1 */}
-            <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+             {/* Card 1 */}
+             <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
               <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
                 <AlertCircle className="h-32 w-32 text-destructive" />
               </div>
@@ -354,18 +354,18 @@ export default function Dashboard() {
               <p className="text-sm font-medium text-muted-foreground relative z-10">Total Active Contracts</p>
             </div>
             
-            {/* Card 3 */}
-            <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-              <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
-                <CheckCircle2 className="h-32 w-32 text-green-500" />
-              </div>
-              <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
-                Action Items
-              </div>
-            <div className="text-4xl font-extrabold mb-1 relative z-10">{openAlerts.length}</div>
-            <p className="text-sm font-medium text-muted-foreground relative z-10">Open action items</p>
-            </div>
+              {/* Card 3 */}
+              <button type="button" onClick={() => setLocation("/action-items")} className="w-full bg-card border rounded-xl p-6 text-left shadow-sm transition-shadow hover:shadow-md cursor-pointer relative overflow-hidden group">
+                <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
+                  <CheckCircle2 className="h-32 w-32 text-green-500" />
+                </div>
+                <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  Action Items
+                </div>
+                <div className="text-4xl font-extrabold mb-1 relative z-10">{openAlerts.length}</div>
+                <p className="text-sm font-medium text-muted-foreground relative z-10">Open action items</p>
+              </button>
           </div>}
 
           {isActionItemsPage && <section id="action-items" className="space-y-4 scroll-mt-24">
