@@ -7,3 +7,4 @@
 - [OCR completeness](ocr-completeness.md) — do not call OCR complete unless every page finishes without a model output cutoff.
 - [Browser test runtime](browser-test-runtime.md) — Playwright may need explicitly exposed Nix graphics libraries before Chromium can launch.
 - [Video artifact registration](video-artifact-registration.md) — video compositions must be placed in a registered managed artifact before preview or delivery.
+- [OpenAPI code generation](openapi-code-generation.md) — express date-only and integer constraints without Orval/Zod coercion or unsupported helpers.

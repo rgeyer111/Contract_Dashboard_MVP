@@ -6,13 +6,24 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
+import {
+  CONTRACT_EXTRACTION_PROMPT_VERSION,
+  CONTRACT_EXTRACTION_SYSTEM_PROMPT,
+} from "./contract-extraction-prompt";
 
 const extractionConfidence = ["High", "Medium", "Low"] as const;
-const contractTypes = [
-  "Maintenance",
-  "Software License",
-  "Real Estate",
-  "Infrastructure",
+const provenanceStatuses = ["found", "not_found", "ambiguous", "conflicting"] as const;
+const provenanceConfidences = ["high", "medium", "low"] as const;
+const periodUnits = ["days", "weeks", "months", "years"] as const;
+const noticeAnchors = [
+  "term_end",
+  "renewal_date",
+  "anniversary",
+  "period_end_month",
+  "period_end_quarter",
+  "period_end_year",
+  "any_time",
+  "unknown",
 ] as const;
 
 type ExtractionConfidence = (typeof extractionConfidence)[number];
@@ -60,69 +71,212 @@ export class OcrIncompleteError extends Error {
   }
 }
 
-export function normalizeExtraction(raw: unknown) {
-  const response = asRecord(raw);
-  const contract = asRecord(response.contract);
-  const confidence = asRecord(response.confidence);
+function notFound(note: string | null = null) {
+  return {
+    value: null,
+    status: "not_found" as const,
+    confidence: "low" as const,
+    page: null,
+    clause: null,
+    quote: null,
+    note,
+  };
+}
 
-  const requestedType = safeText(contract.contractType);
-  const contractType = contractTypes.includes(requestedType as (typeof contractTypes)[number])
-    ? requestedType
-    : "";
-
-  const rawAmount = contract.contractValue;
-  const valueCandidate =
-    rawAmount && typeof rawAmount === "object"
-      ? (rawAmount as Record<string, unknown>)
-      : {};
-  const amount =
-    typeof valueCandidate.amount === "number" && Number.isFinite(valueCandidate.amount)
-      ? valueCandidate.amount
+function normalizeMetadata(raw: unknown) {
+  const field = asRecord(raw);
+  const status = provenanceStatuses.includes(field.status as never)
+    ? (field.status as (typeof provenanceStatuses)[number])
+    : "not_found";
+  const confidence = provenanceConfidences.includes(field.confidence as never)
+    ? (field.confidence as (typeof provenanceConfidences)[number])
+    : "low";
+  const page =
+    typeof field.page === "number" && Number.isInteger(field.page) && field.page > 0
+      ? field.page
       : null;
-  const currency = safeText(valueCandidate.currency).toUpperCase();
-  const valueIsStated =
-    valueCandidate.status === "stated" && amount !== null && amount > 0 && /^[A-Z]{3}$/.test(currency);
+  const clause = safeText(field.clause) || null;
+  const quote = typeof field.quote === "string" ? field.quote.trim().slice(0, 300) || null : null;
+  const note = typeof field.note === "string" ? field.note.trim().slice(0, 500) || null : null;
 
+  if (status === "not_found") return notFound();
+  if (!quote || !page) return notFound("The model did not provide complete page and quote evidence.");
+  return { status, confidence, page, clause, quote, note };
+}
+
+function normalizeField<T>(raw: unknown, parseValue: (value: unknown) => T | null) {
+  const field = asRecord(raw);
+  const metadata = normalizeMetadata(raw);
+  if (metadata.status === "not_found") return metadata;
+  const value = parseValue(field.value);
+  return value === null
+    ? notFound("The extracted value did not match the required field type.")
+    : { value, ...metadata };
+}
+
+const enumValue =
+  <T extends readonly string[]>(allowed: T) =>
+  (value: unknown): T[number] | null =>
+    allowed.includes(value as T[number]) ? (value as T[number]) : null;
+
+const stringValue = (value: unknown) => safeText(value) || null;
+const dateValue = (value: unknown) =>
+  typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
+
+function periodValue(value: unknown) {
+  const candidate = asRecord(value);
+  return typeof candidate.amount === "number" &&
+    Number.isInteger(candidate.amount) &&
+    candidate.amount > 0 &&
+    periodUnits.includes(candidate.unit as never)
+    ? { amount: candidate.amount, unit: candidate.unit as (typeof periodUnits)[number] }
+    : null;
+}
+
+function noticePeriodValue(value: unknown) {
+  const parseOne = (item: unknown) => {
+    const candidate = asRecord(item);
+    const purpose = ["non_renewal", "termination_for_convenience", "other"].includes(
+      candidate.purpose as string,
+    )
+      ? (candidate.purpose as "non_renewal" | "termination_for_convenience" | "other")
+      : null;
+    return typeof candidate.amount === "number" &&
+      Number.isInteger(candidate.amount) &&
+      candidate.amount > 0 &&
+      periodUnits.includes(candidate.unit as never) &&
+      noticeAnchors.includes(candidate.anchor as never)
+      ? {
+          amount: candidate.amount,
+          unit: candidate.unit as (typeof periodUnits)[number],
+          anchor: candidate.anchor as (typeof noticeAnchors)[number],
+          purpose,
+        }
+      : null;
+  };
+  if (Array.isArray(value)) {
+    const values = value.map(parseOne);
+    return values.length > 0 && values.every(Boolean) ? values : null;
+  }
+  return parseOne(value);
+}
+
+function noticeDeliveryValue(value: unknown) {
+  const candidate = asRecord(value);
+  const methods = ["email", "registered_post", "post", "portal", "any_written"] as const;
+  if (!methods.includes(candidate.method as never)) return null;
+  return {
+    method: candidate.method as (typeof methods)[number],
+    address: safeText(candidate.address) || null,
+    cc: Array.isArray(candidate.cc)
+      ? candidate.cc.map(safeText).filter(Boolean).slice(0, 20)
+      : [],
+  };
+}
+
+function contractValue(value: unknown) {
+  const candidate = asRecord(value);
+  const bases = [
+    "total_contract_value",
+    "annual",
+    "monthly",
+    "per_unit",
+    "not_to_exceed",
+    "variable",
+  ] as const;
+  const currency = safeText(candidate.currency).toUpperCase();
+  return typeof candidate.amount === "number" &&
+    Number.isFinite(candidate.amount) &&
+    candidate.amount >= 0 &&
+    /^[A-Z]{3}$/.test(currency) &&
+    bases.includes(candidate.basis as never)
+    ? { amount: candidate.amount, currency, basis: candidate.basis as (typeof bases)[number] }
+    : null;
+}
+
+export function normalizeExtraction(raw: unknown) {
+  const fields = asRecord(asRecord(raw).fields);
   return {
     contract: {
-      vendor: safeText(contract.vendor),
-      contractNumber: safeText(contract.contractNumber),
-      contractName: safeText(contract.contractName),
-      contractType,
-      contractValue: valueIsStated
-        ? { status: "stated" as const, amount, currency }
-        : { status: "unknown" as const, amount: null, currency: null },
-      startDate: safeText(contract.startDate),
-      contractDuration: safeText(contract.contractDuration),
-      endDate: safeText(contract.endDate),
-      noticePeriod: safeText(contract.noticePeriod),
-      noticeDeadline: safeText(contract.noticeDeadline),
-      negotiationBuffer: safeText(contract.negotiationBuffer),
-      // In this unauthenticated MVP, every new record is assigned to the demo uploader.
-      owner: "John Doe",
-      status: "Review Open" as const,
-    },
-    confidence: {
-      vendor: safeConfidence(confidence.vendor),
-      contractNumber: safeConfidence(confidence.contractNumber),
-      contractName: safeConfidence(confidence.contractName),
-      contractType: safeConfidence(confidence.contractType),
-      contractValue: safeConfidence(confidence.contractValue),
-      startDate: safeConfidence(confidence.startDate),
-      contractDuration: safeConfidence(confidence.contractDuration),
-      endDate: safeConfidence(confidence.endDate),
-      noticePeriod: safeConfidence(confidence.noticePeriod),
-      noticeDeadline: safeConfidence(confidence.noticeDeadline),
-      negotiationBuffer: safeConfidence(confidence.negotiationBuffer),
-      owner: "High" as const,
-      status: "High" as const,
+      fields: {
+        documentType: normalizeField(
+          fields.documentType,
+          enumValue([
+            "master_agreement",
+            "order_form",
+            "sow",
+            "amendment",
+            "renewal_letter",
+            "termination_notice",
+            "quote_or_proposal",
+            "unknown",
+          ] as const),
+        ),
+        documentLanguage: normalizeField(
+          fields.documentLanguage,
+          enumValue(["de", "en", "fr", "it", "other"] as const),
+        ),
+        vendorLegalName: normalizeField(fields.vendorLegalName, stringValue),
+        buyerLegalEntity: normalizeField(fields.buyerLegalEntity, stringValue),
+        contractTitle: normalizeField(fields.contractTitle, stringValue),
+        contractNumber: normalizeField(fields.contractNumber, stringValue),
+        contractType: normalizeField(
+          fields.contractType,
+          enumValue([
+            "maintenance",
+            "software_license",
+            "saas_subscription",
+            "real_estate",
+            "infrastructure",
+            "professional_services",
+            "data_services",
+            "equipment_lease",
+            "other",
+          ] as const),
+        ),
+        signatureDate: normalizeField(fields.signatureDate, dateValue),
+        effectiveDate: normalizeField(fields.effectiveDate, dateValue),
+        initialTermLength: normalizeField(fields.initialTermLength, periodValue),
+        initialTermEndDate: normalizeField(fields.initialTermEndDate, dateValue),
+        renewalMechanism: normalizeField(
+          fields.renewalMechanism,
+          enumValue(["auto_renew", "expires", "by_mutual_agreement", "indefinite", "unknown"] as const),
+        ),
+        renewalTermLength: normalizeField(fields.renewalTermLength, periodValue),
+        noticePeriod: normalizeField(fields.noticePeriod, noticePeriodValue),
+        noticeDeadline: notFound("Computed by the application; never extracted from model output."),
+        noticeDelivery: normalizeField(fields.noticeDelivery, noticeDeliveryValue),
+        contractValue: normalizeField(fields.contractValue, contractValue),
+        billingFrequency: normalizeField(
+          fields.billingFrequency,
+          enumValue(["annual", "quarterly", "monthly", "one_time", "milestone", "usage"] as const),
+        ),
+      },
+      assignment: {
+        owner: "John Doe",
+        negotiationBufferDays: 30,
+        status: "Review Open" as const,
+      },
     },
   };
 }
 
 export async function extractReadablePdfText(buffer: Buffer): Promise<string> {
-  const result = await pdf(buffer);
-  return result.text.replace(/\s+/g, " ").trim();
+  const result = await pdf(buffer, {
+    pagerender: async (page: {
+      pageNumber: number;
+      getTextContent: (options: Record<string, boolean>) => Promise<{ items: Array<{ str?: string }> }>;
+    }) => {
+      const content = await page.getTextContent({
+        normalizeWhitespace: false,
+        disableCombineTextItems: false,
+      });
+      return `--- Page ${page.pageNumber} ---\n${content.items
+        .map((item) => item.str ?? "")
+        .join(" ")}`;
+    },
+  });
+  return result.text.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
 }
 
 export async function extractContractFromText(
@@ -146,11 +300,7 @@ export async function extractContractFromText(
     messages: [
       {
         role: "system",
-        content: `You extract contract metadata for a review screen. Use only the supplied contract text; do not invent facts. Return a single JSON object with this exact shape: {"contract": {...}, "confidence": {...}}.
-
-contract must contain vendor, contractNumber, contractName, contractType, contractValue, startDate, contractDuration, endDate, noticePeriod, noticeDeadline, negotiationBuffer. Use empty strings for unknown string fields. contractType must be one of Maintenance, Software License, Real Estate, Infrastructure, or an empty string when no category is supported by evidence. contractValue must be {"status":"stated","amount":number,"currency":"ISO-4217"} only when an explicit numeric value and currency are clear; otherwise use {"status":"unknown"}. Format dates as YYYY-MM-DD when a full date is available. Express durations and notice periods plainly, for example "60 days" or "24 months".
-
-confidence must contain every matching field and use High, Medium, or Low. High means directly stated, Medium means clear but inferred from surrounding text, and Low means absent, unclear, or ambiguous. Do not include owner or status; the application assigns those itself.`,
+        content: `${CONTRACT_EXTRACTION_SYSTEM_PROMPT}\n\nPrompt version: ${CONTRACT_EXTRACTION_PROMPT_VERSION}`,
       },
       {
         role: "user",

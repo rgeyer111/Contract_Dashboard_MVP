@@ -76,7 +76,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-[100dvh] w-full bg-muted/20 flex flex-col md:flex-row">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-card border-r border-border flex flex-col sticky top-0 md:h-[100dvh] z-20 shadow-sm">
+      <aside className="w-full md:w-64 bg-card border-r border-border flex flex-col sticky top-0 md:h-[100dvh] z-20 shadow-sm hidden md:flex">
         <div className="p-6 border-b flex items-center gap-3">
           <div className="bg-primary h-8 w-8 rounded-lg flex items-center justify-center shadow-inner">
             <FileText className="h-4 w-4 text-primary-foreground" />
@@ -162,7 +162,7 @@ export default function Dashboard() {
                     New contract
                   </div>
                   <h2 id="upload-contract-heading" className="text-xl font-extrabold tracking-tight mt-1">Upload a PDF to extract its details</h2>
-                  <p className="text-sm text-muted-foreground font-medium mt-1">We’ll prepare an editable draft with confidence ratings for every field.</p>
+                  <p className="text-sm text-muted-foreground font-medium mt-1">We'll prepare an editable draft with confidence ratings for every field.</p>
                 </div>
                 <Button
                   type="button"
@@ -203,7 +203,7 @@ export default function Dashboard() {
                 {extraction.isPending ? (
                   <>
                     <LoaderCircle className="h-8 w-8 text-primary animate-spin mb-3" />
-                    <span className="font-extrabold text-sm">Reading and extracting your contract…</span>
+                    <span className="font-extrabold text-sm">Reading and extracting your contract...</span>
                     <span className="text-xs text-muted-foreground font-medium mt-1">This usually takes a few seconds.</span>
                   </>
                 ) : selectedFile ? (
@@ -254,7 +254,7 @@ export default function Dashboard() {
                 <div className="h-2 w-2 rounded-full bg-destructive animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
                 Critical Renewals
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.filter((contract) => contract.contract.status === "At Risk").length}</div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.filter((c) => c.contract.assignment.status === 'At Risk').length}</div>
               <p className="text-sm font-medium text-muted-foreground relative z-10">Require attention within 30 days</p>
             </div>
             
@@ -268,7 +268,7 @@ export default function Dashboard() {
                 Upcoming
               </div>
               <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.length}</div>
-              <p className="text-sm font-medium text-muted-foreground relative z-10">Renewing in next 90 days</p>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">Total Active Contracts</p>
             </div>
             
             {/* Card 3 */}
@@ -288,7 +288,7 @@ export default function Dashboard() {
           {/* Recent Contracts Section */}
           <div className="space-y-4 pt-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold tracking-tight">Requires Attention</h2>
+              <h2 className="text-xl font-bold tracking-tight">Contract Registry</h2>
               <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
             </div>
             
@@ -308,34 +308,41 @@ export default function Dashboard() {
                   <tbody className="divide-y">
                     {contracts.map((saved) => {
                       const contract = saved.contract;
-                      const valueIsUnknown = contract.contractValue.status === 'unknown';
-                      const value = valueIsUnknown
+                      const vendor = contract.fields.vendorLegalName.value || 'Unknown Vendor';
+                      const title = contract.fields.contractTitle.value || 'Untitled Contract';
+                      const val = contract.fields.contractValue.value;
+                      const valueIsUnknown = !val;
+                      const valueStr = valueIsUnknown
                         ? 'Unknown / not stated'
-                        : `${contract.contractValue.currency === 'USD' ? '$' : ''}${contract.contractValue.amount?.toLocaleString()}/yr`;
-                      const deadlineIsUrgent = contract.status === 'At Risk';
+                        : `${val.currency === 'USD' ? '$' : ''}${val.amount?.toLocaleString()} ${val.basis.replace(/_/g, ' ')}`;
+                      const owner = contract.assignment.owner || 'Unassigned';
+                      const endDate = contract.fields.initialTermEndDate.value || 'Unknown End Date';
+                      const status = contract.assignment.status;
+                      const deadlineIsUrgent = status === 'At Risk';
+                      
                       return (
                         <tr key={saved.id} className="hover:bg-muted/30 transition-colors group cursor-pointer" onClick={() => setLocation(`/review?id=${saved.id}`)}>
                           <td className="px-6 py-4">
-                            <div className="font-bold text-foreground text-sm">{contract.vendor}</div>
-                            <div className="text-muted-foreground text-xs font-medium mt-0.5">{contract.contractName}</div>
+                            <div className="font-bold text-foreground text-sm">{vendor}</div>
+                            <div className="text-muted-foreground text-xs font-medium mt-0.5">{title}</div>
                           </td>
                           <td className={`px-6 py-4 font-semibold ${valueIsUnknown ? 'text-destructive' : 'text-foreground'}`}>
-                            {value}
+                            {valueStr}
                             {valueIsUnknown && <div className="text-[10px] font-bold uppercase tracking-wide mt-1">Needs review</div>}
                           </td>
                           <td className="px-6 py-4">
-                            <div className="font-semibold text-foreground text-xs">{contract.owner}</div>
+                            <div className="font-semibold text-foreground text-xs">{owner}</div>
                             <div className="text-muted-foreground text-[10px] uppercase tracking-wide mt-1">Contract owner</div>
                           </td>
                           <td className="px-6 py-4">
                             <div className={`flex items-center gap-2 font-bold text-xs w-fit px-2.5 py-1 rounded-md ${deadlineIsUrgent ? 'text-destructive bg-destructive/5' : 'text-muted-foreground bg-muted/50'}`}>
                               {deadlineIsUrgent && <AlertCircle className="h-3.5 w-3.5" />}
-                              {contract.endDate}
+                              {endDate}
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold border ${contract.status === 'At Risk' ? 'bg-destructive/10 text-destructive border-destructive/20' : contract.status === 'Review Open' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
-                              {contract.status}
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold border ${status === 'At Risk' ? 'bg-destructive/10 text-destructive border-destructive/20' : status === 'Review Open' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                              {status}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right">

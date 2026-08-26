@@ -24,6 +24,170 @@ export const ExtractContractBody = zod.object({
   "file": zod.instanceof(File).describe('A PDF contract up to 10 MB.')
 })
 
+export const extractContractResponseExtractionContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractTitleOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractTitleOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractTitleOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractTypeOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractTypeOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractTypeOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractValueOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractValueOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const extractContractResponseExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMin = 0;
+export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMax = 365;
+export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
 
 export const extractContractResponseExtractionOcrPagesProcessedMin = 0;
 
@@ -33,38 +197,217 @@ export const ExtractContractResponse = zod.object({
   "filename": zod.string(),
   "extraction": zod.object({
   "contract": zod.object({
-  "vendor": zod.string(),
-  "contractNumber": zod.string(),
-  "contractName": zod.string(),
-  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(extractContractResponseExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(extractContractResponseExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(extractContractResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(extractContractResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
   "contractValue": zod.object({
-  "status": zod.enum(['stated', 'unknown']),
-  "amount": zod.number().nullish(),
-  "currency": zod.string().nullish()
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(extractContractResponseExtractionContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(extractContractResponseExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
 }),
-  "startDate": zod.string(),
-  "contractDuration": zod.string(),
-  "endDate": zod.string(),
-  "noticePeriod": zod.string(),
-  "noticeDeadline": zod.string(),
-  "negotiationBuffer": zod.string(),
-  "owner": zod.string(),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "negotiationBufferDays": zod.number().min(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMin).max(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMax).multipleOf(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
-}),
-  "confidence": zod.object({
-  "vendor": zod.enum(['High', 'Medium', 'Low']),
-  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
-  "contractName": zod.enum(['High', 'Medium', 'Low']),
-  "contractType": zod.enum(['High', 'Medium', 'Low']),
-  "contractValue": zod.enum(['High', 'Medium', 'Low']),
-  "startDate": zod.enum(['High', 'Medium', 'Low']),
-  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
-  "endDate": zod.enum(['High', 'Medium', 'Low']),
-  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
-  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
-  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
-  "owner": zod.enum(['High', 'Medium', 'Low']),
-  "status": zod.enum(['High', 'Medium', 'Low'])
+})
 }),
   "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
   "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
@@ -77,41 +420,386 @@ export const ExtractContractResponse = zod.object({
 /**
  * @summary List saved contracts
  */
+export const listContractsResponseOneContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractTitleOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractTitleOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractTitleOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractNumberOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractNumberOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractTypeOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractTypeOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractTypeOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsSignatureDateOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractValueOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractValueOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const listContractsResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const listContractsResponseOneContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
+export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
+export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+
+
 export const ListContractsResponseItem = zod.object({
   "filename": zod.string(),
   "contract": zod.object({
-  "vendor": zod.string(),
-  "contractNumber": zod.string(),
-  "contractName": zod.string(),
-  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(listContractsResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(listContractsResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(listContractsResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(listContractsResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
   "contractValue": zod.object({
-  "status": zod.enum(['stated', 'unknown']),
-  "amount": zod.number().nullish(),
-  "currency": zod.string().nullish()
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(listContractsResponseOneContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(listContractsResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
 }),
-  "startDate": zod.string(),
-  "contractDuration": zod.string(),
-  "endDate": zod.string(),
-  "noticePeriod": zod.string(),
-  "noticeDeadline": zod.string(),
-  "negotiationBuffer": zod.string(),
-  "owner": zod.string(),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "negotiationBufferDays": zod.number().min(listContractsResponseOneContractAssignmentNegotiationBufferDaysMin).max(listContractsResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(listContractsResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
-}),
-  "confidence": zod.object({
-  "vendor": zod.enum(['High', 'Medium', 'Low']),
-  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
-  "contractName": zod.enum(['High', 'Medium', 'Low']),
-  "contractType": zod.enum(['High', 'Medium', 'Low']),
-  "contractValue": zod.enum(['High', 'Medium', 'Low']),
-  "startDate": zod.enum(['High', 'Medium', 'Low']),
-  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
-  "endDate": zod.enum(['High', 'Medium', 'Low']),
-  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
-  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
-  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
-  "owner": zod.enum(['High', 'Medium', 'Low']),
-  "status": zod.enum(['High', 'Medium', 'Low'])
+})
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -124,79 +812,769 @@ export const ListContractsResponse = zod.array(ListContractsResponseItem)
 /**
  * @summary Save a confirmed contract
  */
+export const createContractBodyContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const createContractBodyContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const createContractBodyContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const createContractBodyContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const createContractBodyContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const createContractBodyContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const createContractBodyContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractTitleOneClauseMax = 100;
+
+export const createContractBodyContractFieldsContractTitleOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractTitleOneNoteMax = 500;
+
+export const createContractBodyContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractNumberOneClauseMax = 100;
+
+export const createContractBodyContractFieldsContractNumberOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractNumberOneNoteMax = 500;
+
+export const createContractBodyContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractTypeOneClauseMax = 100;
+
+export const createContractBodyContractFieldsContractTypeOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractTypeOneNoteMax = 500;
+
+export const createContractBodyContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsSignatureDateOneClauseMax = 100;
+
+export const createContractBodyContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsSignatureDateOneNoteMax = 500;
+
+export const createContractBodyContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const createContractBodyContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const createContractBodyContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const createContractBodyContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const createContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const createContractBodyContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const createContractBodyContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const createContractBodyContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const createContractBodyContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const createContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const createContractBodyContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const createContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const createContractBodyContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const createContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const createContractBodyContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const createContractBodyContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const createContractBodyContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const createContractBodyContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractValueOneClauseMax = 100;
+
+export const createContractBodyContractFieldsContractValueOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractValueOneNoteMax = 500;
+
+export const createContractBodyContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const createContractBodyContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const createContractBodyContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const createContractBodyContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const createContractBodyContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const createContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const createContractBodyContractAssignmentNegotiationBufferDaysMin = 0;
+export const createContractBodyContractAssignmentNegotiationBufferDaysMax = 365;
+export const createContractBodyContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+
+
 export const CreateContractBody = zod.object({
   "filename": zod.string(),
   "contract": zod.object({
-  "vendor": zod.string(),
-  "contractNumber": zod.string(),
-  "contractName": zod.string(),
-  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractBodyContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractBodyContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractBodyContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractBodyContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
   "contractValue": zod.object({
-  "status": zod.enum(['stated', 'unknown']),
-  "amount": zod.number().nullish(),
-  "currency": zod.string().nullish()
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(createContractBodyContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(createContractBodyContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
 }),
-  "startDate": zod.string(),
-  "contractDuration": zod.string(),
-  "endDate": zod.string(),
-  "noticePeriod": zod.string(),
-  "noticeDeadline": zod.string(),
-  "negotiationBuffer": zod.string(),
-  "owner": zod.string(),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "negotiationBufferDays": zod.number().min(createContractBodyContractAssignmentNegotiationBufferDaysMin).max(createContractBodyContractAssignmentNegotiationBufferDaysMax).multipleOf(createContractBodyContractAssignmentNegotiationBufferDaysMultipleOf),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
-}),
-  "confidence": zod.object({
-  "vendor": zod.enum(['High', 'Medium', 'Low']),
-  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
-  "contractName": zod.enum(['High', 'Medium', 'Low']),
-  "contractType": zod.enum(['High', 'Medium', 'Low']),
-  "contractValue": zod.enum(['High', 'Medium', 'Low']),
-  "startDate": zod.enum(['High', 'Medium', 'Low']),
-  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
-  "endDate": zod.enum(['High', 'Medium', 'Low']),
-  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
-  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
-  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
-  "owner": zod.enum(['High', 'Medium', 'Low']),
-  "status": zod.enum(['High', 'Medium', 'Low'])
 })
 })
+})
+
+export const createContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractTitleOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractTitleOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractTitleOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractNumberOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractNumberOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractTypeOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractTypeOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractTypeOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsSignatureDateOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractValueOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractValueOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const createContractResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const createContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const createContractResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const createContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
+export const createContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
+export const createContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+
 
 export const CreateContractResponse = zod.object({
   "filename": zod.string(),
   "contract": zod.object({
-  "vendor": zod.string(),
-  "contractNumber": zod.string(),
-  "contractName": zod.string(),
-  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(createContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
   "contractValue": zod.object({
-  "status": zod.enum(['stated', 'unknown']),
-  "amount": zod.number().nullish(),
-  "currency": zod.string().nullish()
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(createContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(createContractResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
 }),
-  "startDate": zod.string(),
-  "contractDuration": zod.string(),
-  "endDate": zod.string(),
-  "noticePeriod": zod.string(),
-  "noticeDeadline": zod.string(),
-  "negotiationBuffer": zod.string(),
-  "owner": zod.string(),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "negotiationBufferDays": zod.number().min(createContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(createContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(createContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
-}),
-  "confidence": zod.object({
-  "vendor": zod.enum(['High', 'Medium', 'Low']),
-  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
-  "contractName": zod.enum(['High', 'Medium', 'Low']),
-  "contractType": zod.enum(['High', 'Medium', 'Low']),
-  "contractValue": zod.enum(['High', 'Medium', 'Low']),
-  "startDate": zod.enum(['High', 'Medium', 'Low']),
-  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
-  "endDate": zod.enum(['High', 'Medium', 'Low']),
-  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
-  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
-  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
-  "owner": zod.enum(['High', 'Medium', 'Low']),
-  "status": zod.enum(['High', 'Medium', 'Low'])
+})
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -212,41 +1590,386 @@ export const GetContractParams = zod.object({
   "id": zod.coerce.string()
 })
 
+export const getContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractTitleOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractTitleOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractTitleOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractNumberOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractNumberOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractTypeOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractTypeOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractTypeOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsSignatureDateOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractValueOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractValueOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const getContractResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const getContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const getContractResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const getContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
+export const getContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
+export const getContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+
+
 export const GetContractResponse = zod.object({
   "filename": zod.string(),
   "contract": zod.object({
-  "vendor": zod.string(),
-  "contractNumber": zod.string(),
-  "contractName": zod.string(),
-  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(getContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(getContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(getContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(getContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
   "contractValue": zod.object({
-  "status": zod.enum(['stated', 'unknown']),
-  "amount": zod.number().nullish(),
-  "currency": zod.string().nullish()
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(getContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(getContractResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
 }),
-  "startDate": zod.string(),
-  "contractDuration": zod.string(),
-  "endDate": zod.string(),
-  "noticePeriod": zod.string(),
-  "noticeDeadline": zod.string(),
-  "negotiationBuffer": zod.string(),
-  "owner": zod.string(),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "negotiationBufferDays": zod.number().min(getContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(getContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(getContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
-}),
-  "confidence": zod.object({
-  "vendor": zod.enum(['High', 'Medium', 'Low']),
-  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
-  "contractName": zod.enum(['High', 'Medium', 'Low']),
-  "contractType": zod.enum(['High', 'Medium', 'Low']),
-  "contractValue": zod.enum(['High', 'Medium', 'Low']),
-  "startDate": zod.enum(['High', 'Medium', 'Low']),
-  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
-  "endDate": zod.enum(['High', 'Medium', 'Low']),
-  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
-  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
-  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
-  "owner": zod.enum(['High', 'Medium', 'Low']),
-  "status": zod.enum(['High', 'Medium', 'Low'])
+})
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -262,79 +1985,769 @@ export const UpdateContractParams = zod.object({
   "id": zod.coerce.string()
 })
 
+export const updateContractBodyContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractTitleOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractTitleOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractTitleOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractNumberOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractNumberOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractNumberOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractTypeOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractTypeOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractTypeOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsSignatureDateOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsSignatureDateOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const updateContractBodyContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractValueOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractValueOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractValueOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const updateContractBodyContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const updateContractBodyContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const updateContractBodyContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const updateContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const updateContractBodyContractAssignmentNegotiationBufferDaysMin = 0;
+export const updateContractBodyContractAssignmentNegotiationBufferDaysMax = 365;
+export const updateContractBodyContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+
+
 export const UpdateContractBody = zod.object({
   "filename": zod.string(),
   "contract": zod.object({
-  "vendor": zod.string(),
-  "contractNumber": zod.string(),
-  "contractName": zod.string(),
-  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractBodyContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractBodyContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractBodyContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractBodyContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
   "contractValue": zod.object({
-  "status": zod.enum(['stated', 'unknown']),
-  "amount": zod.number().nullish(),
-  "currency": zod.string().nullish()
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(updateContractBodyContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(updateContractBodyContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
 }),
-  "startDate": zod.string(),
-  "contractDuration": zod.string(),
-  "endDate": zod.string(),
-  "noticePeriod": zod.string(),
-  "noticeDeadline": zod.string(),
-  "negotiationBuffer": zod.string(),
-  "owner": zod.string(),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "negotiationBufferDays": zod.number().min(updateContractBodyContractAssignmentNegotiationBufferDaysMin).max(updateContractBodyContractAssignmentNegotiationBufferDaysMax).multipleOf(updateContractBodyContractAssignmentNegotiationBufferDaysMultipleOf),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
-}),
-  "confidence": zod.object({
-  "vendor": zod.enum(['High', 'Medium', 'Low']),
-  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
-  "contractName": zod.enum(['High', 'Medium', 'Low']),
-  "contractType": zod.enum(['High', 'Medium', 'Low']),
-  "contractValue": zod.enum(['High', 'Medium', 'Low']),
-  "startDate": zod.enum(['High', 'Medium', 'Low']),
-  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
-  "endDate": zod.enum(['High', 'Medium', 'Low']),
-  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
-  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
-  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
-  "owner": zod.enum(['High', 'Medium', 'Low']),
-  "status": zod.enum(['High', 'Medium', 'Low'])
 })
 })
+})
+
+export const updateContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractTitleOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractTitleOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractTitleOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractNumberOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractNumberOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractTypeOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractTypeOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractTypeOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsSignatureDateOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractValueOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractValueOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const updateContractResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const updateContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
+export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
+export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+
 
 export const UpdateContractResponse = zod.object({
   "filename": zod.string(),
   "contract": zod.object({
-  "vendor": zod.string(),
-  "contractNumber": zod.string(),
-  "contractName": zod.string(),
-  "contractType": zod.enum(['', 'Maintenance', 'Software License', 'Real Estate', 'Infrastructure']),
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(updateContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
   "contractValue": zod.object({
-  "status": zod.enum(['stated', 'unknown']),
-  "amount": zod.number().nullish(),
-  "currency": zod.string().nullish()
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(updateContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(updateContractResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
 }),
-  "startDate": zod.string(),
-  "contractDuration": zod.string(),
-  "endDate": zod.string(),
-  "noticePeriod": zod.string(),
-  "noticeDeadline": zod.string(),
-  "negotiationBuffer": zod.string(),
-  "owner": zod.string(),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "negotiationBufferDays": zod.number().min(updateContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(updateContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(updateContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
-}),
-  "confidence": zod.object({
-  "vendor": zod.enum(['High', 'Medium', 'Low']),
-  "contractNumber": zod.enum(['High', 'Medium', 'Low']),
-  "contractName": zod.enum(['High', 'Medium', 'Low']),
-  "contractType": zod.enum(['High', 'Medium', 'Low']),
-  "contractValue": zod.enum(['High', 'Medium', 'Low']),
-  "startDate": zod.enum(['High', 'Medium', 'Low']),
-  "contractDuration": zod.enum(['High', 'Medium', 'Low']),
-  "endDate": zod.enum(['High', 'Medium', 'Low']),
-  "noticePeriod": zod.enum(['High', 'Medium', 'Low']),
-  "noticeDeadline": zod.enum(['High', 'Medium', 'Low']),
-  "negotiationBuffer": zod.enum(['High', 'Medium', 'Low']),
-  "owner": zod.enum(['High', 'Medium', 'Low']),
-  "status": zod.enum(['High', 'Medium', 'Low'])
+})
 })
 }).and(zod.object({
   "id": zod.string(),

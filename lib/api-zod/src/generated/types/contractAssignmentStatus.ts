@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ContractReviewDraftStatus = typeof ContractReviewDraftStatus[keyof typeof ContractReviewDraftStatus];
+export type ContractAssignmentStatus = typeof ContractAssignmentStatus[keyof typeof ContractAssignmentStatus];
 
 
-export const ContractReviewDraftStatus = {
+export const ContractAssignmentStatus = {
   At_Risk: 'At Risk',
   Review_Open: 'Review Open',
   In_Negotiation: 'In Negotiation',

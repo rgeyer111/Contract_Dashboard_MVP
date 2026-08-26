@@ -1,158 +1,51 @@
-export type ContractValue = {
-  status: 'stated' | 'unknown';
-  amount?: number;
-  currency?: string;
-};
+import { ContractReviewRecord, ProvenanceMetadata } from "@workspace/api-client-react";
 
-export type ContractStatus = 'At Risk' | 'Review Open' | 'In Negotiation';
-export type ExtractionConfidence = 'High' | 'Medium' | 'Low';
-export const contractTypes = [
-  'Maintenance',
-  'Software License',
-  'Real Estate',
-  'Infrastructure',
-] as const;
-export type ContractType = (typeof contractTypes)[number];
-
-export type Contract = {
-  id: string;
-  vendor: string;
-  contractNumber: string;
-  contractName: string;
-  contractType: ContractType;
-  contractValue: ContractValue;
-  startDate: string;
-  contractDuration: string;
-  endDate: string;
-  noticePeriod: string;
-  noticeDeadline: string;
-  negotiationBuffer: string;
-  owner: string;
-  status: ContractStatus;
-};
-
-export type ContractFieldKey =
-  | 'vendor'
-  | 'contractNumber'
-  | 'contractName'
-  | 'contractType'
-  | 'contractValue'
-  | 'startDate'
-  | 'contractDuration'
-  | 'endDate'
-  | 'noticePeriod'
-  | 'noticeDeadline'
-  | 'negotiationBuffer'
-  | 'owner'
-  | 'status';
-
-export const contractFields: ReadonlyArray<{
-  key: ContractFieldKey;
-  label: string;
-  requiredAtConfirmation: boolean;
-}> = [
-  { key: 'vendor', label: 'Vendor', requiredAtConfirmation: true },
-  { key: 'contractNumber', label: 'Contract #', requiredAtConfirmation: true },
-  { key: 'contractName', label: 'Contract name', requiredAtConfirmation: false },
-  { key: 'contractType', label: 'Contract type', requiredAtConfirmation: true },
-  { key: 'contractValue', label: 'Contract value', requiredAtConfirmation: true },
-  { key: 'startDate', label: 'Start date', requiredAtConfirmation: true },
-  { key: 'contractDuration', label: 'Contract duration', requiredAtConfirmation: true },
-  { key: 'endDate', label: 'End date', requiredAtConfirmation: true },
-  { key: 'noticePeriod', label: 'Notice period', requiredAtConfirmation: true },
-  { key: 'noticeDeadline', label: 'Notice deadline', requiredAtConfirmation: false },
-  { key: 'negotiationBuffer', label: 'Negotiation buffer', requiredAtConfirmation: true },
-  { key: 'owner', label: 'Owner', requiredAtConfirmation: true },
-  { key: 'status', label: 'Status', requiredAtConfirmation: false },
-];
-
-export type ExtractedContractOutput = {
-  contract: Omit<Contract, 'id'>;
-  confidence: Record<ContractFieldKey, ExtractionConfidence>;
-};
-
-export const demoExtractionConfidence: Record<
-  ContractFieldKey,
-  ExtractionConfidence
-> = {
-  vendor: 'High',
-  contractNumber: 'Low',
-  contractName: 'High',
-  contractType: 'High',
-  contractValue: 'Low',
-  startDate: 'High',
-  contractDuration: 'Medium',
-  endDate: 'High',
-  noticePeriod: 'Medium',
-  noticeDeadline: 'Medium',
-  negotiationBuffer: 'Medium',
-  owner: 'Low',
-  status: 'High',
-};
-
-export const currentDemoUser = {
-  id: 'john-doe',
-  name: 'John Doe',
-  initials: 'JD',
-};
-
-export function createContractDraft(
-  contract: Omit<Contract, 'id' | 'owner'> & { id?: string; owner?: string },
-): Contract {
+export function createEmptyProvenanceMetadata(): ProvenanceMetadata {
   return {
-    ...contract,
-    id: contract.id ?? crypto.randomUUID(),
-    owner: contract.owner ?? currentDemoUser.name,
+    status: 'not_found',
+    confidence: 'low',
+    page: null,
+    clause: null,
+    quote: null,
+    note: null,
   };
 }
 
-export const demoContracts: Contract[] = [
-  {
-    id: 'salesforce-crm',
-    vendor: 'Salesforce',
-    contractNumber: 'SF-2024-4471',
-    contractName: 'CRM Platform',
-    contractType: 'Software License',
-    contractValue: { status: 'stated', amount: 240000, currency: 'USD' },
-    startDate: 'Jan 01, 2024',
-    contractDuration: '12 months',
-    endDate: 'Oct 15, 2024',
-    noticePeriod: '90 days',
-    noticeDeadline: 'Jul 17, 2024',
-    negotiationBuffer: '30 days',
-    owner: 'John Doe',
-    status: 'At Risk',
-  },
-  {
-    id: 'aws-cloud',
-    vendor: 'AWS',
-    contractNumber: 'AWS-ENT-9823',
-    contractName: 'Cloud Infrastructure',
-    contractType: 'Infrastructure',
-    contractValue: { status: 'unknown' },
-    startDate: 'Nov 01, 2023',
-    contractDuration: '12 months',
-    endDate: 'Nov 01, 2024',
-    noticePeriod: '60 days',
-    noticeDeadline: 'Sep 02, 2024',
-    negotiationBuffer: '21 days',
-    owner: 'Sarah Miller',
-    status: 'Review Open',
-  },
-  {
-    id: 'datadog-monitoring',
-    vendor: 'Datadog',
-    contractNumber: 'DD-2023-112',
-    contractName: 'Monitoring',
-    contractType: 'Software License',
-    contractValue: { status: 'stated', amount: 120000, currency: 'USD' },
-    startDate: 'Dec 12, 2023',
-    contractDuration: '12 months',
-    endDate: 'Dec 12, 2024',
-    noticePeriod: '30 days',
-    noticeDeadline: 'Nov 12, 2024',
-    negotiationBuffer: '14 days',
-    owner: 'John Doe',
-    status: 'In Negotiation',
-  },
-];
+export function createEmptyContractReviewRecord(): ContractReviewRecord {
+  return {
+    fields: {
+      documentType: { ...createEmptyProvenanceMetadata(), value: null },
+      documentLanguage: { ...createEmptyProvenanceMetadata(), value: null },
+      vendorLegalName: { ...createEmptyProvenanceMetadata(), value: null },
+      buyerLegalEntity: { ...createEmptyProvenanceMetadata(), value: null },
+      contractTitle: { ...createEmptyProvenanceMetadata(), value: null },
+      contractNumber: { ...createEmptyProvenanceMetadata(), value: null },
+      contractType: { ...createEmptyProvenanceMetadata(), value: null },
+      signatureDate: { ...createEmptyProvenanceMetadata(), value: null },
+      effectiveDate: { ...createEmptyProvenanceMetadata(), value: null },
+      initialTermLength: { ...createEmptyProvenanceMetadata(), value: null },
+      initialTermEndDate: { ...createEmptyProvenanceMetadata(), value: null },
+      renewalMechanism: { ...createEmptyProvenanceMetadata(), value: null },
+      renewalTermLength: { ...createEmptyProvenanceMetadata(), value: null },
+      noticePeriod: { ...createEmptyProvenanceMetadata(), value: null },
+      noticeDeadline: { ...createEmptyProvenanceMetadata(), value: null },
+      noticeDelivery: { ...createEmptyProvenanceMetadata(), value: null },
+      contractValue: { ...createEmptyProvenanceMetadata(), value: null },
+      billingFrequency: { ...createEmptyProvenanceMetadata(), value: null },
+    },
+    assignment: {
+      owner: '',
+      negotiationBufferDays: 30,
+      status: 'Review Open',
+    }
+  };
+}
+
+export const documentTypeOptions = ['master_agreement', 'order_form', 'sow', 'amendment', 'renewal_letter', 'termination_notice', 'quote_or_proposal', 'unknown'] as const;
+export const languageOptions = ['en', 'de', 'fr', 'it', 'other'] as const;
+export const contractTypeOptions = ['maintenance', 'software_license', 'saas_subscription', 'real_estate', 'infrastructure', 'professional_services', 'data_services', 'equipment_lease', 'other'] as const;
+export const renewalMechanismOptions = ['auto_renew', 'expires', 'by_mutual_agreement', 'indefinite', 'unknown'] as const;
+export const billingFrequencyOptions = ['annual', 'quarterly', 'monthly', 'one_time', 'milestone', 'usage'] as const;
+export const periodUnitOptions = ['days', 'weeks', 'months', 'years'] as const;
+export const contractValueBasisOptions = ['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'] as const;
+export const assignmentStatusOptions = ['At Risk', 'Review Open', 'In Negotiation'] as const;

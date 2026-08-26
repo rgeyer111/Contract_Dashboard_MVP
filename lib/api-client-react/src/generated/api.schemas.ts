@@ -18,189 +18,325 @@ export interface ContractExtractionUpload {
   file: Blob;
 }
 
-export type ContractValueStatus = typeof ContractValueStatus[keyof typeof ContractValueStatus];
+export type ProvenanceMetadataStatus = typeof ProvenanceMetadataStatus[keyof typeof ProvenanceMetadataStatus];
 
 
-export const ContractValueStatus = {
-  stated: 'stated',
+export const ProvenanceMetadataStatus = {
+  found: 'found',
+  not_found: 'not_found',
+  ambiguous: 'ambiguous',
+  conflicting: 'conflicting',
+} as const;
+
+export type ProvenanceMetadataConfidence = typeof ProvenanceMetadataConfidence[keyof typeof ProvenanceMetadataConfidence];
+
+
+export const ProvenanceMetadataConfidence = {
+  high: 'high',
+  medium: 'medium',
+  low: 'low',
+} as const;
+
+export interface ProvenanceMetadata {
+  status: ProvenanceMetadataStatus;
+  confidence: ProvenanceMetadataConfidence;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  page: number | null;
+  /**
+     * @maxLength 100
+     * @nullable
+     */
+  clause: string | null;
+  /**
+     * @maxLength 300
+     * @nullable
+     */
+  quote: string | null;
+  /**
+     * @maxLength 500
+     * @nullable
+     */
+  note: string | null;
+}
+
+export type ProvenanceStringField = ProvenanceMetadata & ({
+  /** @nullable */
+  value: string | null;
+});
+
+export type ProvenanceDateField = ProvenanceMetadata & ({
+  /**
+     * @nullable
+     * @pattern ^\d{4}-\d{2}-\d{2}$
+     */
+  value: string | null;
+});
+
+/**
+ * @nullable
+ */
+export type ProvenanceDocumentTypeFieldValue = typeof ProvenanceDocumentTypeFieldValue[keyof typeof ProvenanceDocumentTypeFieldValue] | null;
+
+
+export const ProvenanceDocumentTypeFieldValue = {
+  master_agreement: 'master_agreement',
+  order_form: 'order_form',
+  sow: 'sow',
+  amendment: 'amendment',
+  renewal_letter: 'renewal_letter',
+  termination_notice: 'termination_notice',
+  quote_or_proposal: 'quote_or_proposal',
   unknown: 'unknown',
 } as const;
 
-export interface ContractValue {
-  status: ContractValueStatus;
+export type ProvenanceDocumentTypeField = ProvenanceMetadata & {
   /** @nullable */
-  amount?: number | null;
+  value: ProvenanceDocumentTypeFieldValue;
+};
+
+/**
+ * @nullable
+ */
+export type ProvenanceLanguageFieldValue = typeof ProvenanceLanguageFieldValue[keyof typeof ProvenanceLanguageFieldValue] | null;
+
+
+export const ProvenanceLanguageFieldValue = {
+  de: 'de',
+  en: 'en',
+  fr: 'fr',
+  it: 'it',
+  other: 'other',
+} as const;
+
+export type ProvenanceLanguageField = ProvenanceMetadata & {
   /** @nullable */
-  currency?: string | null;
+  value: ProvenanceLanguageFieldValue;
+};
+
+/**
+ * @nullable
+ */
+export type ProvenanceContractTypeFieldValue = typeof ProvenanceContractTypeFieldValue[keyof typeof ProvenanceContractTypeFieldValue] | null;
+
+
+export const ProvenanceContractTypeFieldValue = {
+  maintenance: 'maintenance',
+  software_license: 'software_license',
+  saas_subscription: 'saas_subscription',
+  real_estate: 'real_estate',
+  infrastructure: 'infrastructure',
+  professional_services: 'professional_services',
+  data_services: 'data_services',
+  equipment_lease: 'equipment_lease',
+  other: 'other',
+} as const;
+
+export type ProvenanceContractTypeField = ProvenanceMetadata & {
+  /** @nullable */
+  value: ProvenanceContractTypeFieldValue;
+};
+
+export type PeriodValueUnit = typeof PeriodValueUnit[keyof typeof PeriodValueUnit];
+
+
+export const PeriodValueUnit = {
+  days: 'days',
+  weeks: 'weeks',
+  months: 'months',
+  years: 'years',
+} as const;
+
+export interface PeriodValue {
+  /** @minimum 1 */
+  amount: number;
+  unit: PeriodValueUnit;
 }
 
-export type ContractConfidenceVendor = typeof ContractConfidenceVendor[keyof typeof ContractConfidenceVendor];
+export type ProvenancePeriodField = ProvenanceMetadata & ({
+  value: PeriodValue | null;
+});
+
+/**
+ * @nullable
+ */
+export type ProvenanceRenewalMechanismFieldValue = typeof ProvenanceRenewalMechanismFieldValue[keyof typeof ProvenanceRenewalMechanismFieldValue] | null;
 
 
-export const ContractConfidenceVendor = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
+export const ProvenanceRenewalMechanismFieldValue = {
+  auto_renew: 'auto_renew',
+  expires: 'expires',
+  by_mutual_agreement: 'by_mutual_agreement',
+  indefinite: 'indefinite',
+  unknown: 'unknown',
 } as const;
 
-export type ContractConfidenceContractNumber = typeof ContractConfidenceContractNumber[keyof typeof ContractConfidenceContractNumber];
+export type ProvenanceRenewalMechanismField = ProvenanceMetadata & {
+  /** @nullable */
+  value: ProvenanceRenewalMechanismFieldValue;
+};
+
+export type NoticePeriodValueUnit = typeof NoticePeriodValueUnit[keyof typeof NoticePeriodValueUnit];
 
 
-export const ContractConfidenceContractNumber = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
+export const NoticePeriodValueUnit = {
+  days: 'days',
+  weeks: 'weeks',
+  months: 'months',
+  years: 'years',
 } as const;
 
-export type ContractConfidenceContractName = typeof ContractConfidenceContractName[keyof typeof ContractConfidenceContractName];
+export type NoticePeriodValueAnchor = typeof NoticePeriodValueAnchor[keyof typeof NoticePeriodValueAnchor];
 
 
-export const ContractConfidenceContractName = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
+export const NoticePeriodValueAnchor = {
+  term_end: 'term_end',
+  renewal_date: 'renewal_date',
+  anniversary: 'anniversary',
+  period_end_month: 'period_end_month',
+  period_end_quarter: 'period_end_quarter',
+  period_end_year: 'period_end_year',
+  any_time: 'any_time',
+  unknown: 'unknown',
 } as const;
 
-export type ContractConfidenceContractType = typeof ContractConfidenceContractType[keyof typeof ContractConfidenceContractType];
+/**
+ * @nullable
+ */
+export type NoticePeriodValuePurpose = typeof NoticePeriodValuePurpose[keyof typeof NoticePeriodValuePurpose] | null;
 
 
-export const ContractConfidenceContractType = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
+export const NoticePeriodValuePurpose = {
+  non_renewal: 'non_renewal',
+  termination_for_convenience: 'termination_for_convenience',
+  other: 'other',
 } as const;
 
-export type ContractConfidenceContractValue = typeof ContractConfidenceContractValue[keyof typeof ContractConfidenceContractValue];
-
-
-export const ContractConfidenceContractValue = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceStartDate = typeof ContractConfidenceStartDate[keyof typeof ContractConfidenceStartDate];
-
-
-export const ContractConfidenceStartDate = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceContractDuration = typeof ContractConfidenceContractDuration[keyof typeof ContractConfidenceContractDuration];
-
-
-export const ContractConfidenceContractDuration = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceEndDate = typeof ContractConfidenceEndDate[keyof typeof ContractConfidenceEndDate];
-
-
-export const ContractConfidenceEndDate = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceNoticePeriod = typeof ContractConfidenceNoticePeriod[keyof typeof ContractConfidenceNoticePeriod];
-
-
-export const ContractConfidenceNoticePeriod = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceNoticeDeadline = typeof ContractConfidenceNoticeDeadline[keyof typeof ContractConfidenceNoticeDeadline];
-
-
-export const ContractConfidenceNoticeDeadline = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceNegotiationBuffer = typeof ContractConfidenceNegotiationBuffer[keyof typeof ContractConfidenceNegotiationBuffer];
-
-
-export const ContractConfidenceNegotiationBuffer = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceOwner = typeof ContractConfidenceOwner[keyof typeof ContractConfidenceOwner];
-
-
-export const ContractConfidenceOwner = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export type ContractConfidenceStatus = typeof ContractConfidenceStatus[keyof typeof ContractConfidenceStatus];
-
-
-export const ContractConfidenceStatus = {
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
-} as const;
-
-export interface ContractConfidence {
-  vendor: ContractConfidenceVendor;
-  contractNumber: ContractConfidenceContractNumber;
-  contractName: ContractConfidenceContractName;
-  contractType: ContractConfidenceContractType;
-  contractValue: ContractConfidenceContractValue;
-  startDate: ContractConfidenceStartDate;
-  contractDuration: ContractConfidenceContractDuration;
-  endDate: ContractConfidenceEndDate;
-  noticePeriod: ContractConfidenceNoticePeriod;
-  noticeDeadline: ContractConfidenceNoticeDeadline;
-  negotiationBuffer: ContractConfidenceNegotiationBuffer;
-  owner: ContractConfidenceOwner;
-  status: ContractConfidenceStatus;
+export interface NoticePeriodValue {
+  /** @minimum 1 */
+  amount: number;
+  unit: NoticePeriodValueUnit;
+  anchor: NoticePeriodValueAnchor;
+  /** @nullable */
+  purpose?: NoticePeriodValuePurpose;
 }
 
-export type ContractReviewDraftContractType = typeof ContractReviewDraftContractType[keyof typeof ContractReviewDraftContractType];
+export type ProvenanceNoticePeriodField = ProvenanceMetadata & ({
+  value: NoticePeriodValue | NoticePeriodValue[] | null;
+});
+
+export type NoticeDeliveryValueMethod = typeof NoticeDeliveryValueMethod[keyof typeof NoticeDeliveryValueMethod];
 
 
-export const ContractReviewDraftContractType = {
-  '': '',
-  Maintenance: 'Maintenance',
-  Software_License: 'Software License',
-  Real_Estate: 'Real Estate',
-  Infrastructure: 'Infrastructure',
+export const NoticeDeliveryValueMethod = {
+  email: 'email',
+  registered_post: 'registered_post',
+  post: 'post',
+  portal: 'portal',
+  any_written: 'any_written',
 } as const;
 
-export type ContractReviewDraftStatus = typeof ContractReviewDraftStatus[keyof typeof ContractReviewDraftStatus];
+export interface NoticeDeliveryValue {
+  method: NoticeDeliveryValueMethod;
+  /** @nullable */
+  address: string | null;
+  cc: string[];
+}
+
+export type ProvenanceNoticeDeliveryField = ProvenanceMetadata & ({
+  value: NoticeDeliveryValue | null;
+});
+
+export type ContractValueValueBasis = typeof ContractValueValueBasis[keyof typeof ContractValueValueBasis];
 
 
-export const ContractReviewDraftStatus = {
+export const ContractValueValueBasis = {
+  total_contract_value: 'total_contract_value',
+  annual: 'annual',
+  monthly: 'monthly',
+  per_unit: 'per_unit',
+  not_to_exceed: 'not_to_exceed',
+  variable: 'variable',
+} as const;
+
+export interface ContractValueValue {
+  /** @minimum 0 */
+  amount: number;
+  /** @pattern ^[A-Z]{3}$ */
+  currency: string;
+  basis: ContractValueValueBasis;
+}
+
+export type ProvenanceContractValueField = ProvenanceMetadata & ({
+  value: ContractValueValue | null;
+});
+
+/**
+ * @nullable
+ */
+export type ProvenanceBillingFrequencyFieldValue = typeof ProvenanceBillingFrequencyFieldValue[keyof typeof ProvenanceBillingFrequencyFieldValue] | null;
+
+
+export const ProvenanceBillingFrequencyFieldValue = {
+  annual: 'annual',
+  quarterly: 'quarterly',
+  monthly: 'monthly',
+  one_time: 'one_time',
+  milestone: 'milestone',
+  usage: 'usage',
+} as const;
+
+export type ProvenanceBillingFrequencyField = ProvenanceMetadata & {
+  /** @nullable */
+  value: ProvenanceBillingFrequencyFieldValue;
+};
+
+export interface ContractProvenance {
+  documentType: ProvenanceDocumentTypeField;
+  documentLanguage: ProvenanceLanguageField;
+  vendorLegalName: ProvenanceStringField;
+  buyerLegalEntity: ProvenanceStringField;
+  contractTitle: ProvenanceStringField;
+  contractNumber: ProvenanceStringField;
+  contractType: ProvenanceContractTypeField;
+  signatureDate: ProvenanceDateField;
+  effectiveDate: ProvenanceDateField;
+  initialTermLength: ProvenancePeriodField;
+  initialTermEndDate: ProvenanceDateField;
+  renewalMechanism: ProvenanceRenewalMechanismField;
+  renewalTermLength: ProvenancePeriodField;
+  noticePeriod: ProvenanceNoticePeriodField;
+  noticeDeadline: ProvenanceDateField;
+  noticeDelivery: ProvenanceNoticeDeliveryField;
+  contractValue: ProvenanceContractValueField;
+  billingFrequency: ProvenanceBillingFrequencyField;
+}
+
+export type ContractAssignmentStatus = typeof ContractAssignmentStatus[keyof typeof ContractAssignmentStatus];
+
+
+export const ContractAssignmentStatus = {
   At_Risk: 'At Risk',
   Review_Open: 'Review Open',
   In_Negotiation: 'In Negotiation',
 } as const;
 
-export interface ContractReviewDraft {
-  vendor: string;
-  contractNumber: string;
-  contractName: string;
-  contractType: ContractReviewDraftContractType;
-  contractValue: ContractValue;
-  startDate: string;
-  contractDuration: string;
-  endDate: string;
-  noticePeriod: string;
-  noticeDeadline: string;
-  negotiationBuffer: string;
+export interface ContractAssignment {
+  /** @minLength 1 */
   owner: string;
-  status: ContractReviewDraftStatus;
+  /**
+     * @minimum 0
+     * @maximum 365
+     */
+  negotiationBufferDays: number;
+  status: ContractAssignmentStatus;
+}
+
+export interface ContractReviewRecord {
+  fields: ContractProvenance;
+  assignment: ContractAssignment;
 }
 
 /**
@@ -228,8 +364,7 @@ export const ContractExtractionResultExtractionOcrConfidence = {
 } as const;
 
 export type ContractExtractionResultExtraction = {
-  contract: ContractReviewDraft;
-  confidence: ContractConfidence;
+  contract: ContractReviewRecord;
   /** Whether the contract fields came from embedded PDF text or OCR. */
   source: ContractExtractionResultExtractionSource;
   /**
@@ -258,8 +393,7 @@ export interface ContractExtractionResult {
 
 export interface ContractSaveRequest {
   filename: string;
-  contract: ContractReviewDraft;
-  confidence: ContractConfidence;
+  contract: ContractReviewRecord;
 }
 
 export type SavedContract = ContractSaveRequest & {

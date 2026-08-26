@@ -5,11 +5,9 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ContractConfidence } from './contractConfidence';
-import type { ContractReviewDraft } from './contractReviewDraft';
+import type { ContractReviewRecord } from './contractReviewRecord';
 
 export interface ContractSaveRequest {
   filename: string;
-  contract: ContractReviewDraft;
-  confidence: ContractConfidence;
+  contract: ContractReviewRecord;
 }

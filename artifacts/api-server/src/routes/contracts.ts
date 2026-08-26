@@ -4,6 +4,10 @@ import { desc, eq } from "drizzle-orm";
 import { db, contractsTable } from "@workspace/db";
 import { randomUUID } from "node:crypto";
 import {
+  CreateContractBody,
+  UpdateContractBody,
+} from "@workspace/api-zod";
+import {
   extractContractFromText,
   extractReadablePdfText,
   extractScannedPdfText,
@@ -17,22 +21,151 @@ const upload = multer({
 
 const router: IRouter = Router();
 
-const contractFields = [
-  "vendor", "contractNumber", "contractName", "contractType", "contractValue",
-  "startDate", "contractDuration", "endDate", "noticePeriod", "noticeDeadline",
-  "negotiationBuffer", "owner", "status",
-] as const;
-
-function isContract(value: unknown): value is Record<string, unknown> {
+function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+const missing = (note: string | null = null) => ({
+  value: null,
+  status: "not_found" as const,
+  confidence: "low" as const,
+  page: null,
+  clause: null,
+  quote: null,
+  note,
+});
+
+function legacyField(value: unknown, note = "Legacy saved value; source evidence was not retained.") {
+  return value === null || value === undefined || value === ""
+    ? missing()
+    : {
+        value,
+        status: "ambiguous" as const,
+        confidence: "low" as const,
+        page: null,
+        clause: null,
+        quote: null,
+        note,
+      };
+}
+
+function parseLegacyPeriod(value: unknown) {
+  if (typeof value !== "string") return null;
+  const match = /^\s*(\d+)\s+(days?|weeks?|months?|years?)\s*$/i.exec(value);
+  if (!match) return null;
+  return {
+    amount: Number(match[1]),
+    unit: match[2].toLowerCase().replace(/s$/, "") + "s",
+  };
+}
+
+const reviewerEditNote = "Reviewer-supplied value; original extraction evidence was cleared.";
+
+function valuesMatch(left: unknown, right: unknown) {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function enforceProvenanceConsistency(contract: Record<string, unknown>) {
+  const fields = isRecord(contract.fields) ? contract.fields : {};
+  for (const field of Object.values(fields)) {
+    if (!isRecord(field)) continue;
+    if (field.status === "found" && (field.page === null || !field.quote)) return false;
+    if (field.status === "not_found" && field.value !== null) return false;
+  }
+  return true;
+}
+
+function sanitizeChangedFields(
+  incoming: Record<string, unknown>,
+  previous: Record<string, unknown>,
+) {
+  const incomingFields = isRecord(incoming.fields) ? incoming.fields : {};
+  const previousFields = isRecord(previous.fields) ? previous.fields : {};
+  const fields = Object.fromEntries(
+    Object.entries(incomingFields).map(([key, rawField]) => {
+      const field = isRecord(rawField) ? rawField : {};
+      const previousField = isRecord(previousFields[key]) ? previousFields[key] : {};
+      if (valuesMatch(field.value, previousField.value)) return [key, rawField];
+      return [
+        key,
+        {
+          ...field,
+          status: "ambiguous",
+          confidence: "low",
+          page: null,
+          clause: null,
+          quote: null,
+          note: reviewerEditNote,
+        },
+      ];
+    }),
+  );
+  return { ...incoming, fields };
+}
+
+function upgradeContract(value: unknown) {
+  const canonical = CreateContractBody.safeParse({ filename: "legacy-upgrade.pdf", contract: value });
+  if (canonical.success) {
+    return canonical.data.contract;
+  }
+  const legacy = isRecord(value) ? value : {};
+  const legacyType = {
+    Maintenance: "maintenance",
+    "Software License": "software_license",
+    "Real Estate": "real_estate",
+    Infrastructure: "infrastructure",
+  }[String(legacy.contractType)] ?? null;
+  const oldValue = isRecord(legacy.contractValue) ? legacy.contractValue : {};
+  const statedValue =
+    oldValue.status === "stated" &&
+    typeof oldValue.amount === "number" &&
+    typeof oldValue.currency === "string"
+      ? {
+          amount: oldValue.amount,
+          currency: oldValue.currency.toUpperCase(),
+          basis: "variable" as const,
+        }
+      : null;
+  const notice = parseLegacyPeriod(legacy.noticePeriod);
+
+  return {
+    fields: {
+      documentType: missing(),
+      documentLanguage: missing(),
+      vendorLegalName: legacyField(legacy.vendor),
+      buyerLegalEntity: missing(),
+      contractTitle: legacyField(legacy.contractName),
+      contractNumber: legacyField(legacy.contractNumber),
+      contractType: legacyField(legacyType),
+      signatureDate: missing(),
+      effectiveDate: legacyField(legacy.startDate),
+      initialTermLength: legacyField(parseLegacyPeriod(legacy.contractDuration)),
+      initialTermEndDate: legacyField(legacy.endDate),
+      renewalMechanism: missing(),
+      renewalTermLength: missing(),
+      noticePeriod: legacyField(
+        notice ? { ...notice, anchor: "unknown" as const, purpose: "non_renewal" as const } : null,
+      ),
+      noticeDeadline: legacyField(legacy.noticeDeadline),
+      noticeDelivery: missing(),
+      contractValue: legacyField(statedValue),
+      billingFrequency: missing(),
+    },
+    assignment: {
+      owner: typeof legacy.owner === "string" && legacy.owner ? legacy.owner : "John Doe",
+      negotiationBufferDays: parseLegacyPeriod(legacy.negotiationBuffer)?.amount ?? 30,
+      status: ["At Risk", "Review Open", "In Negotiation"].includes(String(legacy.status))
+        ? legacy.status
+        : "Review Open",
+    },
+  };
 }
 
 function responseFor(record: typeof contractsTable.$inferSelect) {
   return {
     id: record.id,
     filename: record.filename,
-    contract: record.contract,
-    confidence: record.confidence,
+    contract: upgradeContract(record.contract),
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString(),
   };
@@ -54,24 +187,31 @@ router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> 
 });
 
 router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
-  const body = req.body as { filename?: unknown; contract?: unknown; confidence?: unknown };
-  if (typeof body.filename !== "string" || !isContract(body.contract) || !isContract(body.confidence)) {
-    res.status(400).json({ error: "A filename, contract, and confidence are required." });
+  const parsed = UpdateContractBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "A valid filename and provenance contract are required." });
     return;
   }
-  const contract = body.contract;
-  const confidence = body.confidence;
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  if (contractFields.some((field) => !(field in contract))) {
-    res.status(400).json({ error: "The contract is missing required fields." });
+  const [existing] = await db.select().from(contractsTable).where(eq(contractsTable.id, id));
+  if (!existing) {
+    res.status(404).json({ error: "Contract not found." });
+    return;
+  }
+  const contract = sanitizeChangedFields(
+    parsed.data.contract as unknown as Record<string, unknown>,
+    upgradeContract(existing.contract) as unknown as Record<string, unknown>,
+  );
+  if (!enforceProvenanceConsistency(contract)) {
+    res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
   const [record] = await db
     .update(contractsTable)
     .set({
-      filename: body.filename.slice(0, 250),
+      filename: parsed.data.filename.slice(0, 250),
       contract,
-      confidence,
+      confidence: {},
       updatedAt: new Date(),
     })
     .where(eq(contractsTable.id, id))
@@ -84,22 +224,20 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
 });
 
 router.post("/contracts", async (req: Request, res: Response): Promise<void> => {
-  const body = req.body as { filename?: unknown; contract?: unknown; confidence?: unknown };
-  if (typeof body.filename !== "string" || !isContract(body.contract) || !isContract(body.confidence)) {
-    res.status(400).json({ error: "A filename, contract, and confidence are required." });
+  const parsed = CreateContractBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "A valid filename and provenance contract are required." });
     return;
   }
-  const contract = body.contract;
-  const confidence = body.confidence;
-  if (contractFields.some((field) => !(field in contract))) {
-    res.status(400).json({ error: "The contract is missing required fields." });
+  if (!enforceProvenanceConsistency(parsed.data.contract as unknown as Record<string, unknown>)) {
+    res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
   const [record] = await db.insert(contractsTable).values({
     id: randomUUID(),
-    filename: body.filename.slice(0, 250),
-    contract,
-    confidence,
+    filename: parsed.data.filename.slice(0, 250),
+    contract: parsed.data.contract,
+    confidence: {},
   }).returning();
   res.status(201).json(responseFor(record));
 });

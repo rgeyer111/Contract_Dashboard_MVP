@@ -176,83 +176,234 @@ components:
           type: string
           format: binary
           description: A PDF contract up to 10 MB.
-    ContractValue:
+    ProvenanceMetadata:
       type: object
-      required:
-        - status
+      required: [status, confidence, page, clause, quote, note]
       properties:
         status:
           type: string
-          enum: [stated, unknown]
-        amount:
-          type: ["number", "null"]
-        currency:
-          type: ["string", "null"]
-    ContractConfidence:
-      type: object
-      required:
-        - vendor
-        - contractNumber
-        - contractName
-        - contractType
-        - contractValue
-        - startDate
-        - contractDuration
-        - endDate
-        - noticePeriod
-        - noticeDeadline
-        - negotiationBuffer
-        - owner
-        - status
-      properties:
-        vendor: { type: string, enum: [High, Medium, Low] }
-        contractNumber: { type: string, enum: [High, Medium, Low] }
-        contractName: { type: string, enum: [High, Medium, Low] }
-        contractType: { type: string, enum: [High, Medium, Low] }
-        contractValue: { type: string, enum: [High, Medium, Low] }
-        startDate: { type: string, enum: [High, Medium, Low] }
-        contractDuration: { type: string, enum: [High, Medium, Low] }
-        endDate: { type: string, enum: [High, Medium, Low] }
-        noticePeriod: { type: string, enum: [High, Medium, Low] }
-        noticeDeadline: { type: string, enum: [High, Medium, Low] }
-        negotiationBuffer: { type: string, enum: [High, Medium, Low] }
-        owner: { type: string, enum: [High, Medium, Low] }
-        status: { type: string, enum: [High, Medium, Low] }
-    ContractReviewDraft:
-      type: object
-      required:
-        - vendor
-        - contractNumber
-        - contractName
-        - contractType
-        - contractValue
-        - startDate
-        - contractDuration
-        - endDate
-        - noticePeriod
-        - noticeDeadline
-        - negotiationBuffer
-        - owner
-        - status
-      properties:
-        vendor: { type: string }
-        contractNumber: { type: string }
-        contractName: { type: string }
-        contractType:
+          enum: [found, not_found, ambiguous, conflicting]
+        confidence:
           type: string
-          enum: ["", Maintenance, Software License, Real Estate, Infrastructure]
-        contractValue:
-          $ref: "#/components/schemas/ContractValue"
-        startDate: { type: string }
-        contractDuration: { type: string }
-        endDate: { type: string }
-        noticePeriod: { type: string }
-        noticeDeadline: { type: string }
-        negotiationBuffer: { type: string }
-        owner: { type: string }
+          enum: [high, medium, low]
+        page:
+          type: ["number", "null"]
+          minimum: 1
+          multipleOf: 1
+        clause:
+          type: ["string", "null"]
+          maxLength: 100
+        quote:
+          type: ["string", "null"]
+          maxLength: 300
+        note:
+          type: ["string", "null"]
+          maxLength: 500
+    ProvenanceStringField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value: { type: ["string", "null"] }
+    ProvenanceDateField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              type: ["string", "null"]
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+    ProvenanceDocumentTypeField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              type: ["string", "null"]
+              enum: [master_agreement, order_form, sow, amendment, renewal_letter, termination_notice, quote_or_proposal, unknown, null]
+    ProvenanceLanguageField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              type: ["string", "null"]
+              enum: [de, en, fr, it, other, null]
+    ProvenanceContractTypeField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              type: ["string", "null"]
+              enum: [maintenance, software_license, saas_subscription, real_estate, infrastructure, professional_services, data_services, equipment_lease, other, null]
+    PeriodValue:
+      type: object
+      required: [amount, unit]
+      properties:
+        amount: { type: number, minimum: 1, multipleOf: 1 }
+        unit:
+          type: string
+          enum: [days, weeks, months, years]
+    ProvenancePeriodField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              oneOf:
+                - $ref: "#/components/schemas/PeriodValue"
+                - type: "null"
+    ProvenanceRenewalMechanismField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              type: ["string", "null"]
+              enum: [auto_renew, expires, by_mutual_agreement, indefinite, unknown, null]
+    NoticePeriodValue:
+      type: object
+      required: [amount, unit, anchor]
+      properties:
+        amount: { type: number, minimum: 1, multipleOf: 1 }
+        unit:
+          type: string
+          enum: [days, weeks, months, years]
+        anchor:
+          type: string
+          enum: [term_end, renewal_date, anniversary, period_end_month, period_end_quarter, period_end_year, any_time, unknown]
+        purpose:
+          type: ["string", "null"]
+          enum: [non_renewal, termination_for_convenience, other, null]
+    ProvenanceNoticePeriodField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              oneOf:
+                - $ref: "#/components/schemas/NoticePeriodValue"
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/NoticePeriodValue"
+                - type: "null"
+    NoticeDeliveryValue:
+      type: object
+      required: [method, address, cc]
+      properties:
+        method:
+          type: string
+          enum: [email, registered_post, post, portal, any_written]
+        address: { type: ["string", "null"] }
+        cc:
+          type: array
+          items: { type: string }
+    ProvenanceNoticeDeliveryField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              oneOf:
+                - $ref: "#/components/schemas/NoticeDeliveryValue"
+                - type: "null"
+    ContractValueValue:
+      type: object
+      required: [amount, currency, basis]
+      properties:
+        amount: { type: number, minimum: 0 }
+        currency:
+          type: string
+          pattern: "^[A-Z]{3}$"
+        basis:
+          type: string
+          enum: [total_contract_value, annual, monthly, per_unit, not_to_exceed, variable]
+    ProvenanceContractValueField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              oneOf:
+                - $ref: "#/components/schemas/ContractValueValue"
+                - type: "null"
+    ProvenanceBillingFrequencyField:
+      allOf:
+        - $ref: "#/components/schemas/ProvenanceMetadata"
+        - type: object
+          required: [value]
+          properties:
+            value:
+              type: ["string", "null"]
+              enum: [annual, quarterly, monthly, one_time, milestone, usage, null]
+    ContractProvenance:
+      type: object
+      required:
+        - documentType
+        - documentLanguage
+        - vendorLegalName
+        - buyerLegalEntity
+        - contractTitle
+        - contractNumber
+        - contractType
+        - signatureDate
+        - effectiveDate
+        - initialTermLength
+        - initialTermEndDate
+        - renewalMechanism
+        - renewalTermLength
+        - noticePeriod
+        - noticeDeadline
+        - noticeDelivery
+        - contractValue
+        - billingFrequency
+      properties:
+        documentType: { $ref: "#/components/schemas/ProvenanceDocumentTypeField" }
+        documentLanguage: { $ref: "#/components/schemas/ProvenanceLanguageField" }
+        vendorLegalName: { $ref: "#/components/schemas/ProvenanceStringField" }
+        buyerLegalEntity: { $ref: "#/components/schemas/ProvenanceStringField" }
+        contractTitle: { $ref: "#/components/schemas/ProvenanceStringField" }
+        contractNumber: { $ref: "#/components/schemas/ProvenanceStringField" }
+        contractType: { $ref: "#/components/schemas/ProvenanceContractTypeField" }
+        signatureDate: { $ref: "#/components/schemas/ProvenanceDateField" }
+        effectiveDate: { $ref: "#/components/schemas/ProvenanceDateField" }
+        initialTermLength: { $ref: "#/components/schemas/ProvenancePeriodField" }
+        initialTermEndDate: { $ref: "#/components/schemas/ProvenanceDateField" }
+        renewalMechanism: { $ref: "#/components/schemas/ProvenanceRenewalMechanismField" }
+        renewalTermLength: { $ref: "#/components/schemas/ProvenancePeriodField" }
+        noticePeriod: { $ref: "#/components/schemas/ProvenanceNoticePeriodField" }
+        noticeDeadline: { $ref: "#/components/schemas/ProvenanceDateField" }
+        noticeDelivery: { $ref: "#/components/schemas/ProvenanceNoticeDeliveryField" }
+        contractValue: { $ref: "#/components/schemas/ProvenanceContractValueField" }
+        billingFrequency: { $ref: "#/components/schemas/ProvenanceBillingFrequencyField" }
+    ContractAssignment:
+      type: object
+      required: [owner, negotiationBufferDays, status]
+      properties:
+        owner: { type: string, minLength: 1 }
+        negotiationBufferDays: { type: number, minimum: 0, maximum: 365, multipleOf: 1 }
         status:
           type: string
           enum: [At Risk, Review Open, In Negotiation]
+    ContractReviewRecord:
+      type: object
+      required: [fields, assignment]
+      properties:
+        fields:
+          $ref: "#/components/schemas/ContractProvenance"
+        assignment:
+          $ref: "#/components/schemas/ContractAssignment"
     ContractExtractionResult:
       type: object
       required:
@@ -265,16 +416,13 @@ components:
           type: object
           required:
             - contract
-            - confidence
             - source
             - ocrConfidence
             - ocrPageCount
             - ocrPagesProcessed
           properties:
             contract:
-              $ref: "#/components/schemas/ContractReviewDraft"
-            confidence:
-              $ref: "#/components/schemas/ContractConfidence"
+              $ref: "#/components/schemas/ContractReviewRecord"
             source:
               type: string
               enum: [text, ocr]
@@ -293,13 +441,11 @@ components:
               description: Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.
     ContractSaveRequest:
       type: object
-      required: [filename, contract, confidence]
+      required: [filename, contract]
       properties:
         filename: { type: string }
         contract:
-          $ref: "#/components/schemas/ContractReviewDraft"
-        confidence:
-          $ref: "#/components/schemas/ContractConfidence"
+          $ref: "#/components/schemas/ContractReviewRecord"
     SavedContract:
       allOf:
         - $ref: "#/components/schemas/ContractSaveRequest"

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { 
@@ -11,48 +11,39 @@ import {
   AlertCircle,
   ChevronLeft,
   Save,
-  ShieldCheck
+  ShieldCheck,
+  User,
+  Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { 
-  Contract, 
-  contractFields, 
-  contractTypes,
-  type ExtractionConfidence,
-  type ContractFieldKey,
-  type ExtractedContractOutput,
-} from "@/lib/contracts";
 import {
   useCreateContract,
   useGetContract,
   useUpdateContract,
   type ContractExtractionResult,
+  type ContractReviewRecord,
+  type ProvenanceMetadata
 } from "@workspace/api-client-react";
+import {
+  createEmptyContractReviewRecord,
+  documentTypeOptions,
+  languageOptions,
+  contractTypeOptions,
+  renewalMechanismOptions,
+  billingFrequencyOptions,
+  periodUnitOptions,
+  contractValueBasisOptions,
+  assignmentStatusOptions
+} from "@/lib/contracts";
 
 const extractionStorageKey = "contract-dashboard.extraction";
-
-const emptyConfidence: Record<ContractFieldKey, ExtractionConfidence> = {
-  vendor: "Low",
-  contractNumber: "Low",
-  contractName: "Low",
-  contractType: "Low",
-  contractValue: "Low",
-  startDate: "Low",
-  contractDuration: "Low",
-  endDate: "Low",
-  noticePeriod: "Low",
-  noticeDeadline: "Low",
-  negotiationBuffer: "Low",
-  owner: "High",
-  status: "High",
-};
 
 function readStoredExtraction(): ContractExtractionResult | null {
   try {
     const saved = sessionStorage.getItem(extractionStorageKey);
     if (!saved) return null;
     const parsed = JSON.parse(saved) as ContractExtractionResult;
-    return parsed?.filename && parsed?.extraction?.contract && parsed?.extraction?.confidence
+    return parsed?.filename && parsed?.extraction?.contract
       ? parsed
       : null;
   } catch {
@@ -60,236 +51,244 @@ function readStoredExtraction(): ContractExtractionResult | null {
   }
 }
 
-function reviewDraftFromExtraction(extraction: ContractExtractionResult): Partial<Contract> {
-  const { contract } = extraction.extraction;
-  return {
-    ...contract,
-    contractType: contract.contractType as Contract["contractType"],
-    contractValue:
-      contract.contractValue.status === "stated"
-        ? {
-            status: "stated",
-            amount: contract.contractValue.amount ?? undefined,
-            currency: contract.contractValue.currency ?? undefined,
-          }
-        : { status: "unknown" },
-    status: contract.status as Contract["status"],
-  };
-}
-
 const FieldGroup = ({ title, children }: { title: string, children: React.ReactNode }) => (
   <div className="bg-card border rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md">
     <div className="bg-muted/40 border-b px-6 py-4 flex items-center justify-between">
       <h3 className="text-sm font-extrabold text-foreground tracking-wide uppercase">{title}</h3>
     </div>
-    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+    <div className="p-6 grid grid-cols-1 gap-6">
       {children}
     </div>
   </div>
 );
 
-const isRequired = (key: string) => contractFields.find(f => f.key === key)?.requiredAtConfirmation;
-const getLabel = (key: string) => contractFields.find(f => f.key === key)?.label || key;
-
-const ConfidenceBadge = ({ confidence }: { confidence: ExtractionConfidence }) => {
-  const style = {
-    High: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
-    Medium: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
-    Low: 'bg-destructive/10 text-destructive border-destructive/20',
-  }[confidence];
+const ReviewField = ({
+  label,
+  field,
+  children
+}: {
+  label: string;
+  field: ProvenanceMetadata;
+  children: React.ReactNode;
+}) => {
+  const statusColors = {
+    found: 'bg-primary/10 text-primary border-primary/20',
+    not_found: 'bg-destructive/10 text-destructive border-destructive/20',
+    ambiguous: 'bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-500/20',
+    conflicting: 'bg-orange-500/10 text-orange-600 dark:text-orange-500 border-orange-500/20',
+  };
+  
+  const bgClass =
+    field.status === 'not_found' ? 'bg-destructive/5 border-destructive/20' :
+    field.status === 'ambiguous' ? 'bg-amber-500/5 border-amber-500/20' :
+    field.status === 'conflicting' ? 'bg-orange-500/5 border-orange-500/20' :
+    'bg-card border-border hover:border-border/80';
 
   return (
-    <span className={`inline-flex items-center rounded-full border px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide ${style}`}>
-      {confidence}
-    </span>
-  );
-};
+    <div className={`p-5 rounded-xl border transition-all duration-200 ${bgClass} flex flex-col xl:flex-row gap-5`}>
+      <div className="w-full xl:w-1/3 shrink-0 flex flex-col gap-2">
+        <label className="text-sm font-extrabold text-foreground tracking-tight">{label}</label>
+        <div className="flex flex-wrap items-center gap-2 mt-1">
+          <span className={`px-2 py-0.5 rounded border text-[9px] font-bold uppercase tracking-wider ${statusColors[field.status]}`}>
+            {field.status.replace('_', ' ')}
+          </span>
+          <span className={`px-2 py-0.5 rounded border text-[9px] font-bold uppercase tracking-wider ${
+            field.confidence === 'high' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-500 border-emerald-500/20' :
+            field.confidence === 'medium' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-500/20' :
+            'bg-destructive/10 text-destructive border-destructive/20'
+          }`}>
+            {field.confidence}
+          </span>
+        </div>
+        {(field.page || field.clause) && (
+          <div className="text-xs font-semibold text-muted-foreground mt-2 space-y-1 bg-muted/40 p-2 rounded-md border border-border/50">
+            {field.page && <div>Page {field.page}</div>}
+            {field.clause && <div>Clause: {field.clause}</div>}
+          </div>
+        )}
+      </div>
 
-const Field = ({ fieldKey, confidence, children }: { fieldKey: string, confidence: ExtractionConfidence, children: React.ReactNode }) => {
-  const req = isRequired(fieldKey);
-  return (
-    <div className="space-y-2">
-      <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-        {getLabel(fieldKey)}
-        {req && <span className="text-destructive font-bold">*</span>}
-        {confidence && <ConfidenceBadge confidence={confidence} />}
-      </label>
-      {children}
+      <div className="w-full xl:w-2/3 flex flex-col gap-3">
+        {children}
+        
+        {field.quote && (
+          <div className="p-3 bg-muted/30 rounded-md border border-l-4 border-l-primary/40 text-xs text-muted-foreground italic leading-relaxed">
+            "{field.quote}"
+          </div>
+        )}
+        {field.note && (
+          <div className="p-3 bg-primary/5 rounded-md border border-primary/10 text-xs font-medium text-foreground leading-relaxed">
+            <span className="font-extrabold text-primary mr-1">Note:</span>
+            {field.note}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-const TextInput = ({ value, onChange, placeholder, required }: any) => (
+const TextInput = ({ value, onChange, placeholder }: { value: string | null, onChange: (v: string) => void, placeholder?: string }) => (
   <input 
     type="text" 
     value={value || ''} 
     onChange={e => onChange(e.target.value)}
     placeholder={placeholder}
-    className={`w-full h-10 px-3 rounded-md border bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all ${required && !value ? 'border-destructive/60 ring-4 ring-destructive/10 focus:ring-destructive/30 bg-destructive/5' : 'border-input hover:border-border/80'}`}
+    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80"
   />
 );
 
-const SelectInput = ({ value, onChange, options, required }: any) => (
+const SelectInput = ({ value, onChange, options }: { value: string | null, onChange: (v: string) => void, options: readonly string[] }) => (
   <select 
     value={value || ''} 
     onChange={e => onChange(e.target.value)}
-    className={`w-full h-10 px-3 rounded-md border bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all ${required && !value ? 'border-destructive/60 ring-4 ring-destructive/10 focus:ring-destructive/30 bg-destructive/5 text-destructive font-bold' : 'border-input hover:border-border/80'}`}
+    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80"
   >
     <option value="" disabled>Select an option...</option>
-    {options.map((opt: string) => (
-      <option key={opt} value={opt}>{opt}</option>
+    {options.map((opt) => (
+      <option key={opt} value={opt}>{opt.replace(/_/g, ' ')}</option>
     ))}
   </select>
 );
 
-const ContractValueControl = ({ value, confidence, onChange }: { value: any, confidence: ExtractionConfidence, onChange: (v: any) => void }) => {
-  const isUnknown = value?.status === 'unknown';
+const PeriodInput = ({ value, onChange }: { value: any, onChange: (v: any) => void }) => {
+  const amount = value?.amount ?? '';
+  const unit = value?.unit ?? 'months';
   return (
-    <div className="col-span-1 md:col-span-2 space-y-4">
-      <div className="space-y-2">
-        <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-          Contract Value Status
-          <span className="text-destructive font-bold">*</span>
-          <ConfidenceBadge confidence={confidence} />
-        </label>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => onChange({ status: 'stated', amount: value?.amount || 0, currency: value?.currency || 'USD' })}
-            className={`px-4 py-2.5 text-xs font-extrabold tracking-wide uppercase rounded-md border transition-all ${!isUnknown ? 'bg-primary text-primary-foreground border-primary shadow-sm' : 'bg-card text-muted-foreground hover:bg-muted hover:text-foreground'}`}
-          >
-            Stated Value
-          </button>
-          <button
-            type="button"
-            onClick={() => onChange({ status: 'unknown' })}
-            className={`px-4 py-2.5 text-xs font-extrabold tracking-wide uppercase rounded-md border transition-all ${isUnknown ? 'bg-destructive/10 text-destructive border-destructive/30 shadow-sm ring-4 ring-destructive/10' : 'bg-card text-muted-foreground hover:bg-muted hover:text-foreground'}`}
-          >
-            Unknown / Not Stated
-          </button>
-        </div>
-      </div>
-      
-      {!isUnknown && (
-        <div className="flex gap-4 p-5 border rounded-lg bg-muted/20 animate-in fade-in slide-in-from-top-1">
-          <div className="flex-1 space-y-2">
-            <label className="text-xs font-semibold text-foreground">Amount</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold text-sm">
-                {value?.currency === 'USD' ? '$' : value?.currency === 'EUR' ? '€' : value?.currency === 'GBP' ? '£' : ''}
-              </span>
-              <input 
-                type="number"
-                value={value?.amount || ''}
-                onChange={e => onChange({ ...value, amount: parseFloat(e.target.value) || 0 })}
-                className={`w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80 ${value?.currency ? 'pl-7' : ''}`}
-                placeholder="0.00"
-              />
-            </div>
-          </div>
-          <div className="w-32 space-y-2">
-            <label className="text-xs font-semibold text-foreground">Currency</label>
-            <select
-              value={value?.currency || 'USD'}
-              onChange={e => onChange({ ...value, currency: e.target.value })}
-              className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80"
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-            </select>
-          </div>
-        </div>
-      )}
-      {isUnknown && (
-        <div className="p-5 bg-destructive/5 border border-destructive/20 rounded-lg flex items-start gap-3 animate-in fade-in slide-in-from-top-1">
-          <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-extrabold text-destructive tracking-tight">Value Flagged for Review</p>
-            <p className="text-xs font-semibold text-destructive/80 mt-1">This value could not be extracted automatically. Operations will verify manually after confirmation.</p>
-          </div>
-        </div>
-      )}
+    <div className="flex items-center gap-2">
+      <input type="number" placeholder="Amount" value={amount} onChange={(e) => onChange({ ...value, amount: parseInt(e.target.value) || 0, unit })} className="w-24 h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20" />
+      <select value={unit} onChange={(e) => onChange({ ...value, amount: amount || 0, unit: e.target.value })} className="h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20">
+        {periodUnitOptions.map(o => <option key={o} value={o}>{o}</option>)}
+      </select>
     </div>
-  )
-}
+  );
+};
+
+const ContractValueInput = ({ value, onChange }: { value: any, onChange: (v: any) => void }) => {
+  const amount = value?.amount ?? '';
+  const currency = value?.currency ?? 'USD';
+  const basis = value?.basis ?? 'total_contract_value';
+  
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold text-sm">
+          {currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : ''}
+        </span>
+        <input type="number" placeholder="Amount" value={amount} onChange={(e) => onChange({ ...value, amount: parseInt(e.target.value) || 0, currency, basis })} className={`w-36 h-10 px-3 ${currency ? 'pl-7' : ''} rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20`} />
+      </div>
+      <input type="text" placeholder="Currency (USD)" maxLength={3} value={currency} onChange={(e) => onChange({ ...value, amount: amount || 0, currency: e.target.value.toUpperCase(), basis })} className="w-24 h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20" />
+      <select value={basis} onChange={(e) => onChange({ ...value, amount: amount || 0, currency, basis: e.target.value })} className="h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20">
+        {contractValueBasisOptions.map(o => <option key={o} value={o}>{o.replace(/_/g, ' ')}</option>)}
+      </select>
+    </div>
+  );
+};
+
+const JsonInput = ({ value, onChange, placeholder }: { value: any, onChange: (v: any) => void, placeholder?: string }) => {
+  const [text, setText] = useState(() => value ? JSON.stringify(value, null, 2) : '');
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setText(value ? JSON.stringify(value, null, 2) : '');
+    setError(false);
+  }, [value]);
+
+  const handleBlur = () => {
+    try {
+      const parsed = text.trim() ? JSON.parse(text) : null;
+      onChange(parsed);
+      setText(parsed ? JSON.stringify(parsed, null, 2) : '');
+      setError(false);
+    } catch {
+      setError(true);
+    }
+  };
+
+  return (
+    <textarea 
+      value={text} 
+      onChange={(e) => setText(e.target.value)} 
+      onBlur={handleBlur}
+      placeholder={placeholder}
+      className={`min-h-[120px] w-full p-3 rounded-md border bg-background text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all ${error ? 'border-destructive focus:ring-destructive/30' : 'border-input hover:border-border/80'}`} 
+    />
+  );
+};
 
 export default function Review() {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const savedId = new URLSearchParams(window.location.search).get("id") ?? "";
+  
   const savedContractQuery = useGetContract(savedId, {
     query: {
       enabled: Boolean(savedId),
       queryKey: [`/api/contracts/${savedId}`],
     },
   });
-  const [storedExtraction] = useState(readStoredExtraction);
-  const [confidence, setConfidence] = useState<Record<ContractFieldKey, ExtractionConfidence>>(
-    () => storedExtraction?.extraction.confidence ?? emptyConfidence,
-  );
 
-  const [draft, setDraft] = useState<Partial<Contract>>(() =>
-    storedExtraction
-      ? reviewDraftFromExtraction(storedExtraction)
-      : { contractValue: { status: "unknown" }, owner: "John Doe", status: "Review Open" },
+  const [storedExtraction] = useState(readStoredExtraction);
+  const [draft, setDraft] = useState<ContractReviewRecord>(() =>
+    storedExtraction ? storedExtraction.extraction.contract : createEmptyContractReviewRecord()
   );
+  
   const [filename, setFilename] = useState(storedExtraction?.filename ?? "confirmed-contract.pdf");
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = savedContractQuery.data;
-    if (!saved) return;
-    setFilename(saved.filename);
-    setConfidence(saved.confidence as Record<ContractFieldKey, ExtractionConfidence>);
-    setDraft(reviewDraftFromExtraction({
-      filename: saved.filename,
-      extraction: {
-        contract: saved.contract,
-        confidence: saved.confidence,
-        source: "text",
-        ocrConfidence: null,
-        ocrPageCount: null,
-        ocrPagesProcessed: null,
-      },
-    }));
+    if (savedContractQuery.data) {
+      setFilename(savedContractQuery.data.filename);
+      setDraft(savedContractQuery.data.contract);
+    }
   }, [savedContractQuery.data]);
 
-  const updateField = (key: keyof Contract, value: any) => {
-    setDraft(prev => ({ ...prev, [key]: value }));
+  const updateField = (key: keyof ContractReviewRecord['fields'], value: any) => {
+    setDraft(prev => ({
+      ...prev,
+      fields: {
+        ...prev.fields,
+        [key]: {
+          ...prev.fields[key],
+          value,
+          status: "ambiguous",
+          confidence: "low",
+          page: null,
+          clause: null,
+          quote: null,
+          note: "Reviewer-supplied value; original extraction evidence was cleared."
+        }
+      }
+    }));
   };
 
-  const missingRequiredFields = useMemo(() => {
-    return contractFields.filter(f => f.requiredAtConfirmation).filter(f => {
-      const val = draft[f.key];
-      if (f.key === 'contractValue') {
-        const cv = val as Contract['contractValue'];
-        return !cv || !cv.status || (cv.status === 'stated' && !cv.amount);
+  const updateAssignment = (key: keyof ContractReviewRecord['assignment'], value: any) => {
+    setDraft(prev => ({
+      ...prev,
+      assignment: {
+        ...prev.assignment,
+        [key]: value
       }
-      return val === undefined || val === null || String(val).trim() === '';
-    });
-  }, [draft]);
-
-  const isComplete = missingRequiredFields.length === 0;
+    }));
+  };
 
   const createContract = useCreateContract();
   const updateContract = useUpdateContract();
   const isSaving = createContract.isPending || updateContract.isPending;
 
+  const isComplete = Boolean(draft.assignment.owner && draft.assignment.owner.trim() !== "");
+
   const handleConfirm = async () => {
     if (!isComplete) return;
     setSaveError(null);
-    const contract = draft as ContractExtractionResult["extraction"]["contract"];
-    const confidenceData = confidence as ContractExtractionResult["extraction"]["confidence"];
     try {
       if (savedId) {
         await updateContract.mutateAsync({
           id: savedId,
-          data: { filename, contract, confidence: confidenceData },
+          data: { filename, contract: draft },
         });
       } else {
         await createContract.mutateAsync({
-          data: { filename, contract, confidence: confidenceData },
+          data: { filename, contract: draft },
         });
       }
       await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
@@ -363,9 +362,9 @@ export default function Review() {
         </header>
         
         <div className="flex-1 overflow-auto p-6 lg:p-10 bg-background/50">
-          <div className="max-w-4xl mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
+          <div className="max-w-5xl mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
             
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-2 border-b">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-4 border-b">
               <div>
                 <button 
                   onClick={() => setLocation('/dashboard')}
@@ -375,20 +374,17 @@ export default function Review() {
                 </button>
                 <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
                   <ShieldCheck className="h-8 w-8 text-primary" />
-                  Review Extracted Contract
+                  Review Contract Details
                 </h1>
                 <p className="text-muted-foreground mt-2 font-medium text-sm max-w-xl">
                    {storedExtraction
-                     ? `Review the details extracted from ${storedExtraction.filename}. Complete all required fields to advance this record.`
+                     ? `Review the details extracted from ${storedExtraction.filename}. Resolve flagged fields to ensure data integrity.`
                      : savedContractQuery.data
-                       ? `Review and update ${savedContractQuery.data.filename}. Your changes are saved to the dashboard.`
+                       ? `Review and update ${savedContractQuery.data.filename}. Your changes are saved to the registry.`
                      : "No uploaded contract is currently open. Return to the dashboard to upload a PDF."}
                 </p>
                 {storedExtraction?.extraction.source === "ocr" && storedExtraction.extraction.ocrConfidence && (
-                  <div
-                    className="mt-4 inline-flex items-center gap-2 rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-700"
-                    role="alert"
-                  >
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-700">
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     OCR used for this scan
                     <span className="font-semibold text-amber-700/80">
@@ -410,84 +406,144 @@ export default function Review() {
                 {!isComplete && (
                   <span className="text-[11px] font-bold text-destructive uppercase tracking-wider flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
-                    {missingRequiredFields.length} Required Field{missingRequiredFields.length !== 1 ? 's' : ''} Missing
+                    Application Owner is required
                   </span>
                 )}
               </div>
             </div>
 
             <div className="space-y-8">
-               {!storedExtraction && (
+               {!storedExtraction && !savedContractQuery.data && (
                  <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-5 py-4 flex items-start gap-3">
                    <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
                    <div>
-                     <p className="text-sm font-extrabold text-destructive">No extraction draft available</p>
-                     <p className="text-xs font-semibold text-destructive/80 mt-1">Upload a text-based PDF from the dashboard to begin a live review.</p>
+                     <p className="text-sm font-extrabold text-destructive">No contract loaded</p>
+                     <p className="text-xs font-semibold text-destructive/80 mt-1">Upload a PDF from the dashboard to begin a live review.</p>
                    </div>
                  </div>
                )}
-              <FieldGroup title="General Information">
-                 <Field fieldKey="vendor" confidence={confidence.vendor}>
-                  <TextInput value={draft.vendor} onChange={(v: string) => updateField('vendor', v)} required={isRequired('vendor')} />
-                </Field>
-                 <Field fieldKey="contractNumber" confidence={confidence.contractNumber}>
-                  <TextInput value={draft.contractNumber} onChange={(v: string) => updateField('contractNumber', v)} required={isRequired('contractNumber')} placeholder="e.g. SF-2024-1234" />
-                </Field>
-                 <Field fieldKey="contractName" confidence={confidence.contractName}>
-                  <TextInput value={draft.contractName} onChange={(v: string) => updateField('contractName', v)} required={isRequired('contractName')} />
-                </Field>
-                 <Field fieldKey="contractType" confidence={confidence.contractType}>
-                  <SelectInput 
-                    value={draft.contractType} 
-                    onChange={(v: string) => updateField('contractType', v)} 
-                    options={contractTypes} 
-                    required={isRequired('contractType')} 
-                  />
-                </Field>
+
+              <FieldGroup title="Document Identification">
+                <ReviewField label="Document Type" field={draft.fields.documentType}>
+                  <SelectInput value={draft.fields.documentType.value} onChange={(v) => updateField('documentType', v)} options={documentTypeOptions} />
+                </ReviewField>
+                <ReviewField label="Document Language" field={draft.fields.documentLanguage}>
+                  <SelectInput value={draft.fields.documentLanguage.value} onChange={(v) => updateField('documentLanguage', v)} options={languageOptions} />
+                </ReviewField>
+                <ReviewField label="Contract Title" field={draft.fields.contractTitle}>
+                  <TextInput value={draft.fields.contractTitle.value} onChange={(v) => updateField('contractTitle', v)} placeholder="e.g. Master Services Agreement" />
+                </ReviewField>
+                <ReviewField label="Contract Number" field={draft.fields.contractNumber}>
+                  <TextInput value={draft.fields.contractNumber.value} onChange={(v) => updateField('contractNumber', v)} placeholder="e.g. MSA-2023-001" />
+                </ReviewField>
               </FieldGroup>
 
-              <FieldGroup title="Timeline & Deadlines">
-                 <Field fieldKey="startDate" confidence={confidence.startDate}>
-                  <TextInput value={draft.startDate} onChange={(v: string) => updateField('startDate', v)} required={isRequired('startDate')} placeholder="e.g. Oct 01, 2023" />
-                </Field>
-                 <Field fieldKey="endDate" confidence={confidence.endDate}>
-                  <TextInput value={draft.endDate} onChange={(v: string) => updateField('endDate', v)} required={isRequired('endDate')} placeholder="e.g. Oct 01, 2025" />
-                </Field>
-                 <Field fieldKey="contractDuration" confidence={confidence.contractDuration}>
-                  <TextInput value={draft.contractDuration} onChange={(v: string) => updateField('contractDuration', v)} required={isRequired('contractDuration')} placeholder="e.g. 24 months" />
-                </Field>
-                 <Field fieldKey="noticePeriod" confidence={confidence.noticePeriod}>
-                  <TextInput value={draft.noticePeriod} onChange={(v: string) => updateField('noticePeriod', v)} required={isRequired('noticePeriod')} placeholder="e.g. 60 days" />
-                </Field>
-                 <Field fieldKey="negotiationBuffer" confidence={confidence.negotiationBuffer}>
-                  <TextInput value={draft.negotiationBuffer} onChange={(v: string) => updateField('negotiationBuffer', v)} required={isRequired('negotiationBuffer')} placeholder="e.g. 30 days" />
-                </Field>
-                 <Field fieldKey="noticeDeadline" confidence={confidence.noticeDeadline}>
-                  <TextInput value={draft.noticeDeadline} onChange={(v: string) => updateField('noticeDeadline', v)} required={isRequired('noticeDeadline')} placeholder="e.g. Aug 02, 2025" />
-                </Field>
+              <FieldGroup title="Parties & Entities">
+                <ReviewField label="Vendor Legal Name" field={draft.fields.vendorLegalName}>
+                  <TextInput value={draft.fields.vendorLegalName.value} onChange={(v) => updateField('vendorLegalName', v)} placeholder="e.g. Acme Corp LLC" />
+                </ReviewField>
+                <ReviewField label="Buyer Legal Entity" field={draft.fields.buyerLegalEntity}>
+                  <TextInput value={draft.fields.buyerLegalEntity.value} onChange={(v) => updateField('buyerLegalEntity', v)} placeholder="e.g. Global Tech Inc." />
+                </ReviewField>
+              </FieldGroup>
+
+              <FieldGroup title="Key Dates & Terms">
+                <ReviewField label="Signature Date" field={draft.fields.signatureDate}>
+                  <TextInput value={draft.fields.signatureDate.value} onChange={(v) => updateField('signatureDate', v)} placeholder="YYYY-MM-DD" />
+                </ReviewField>
+                <ReviewField label="Effective Date" field={draft.fields.effectiveDate}>
+                  <TextInput value={draft.fields.effectiveDate.value} onChange={(v) => updateField('effectiveDate', v)} placeholder="YYYY-MM-DD" />
+                </ReviewField>
+                <ReviewField label="Initial Term Length" field={draft.fields.initialTermLength}>
+                  <PeriodInput value={draft.fields.initialTermLength.value} onChange={(v) => updateField('initialTermLength', v)} />
+                </ReviewField>
+                <ReviewField label="Initial Term End Date" field={draft.fields.initialTermEndDate}>
+                  <TextInput value={draft.fields.initialTermEndDate.value} onChange={(v) => updateField('initialTermEndDate', v)} placeholder="YYYY-MM-DD" />
+                </ReviewField>
+              </FieldGroup>
+
+              <FieldGroup title="Renewals & Notice">
+                <ReviewField label="Renewal Mechanism" field={draft.fields.renewalMechanism}>
+                  <SelectInput value={draft.fields.renewalMechanism.value} onChange={(v) => updateField('renewalMechanism', v)} options={renewalMechanismOptions} />
+                </ReviewField>
+                <ReviewField label="Renewal Term Length" field={draft.fields.renewalTermLength}>
+                  <PeriodInput value={draft.fields.renewalTermLength.value} onChange={(v) => updateField('renewalTermLength', v)} />
+                </ReviewField>
+                <ReviewField label="Notice Period" field={draft.fields.noticePeriod}>
+                  <JsonInput value={draft.fields.noticePeriod.value} onChange={(v) => updateField('noticePeriod', v)} placeholder='[{"amount": 30, "unit": "days", "anchor": "term_end"}]' />
+                </ReviewField>
+                <ReviewField label="Notice Deadline" field={draft.fields.noticeDeadline}>
+                  <TextInput value={draft.fields.noticeDeadline.value} onChange={(v) => updateField('noticeDeadline', v)} placeholder="YYYY-MM-DD" />
+                </ReviewField>
+                <ReviewField label="Notice Delivery" field={draft.fields.noticeDelivery}>
+                  <JsonInput value={draft.fields.noticeDelivery.value} onChange={(v) => updateField('noticeDelivery', v)} placeholder='{"method": "email", "cc": ["legal@acme.com"]}' />
+                </ReviewField>
               </FieldGroup>
 
               <FieldGroup title="Financials">
-                <ContractValueControl 
-                  value={draft.contractValue} 
-                   confidence={confidence.contractValue}
-                  onChange={(v: any) => updateField('contractValue', v)} 
-                />
+                <ReviewField label="Contract Type" field={draft.fields.contractType}>
+                  <SelectInput value={draft.fields.contractType.value} onChange={(v) => updateField('contractType', v)} options={contractTypeOptions} />
+                </ReviewField>
+                <ReviewField label="Contract Value" field={draft.fields.contractValue}>
+                  <ContractValueInput value={draft.fields.contractValue.value} onChange={(v) => updateField('contractValue', v)} />
+                </ReviewField>
+                <ReviewField label="Billing Frequency" field={draft.fields.billingFrequency}>
+                  <SelectInput value={draft.fields.billingFrequency.value} onChange={(v) => updateField('billingFrequency', v)} options={billingFrequencyOptions} />
+                </ReviewField>
               </FieldGroup>
 
-              <FieldGroup title="Administration">
-                 <Field fieldKey="owner" confidence={confidence.owner}>
-                  <TextInput value={draft.owner} onChange={(v: string) => updateField('owner', v)} required={isRequired('owner')} />
-                </Field>
-                 <Field fieldKey="status" confidence={confidence.status}>
-                  <SelectInput 
-                    value={draft.status} 
-                    onChange={(v: string) => updateField('status', v)} 
-                    options={['At Risk', 'Review Open', 'In Negotiation']} 
-                    required={isRequired('status')} 
-                  />
-                </Field>
-              </FieldGroup>
+              <div className="bg-primary/5 border border-primary/20 rounded-xl shadow-sm overflow-hidden mb-8">
+                <div className="border-b border-primary/10 px-6 py-4 flex items-center gap-2">
+                  <Briefcase className="h-5 w-5 text-primary" />
+                  <h3 className="text-sm font-extrabold text-foreground tracking-wide uppercase">Application Assignment</h3>
+                </div>
+                <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                      <User className="h-3 w-3" /> Owner <span className="text-destructive">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      value={draft.assignment.owner} 
+                      onChange={e => updateAssignment('owner', e.target.value)}
+                      placeholder="e.g. John Doe"
+                      className={`w-full h-10 px-3 rounded-md border bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all ${!draft.assignment.owner.trim() ? 'border-destructive/60 ring-4 ring-destructive/10' : 'border-input hover:border-border/80'}`}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                      <Clock className="h-3 w-3" /> Negotiation Buffer (Days)
+                    </label>
+                    <input 
+                      type="number" 
+                      value={draft.assignment.negotiationBufferDays} 
+                      onChange={e => updateAssignment('negotiationBufferDays', parseInt(e.target.value) || 0)}
+                      className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" /> Status
+                    </label>
+                    <select 
+                      value={draft.assignment.status} 
+                      onChange={e => updateAssignment('status', e.target.value)}
+                      className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80"
+                    >
+                      {assignmentStatusOptions.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-span-1 md:col-span-3">
+                    <p className="text-xs text-muted-foreground font-medium">
+                      These settings dictate how this contract is tracked internally and are not extracted from the document itself. 
+                      The <strong className="text-foreground">Owner</strong> will receive notices based on the negotiation buffer.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
             </div>
             
           </div>

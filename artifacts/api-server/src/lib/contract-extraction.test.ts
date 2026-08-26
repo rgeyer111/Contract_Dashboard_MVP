@@ -38,32 +38,22 @@ import {
   OcrIncompleteError,
 } from "./contract-extraction";
 
+const found = (value: unknown, page = 1, quote = "Verbatim contract evidence.") => ({
+  value,
+  status: "found",
+  confidence: "high",
+  page,
+  clause: null,
+  quote,
+  note: null,
+});
+
 const extractedContract = {
-  contract: {
-    vendor: "Acme",
-    contractNumber: "AC-100",
-    contractName: "Support",
-    contractType: "Maintenance",
-    contractValue: { status: "unknown" },
-    startDate: "2026-01-01",
-    contractDuration: "12 months",
-    endDate: "2026-12-31",
-    noticePeriod: "60 days",
-    noticeDeadline: "",
-    negotiationBuffer: "30 days",
-  },
-  confidence: {
-    vendor: "High",
-    contractNumber: "High",
-    contractName: "High",
-    contractType: "High",
-    contractValue: "Low",
-    startDate: "High",
-    contractDuration: "High",
-    endDate: "High",
-    noticePeriod: "High",
-    noticeDeadline: "Low",
-    negotiationBuffer: "High",
+  fields: {
+    documentLanguage: found("en"),
+    vendorLegalName: found("Acme Ltd."),
+    contractTitle: found("Support Agreement"),
+    contractType: found("maintenance"),
   },
 };
 
@@ -110,84 +100,110 @@ beforeEach(() => {
 });
 
 describe("normalizeExtraction", () => {
-  it("fills missing AI fields with safe defaults", () => {
+  it("returns all 18 fields and safe application assignments for an empty model response", () => {
     const result = normalizeExtraction({});
 
-    expect(result.contract).toMatchObject({
-      vendor: "",
-      contractType: "",
-      contractValue: { status: "unknown", amount: null, currency: null },
+    expect(result.contract.assignment).toEqual({
       owner: "John Doe",
+      negotiationBufferDays: 30,
       status: "Review Open",
     });
-    expect(Object.values(result.confidence)).toEqual(
-      expect.arrayContaining(["Low"]),
+    expect(Object.keys(result.contract.fields)).toHaveLength(18);
+    expect(Object.values(result.contract.fields).every((field) => field.status === "not_found")).toBe(
+      true,
     );
-    expect(Object.keys(result.confidence)).toHaveLength(13);
+    expect(result.contract.fields.noticeDeadline.note).toMatch(/computed/i);
   });
 
-  it("rejects malformed types, values, currencies, and confidence labels", () => {
+  it("rejects values that do not have complete page and quote evidence", () => {
     const result = normalizeExtraction({
-      contract: {
-        vendor: 42,
-        contractType: "Unsupported",
-        contractValue: {
-          status: "stated",
-          amount: "240000",
-          currency: "US dollars",
+      fields: {
+        vendorLegalName: {
+          value: "Acme Ltd.",
+          status: "found",
+          confidence: "high",
+          page: null,
+          quote: null,
         },
       },
-      confidence: { vendor: "Certain", contractType: "High" },
     });
 
-    expect(result.contract.vendor).toBe("");
-    expect(result.contract.contractType).toBe("");
-    expect(result.contract.contractValue).toEqual({
-      status: "unknown",
-      amount: null,
-      currency: null,
+    expect(result.contract.fields.vendorLegalName).toMatchObject({
+      value: null,
+      status: "not_found",
+      confidence: "low",
+      page: null,
+      quote: null,
     });
-    expect(result.confidence.vendor).toBe("Low");
-    expect(result.confidence.contractType).toBe("High");
   });
 
-  it("preserves a valid structured extraction", () => {
+  it("preserves provenance, structured notice anchors, conflicts, and contract value basis", () => {
     const result = normalizeExtraction({
-      contract: {
-        vendor: " Acme ",
-        contractNumber: "AC-100",
-        contractName: "Support",
-        contractType: "Maintenance",
-        contractValue: { status: "stated", amount: 240000, currency: "usd" },
-        startDate: "2026-01-01",
-        contractDuration: "12 months",
-        endDate: "2026-12-31",
-        noticePeriod: "60 days",
-        noticeDeadline: "2026-11-01",
-        negotiationBuffer: "30 days",
-      },
-      confidence: {
-        vendor: "High",
-        contractNumber: "Medium",
-        contractName: "High",
-        contractType: "High",
-        contractValue: "High",
-        startDate: "High",
-        contractDuration: "Medium",
-        endDate: "High",
-        noticePeriod: "Medium",
-        noticeDeadline: "Low",
-        negotiationBuffer: "Medium",
+      fields: {
+        vendorLegalName: found(" Acme GmbH ", 2, "Acme GmbH, Berlin"),
+        noticePeriod: {
+          ...found(
+            { amount: 3, unit: "months", anchor: "period_end_quarter", purpose: "non_renewal" },
+            7,
+            "mit einer Frist von drei Monaten zum Quartalsende",
+          ),
+          status: "conflicting",
+          confidence: "medium",
+          note: "The annex says two months; the body says three months.",
+        },
+        contractValue: found({
+          amount: 240000,
+          currency: "usd",
+          basis: "annual",
+        }),
       },
     });
 
-    expect(result.contract.vendor).toBe("Acme");
-    expect(result.contract.contractValue).toEqual({
-      status: "stated",
+    expect(result.contract.fields.vendorLegalName).toMatchObject({
+      value: "Acme GmbH",
+      status: "found",
+      page: 2,
+    });
+    expect(result.contract.fields.noticePeriod).toMatchObject({
+      value: {
+        amount: 3,
+        unit: "months",
+        anchor: "period_end_quarter",
+        purpose: "non_renewal",
+      },
+      status: "conflicting",
+      page: 7,
+    });
+    expect(result.contract.fields.contractValue.value).toEqual({
       amount: 240000,
       currency: "USD",
+      basis: "annual",
     });
-    expect(result.confidence.noticeDeadline).toBe("Low");
+  });
+
+  it("keeps an absent notice clause explicitly not found", () => {
+    const result = normalizeExtraction({
+      fields: {
+        noticePeriod: {
+          value: null,
+          status: "not_found",
+          confidence: "low",
+          page: null,
+          clause: null,
+          quote: null,
+          note: null,
+        },
+      },
+    });
+    expect(result.contract.fields.noticePeriod).toEqual({
+      value: null,
+      status: "not_found",
+      confidence: "low",
+      page: null,
+      clause: null,
+      quote: null,
+      note: null,
+    });
   });
 });
 
@@ -298,6 +314,16 @@ describe("OCR extraction metadata", () => {
 
     expect(result.extraction.source).toBe("text");
     expect(result.extraction.ocrConfidence).toBeNull();
+  });
+
+  it("uses the versioned provenance prompt without asking the model for assigned fields or deadlines", async () => {
+    mockOpenAiResponse(extractedContract);
+    await extractContractFromText("--- Page 1 --- Contract text with sufficient evidence.", "prompt.pdf");
+
+    const systemPrompt = mocks.create.mock.calls[0][0].messages[0].content as string;
+    expect(systemPrompt).toContain("provenance-v1");
+    expect(systemPrompt).toContain("Do not return noticeDeadline");
+    expect(systemPrompt).toContain("Do not extract owner");
   });
 
   it("passes text beyond the previous 60,000-character cutoff to field extraction", async () => {

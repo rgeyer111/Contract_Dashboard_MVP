@@ -5,14 +5,12 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ContractConfidence } from './contractConfidence';
 import type { ContractExtractionResultExtractionOcrConfidence } from './contractExtractionResultExtractionOcrConfidence';
 import type { ContractExtractionResultExtractionSource } from './contractExtractionResultExtractionSource';
-import type { ContractReviewDraft } from './contractReviewDraft';
+import type { ContractReviewRecord } from './contractReviewRecord';
 
 export type ContractExtractionResultExtraction = {
-  contract: ContractReviewDraft;
-  confidence: ContractConfidence;
+  contract: ContractReviewRecord;
   /** Whether the contract fields came from embedded PDF text or OCR. */
   source: ContractExtractionResultExtractionSource;
   /**
