@@ -6,7 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import Home from '@/pages/home';
 import Dashboard from '@/pages/dashboard';
-import Review from '@/pages/review';
+import Review from '@/pages/review-compact';
 import {
   Route,
   Switch,

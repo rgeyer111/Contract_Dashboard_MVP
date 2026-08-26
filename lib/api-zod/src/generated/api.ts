@@ -223,7 +223,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -233,7 +234,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -243,7 +245,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -253,7 +256,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -263,7 +267,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -273,7 +278,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -283,7 +289,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -293,7 +300,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -303,7 +311,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -313,7 +322,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -326,7 +336,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -336,7 +347,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -346,7 +358,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -359,7 +372,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -379,7 +393,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -389,7 +404,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -403,7 +419,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(extractContractResponseExtractionContractFieldsContractValueTwoValueOneAmountMin),
@@ -417,7 +434,8 @@ export const ExtractContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -836,7 +854,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -846,7 +865,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -856,7 +876,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -866,7 +887,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -876,7 +898,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -886,7 +909,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -896,7 +920,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -906,7 +931,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -916,7 +942,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -926,7 +953,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -939,7 +967,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -949,7 +978,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -959,7 +989,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -972,7 +1003,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -992,7 +1024,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -1002,7 +1035,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -1016,7 +1050,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(listContractsResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -1030,7 +1065,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -1080,7 +1116,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1090,7 +1127,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -1100,7 +1138,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1110,7 +1149,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1120,7 +1160,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1130,7 +1171,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1140,7 +1182,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -1150,7 +1193,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseTwoFamilyEffectiveContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -1160,7 +1204,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseTwoFamilyEffectiveContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -1170,7 +1215,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -1183,7 +1229,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -1193,7 +1240,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1203,7 +1251,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -1216,7 +1265,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -1236,7 +1286,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -1246,7 +1297,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -1260,7 +1312,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(listContractsResponseTwoFamilyEffectiveContractFieldsContractValueTwoValueOneAmountMin),
@@ -1274,7 +1327,8 @@ export const ListContractsResponseItem = zod.object({
   "page": zod.number().min(1).multipleOf(listContractsResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(listContractsResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -1520,7 +1574,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1530,7 +1585,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -1540,7 +1596,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1550,7 +1607,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1560,7 +1618,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1570,7 +1629,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1580,7 +1640,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -1590,7 +1651,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -1600,7 +1662,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -1610,7 +1673,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -1623,7 +1687,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -1633,7 +1698,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1643,7 +1709,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -1656,7 +1723,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -1676,7 +1744,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -1686,7 +1755,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -1700,7 +1770,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(createContractBodyContractFieldsContractValueTwoValueOneAmountMin),
@@ -1714,7 +1785,8 @@ export const CreateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -2124,7 +2196,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2134,7 +2207,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -2144,7 +2218,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2154,7 +2229,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2164,7 +2240,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2174,7 +2251,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2184,7 +2262,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -2194,7 +2273,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -2204,7 +2284,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -2214,7 +2295,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -2227,7 +2309,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -2237,7 +2320,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2247,7 +2331,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -2260,7 +2345,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -2280,7 +2366,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -2290,7 +2377,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -2304,7 +2392,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(createContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -2318,7 +2407,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -2368,7 +2458,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2378,7 +2469,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -2388,7 +2480,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2398,7 +2491,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2408,7 +2502,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2418,7 +2513,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2428,7 +2524,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -2438,7 +2535,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseTwoFamilyEffectiveContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -2448,7 +2546,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -2458,7 +2557,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -2471,7 +2571,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -2481,7 +2582,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2491,7 +2593,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -2504,7 +2607,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -2524,7 +2628,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -2534,7 +2639,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -2548,7 +2654,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(createContractResponseTwoFamilyEffectiveContractFieldsContractValueTwoValueOneAmountMin),
@@ -2562,7 +2669,8 @@ export const CreateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(createContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(createContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -2610,6 +2718,7 @@ export const CreateContractResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
+
 /**
  * @summary Get a saved contract
  */
@@ -2990,7 +3099,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3000,7 +3110,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3010,7 +3121,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3020,7 +3132,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3030,7 +3143,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3040,7 +3154,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3050,7 +3165,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3060,7 +3176,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -3070,7 +3187,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -3080,7 +3198,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -3093,7 +3212,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -3103,7 +3223,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3113,7 +3234,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -3126,7 +3248,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -3146,7 +3269,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -3156,7 +3280,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -3170,7 +3295,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(getContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -3184,7 +3310,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -3234,7 +3361,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3244,7 +3372,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3254,7 +3383,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3264,7 +3394,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3274,7 +3405,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3284,7 +3416,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3294,7 +3427,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3304,7 +3438,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseTwoFamilyEffectiveContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -3314,7 +3449,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -3324,7 +3460,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -3337,7 +3474,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -3347,7 +3485,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3357,7 +3496,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -3370,7 +3510,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -3390,7 +3531,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -3400,7 +3542,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -3414,7 +3557,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(getContractResponseTwoFamilyEffectiveContractFieldsContractValueTwoValueOneAmountMin),
@@ -3428,7 +3572,8 @@ export const GetContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(getContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(getContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -3476,7 +3621,6 @@ export const GetContractResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
-
 /**
  * @summary Update a saved contract
  */
@@ -3676,7 +3820,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3686,7 +3831,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3696,7 +3842,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3706,7 +3853,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3716,7 +3864,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3726,7 +3875,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3736,7 +3886,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3746,7 +3897,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -3756,7 +3908,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -3766,7 +3919,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -3779,7 +3933,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -3789,7 +3944,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3799,7 +3955,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -3812,7 +3969,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -3832,7 +3990,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -3842,7 +4001,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -3856,7 +4016,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(updateContractBodyContractFieldsContractValueTwoValueOneAmountMin),
@@ -3870,7 +4031,8 @@ export const UpdateContractBody = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -4280,7 +4442,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4290,7 +4453,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -4300,7 +4464,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4310,7 +4475,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4320,7 +4486,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4330,7 +4497,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4340,7 +4508,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -4350,7 +4519,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -4360,7 +4530,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -4370,7 +4541,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -4383,7 +4555,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -4393,7 +4566,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4403,7 +4577,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -4416,7 +4591,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -4436,7 +4612,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -4446,7 +4623,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -4460,7 +4638,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(updateContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -4474,7 +4653,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -4524,7 +4704,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4534,7 +4715,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -4544,7 +4726,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4554,7 +4737,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4564,7 +4748,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4574,7 +4759,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4584,7 +4770,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -4594,7 +4781,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseTwoFamilyEffectiveContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -4604,7 +4792,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseTwoFamilyEffectiveContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -4614,7 +4803,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -4627,7 +4817,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -4637,7 +4828,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4647,7 +4839,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -4660,7 +4853,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -4680,7 +4874,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -4690,7 +4885,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -4704,7 +4900,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(updateContractResponseTwoFamilyEffectiveContractFieldsContractValueTwoValueOneAmountMin),
@@ -4718,7 +4915,8 @@ export const UpdateContractResponse = zod.object({
   "page": zod.number().min(1).multipleOf(updateContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(updateContractResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -4766,6 +4964,8 @@ export const UpdateContractResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
+
+
 /**
  * @summary Dismiss a contract alert
  */
@@ -5154,7 +5354,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -5164,7 +5365,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -5174,7 +5376,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5184,7 +5387,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5194,7 +5398,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5204,7 +5409,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5214,7 +5420,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -5224,7 +5431,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -5234,7 +5442,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -5244,7 +5453,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -5257,7 +5467,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -5267,7 +5478,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -5277,7 +5489,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -5290,7 +5503,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -5310,7 +5524,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -5320,7 +5535,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -5334,7 +5550,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(dismissContractAlertResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -5348,7 +5565,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -5398,7 +5616,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -5408,7 +5627,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -5418,7 +5638,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5428,7 +5649,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5438,7 +5660,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTitleOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTitleOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5448,7 +5671,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractNumberOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractNumberOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5458,7 +5682,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTypeOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTypeOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -5468,7 +5693,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsSignatureDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsSignatureDateOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -5478,7 +5704,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -5488,7 +5715,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -5501,7 +5729,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -5511,7 +5740,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -5521,7 +5751,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -5534,7 +5765,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -5554,7 +5786,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -5564,7 +5797,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -5578,7 +5812,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractValueOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractValueOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsContractValueTwoValueOneAmountMin),
@@ -5592,7 +5827,8 @@ export const DismissContractAlertResponse = zod.object({
   "page": zod.number().min(1).multipleOf(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
   "clause": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneQuoteMax).nullable(),
-  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable()
+  "note": zod.string().max(dismissContractAlertResponseTwoFamilyEffectiveContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -5640,3 +5876,5 @@ export const DismissContractAlertResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
+
+

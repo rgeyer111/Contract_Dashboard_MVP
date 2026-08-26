@@ -238,6 +238,9 @@ components:
         note:
           type: ["string", "null"]
           maxLength: 500
+        reviewed:
+          type: boolean
+          description: True when a human reviewer explicitly resolved this field without changing the original extraction provenance.
     ProvenanceStringField:
       allOf:
         - $ref: "#/components/schemas/ProvenanceMetadata"

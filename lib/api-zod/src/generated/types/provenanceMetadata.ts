@@ -31,4 +31,6 @@ export interface ProvenanceMetadata {
      * @nullable
      */
   note: string | null;
+  /** True when a human reviewer explicitly resolved this field without changing the original extraction provenance. */
+  reviewed?: boolean;
 }

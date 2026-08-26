@@ -12,3 +12,4 @@
 - [Contract alert lifecycle](contract-alert-lifecycle.md) — blocked/expired contracts have no alert; dismissal survives only while alert inputs remain unchanged.
 - [Contract ingestion sources](contract-ingestion-sources.md) — ingestion is source-agnostic; deduplicate by SHA-256 bytes and never by filename.
 - [Contract family replay](contract-family-replay.md) — resolve families by effective date; amendments supersede only explicitly addressed fields.
+- [Reviewer resolutions](reviewer-resolutions.md) — persist human resolution separately from extraction provenance so reviewed unknowns stay honest and durable.

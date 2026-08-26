@@ -20,10 +20,46 @@ import {
   Ban,
   ChevronDown,
   ChevronRight,
-  GitBranch
+  GitBranch,
+  CalendarDays,
+  WalletCards,
+  ListFilter
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
+
+const registryIssueKeys = [
+  "vendorLegalName",
+  "contractType",
+  "contractNumber",
+  "effectiveDate",
+  "initialTermLength",
+  "initialTermEndDate",
+  "renewalMechanism",
+  "noticePeriod",
+  "contractValue",
+] as const;
+
+function getRegistryIssueCount(contract: any) {
+  return registryIssueKeys.filter((key) => {
+    const field = contract.fields?.[key];
+    return !field || (!field.reviewed && (field.status !== "found" || field.value === null || field.value === undefined || field.value === ""));
+  }).length;
+}
+
+function registryDate(value: string | null | undefined) {
+  if (!value) return "Not set";
+  const [year, month, day] = value.split("-");
+  return year && month && day ? `${day}.${month}.${year}` : value;
+}
+
+function registryStatusLabel(status: string) {
+  return status === "red" ? "At risk"
+    : status === "amber" ? "Upcoming"
+      : status === "green" ? "On track"
+        : status === "expired" ? "Expired"
+          : "Blocked";
+}
 
 export default function Dashboard() {
   const [location, setLocation] = useLocation();
@@ -36,11 +72,26 @@ export default function Dashboard() {
   const [dismissingId, setDismissingId] = useState<string | null>(null);
   const [dismissReason, setDismissReason] = useState("");
   const [expandedFamilies, setExpandedFamilies] = useState<Set<string>>(new Set());
+  const [registryQuery, setRegistryQuery] = useState("");
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
   const familyRoots = contracts.filter((saved) => saved.family.id === saved.id);
+  const filteredFamilyRoots = familyRoots.filter((saved) => {
+    const contract = saved.family.effectiveContract;
+    const query = registryQuery.trim().toLowerCase();
+    if (!query) return true;
+    return [
+      contract.fields.vendorLegalName.value,
+      contract.fields.contractTitle.value,
+      contract.fields.contractType.value,
+      contract.assignment.owner,
+      saved.filename,
+    ].some((value) => String(value ?? "").toLowerCase().includes(query));
+  });
   const alerts = familyRoots.filter((saved) => saved.family.effectiveContract.alert);
+  const openIssueCount = familyRoots.reduce((total, saved) => total + getRegistryIssueCount(saved.family.effectiveContract), 0);
+  const statedValueCount = familyRoots.filter((saved) => saved.family.effectiveContract.fields.contractValue.value).length;
   const dismissAlert = useDismissContractAlert({
     mutation: {
       onSuccess: async () => {
@@ -182,8 +233,8 @@ export default function Dashboard() {
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">{isActionItemsPage ? "Action Items" : "Welcome back, John"}</h1>
-              <p className="text-muted-foreground mt-1 font-medium text-sm">{isActionItemsPage ? "Stay ahead of the contract decisions that need your attention." : "Here's the status of your contract renewals this week."}</p>
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">{isActionItemsPage ? "Action Items" : "Contract portfolio"}</h1>
+              <p className="text-muted-foreground mt-1 font-medium text-sm">{isActionItemsPage ? "Stay ahead of the contract decisions that need your attention." : "Compare renewal exposure, ownership, value, and open decisions in one view."}</p>
             </div>
             {!isActionItemsPage && (
               <Button onClick={() => setUploadOpen(true)} className="shrink-0 gap-2 shadow-sm font-semibold">
@@ -302,7 +353,7 @@ export default function Dashboard() {
             </section>
           )}
           
-          {!isActionItemsPage && <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {!isActionItemsPage && <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
             {/* Card 1 */}
             <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
               <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
@@ -312,34 +363,45 @@ export default function Dashboard() {
                 <div className="h-2 w-2 rounded-full bg-destructive animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
                 Critical Renewals
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.filter((c) => c.contract.computed.status === 'red').length}</div>
-              <p className="text-sm font-medium text-muted-foreground relative z-10">Past the legal notice deadline</p>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{familyRoots.filter((c) => c.family.effectiveContract.computed.status === 'red' || c.family.effectiveContract.computed.status === 'expired').length}</div>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">At risk or past deadline</p>
             </div>
             
             {/* Card 2 */}
             <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
               <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
-                <Clock className="h-32 w-32 text-primary" />
+                <CalendarDays className="h-32 w-32 text-primary" />
               </div>
               <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
                 <Clock className="h-4 w-4 text-primary" />
-                Upcoming
+                Active families
               </div>
               <div className="text-4xl font-extrabold mb-1 relative z-10">{familyRoots.length}</div>
-              <p className="text-sm font-medium text-muted-foreground relative z-10">Total Active Contracts</p>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">One row per effective family</p>
             </div>
             
             {/* Card 3 */}
             <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
               <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
-                <CheckCircle2 className="h-32 w-32 text-green-500" />
+                <WalletCards className="h-32 w-32 text-green-500" />
               </div>
               <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
-                Negotiated YTD
+                Values captured
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">$1.2M</div>
-              <p className="text-sm font-medium text-muted-foreground relative z-10">In total contract value saved</p>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{statedValueCount}<span className="ml-1 text-lg text-muted-foreground">/ {familyRoots.length}</span></div>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">Families with a stated value</p>
+            </div>
+            <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+              <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
+                <ListFilter className="h-32 w-32 text-amber-500" />
+              </div>
+              <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
+                <AlertCircle className="h-4 w-4 text-amber-500" />
+                Open decisions
+              </div>
+              <div className="text-4xl font-extrabold mb-1 relative z-10">{openIssueCount}</div>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">Fields needing review</p>
             </div>
           </div>}
 
@@ -390,9 +452,20 @@ export default function Dashboard() {
           
           {/* Recent Contracts Section */}
           {!isActionItemsPage && <div className="space-y-4 pt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-xl font-bold tracking-tight">Contract Registry</h2>
-              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    value={registryQuery}
+                    onChange={(event) => setRegistryQuery(event.target.value)}
+                    placeholder="Filter registry..."
+                    className="h-9 w-full rounded-md border bg-card pl-9 pr-3 text-xs font-semibold outline-none transition focus:ring-2 focus:ring-primary/20 sm:w-56"
+                  />
+                </div>
+                <span className="whitespace-nowrap text-xs font-bold text-muted-foreground">{filteredFamilyRoots.length} of {familyRoots.length}</span>
+              </div>
             </div>
             
             <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
@@ -400,28 +473,33 @@ export default function Dashboard() {
                 <table className="w-full text-sm text-left">
                   <thead className="bg-muted/30 border-b text-muted-foreground text-xs uppercase tracking-wider">
                     <tr>
-                      <th className="px-6 py-4 font-bold">Vendor</th>
-                      <th className="px-6 py-4 font-bold">Value</th>
-                      <th className="px-6 py-4 font-bold">Owner</th>
-                       <th className="px-6 py-4 font-bold">Deadlines</th>
-                      <th className="px-6 py-4 font-bold">Status</th>
+                      <th className="px-5 py-4 font-bold">Contract family</th>
+                      <th className="px-5 py-4 font-bold">Type</th>
+                      <th className="px-5 py-4 font-bold">Value</th>
+                      <th className="px-5 py-4 font-bold">Renewal</th>
+                      <th className="px-5 py-4 font-bold">Notice / action</th>
+                      <th className="px-5 py-4 font-bold">Owner</th>
+                      <th className="px-5 py-4 font-bold">Signal</th>
                       <th className="px-6 py-4 font-bold text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {familyRoots.map((saved) => {
+                    {filteredFamilyRoots.map((saved) => {
                       const contract = saved.family.effectiveContract;
                       const vendor = contract.fields.vendorLegalName.value || 'Unknown Vendor';
                       const title = contract.fields.contractTitle.value || 'Untitled Contract';
                       const val = contract.fields.contractValue.value;
+                      const contractType = contract.fields.contractType.value;
                       const valueIsUnknown = !val;
                       const valueStr = valueIsUnknown
                         ? 'Unknown / not stated'
-                        : `${val.currency === 'USD' ? '$' : ''}${val.amount?.toLocaleString()} ${val.basis.replace(/_/g, ' ')}`;
+                        : `${val.currency === 'USD' ? '$' : `${val.currency} `}${val.amount?.toLocaleString()} · ${val.basis.replace(/_/g, ' ')}`;
                       const owner = contract.assignment.owner || 'Unassigned';
                       const status = contract.computed.status;
                       const isBlocked = status === 'blocked';
                       const deadlineIsUrgent = status === 'red' || status === 'expired';
+                      const issueCount = getRegistryIssueCount(contract);
+                      const renewalDate = contract.fields.initialTermEndDate.value || contract.computed.exitDate;
                       const statusClass = status === 'red'
                         ? 'bg-destructive/10 text-destructive border-destructive/20'
                         : status === 'expired'
@@ -431,6 +509,9 @@ export default function Dashboard() {
                             : status === 'green'
                               ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20'
                               : 'bg-muted text-muted-foreground border-border';
+                      const signalClass = issueCount > 0
+                        ? 'bg-amber-500/10 text-amber-700 border-amber-500/20'
+                        : statusClass;
                       
                       const isExpanded = expandedFamilies.has(saved.family.id);
                       const familyDocuments = saved.family.documents;
@@ -449,7 +530,7 @@ export default function Dashboard() {
                       return (
                         <Fragment key={saved.id}>
                         <tr className="hover:bg-muted/30 transition-colors group">
-                          <td className="px-6 py-4">
+                          <td className="px-5 py-4">
                             <div className="flex items-start gap-2">
                               <button
                                 type="button"
@@ -466,50 +547,53 @@ export default function Dashboard() {
                                 {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                               </button>
                               <div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="font-bold text-foreground text-sm hover:text-primary">{vendor}</button>
-                                  <span className="inline-flex items-center gap-1 rounded-full border bg-muted/50 px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
-                                    <GitBranch className="h-3 w-3" />{saved.family.documentCount} document{saved.family.documentCount === 1 ? "" : "s"}
-                                  </span>
-                                </div>
+                                <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="font-bold text-foreground text-sm hover:text-primary">{vendor}</button>
                                 <div className="text-muted-foreground text-xs font-medium mt-0.5">{title}</div>
                               </div>
                             </div>
                           </td>
-                          <td className={`px-6 py-4 font-semibold ${valueIsUnknown ? 'text-destructive' : 'text-foreground'}`}>
+                          <td className="px-5 py-4">
+                            <div className="text-xs font-extrabold capitalize">{String(contractType || "Unclassified").replace(/_/g, " ")}</div>
+                            <div className="mt-1 text-[10px] font-semibold capitalize text-muted-foreground">{contract.fields.renewalMechanism.value ? String(contract.fields.renewalMechanism.value).replace(/_/g, " ") : "Renewal unknown"}</div>
+                          </td>
+                          <td className={`px-5 py-4 font-semibold ${valueIsUnknown ? 'text-destructive' : 'text-foreground'}`}>
                             {valueStr}
-                            {valueIsUnknown && <div className="text-[10px] font-bold uppercase tracking-wide mt-1">Needs review</div>}
+                            {valueIsUnknown && <div className="text-[10px] font-bold uppercase tracking-wide mt-1">{contract.fields.contractValue.reviewed ? "Reviewed unknown" : "Needs review"}</div>}
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="font-semibold text-foreground text-xs">{owner}</div>
-                            <div className="text-muted-foreground text-[10px] uppercase tracking-wide mt-1">Contract owner</div>
+                          <td className="px-5 py-4">
+                            <div className="text-xs font-extrabold">{registryDate(renewalDate)}</div>
+                            <div className="mt-1 text-[10px] font-semibold text-muted-foreground">
+                              {contract.fields.renewalTermLength.value
+                                ? `Renews for ${contract.fields.renewalTermLength.value.amount} ${contract.fields.renewalTermLength.value.unit}`
+                                : "Term length unknown"}
+                            </div>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-5 py-4">
                             {isBlocked ? (
-                              <div className="max-w-64 rounded-md border border-destructive/20 bg-destructive/5 px-2.5 py-2">
+                              <div className="max-w-52 rounded-md border border-destructive/20 bg-destructive/5 px-2.5 py-2">
                                 <div className="flex items-center gap-1.5 text-xs font-extrabold text-destructive">
                                   <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                                   Deadline unavailable
                                 </div>
-                                {contract.computed.reason && (
-                                  <p className="mt-1 text-[10px] font-semibold leading-relaxed text-destructive/90">
-                                    {contract.computed.reason}
-                                  </p>
-                                )}
                               </div>
                             ) : (
-                              <div className={`flex flex-col items-start gap-0.5 font-bold text-xs w-fit px-2.5 py-1 rounded-md whitespace-nowrap ${deadlineIsUrgent ? 'text-destructive bg-destructive/5' : 'text-muted-foreground bg-muted/50'}`}>
-                                {deadlineIsUrgent && <AlertCircle className="h-3.5 w-3.5" />}
-                                <span>Notice {contract.computed.noticeDeadline}</span>
-                                {contract.computed.actionDate && <span className="font-medium">Act {contract.computed.actionDate}</span>}
+                              <div className={`text-xs font-bold ${deadlineIsUrgent ? "text-destructive" : "text-foreground"}`}>
+                                <span>Notice {registryDate(contract.computed.noticeDeadline)}</span>
+                                <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Act {registryDate(contract.computed.actionDate)}</div>
                               </div>
                             )}
                           </td>
-                          <td className="px-6 py-4">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold border ${statusClass}`}>
-                              {status}
+                          <td className="px-5 py-4">
+                            <div className="font-semibold text-foreground text-xs">{owner}</div>
+                            <div className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-muted-foreground"><GitBranch className="h-3 w-3" /> {saved.family.documentCount} doc{saved.family.documentCount === 1 ? "" : "s"}</div>
+                          </td>
+                          <td className="px-5 py-4">
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold border ${signalClass}`}>
+                              {issueCount > 0 ? `${issueCount} issue${issueCount === 1 ? "" : "s"}` : registryStatusLabel(status)}
                             </span>
-                            {!isBlocked && contract.computed.reason && <div className="mt-1 max-w-56 text-[10px] font-semibold text-destructive normal-case">{contract.computed.reason}</div>}
+                            <div className={`mt-1 text-[10px] font-semibold ${issueCount > 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                              {issueCount > 0 ? "Open decisions" : registryStatusLabel(status)}
+                            </div>
                           </td>
                           <td className="px-6 py-4 text-right">
                             <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => setLocation(`/review?id=${saved.id}`)}>
@@ -519,7 +603,7 @@ export default function Dashboard() {
                         </tr>
                         {isExpanded && (
                           <tr className="bg-muted/20">
-                            <td colSpan={6} className="px-8 py-5">
+                            <td colSpan={8} className="px-8 py-5">
                               <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                   <div>
