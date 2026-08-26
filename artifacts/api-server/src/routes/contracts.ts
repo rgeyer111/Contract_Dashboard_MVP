@@ -290,11 +290,17 @@ function familyFor(record: typeof contractsTable.$inferSelect, records: Array<ty
         isParent: member.id === rootId,
         isCurrent: member.id === currentId,
         fieldValues: Object.fromEntries(
-          fieldKeys.map((key) => [key, {
-            value: contract.fields?.[key]?.value ?? null,
-            sourceDocumentId: member.id,
-            sourceFilename: member.filename,
-          }]),
+          fieldKeys.map((key) => {
+            const field = contract.fields?.[key];
+            return [key, {
+              value: field?.value ?? null,
+              sourceDocumentId: member.id,
+              sourceFilename: member.filename,
+              provenance: field?.note === reviewerEditNote
+                ? "reviewer_supplied"
+                : "document",
+            }];
+          }),
         ),
       };
     }),

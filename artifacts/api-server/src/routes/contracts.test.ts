@@ -478,6 +478,33 @@ describe("saved contract persistence", () => {
       expect(family.body.family.documents[1].fieldValues.contractValue).toMatchObject({
         value: amendment.fields.contractValue.value,
         sourceFilename: `family-amendment-${suffix}.pdf`,
+        provenance: "document",
+      });
+
+      const reviewerValue = { amount: 310000, currency: "USD", basis: "annual" };
+      const reviewerUpdate = await request(app)
+        .put(`/api/contracts/${amendmentId}`)
+        .send({
+          filename: `family-amendment-${suffix}.pdf`,
+          contract: {
+            ...amendment,
+            fields: {
+              ...amendment.fields,
+              contractValue: reviewerEdited(reviewerValue),
+            },
+          },
+        });
+      expect(reviewerUpdate.status).toBe(200);
+
+      const reloadedFamily = await request(app).get(`/api/contracts/${parentId}`);
+      expect(reloadedFamily.status).toBe(200);
+      expect(reloadedFamily.body.family.effectiveContract.fields.contractValue.value).toEqual(
+        reviewerValue,
+      );
+      expect(reloadedFamily.body.family.documents[1].fieldValues.contractValue).toMatchObject({
+        value: reviewerValue,
+        sourceFilename: `family-amendment-${suffix}.pdf`,
+        provenance: "reviewer_supplied",
       });
     } finally {
       if (secondParentId) await db.delete(contractsTable).where(eq(contractsTable.id, secondParentId));

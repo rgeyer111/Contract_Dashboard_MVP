@@ -537,7 +537,11 @@ export default function Dashboard() {
                                    {(["contractValue", "noticePeriod", "vendorLegalName", "renewalMechanism", "initialTermEndDate"] as const).map((key) => {
                                     const history = familyDocuments
                                       .map((document) => {
-                                        const field = document.fieldValues[key] as { value?: unknown; sourceFilename?: string } | undefined;
+                                         const field = document.fieldValues[key] as {
+                                           value?: unknown;
+                                           sourceFilename?: string;
+                                           provenance?: "document" | "reviewer_supplied";
+                                         } | undefined;
                                          return field?.value == null ? null : {
                                            document,
                                            field,
@@ -546,7 +550,11 @@ export default function Dashboard() {
                                       })
                                        .filter(Boolean) as Array<{
                                          document: typeof familyDocuments[number];
-                                         field: { value?: unknown; sourceFilename?: string };
+                                          field: {
+                                            value?: unknown;
+                                            sourceFilename?: string;
+                                            provenance?: "document" | "reviewer_supplied";
+                                          };
                                          sourceFilename: string;
                                        }>;
                                      if (history.length === 0) return null;
@@ -563,6 +571,11 @@ export default function Dashboard() {
                                                    <span className={`shrink-0 text-[9px] font-bold uppercase tracking-wide ${index === history.length - 1 ? "text-primary" : "text-muted-foreground"}`}>
                                                      {index === history.length - 1 ? "Current" : "Superseded"}
                                                    </span>
+                                                    {field.provenance === "reviewer_supplied" && (
+                                                      <span className="shrink-0 rounded-full border border-violet-500/20 bg-violet-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-violet-700">
+                                                        Reviewer supplied
+                                                      </span>
+                                                    )}
                                                    <button
                                                      type="button"
                                                      aria-label={`Open ${sourceFilename}`}
