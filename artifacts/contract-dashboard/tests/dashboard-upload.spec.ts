@@ -567,6 +567,23 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);
   await expect(page.getByTestId("contract-family-history")).toHaveCount(0);
 
+  const typeFilter = page.getByLabel("Filter by agreement type");
+  await expect(typeFilter).toBeVisible();
+  await typeFilter.selectOption("amendment");
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Clear filters" }).click();
+  await expect(page.getByTestId("active-contract-count")).toHaveText("2");
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
+
+  await page.getByLabel("Search contracts").fill("Northstar");
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Clear search" }).click();
+  await expect(page.getByTestId("active-contract-count")).toHaveText("2");
+
   const scrollerMetrics = await page.locator("table").evaluate((table) => {
     const scroller = table.parentElement;
     return {

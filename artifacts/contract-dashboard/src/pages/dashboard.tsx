@@ -20,9 +20,14 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
+import { documentTypeOptions } from "@/lib/contracts";
 
 function formatContractType(value: string | null) {
   return value ? value.replace(/_/g, " ") : "Type not stated";
+}
+
+function formatDocumentType(value: string) {
+  return value.replace(/_/g, " ");
 }
 
 function formatContractValue(value: { amount?: number; currency?: string; basis?: string } | null) {
@@ -56,9 +61,25 @@ export default function Dashboard() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dismissingId, setDismissingId] = useState<string | null>(null);
   const [dismissReason, setDismissReason] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [documentTypeFilter, setDocumentTypeFilter] = useState("");
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredContracts = contracts.filter((saved) => {
+    const documentType = saved.documentType ?? saved.contract.fields.documentType.value;
+    const matchesType = !documentTypeFilter || documentType === documentTypeFilter;
+    if (!matchesType) return false;
+    if (!normalizedSearch) return true;
+    const searchableText = [
+      saved.filename,
+      saved.contract.fields.vendorLegalName.value,
+      saved.contract.fields.contractTitle.value,
+      saved.contract.fields.contractNumber.value,
+    ].filter(Boolean).join(" ").toLowerCase();
+    return searchableText.includes(normalizedSearch);
+  });
   const alerts = contracts.filter((saved) => saved.contract.alert);
   const openAlerts = alerts.filter((saved) => saved.contract.alert?.state !== "dismissed");
   const dismissAlert = useDismissContractAlert({
@@ -178,10 +199,22 @@ export default function Dashboard() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input 
                 type="text" 
-                placeholder="Search contracts..." 
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search contracts..."
                 className="w-full h-9 pl-9 pr-4 rounded-md border bg-muted/30 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/70"
-                disabled
+                aria-label="Search contracts"
               />
+              {searchTerm && (
+                <button
+                  type="button"
+                  aria-label="Clear search"
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           </div>
           
@@ -345,7 +378,7 @@ export default function Dashboard() {
                 <Clock className="h-4 w-4 text-primary" />
                 Upcoming
               </div>
-              <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.length}</div>
+               <div data-testid="active-contract-count" className="text-4xl font-extrabold mb-1 relative z-10">{filteredContracts.length}</div>
               <p className="text-sm font-medium text-muted-foreground relative z-10">Total Active Contracts</p>
             </div>
             
@@ -410,10 +443,47 @@ export default function Dashboard() {
           
           {/* Recent Contracts Section */}
           {!isActionItemsPage && <div className="space-y-4 pt-4">
-            <div className="flex items-center justify-between">
+             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-xl font-bold tracking-tight">Contract Registry</h2>
-              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
+               <div className="flex flex-wrap items-center gap-2">
+                 <label htmlFor="agreement-type-filter" className="sr-only">Filter by agreement type</label>
+                 <select
+                   id="agreement-type-filter"
+                   aria-label="Filter by agreement type"
+                   value={documentTypeFilter}
+                   onChange={(event) => setDocumentTypeFilter(event.target.value)}
+                   className="h-9 rounded-md border border-input bg-background px-3 text-xs font-semibold capitalize outline-none focus:ring-2 focus:ring-primary/20"
+                 >
+                   <option value="">All agreement types</option>
+                   {documentTypeOptions.map((option) => (
+                     <option key={option} value={option}>{formatDocumentType(option)}</option>
+                   ))}
+                 </select>
+                 {(documentTypeFilter || searchTerm) && (
+                   <Button
+                     type="button"
+                     variant="ghost"
+                     size="sm"
+                     onClick={() => {
+                       setDocumentTypeFilter("");
+                       setSearchTerm("");
+                     }}
+                     className="gap-1.5 text-primary hover:text-primary/80 font-semibold"
+                   >
+                     <X className="h-3.5 w-3.5" />
+                     Clear filters
+                   </Button>
+                 )}
+                 {!documentTypeFilter && !searchTerm && (
+                   <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
+                 )}
+               </div>
             </div>
+             {(documentTypeFilter || searchTerm) && (
+               <p className="text-xs font-semibold text-muted-foreground">
+                 Showing {filteredContracts.length} of {contracts.length} contracts
+               </p>
+             )}
             
             <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
@@ -428,7 +498,7 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                     {contracts.map((saved) => {
+                      {filteredContracts.map((saved) => {
                        const contract = saved.contract;
                       const vendor = contract.fields.vendorLegalName.value || 'Unknown Vendor';
                       const title = contract.fields.contractTitle.value || 'Untitled Contract';
@@ -488,8 +558,12 @@ export default function Dashboard() {
                     })}
                   </tbody>
                 </table>
-                {!contractsQuery.isLoading && contracts.length === 0 && (
-                  <div className="p-10 text-center text-sm font-medium text-muted-foreground">No confirmed contracts yet. Upload a PDF to get started.</div>
+                 {!contractsQuery.isLoading && filteredContracts.length === 0 && (
+                   <div className="p-10 text-center text-sm font-medium text-muted-foreground">
+                     {contracts.length === 0
+                       ? "No confirmed contracts yet. Upload a PDF to get started."
+                       : "No contracts match the current filters."}
+                   </div>
                 )}
               </div>
             </div>
