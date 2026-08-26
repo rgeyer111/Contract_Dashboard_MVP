@@ -357,16 +357,14 @@ export default function Dashboard() {
                 const vendor = saved.family.effectiveContract.fields.vendorLegalName.value || 'Unknown Vendor';
                 const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(`Contract action: ${vendor}`)}&body=${encodeURIComponent(`Hi ${alert.owner},\n\n${vendor} needs attention.\nStart action by: ${alert.actionDate}\nLegal notice deadline: ${alert.noticeDeadline}\n\nOpen contract: ${window.location.origin}/review?id=${saved.id}`)}`;
                 return (
-                  <article key={saved.id} className={`rounded-xl border bg-card p-5 shadow-sm ${alert.state === 'dismissed' ? 'opacity-60' : ''}`}>
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className={`rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${alert.state === 'overdue' ? 'bg-destructive/10 text-destructive' : alert.state === 'due' ? 'bg-amber-500/10 text-amber-700' : alert.state === 'dismissed' ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>{alert.state}</span>
-                          <span className="text-xs font-semibold text-muted-foreground">Act {alert.actionDate}</span>
+                  <article key={saved.id} className={`rounded-xl border bg-card px-4 py-3 shadow-sm ${alert.state === 'dismissed' ? 'opacity-60' : ''}`}>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className={`rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${alert.state === 'overdue' ? 'bg-destructive/10 text-destructive' : alert.state === 'due' ? 'bg-amber-500/10 text-amber-700' : alert.state === 'dismissed' ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>{alert.state}</span>
+                        <div className="min-w-0">
+                          <h3 className="truncate font-extrabold">{vendor}</h3>
+                          <p className="mt-0.5 text-xs font-medium text-muted-foreground">Act by {alert.actionDate}</p>
                         </div>
-                        <h3 className="mt-2 font-extrabold">{vendor}</h3>
-                        <p className="mt-1 text-xs font-medium text-muted-foreground">{alert.owner} · {alert.ownerEmail} · Notice deadline {alert.noticeDeadline}</p>
-                        {alert.dismissedReason && <p className="mt-2 text-xs font-semibold">Dismissed: {alert.dismissedReason}</p>}
                       </div>
                       {alert.state !== 'dismissed' && (
                         <div className="flex flex-wrap items-center gap-2">
@@ -375,6 +373,7 @@ export default function Dashboard() {
                         </div>
                       )}
                     </div>
+                    {alert.dismissedReason && <p className="mt-2 text-xs font-semibold text-muted-foreground">Dismissed: {alert.dismissedReason}</p>}
                     {dismissingId === saved.id && (
                       <div className="mt-4 flex flex-col gap-2 border-t pt-4 sm:flex-row">
                         <input value={dismissReason} onChange={(event) => setDismissReason(event.target.value)} placeholder="Why is this handled?" className="h-9 flex-1 rounded-md border bg-background px-3 text-sm" />
