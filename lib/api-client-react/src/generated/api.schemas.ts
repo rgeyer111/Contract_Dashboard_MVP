@@ -42,8 +42,13 @@ export interface RegistryViewSaveRequest {
   documentType: RegistryViewSaveRequestDocumentType;
 }
 
+export interface RegistryViewPinRequest {
+  pinned: boolean;
+}
+
 export type SavedRegistryView = RegistryViewSaveRequest & {
   id: string;
+  isPinned: boolean;
   createdAt: string;
   updatedAt: string;
 };

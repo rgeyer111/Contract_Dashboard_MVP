@@ -111,6 +111,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /registry-views/{id}/pin:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    patch:
+      operationId: pinRegistryView
+      tags: [contracts]
+      summary: Pin or unpin a saved registry view
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistryViewPinRequest"
+      responses:
+        "200":
+          description: Updated registry view pin state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedRegistryView"
+        "400":
+          description: Invalid pin state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Registry view not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /contracts/extract:
     post:
       operationId: extractContract
@@ -301,13 +336,20 @@ components:
         documentType:
           type: ["string", "null"]
           enum: [master_agreement, order_form, sow, amendment, renewal_letter, termination_notice, quote_or_proposal, unknown, null]
+    RegistryViewPinRequest:
+      type: object
+      required: [pinned]
+      properties:
+        pinned:
+          type: boolean
     SavedRegistryView:
       allOf:
         - $ref: "#/components/schemas/RegistryViewSaveRequest"
         - type: object
-          required: [id, createdAt, updatedAt]
+          required: [id, isPinned, createdAt, updatedAt]
           properties:
             id: { type: string }
+            isPinned: { type: boolean }
             createdAt: { type: string, format: date-time }
             updatedAt: { type: string, format: date-time }
     ContractExtractionUpload:

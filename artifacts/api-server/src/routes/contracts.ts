@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import multer from "multer";
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq, sql } from "drizzle-orm";
 import { db, contractsTable, registryViewsTable } from "@workspace/db";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
@@ -8,6 +8,7 @@ import {
   CreateContractBody,
   UpdateContractBody,
   CreateRegistryViewBody,
+  PinRegistryViewBody,
   UpdateRegistryViewBody,
 } from "@workspace/api-zod";
 import {
@@ -248,6 +249,7 @@ function registryViewResponse(record: typeof registryViewsTable.$inferSelect) {
     name: record.name,
     search: record.search,
     documentType: record.documentType,
+    isPinned: record.pinnedAt !== null,
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString(),
   };
@@ -272,7 +274,12 @@ function contractDocumentType(contract: Record<string, any>) {
 }
 
 router.get("/registry-views", async (_req: Request, res: Response): Promise<void> => {
-  const records = await db.select().from(registryViewsTable).orderBy(desc(registryViewsTable.updatedAt));
+  const records = await db.select().from(registryViewsTable).orderBy(
+    asc(sql`CASE WHEN ${registryViewsTable.pinnedAt} IS NULL THEN 1 ELSE 0 END`),
+    asc(registryViewsTable.pinnedAt),
+    desc(registryViewsTable.updatedAt),
+    asc(registryViewsTable.id),
+  );
   res.json(records.map(registryViewResponse));
 });
 
@@ -314,6 +321,24 @@ router.put("/registry-views/:id", async (req: Request, res: Response): Promise<v
       documentType: parsed.data.documentType ?? null,
       updatedAt: new Date(),
     })
+    .where(eq(registryViewsTable.id, id))
+    .returning();
+  if (!record) {
+    res.status(404).json({ error: "Registry view not found." });
+    return;
+  }
+  res.json(registryViewResponse(record));
+});
+
+router.patch("/registry-views/:id/pin", async (req: Request, res: Response): Promise<void> => {
+  const parsed = PinRegistryViewBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "A valid pin state is required." });
+    return;
+  }
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [record] = await db.update(registryViewsTable)
+    .set({ pinnedAt: parsed.data.pinned ? new Date() : null })
     .where(eq(registryViewsTable.id, id))
     .returning();
   if (!record) {

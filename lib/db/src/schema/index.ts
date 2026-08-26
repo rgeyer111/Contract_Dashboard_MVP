@@ -16,6 +16,7 @@ export const registryViewsTable = pgTable("registry_views", {
   name: text("name").notNull(),
   search: text("search").notNull().default(""),
   documentType: text("document_type"),
+  pinnedAt: timestamp("pinned_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

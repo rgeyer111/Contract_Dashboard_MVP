@@ -30,6 +30,7 @@ describe("saved registry views", () => {
       name: "Renewal review queue",
       search: "Acme",
       documentType: "master_agreement",
+      isPinned: false,
     });
     const id = createResponse.body.id as string;
     createdIds.push(id);
@@ -80,5 +81,56 @@ describe("saved registry views", () => {
       .post("/api/registry-views")
       .send({ name: "Invalid type", search: "", documentType: "nda" });
     expect(invalidTypeResponse.status).toBe(400);
+  });
+
+  it("persists pin state and keeps pinned views first in pin order", async () => {
+    const firstResponse = await request(app)
+      .post("/api/registry-views")
+      .send({ name: "First pinned queue", search: "first", documentType: null });
+    const secondResponse = await request(app)
+      .post("/api/registry-views")
+      .send({ name: "Second pinned queue", search: "second", documentType: null });
+    expect(firstResponse.status).toBe(201);
+    expect(secondResponse.status).toBe(201);
+
+    const firstId = firstResponse.body.id as string;
+    const secondId = secondResponse.body.id as string;
+    createdIds.push(firstId, secondId);
+
+    const pinFirstResponse = await request(app)
+      .patch(`/api/registry-views/${firstId}/pin`)
+      .send({ pinned: true });
+    expect(pinFirstResponse.status).toBe(200);
+    expect(pinFirstResponse.body).toMatchObject({ id: firstId, isPinned: true });
+
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    const pinSecondResponse = await request(app)
+      .patch(`/api/registry-views/${secondId}/pin`)
+      .send({ pinned: true });
+    expect(pinSecondResponse.status).toBe(200);
+    expect(pinSecondResponse.body).toMatchObject({ id: secondId, isPinned: true });
+
+    const pinnedListResponse = await request(app).get("/api/registry-views");
+    const pinnedCreatedViews = pinnedListResponse.body.filter(
+      (view: { id: string }) => view.id === firstId || view.id === secondId,
+    );
+    expect(pinnedCreatedViews.map((view: { id: string }) => view.id)).toEqual([firstId, secondId]);
+
+    const unpinFirstResponse = await request(app)
+      .patch(`/api/registry-views/${firstId}/pin`)
+      .send({ pinned: false });
+    expect(unpinFirstResponse.status).toBe(200);
+    expect(unpinFirstResponse.body).toMatchObject({ id: firstId, isPinned: false });
+
+    const unpinnedListResponse = await request(app).get("/api/registry-views");
+    const reorderedCreatedViews = unpinnedListResponse.body.filter(
+      (view: { id: string }) => view.id === firstId || view.id === secondId,
+    );
+    expect(reorderedCreatedViews.map((view: { id: string }) => view.id)).toEqual([secondId, firstId]);
+
+    const invalidPinResponse = await request(app)
+      .patch(`/api/registry-views/${firstId}/pin`)
+      .send({ pinned: "yes" });
+    expect(invalidPinResponse.status).toBe(400);
   });
 });

@@ -20,6 +20,7 @@ import {
   Link2,
   Check,
   Bookmark,
+  Pin,
   Pencil,
   Trash2,
   Save,
@@ -34,6 +35,7 @@ import {
   useExtractContract,
   useListContracts,
   useListRegistryViews,
+  usePinRegistryView,
   useUpdateRegistryView,
   type ContractExtractionResult,
   type RegistryViewSaveRequestDocumentType,
@@ -179,6 +181,15 @@ export default function Dashboard() {
       onError: () => setSavedViewError("This view could not be renamed. Check the name and try again."),
     },
   });
+  const pinRegistryView = usePinRegistryView({
+    mutation: {
+      onSuccess: async () => {
+        setSavedViewError(null);
+        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
+      },
+      onError: () => setSavedViewError("This view's pin state could not be updated. Please try again."),
+    },
+  });
   const deleteRegistryView = useDeleteRegistryView({
     mutation: {
       onSuccess: async () => {
@@ -292,6 +303,14 @@ export default function Dashboard() {
 
   const deleteView = (view: SavedRegistryView) => {
     deleteRegistryView.mutate({ id: view.id });
+  };
+
+  const togglePin = (view: SavedRegistryView) => {
+    setSavedViewError(null);
+    pinRegistryView.mutate({
+      id: view.id,
+      data: { pinned: !view.isPinned },
+    });
   };
 
   const chooseFiles = (files: File[]) => {
@@ -765,6 +784,12 @@ export default function Dashboard() {
                           <button type="button" onClick={() => openSavedView(view)} className="min-w-0 flex-1 text-left" aria-label={`Open saved view ${view.name}`}>
                             <span className="flex flex-wrap items-center gap-2">
                               <span className="truncate text-sm font-extrabold text-foreground hover:text-primary">{view.name}</span>
+                              {view.isPinned && (
+                                <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                                  <Pin className="h-3 w-3" />
+                                  Pinned
+                                </span>
+                              )}
                               {isActive && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary">Active</span>}
                             </span>
                             <span className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
@@ -782,6 +807,17 @@ export default function Dashboard() {
                           </div>
                         ) : editingViewId !== view.id ? (
                           <div className="flex shrink-0 items-center gap-1">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              aria-label={`${view.isPinned ? "Unpin" : "Pin"} saved view ${view.name}`}
+                              title={view.isPinned ? "Unpin saved view" : "Pin saved view"}
+                              disabled={pinRegistryView.isPending}
+                              onClick={() => togglePin(view)}
+                            >
+                              <Pin className={`h-3.5 w-3.5 ${view.isPinned ? "fill-current text-amber-600 dark:text-amber-300" : "text-muted-foreground"}`} />
+                            </Button>
                             <Button type="button" variant="ghost" size="icon" aria-label={`Rename saved view ${view.name}`} title="Rename saved view" onClick={() => startRename(view)}>
                               <Pencil className="h-3.5 w-3.5" />
                             </Button>

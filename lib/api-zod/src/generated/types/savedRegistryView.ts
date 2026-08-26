@@ -9,6 +9,7 @@ import type { RegistryViewSaveRequest } from './registryViewSaveRequest';
 
 export type SavedRegistryView = RegistryViewSaveRequest & {
   id: string;
+  isPinned: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

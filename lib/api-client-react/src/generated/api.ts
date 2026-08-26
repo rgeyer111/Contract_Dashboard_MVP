@@ -26,6 +26,7 @@ import type {
   DismissAlertRequest,
   ErrorResponse,
   HealthStatus,
+  RegistryViewPinRequest,
   RegistryViewSaveRequest,
   SavedContract,
   SavedRegistryView
@@ -425,6 +426,78 @@ export const useDeleteRegistryView = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getDeleteRegistryViewMutationOptions(options));
+    }
+
+export const getPinRegistryViewUrl = (id: string,) => {
+
+
+
+
+  return `/api/registry-views/${id}/pin`
+}
+
+/**
+ * @summary Pin or unpin a saved registry view
+ */
+export const pinRegistryView = async (id: string,
+    registryViewPinRequest: RegistryViewPinRequest, options?: Parameters<typeof customFetch>[1]): Promise<SavedRegistryView> => {
+
+  return customFetch<SavedRegistryView>(getPinRegistryViewUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(registryViewPinRequest)
+  }
+);}
+
+
+
+
+
+export const getPinRegistryViewMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pinRegistryView>>, TError,{id: string;data: BodyType<RegistryViewPinRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pinRegistryView>>, TError,{id: string;data: BodyType<RegistryViewPinRequest>}, TContext> => {
+
+const mutationKey = ['pinRegistryView'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pinRegistryView>>, {id: string;data: BodyType<RegistryViewPinRequest>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  pinRegistryView(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PinRegistryViewMutationResult = NonNullable<Awaited<ReturnType<typeof pinRegistryView>>>
+    export type PinRegistryViewMutationBody = BodyType<RegistryViewPinRequest>
+    export type PinRegistryViewMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Pin or unpin a saved registry view
+ */
+export const usePinRegistryView = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pinRegistryView>>, TError,{id: string;data: BodyType<RegistryViewPinRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof pinRegistryView>>,
+        TError,
+        {id: string;data: BodyType<RegistryViewPinRequest>},
+        TContext
+      > => {
+      return useMutation(getPinRegistryViewMutationOptions(options));
     }
 
 export const getExtractContractUrl = () => {
