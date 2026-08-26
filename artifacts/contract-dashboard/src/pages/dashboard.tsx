@@ -66,10 +66,15 @@ function getSearchTermFromLocation(location: string) {
   return new URLSearchParams(query).get(SEARCH_QUERY_PARAM) ?? "";
 }
 
-function replaceRegistryUrl(params: URLSearchParams) {
+function updateRegistryUrl(params: URLSearchParams, mode: "push" | "replace") {
   const url = new URL(window.location.href);
   url.search = params.toString();
-  window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+  const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+  if (mode === "push") {
+    window.history.pushState(window.history.state, "", nextUrl);
+  } else {
+    window.history.replaceState(window.history.state, "", nextUrl);
+  }
 }
 
 export default function Dashboard() {
@@ -135,14 +140,14 @@ export default function Dashboard() {
     } else {
       params.delete(DOCUMENT_TYPE_QUERY_PARAM);
     }
-    const nextQuery = params.toString();
     setDocumentTypeFilter(value);
     setShareStatus("idle");
-    replaceRegistryUrl(new URLSearchParams(nextQuery));
+    updateRegistryUrl(params, "push");
   };
 
   const updateSearchTerm = (value: string) => {
     const params = new URLSearchParams(window.location.search);
+    const hadSearchTerm = Boolean(params.get(SEARCH_QUERY_PARAM)?.trim());
     if (value.trim()) {
       params.set(SEARCH_QUERY_PARAM, value);
     } else {
@@ -150,7 +155,8 @@ export default function Dashboard() {
     }
     setSearchTerm(value);
     setShareStatus("idle");
-    replaceRegistryUrl(params);
+    const hasSearchTerm = Boolean(value.trim());
+    updateRegistryUrl(params, hadSearchTerm === hasSearchTerm ? "replace" : "push");
   };
 
   const copyFilteredViewLink = async () => {
