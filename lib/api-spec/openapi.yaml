@@ -26,6 +26,91 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /registry-views:
+    get:
+      operationId: listRegistryViews
+      tags: [contracts]
+      summary: List saved registry views
+      responses:
+        "200":
+          description: Saved registry views
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SavedRegistryView"
+    post:
+      operationId: createRegistryView
+      tags: [contracts]
+      summary: Save a registry view
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistryViewSaveRequest"
+      responses:
+        "201":
+          description: Saved registry view
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedRegistryView"
+        "400":
+          description: Invalid registry view
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /registry-views/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    put:
+      operationId: updateRegistryView
+      tags: [contracts]
+      summary: Rename a saved registry view
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistryViewSaveRequest"
+      responses:
+        "200":
+          description: Updated registry view
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedRegistryView"
+        "400":
+          description: Invalid registry view
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Registry view not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteRegistryView
+      tags: [contracts]
+      summary: Delete a saved registry view
+      responses:
+        "204":
+          description: Registry view deleted
+        "404":
+          description: Registry view not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /contracts/extract:
     post:
       operationId: extractContract
@@ -202,6 +287,29 @@ components:
           type: string
       required:
         - error
+    RegistryViewSaveRequest:
+      type: object
+      required: [name, search, documentType]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        search:
+          type: string
+          maxLength: 200
+        documentType:
+          type: ["string", "null"]
+          enum: [master_agreement, order_form, sow, amendment, renewal_letter, termination_notice, quote_or_proposal, unknown, null]
+    SavedRegistryView:
+      allOf:
+        - $ref: "#/components/schemas/RegistryViewSaveRequest"
+        - type: object
+          required: [id, createdAt, updatedAt]
+          properties:
+            id: { type: string }
+            createdAt: { type: string, format: date-time }
+            updatedAt: { type: string, format: date-time }
     ContractExtractionUpload:
       type: object
       required:

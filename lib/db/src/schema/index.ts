@@ -11,4 +11,14 @@ export const contractsTable = pgTable("contracts", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
+export const registryViewsTable = pgTable("registry_views", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  search: text("search").notNull().default(""),
+  documentType: text("document_type"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
 export type ContractRecord = typeof contractsTable.$inferSelect;
+export type RegistryViewRecord = typeof registryViewsTable.$inferSelect;

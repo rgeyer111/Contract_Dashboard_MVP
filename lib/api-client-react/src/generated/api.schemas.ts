@@ -13,6 +13,41 @@ export interface ErrorResponse {
   error: string;
 }
 
+/**
+ * @nullable
+ */
+export type RegistryViewSaveRequestDocumentType = typeof RegistryViewSaveRequestDocumentType[keyof typeof RegistryViewSaveRequestDocumentType] | null;
+
+
+export const RegistryViewSaveRequestDocumentType = {
+  master_agreement: 'master_agreement',
+  order_form: 'order_form',
+  sow: 'sow',
+  amendment: 'amendment',
+  renewal_letter: 'renewal_letter',
+  termination_notice: 'termination_notice',
+  quote_or_proposal: 'quote_or_proposal',
+  unknown: 'unknown',
+} as const;
+
+export interface RegistryViewSaveRequest {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  name: string;
+  /** @maxLength 200 */
+  search: string;
+  /** @nullable */
+  documentType: RegistryViewSaveRequestDocumentType;
+}
+
+export type SavedRegistryView = RegistryViewSaveRequest & {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export interface ContractExtractionUpload {
   /**
      * One or more PDF contracts up to 10 MB each.

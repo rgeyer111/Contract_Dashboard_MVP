@@ -18,6 +18,105 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * @summary List saved registry views
+ */
+export const listRegistryViewsResponseOneNameMax = 100;
+
+export const listRegistryViewsResponseOneSearchMax = 200;
+
+
+
+export const ListRegistryViewsResponseItem = zod.object({
+  "name": zod.string().min(1).max(listRegistryViewsResponseOneNameMax),
+  "search": zod.string().max(listRegistryViewsResponseOneSearchMax),
+  "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+export const ListRegistryViewsResponse = zod.array(ListRegistryViewsResponseItem)
+
+
+/**
+ * @summary Save a registry view
+ */
+export const createRegistryViewBodyNameMax = 100;
+
+export const createRegistryViewBodySearchMax = 200;
+
+
+
+export const CreateRegistryViewBody = zod.object({
+  "name": zod.string().min(1).max(createRegistryViewBodyNameMax),
+  "search": zod.string().max(createRegistryViewBodySearchMax),
+  "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})
+
+export const createRegistryViewResponseOneNameMax = 100;
+
+export const createRegistryViewResponseOneSearchMax = 200;
+
+
+
+export const CreateRegistryViewResponse = zod.object({
+  "name": zod.string().min(1).max(createRegistryViewResponseOneNameMax),
+  "search": zod.string().max(createRegistryViewResponseOneSearchMax),
+  "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Rename a saved registry view
+ */
+export const UpdateRegistryViewParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const updateRegistryViewBodyNameMax = 100;
+
+export const updateRegistryViewBodySearchMax = 200;
+
+
+
+export const UpdateRegistryViewBody = zod.object({
+  "name": zod.string().min(1).max(updateRegistryViewBodyNameMax),
+  "search": zod.string().max(updateRegistryViewBodySearchMax),
+  "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})
+
+export const updateRegistryViewResponseOneNameMax = 100;
+
+export const updateRegistryViewResponseOneSearchMax = 200;
+
+
+
+export const UpdateRegistryViewResponse = zod.object({
+  "name": zod.string().min(1).max(updateRegistryViewResponseOneNameMax),
+  "search": zod.string().max(updateRegistryViewResponseOneSearchMax),
+  "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Delete a saved registry view
+ */
+export const DeleteRegistryViewParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteRegistryViewResponse = zod.void()
+
+
+/**
  * @summary Extract a contract review draft from a PDF
  */
 export const extractContractBodyFilesMax = 20;

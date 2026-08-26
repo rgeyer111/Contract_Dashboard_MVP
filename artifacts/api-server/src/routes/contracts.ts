@@ -1,12 +1,14 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import multer from "multer";
 import { desc, eq } from "drizzle-orm";
-import { db, contractsTable } from "@workspace/db";
+import { db, contractsTable, registryViewsTable } from "@workspace/db";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
 import {
   CreateContractBody,
   UpdateContractBody,
+  CreateRegistryViewBody,
+  UpdateRegistryViewBody,
 } from "@workspace/api-zod";
 import {
   extractContractFromText,
@@ -240,6 +242,17 @@ function responseFor(record: typeof contractsTable.$inferSelect) {
   };
 }
 
+function registryViewResponse(record: typeof registryViewsTable.$inferSelect) {
+  return {
+    id: record.id,
+    name: record.name,
+    search: record.search,
+    documentType: record.documentType,
+    createdAt: record.createdAt.toISOString(),
+    updatedAt: record.updatedAt.toISOString(),
+  };
+}
+
 function uploadedHash(buffer: Buffer) {
   return createHash("sha256").update(buffer).digest("hex");
 }
@@ -257,6 +270,70 @@ function contractDocumentType(contract: Record<string, any>) {
   const value = contract.fields?.documentType?.value;
   return typeof value === "string" ? value : null;
 }
+
+router.get("/registry-views", async (_req: Request, res: Response): Promise<void> => {
+  const records = await db.select().from(registryViewsTable).orderBy(desc(registryViewsTable.updatedAt));
+  res.json(records.map(registryViewResponse));
+});
+
+router.post("/registry-views", async (req: Request, res: Response): Promise<void> => {
+  const parsed = CreateRegistryViewBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "A view name and valid registry filters are required." });
+    return;
+  }
+  const name = parsed.data.name.trim();
+  if (!name) {
+    res.status(400).json({ error: "A view name is required." });
+    return;
+  }
+  const [record] = await db.insert(registryViewsTable).values({
+    name,
+    search: parsed.data.search,
+    documentType: parsed.data.documentType ?? null,
+  }).returning();
+  res.status(201).json(registryViewResponse(record));
+});
+
+router.put("/registry-views/:id", async (req: Request, res: Response): Promise<void> => {
+  const parsed = UpdateRegistryViewBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "A view name and valid registry filters are required." });
+    return;
+  }
+  const name = parsed.data.name.trim();
+  if (!name) {
+    res.status(400).json({ error: "A view name is required." });
+    return;
+  }
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [record] = await db.update(registryViewsTable)
+    .set({
+      name,
+      search: parsed.data.search,
+      documentType: parsed.data.documentType ?? null,
+      updatedAt: new Date(),
+    })
+    .where(eq(registryViewsTable.id, id))
+    .returning();
+  if (!record) {
+    res.status(404).json({ error: "Registry view not found." });
+    return;
+  }
+  res.json(registryViewResponse(record));
+});
+
+router.delete("/registry-views/:id", async (req: Request, res: Response): Promise<void> => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [record] = await db.delete(registryViewsTable)
+    .where(eq(registryViewsTable.id, id))
+    .returning({ id: registryViewsTable.id });
+  if (!record) {
+    res.status(404).json({ error: "Registry view not found." });
+    return;
+  }
+  res.status(204).send();
+});
 
 router.get("/contracts", async (_req: Request, res: Response): Promise<void> => {
   const records = await db.select().from(contractsTable).orderBy(desc(contractsTable.updatedAt));

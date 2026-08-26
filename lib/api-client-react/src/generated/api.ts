@@ -26,7 +26,9 @@ import type {
   DismissAlertRequest,
   ErrorResponse,
   HealthStatus,
-  SavedContract
+  RegistryViewSaveRequest,
+  SavedContract,
+  SavedRegistryView
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -133,6 +135,297 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
 
 
+
+export const getListRegistryViewsUrl = () => {
+
+
+
+
+  return `/api/registry-views`
+}
+
+/**
+ * @summary List saved registry views
+ */
+export const listRegistryViews = async ( options?: Parameters<typeof customFetch>[1]): Promise<SavedRegistryView[]> => {
+
+  return customFetch<SavedRegistryView[]>(getListRegistryViewsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListRegistryViewsQueryKey = () => {
+    return [
+    `/api/registry-views`
+    ] as const;
+    }
+
+
+export const getListRegistryViewsQueryOptions = <TData = Awaited<ReturnType<typeof listRegistryViews>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listRegistryViews>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListRegistryViewsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listRegistryViews>>> = ({ signal }) => listRegistryViews({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listRegistryViews>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListRegistryViewsQueryResult = NonNullable<Awaited<ReturnType<typeof listRegistryViews>>>
+export type ListRegistryViewsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List saved registry views
+ */
+
+export function useListRegistryViews<TData = Awaited<ReturnType<typeof listRegistryViews>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listRegistryViews>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListRegistryViewsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateRegistryViewUrl = () => {
+
+
+
+
+  return `/api/registry-views`
+}
+
+/**
+ * @summary Save a registry view
+ */
+export const createRegistryView = async (registryViewSaveRequest: RegistryViewSaveRequest, options?: Parameters<typeof customFetch>[1]): Promise<SavedRegistryView> => {
+
+  return customFetch<SavedRegistryView>(getCreateRegistryViewUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(registryViewSaveRequest)
+  }
+);}
+
+
+
+
+
+export const getCreateRegistryViewMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRegistryView>>, TError,{data: BodyType<RegistryViewSaveRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createRegistryView>>, TError,{data: BodyType<RegistryViewSaveRequest>}, TContext> => {
+
+const mutationKey = ['createRegistryView'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createRegistryView>>, {data: BodyType<RegistryViewSaveRequest>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createRegistryView(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateRegistryViewMutationResult = NonNullable<Awaited<ReturnType<typeof createRegistryView>>>
+    export type CreateRegistryViewMutationBody = BodyType<RegistryViewSaveRequest>
+    export type CreateRegistryViewMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Save a registry view
+ */
+export const useCreateRegistryView = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRegistryView>>, TError,{data: BodyType<RegistryViewSaveRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createRegistryView>>,
+        TError,
+        {data: BodyType<RegistryViewSaveRequest>},
+        TContext
+      > => {
+      return useMutation(getCreateRegistryViewMutationOptions(options));
+    }
+
+export const getUpdateRegistryViewUrl = (id: string,) => {
+
+
+
+
+  return `/api/registry-views/${id}`
+}
+
+/**
+ * @summary Rename a saved registry view
+ */
+export const updateRegistryView = async (id: string,
+    registryViewSaveRequest: RegistryViewSaveRequest, options?: Parameters<typeof customFetch>[1]): Promise<SavedRegistryView> => {
+
+  return customFetch<SavedRegistryView>(getUpdateRegistryViewUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(registryViewSaveRequest)
+  }
+);}
+
+
+
+
+
+export const getUpdateRegistryViewMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRegistryView>>, TError,{id: string;data: BodyType<RegistryViewSaveRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateRegistryView>>, TError,{id: string;data: BodyType<RegistryViewSaveRequest>}, TContext> => {
+
+const mutationKey = ['updateRegistryView'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRegistryView>>, {id: string;data: BodyType<RegistryViewSaveRequest>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateRegistryView(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateRegistryViewMutationResult = NonNullable<Awaited<ReturnType<typeof updateRegistryView>>>
+    export type UpdateRegistryViewMutationBody = BodyType<RegistryViewSaveRequest>
+    export type UpdateRegistryViewMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Rename a saved registry view
+ */
+export const useUpdateRegistryView = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRegistryView>>, TError,{id: string;data: BodyType<RegistryViewSaveRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateRegistryView>>,
+        TError,
+        {id: string;data: BodyType<RegistryViewSaveRequest>},
+        TContext
+      > => {
+      return useMutation(getUpdateRegistryViewMutationOptions(options));
+    }
+
+export const getDeleteRegistryViewUrl = (id: string,) => {
+
+
+
+
+  return `/api/registry-views/${id}`
+}
+
+/**
+ * @summary Delete a saved registry view
+ */
+export const deleteRegistryView = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getDeleteRegistryViewUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeleteRegistryViewMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRegistryView>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteRegistryView>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteRegistryView'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteRegistryView>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteRegistryView(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteRegistryViewMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRegistryView>>>
+
+    export type DeleteRegistryViewMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Delete a saved registry view
+ */
+export const useDeleteRegistryView = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRegistryView>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteRegistryView>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeleteRegistryViewMutationOptions(options));
+    }
 
 export const getExtractContractUrl = () => {
 

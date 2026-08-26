@@ -19,9 +19,26 @@ import {
   Ban,
   Link2,
   Check,
+  Bookmark,
+  Pencil,
+  Trash2,
+  Save,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
+import {
+  getListContractsQueryKey,
+  getListRegistryViewsQueryKey,
+  useCreateRegistryView,
+  useDeleteRegistryView,
+  useDismissContractAlert,
+  useExtractContract,
+  useListContracts,
+  useListRegistryViews,
+  useUpdateRegistryView,
+  type ContractExtractionResult,
+  type RegistryViewSaveRequestDocumentType,
+  type SavedRegistryView,
+} from "@workspace/api-client-react";
 import { documentTypeOptions, getDocumentTypeCounts, getSavedContractDocumentType } from "@/lib/contracts";
 
 function formatContractType(value: string | null) {
@@ -90,10 +107,18 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState(() => getSearchTermFromLocation(window.location.search));
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
   const [documentTypeFilter, setDocumentTypeFilter] = useState(getDocumentTypeFromUrl);
+  const [saveViewOpen, setSaveViewOpen] = useState(false);
+  const [savedViewName, setSavedViewName] = useState("");
+  const [editingViewId, setEditingViewId] = useState<string | null>(null);
+  const [editingViewName, setEditingViewName] = useState("");
+  const [deletingViewId, setDeletingViewId] = useState<string | null>(null);
+  const [savedViewError, setSavedViewError] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
   const documentTypeCounts = getDocumentTypeCounts(contracts);
+  const registryViewsQuery = useListRegistryViews();
+  const savedViews = registryViewsQuery.data ?? [];
 
   useEffect(() => {
     const syncFiltersFromUrl = () => {
@@ -132,6 +157,38 @@ export default function Dashboard() {
     },
   });
   const extraction = useExtractContract();
+  const createRegistryView = useCreateRegistryView({
+    mutation: {
+      onSuccess: async () => {
+        setSaveViewOpen(false);
+        setSavedViewName("");
+        setSavedViewError(null);
+        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
+      },
+      onError: () => setSavedViewError("This view could not be saved. Check the name and try again."),
+    },
+  });
+  const updateRegistryView = useUpdateRegistryView({
+    mutation: {
+      onSuccess: async () => {
+        setEditingViewId(null);
+        setEditingViewName("");
+        setSavedViewError(null);
+        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
+      },
+      onError: () => setSavedViewError("This view could not be renamed. Check the name and try again."),
+    },
+  });
+  const deleteRegistryView = useDeleteRegistryView({
+    mutation: {
+      onSuccess: async () => {
+        setDeletingViewId(null);
+        setSavedViewError(null);
+        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
+      },
+      onError: () => setSavedViewError("This view could not be deleted. Please try again."),
+    },
+  });
 
   const updateDocumentTypeFilter = (value: string) => {
     const params = new URLSearchParams(window.location.search);
@@ -167,6 +224,74 @@ export default function Dashboard() {
     } catch {
       setShareStatus("error");
     }
+  };
+
+  const openSavedView = (view: SavedRegistryView) => {
+    const params = new URLSearchParams(window.location.search);
+    if (view.search) {
+      params.set(SEARCH_QUERY_PARAM, view.search);
+    } else {
+      params.delete(SEARCH_QUERY_PARAM);
+    }
+    if (view.documentType) {
+      params.set(DOCUMENT_TYPE_QUERY_PARAM, view.documentType);
+    } else {
+      params.delete(DOCUMENT_TYPE_QUERY_PARAM);
+    }
+    setSearchTerm(view.search);
+    setDocumentTypeFilter(view.documentType ?? "");
+    setShareStatus("idle");
+    updateRegistryUrl(params, "push");
+  };
+
+  const saveCurrentView = () => {
+    const name = savedViewName.trim();
+    if (!name) {
+      setSavedViewError("Give this view a clear name before saving.");
+      return;
+    }
+    setSavedViewError(null);
+    createRegistryView.mutate({
+      data: {
+        name,
+        search: searchTerm,
+        documentType: (documentTypeFilter || null) as RegistryViewSaveRequestDocumentType,
+      },
+    });
+  };
+
+  const startRename = (view: SavedRegistryView) => {
+    setSavedViewError(null);
+    setDeletingViewId(null);
+    setEditingViewId(view.id);
+    setEditingViewName(view.name);
+  };
+
+  const renameView = (view: SavedRegistryView) => {
+    const name = editingViewName.trim();
+    if (!name) {
+      setSavedViewError("A saved view needs a name.");
+      return;
+    }
+    setSavedViewError(null);
+    updateRegistryView.mutate({
+      id: view.id,
+      data: {
+        name,
+        search: view.search,
+        documentType: view.documentType,
+      },
+    });
+  };
+
+  const confirmDelete = (view: SavedRegistryView) => {
+    setSavedViewError(null);
+    setEditingViewId(null);
+    setDeletingViewId(view.id);
+  };
+
+  const deleteView = (view: SavedRegistryView) => {
+    deleteRegistryView.mutate({ id: view.id });
   };
 
   const chooseFiles = (files: File[]) => {
@@ -517,6 +642,162 @@ export default function Dashboard() {
             </div>
           </section>}
           
+          {!isActionItemsPage && <section aria-labelledby="saved-views-heading" className="space-y-4 pt-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-primary">
+                  <Bookmark className="h-4 w-4" />
+                  <h2 id="saved-views-heading" className="text-xl font-bold tracking-tight text-foreground">Saved views</h2>
+                </div>
+                <p className="mt-1 text-sm font-medium text-muted-foreground">Save common registry queues and reopen them with one click.</p>
+              </div>
+              {!saveViewOpen && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSavedViewError(null);
+                    setSaveViewOpen(true);
+                    setSavedViewName("");
+                  }}
+                  className="gap-2 font-semibold"
+                >
+                  <Save className="h-3.5 w-3.5" />
+                  Save current view
+                </Button>
+              )}
+            </div>
+
+            {saveViewOpen && (
+              <form
+                className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm sm:flex-row sm:items-end"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  saveCurrentView();
+                }}
+              >
+                <div className="flex-1">
+                  <label htmlFor="saved-view-name" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">View name</label>
+                  <input
+                    id="saved-view-name"
+                    data-testid="saved-view-name"
+                    value={savedViewName}
+                    onChange={(event) => setSavedViewName(event.target.value)}
+                    placeholder="e.g. Renewal review queue"
+                    maxLength={100}
+                    autoFocus
+                    className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
+                    Saves {searchTerm.trim() ? `“${searchTerm.trim()}”` : "all searches"}{documentTypeFilter ? ` · ${formatDocumentType(documentTypeFilter)}` : " · all document types"}.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button type="submit" size="sm" disabled={createRegistryView.isPending} className="gap-2 font-semibold">
+                    <Save className="h-3.5 w-3.5" />
+                    {createRegistryView.isPending ? "Saving…" : "Save view"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSaveViewOpen(false);
+                      setSavedViewName("");
+                      setSavedViewError(null);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            )}
+
+            {savedViewError && <p role="alert" className="rounded-md border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm font-semibold text-destructive">{savedViewError}</p>}
+
+            <div className="rounded-xl border bg-card shadow-sm">
+              {registryViewsQuery.isLoading ? (
+                <div className="flex items-center gap-2 p-5 text-sm font-medium text-muted-foreground">
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                  Loading saved views…
+                </div>
+              ) : registryViewsQuery.isError ? (
+                <div className="p-5 text-sm font-medium text-destructive">Saved views could not be loaded. Refresh and try again.</div>
+              ) : savedViews.length === 0 ? (
+                <div className="p-6 text-center text-sm font-medium text-muted-foreground">
+                  No saved views yet. Save the current search and document type filters to create a reusable queue.
+                </div>
+              ) : (
+                <div className="divide-y">
+                  {savedViews.map((view) => {
+                    const isActive = view.search === searchTerm && (view.documentType ?? "") === documentTypeFilter;
+                    return (
+                      <div key={view.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                        {editingViewId === view.id ? (
+                          <form
+                            className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center"
+                            onSubmit={(event) => {
+                              event.preventDefault();
+                              renameView(view);
+                            }}
+                          >
+                            <label htmlFor={`rename-view-${view.id}`} className="sr-only">Rename {view.name}</label>
+                            <input
+                              id={`rename-view-${view.id}`}
+                              value={editingViewName}
+                              onChange={(event) => setEditingViewName(event.target.value)}
+                              maxLength={100}
+                              autoFocus
+                              className="h-9 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20"
+                            />
+                            <div className="flex items-center gap-2">
+                              <Button type="submit" size="sm" disabled={updateRegistryView.isPending}>Save</Button>
+                              <Button type="button" size="sm" variant="ghost" onClick={() => { setEditingViewId(null); setEditingViewName(""); setSavedViewError(null); }}>Cancel</Button>
+                            </div>
+                          </form>
+                        ) : deletingViewId === view.id ? (
+                          <div className="flex min-w-0 flex-1 flex-col gap-1">
+                            <p className="text-sm font-bold">Delete “{view.name}”?</p>
+                            <p className="text-xs font-medium text-muted-foreground">This only removes the saved shortcut; your contracts are not affected.</p>
+                          </div>
+                        ) : (
+                          <button type="button" onClick={() => openSavedView(view)} className="min-w-0 flex-1 text-left" aria-label={`Open saved view ${view.name}`}>
+                            <span className="flex flex-wrap items-center gap-2">
+                              <span className="truncate text-sm font-extrabold text-foreground hover:text-primary">{view.name}</span>
+                              {isActive && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary">Active</span>}
+                            </span>
+                            <span className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
+                              <span>{view.search ? `Search: “${view.search}”` : "All searches"}</span>
+                              <span>{view.documentType ? formatDocumentType(view.documentType) : "All document types"}</span>
+                            </span>
+                          </button>
+                        )}
+                        {deletingViewId === view.id ? (
+                          <div className="flex shrink-0 items-center gap-2">
+                            <Button type="button" size="sm" variant="destructive" disabled={deleteRegistryView.isPending} onClick={() => deleteView(view)}>
+                              {deleteRegistryView.isPending ? "Deleting…" : "Delete"}
+                            </Button>
+                            <Button type="button" size="sm" variant="ghost" onClick={() => { setDeletingViewId(null); setSavedViewError(null); }}>Cancel</Button>
+                          </div>
+                        ) : editingViewId !== view.id ? (
+                          <div className="flex shrink-0 items-center gap-1">
+                            <Button type="button" variant="ghost" size="icon" aria-label={`Rename saved view ${view.name}`} title="Rename saved view" onClick={() => startRename(view)}>
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button type="button" variant="ghost" size="icon" aria-label={`Delete saved view ${view.name}`} title="Delete saved view" onClick={() => confirmDelete(view)}>
+                              <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                            </Button>
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </section>}
+
           {/* Recent Contracts Section */}
           {!isActionItemsPage && <div className="space-y-4 pt-4">
              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
