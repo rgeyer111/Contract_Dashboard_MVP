@@ -186,7 +186,9 @@ export const extractContractBodyFilesMax = 20;
 
 
 export const ExtractContractBody = zod.object({
-  "files": zod.array(zod.instanceof(File)).min(1).max(extractContractBodyFilesMax).describe('One or more PDF contracts up to 10 MB each.')
+  "files": zod.array(zod.instanceof(File)).min(1).max(extractContractBodyFilesMax).describe('One or more PDF contracts up to 10 MB each.'),
+  "ingestRunId": zod.string().optional().describe('Client-generated durable run identifier used to resume an unfinished batch.'),
+  "ingestItemId": zod.string().optional().describe('Client-generated durable item identifier within the ingest run.')
 })
 
 export const extractContractResponseExtractionContractFieldsDocumentTypeOnePageMultipleOf = 1;
@@ -639,8 +641,1433 @@ export const ExtractContractResponse = zod.object({
   "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
   "ocrPageCount": zod.number().min(1).nullable().describe('Complete whole-number page count detected in the uploaded PDF; null when embedded PDF text was used.'),
   "ocrPagesProcessed": zod.number().min(extractContractResponseExtractionOcrPagesProcessedMin).nullable().describe('Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.')
+}),
+  "ingestRunId": zod.string().optional().describe('Durable ingest run containing this extraction, when the request belongs to a resumable run.'),
+  "ingestItemId": zod.string().optional().describe('Durable ingest item containing this extraction, when the request belongs to a resumable run.')
 })
+
+
+/**
+ * @summary Get the latest unfinished contract ingest run
+ */
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMin = 0;
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMax = 365;
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedDaysRemainingMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedReasonMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneDismissedReasonMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractSourceSizeMin = 0;
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractSourceSizeMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionOcrPagesProcessedMin = 0;
+
+
+
+export const GetCurrentIngestRunResponse = zod.union([zod.object({
+  "id": zod.string(),
+  "items": zod.array(zod.object({
+  "id": zod.string(),
+  "filename": zod.string(),
+  "state": zod.enum(['processing', 'ready', 'duplicate', 'failed']),
+  "message": zod.string().nullable(),
+  "extraction": zod.union([zod.object({
+  "filename": zod.string(),
+  "extraction": zod.object({
+  "contract": zod.object({
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
+  "contractValue": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
+}),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentOwnerEmailRegExp),
+  "negotiationBufferDays": zod.number().min(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMin).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMax).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedReasonMax).nullable()
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractSourceSizeMin).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractSourceHashRegExp)
+}).optional()
+}),
+  "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
+  "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
+  "ocrPageCount": zod.number().min(1).nullable().describe('Complete whole-number page count detected in the uploaded PDF; null when embedded PDF text was used.'),
+  "ocrPagesProcessed": zod.number().min(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionOcrPagesProcessedMin).nullable().describe('Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.')
+}),
+  "ingestRunId": zod.string().optional().describe('Durable ingest run containing this extraction, when the request belongs to a resumable run.'),
+  "ingestItemId": zod.string().optional().describe('Durable ingest item containing this extraction, when the request belongs to a resumable run.')
+}),zod.null()])
+}))
+}),zod.null()])
+
+
+/**
+ * @summary Persist the PDFs in a new resumable ingest run
+ */
+export const registerIngestRunBodyFilesMax = 20;
+
+export const registerIngestRunBodyItemIdsMax = 20;
+
+
+
+export const RegisterIngestRunBody = zod.object({
+  "files": zod.array(zod.instanceof(File)).min(1).max(registerIngestRunBodyFilesMax),
+  "runId": zod.string(),
+  "itemIds": zod.array(zod.string()).min(1).max(registerIngestRunBodyItemIdsMax)
 })
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMin = 0;
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMax = 365;
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedDaysRemainingMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedReasonMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneDismissedReasonMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractSourceSizeMin = 0;
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractSourceSizeMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionOcrPagesProcessedMin = 0;
+
+
+
+export const RegisterIngestRunResponse = zod.object({
+  "id": zod.string(),
+  "items": zod.array(zod.object({
+  "id": zod.string(),
+  "filename": zod.string(),
+  "state": zod.enum(['processing', 'ready', 'duplicate', 'failed']),
+  "message": zod.string().nullable(),
+  "extraction": zod.union([zod.object({
+  "filename": zod.string(),
+  "extraction": zod.object({
+  "contract": zod.object({
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
+  "contractValue": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
+}),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentOwnerEmailRegExp),
+  "negotiationBufferDays": zod.number().min(registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMin).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMax).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedReasonMax).nullable()
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(registerIngestRunResponseItemsItemExtractionOneExtractionContractSourceSizeMin).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractSourceHashRegExp)
+}).optional()
+}),
+  "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
+  "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
+  "ocrPageCount": zod.number().min(1).nullable().describe('Complete whole-number page count detected in the uploaded PDF; null when embedded PDF text was used.'),
+  "ocrPagesProcessed": zod.number().min(registerIngestRunResponseItemsItemExtractionOneExtractionOcrPagesProcessedMin).nullable().describe('Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.')
+}),
+  "ingestRunId": zod.string().optional().describe('Durable ingest run containing this extraction, when the request belongs to a resumable run.'),
+  "ingestItemId": zod.string().optional().describe('Durable ingest item containing this extraction, when the request belongs to a resumable run.')
+}),zod.null()])
+}))
+})
+
+
+/**
+ * @summary Retry a failed contract ingest item
+ */
+export const RetryIngestItemParams = zod.object({
+  "runId": zod.coerce.string(),
+  "itemId": zod.coerce.string()
+})
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const retryIngestItemResponseExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const retryIngestItemResponseExtractionContractAssignmentNegotiationBufferDaysMin = 0;
+export const retryIngestItemResponseExtractionContractAssignmentNegotiationBufferDaysMax = 365;
+export const retryIngestItemResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractComputedDaysRemainingMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractComputedReasonMax = 300;
+
+export const retryIngestItemResponseExtractionContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const retryIngestItemResponseExtractionContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const retryIngestItemResponseExtractionContractAlertOneDismissedReasonMax = 300;
+
+export const retryIngestItemResponseExtractionContractSourceSizeMin = 0;
+export const retryIngestItemResponseExtractionContractSourceSizeMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const retryIngestItemResponseExtractionOcrPagesProcessedMin = 0;
+
+
+
+export const RetryIngestItemResponse = zod.object({
+  "filename": zod.string(),
+  "extraction": zod.object({
+  "contract": zod.object({
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTitleOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractNumberOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTypeOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
+  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
+  "contractValue": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractValueOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(retryIngestItemResponseExtractionContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(retryIngestItemResponseExtractionContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
+}),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(retryIngestItemResponseExtractionContractAssignmentOwnerEmailRegExp),
+  "negotiationBufferDays": zod.number().min(retryIngestItemResponseExtractionContractAssignmentNegotiationBufferDaysMin).max(retryIngestItemResponseExtractionContractAssignmentNegotiationBufferDaysMax).multipleOf(retryIngestItemResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(retryIngestItemResponseExtractionContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(retryIngestItemResponseExtractionContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(retryIngestItemResponseExtractionContractComputedActionDateRegExp).nullable(),
+  "daysRemaining": zod.number().multipleOf(retryIngestItemResponseExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(retryIngestItemResponseExtractionContractComputedReasonMax).nullable()
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(retryIngestItemResponseExtractionContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(retryIngestItemResponseExtractionContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(retryIngestItemResponseExtractionContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(retryIngestItemResponseExtractionContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()]),
+  "source": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "modifiedAt": zod.string().nullable(),
+  "size": zod.number().min(retryIngestItemResponseExtractionContractSourceSizeMin).multipleOf(retryIngestItemResponseExtractionContractSourceSizeMultipleOf),
+  "hash": zod.string().regex(retryIngestItemResponseExtractionContractSourceHashRegExp)
+}).optional()
+}),
+  "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
+  "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
+  "ocrPageCount": zod.number().min(1).nullable().describe('Complete whole-number page count detected in the uploaded PDF; null when embedded PDF text was used.'),
+  "ocrPagesProcessed": zod.number().min(retryIngestItemResponseExtractionOcrPagesProcessedMin).nullable().describe('Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.')
+}),
+  "ingestRunId": zod.string().optional().describe('Durable ingest run containing this extraction, when the request belongs to a resumable run.'),
+  "ingestItemId": zod.string().optional().describe('Durable ingest item containing this extraction, when the request belongs to a resumable run.')
+})
+
+
+/**
+ * @summary Mark a reviewed ingest item as handed off
+ */
+export const CompleteIngestItemParams = zod.object({
+  "runId": zod.coerce.string(),
+  "itemId": zod.coerce.string()
+})
+
+export const CompleteIngestItemResponse = zod.void()
 
 
 /**

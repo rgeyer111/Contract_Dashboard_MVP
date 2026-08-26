@@ -208,6 +208,118 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /contracts/ingest-runs/current:
+    get:
+      operationId: getCurrentIngestRun
+      tags: [contracts]
+      summary: Get the latest unfinished contract ingest run
+      responses:
+        "200":
+          description: Unfinished ingest run, or an empty response when none exists
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ContractIngestRun"
+                  - type: "null"
+  /contracts/ingest-runs:
+    post:
+      operationId: registerIngestRun
+      tags: [contracts]
+      summary: Persist the PDFs in a new resumable ingest run
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ContractIngestRegistration"
+      responses:
+        "201":
+          description: Registered ingest run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractIngestRun"
+        "400":
+          description: Invalid ingest run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/ingest-runs/{runId}/items/{itemId}/retry:
+    parameters:
+      - name: runId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: itemId
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      operationId: retryIngestItem
+      tags: [contracts]
+      summary: Retry a failed contract ingest item
+      responses:
+        "200":
+          description: Extracted contract review draft
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractExtractionResult"
+        "404":
+          description: Ingest item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Ingest item is not in a retryable failed state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Unreadable PDF or extracted text exceeds the safe review limit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: Extraction service failure
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/ingest-runs/{runId}/items/{itemId}/complete:
+    parameters:
+      - name: runId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: itemId
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      operationId: completeIngestItem
+      tags: [contracts]
+      summary: Mark a reviewed ingest item as handed off
+      responses:
+        "204":
+          description: Ingest item handed off
+        "404":
+          description: Ingest item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Ingest item is not ready for handoff
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /contracts:
     get:
       operationId: listContracts
@@ -401,6 +513,31 @@ components:
             type: string
             format: binary
           description: One or more PDF contracts up to 10 MB each.
+        ingestRunId:
+          type: string
+          description: Client-generated durable run identifier used to resume an unfinished batch.
+        ingestItemId:
+          type: string
+          description: Client-generated durable item identifier within the ingest run.
+    ContractIngestRegistration:
+      type: object
+      required: [files, runId, itemIds]
+      properties:
+        files:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: string
+            format: binary
+        runId:
+          type: string
+        itemIds:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: string
     ProvenanceMetadata:
       type: object
       required: [status, confidence, page, clause, quote, note]
@@ -726,6 +863,36 @@ components:
               type: ["number", "null"]
               minimum: 0
               description: Whole-number count of scanned PDF pages included in OCR; null when embedded PDF text was used. A successful OCR response always matches ocrPageCount.
+        ingestRunId:
+          type: string
+          description: Durable ingest run containing this extraction, when the request belongs to a resumable run.
+        ingestItemId:
+          type: string
+          description: Durable ingest item containing this extraction, when the request belongs to a resumable run.
+    ContractIngestItem:
+      type: object
+      required: [id, filename, state, message, extraction]
+      properties:
+        id: { type: string }
+        filename: { type: string }
+        state:
+          type: string
+          enum: [processing, ready, duplicate, failed]
+        message:
+          type: ["string", "null"]
+        extraction:
+          oneOf:
+            - $ref: "#/components/schemas/ContractExtractionResult"
+            - type: "null"
+    ContractIngestRun:
+      type: object
+      required: [id, items]
+      properties:
+        id: { type: string }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContractIngestItem"
     ContractSaveRequest:
       type: object
       required: [filename, contract]

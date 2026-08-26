@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import {
   useCreateContract,
+  useCompleteIngestItem,
   useGetContract,
   useUpdateContract,
   type ContractReviewRecord,
@@ -20,6 +21,8 @@ import {
   reviewerEditNote,
   type FieldKey,
 } from "@/lib/review";
+
+const pendingHandoffStorageKey = "contract-dashboard.pending-ingest-handoff";
 
 const requiredKeys: FieldKey[] = [
   "vendorLegalName",
@@ -121,8 +124,9 @@ export function useContractReview() {
   const isComplete = missingRequired.length === 0 && !ownerMissing;
   const progress = Math.round(((issueDefinitions.length + 1 - totalOpenIssues) / (issueDefinitions.length + 1)) * 100);
   const createContract = useCreateContract();
+  const completeIngestItem = useCompleteIngestItem();
   const updateContract = useUpdateContract();
-  const isSaving = createContract.isPending || updateContract.isPending;
+  const isSaving = createContract.isPending || updateContract.isPending || completeIngestItem.isPending;
 
   const handleConfirm = async () => {
     if (!isComplete) return;
@@ -131,7 +135,32 @@ export function useContractReview() {
       if (savedId) {
         await updateContract.mutateAsync({ id: savedId, data: { filename, contract: draft } });
       } else {
-        await createContract.mutateAsync({ data: { filename, contract: draft } });
+        let pendingHandoff: { runId?: string; itemId?: string } | null = null;
+        try {
+          pendingHandoff = JSON.parse(sessionStorage.getItem(pendingHandoffStorageKey) ?? "null");
+        } catch {
+          sessionStorage.removeItem(pendingHandoffStorageKey);
+        }
+        const matchesCurrentExtraction =
+          pendingHandoff?.runId === storedExtraction?.ingestRunId &&
+          pendingHandoff?.itemId === storedExtraction?.ingestItemId;
+        if (!matchesCurrentExtraction) {
+          sessionStorage.removeItem(pendingHandoffStorageKey);
+          await createContract.mutateAsync({ data: { filename, contract: draft } });
+          if (storedExtraction?.ingestRunId && storedExtraction.ingestItemId) {
+            sessionStorage.setItem(pendingHandoffStorageKey, JSON.stringify({
+              runId: storedExtraction.ingestRunId,
+              itemId: storedExtraction.ingestItemId,
+            }));
+          }
+        }
+      }
+      if (storedExtraction?.ingestRunId && storedExtraction.ingestItemId) {
+        await completeIngestItem.mutateAsync({
+          runId: storedExtraction.ingestRunId,
+          itemId: storedExtraction.ingestItemId,
+        });
+        sessionStorage.removeItem(pendingHandoffStorageKey);
       }
       await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
       const queue = readExtractionQueue();

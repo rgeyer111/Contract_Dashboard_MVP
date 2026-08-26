@@ -31,5 +31,35 @@ export const registryViewsTable = pgTable(
   ],
 );
 
+export const contractIngestRunsTable = pgTable("contract_ingest_runs", {
+  id: uuid("id").primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const contractIngestItemsTable = pgTable("contract_ingest_items", {
+  id: text("id").primaryKey(),
+  runId: uuid("run_id").notNull().references(() => contractIngestRunsTable.id, { onDelete: "cascade" }),
+  filename: text("filename").notNull(),
+  size: integer("size").notNull(),
+  hash: text("hash").notNull(),
+  pdf: text("pdf").notNull(),
+  state: text("state").notNull().default("processing"),
+  message: text("message"),
+  extraction: jsonb("extraction"),
+  handedOffAt: timestamp("handed_off_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const contractIngestCompletionsTable = pgTable("contract_ingest_completions", {
+  itemId: text("item_id").primaryKey(),
+  runId: uuid("run_id").notNull(),
+  completedAt: timestamp("completed_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
 export type ContractRecord = typeof contractsTable.$inferSelect;
 export type RegistryViewRecord = typeof registryViewsTable.$inferSelect;
+export type ContractIngestRunRecord = typeof contractIngestRunsTable.$inferSelect;
+export type ContractIngestItemRecord = typeof contractIngestItemsTable.$inferSelect;
+export type ContractIngestCompletionRecord = typeof contractIngestCompletionsTable.$inferSelect;

@@ -10,4 +10,8 @@ import type { ContractExtractionResultExtraction } from './contractExtractionRes
 export interface ContractExtractionResult {
   filename: string;
   extraction: ContractExtractionResultExtraction;
+  /** Durable ingest run containing this extraction, when the request belongs to a resumable run. */
+  ingestRunId?: string;
+  /** Durable ingest item containing this extraction, when the request belongs to a resumable run. */
+  ingestItemId?: string;
 }

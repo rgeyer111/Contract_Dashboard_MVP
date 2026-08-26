@@ -1,7 +1,14 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import multer from "multer";
-import { asc, desc, eq, isNotNull, sql } from "drizzle-orm";
-import { db, contractsTable, registryViewsTable } from "@workspace/db";
+import { and, asc, desc, eq, isNotNull, ne, sql } from "drizzle-orm";
+import {
+  db,
+  contractIngestCompletionsTable,
+  contractIngestItemsTable,
+  contractIngestRunsTable,
+  contractsTable,
+  registryViewsTable,
+} from "@workspace/db";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
 import {
@@ -33,6 +40,10 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: maximumUploadBytes, files: 1 },
 });
+const batchUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: maximumUploadBytes, files: 20 },
+});
 
 const router: IRouter = Router();
 
@@ -52,6 +63,196 @@ async function hasExistingSourceHash(hash: string) {
 function contractDocumentType(contract: Record<string, any>) {
   const value = contract.fields?.documentType?.value;
   return typeof value === "string" ? value : null;
+}
+
+class ExtractionError extends Error {
+  constructor(
+    message: string,
+    readonly status: 422 | 502,
+  ) {
+    super(message);
+  }
+}
+
+async function extractUploadedFile(file: Express.Multer.File, req: Request): Promise<any> {
+  const uploadSource = new UploadSource([{
+    originalname: file.originalname,
+    size: file.size,
+    buffer: file.buffer,
+    id: uploadedHash(file.buffer),
+    hash: uploadedHash(file.buffer),
+  }]);
+  const sourceFiles = await uploadSource.list();
+  if (await hasExistingSourceHash(sourceFiles[0].hash!)) {
+    const error = new Error("This contract has already been uploaded. Duplicate skipped.");
+    (error as Error & { status?: number }).status = 409;
+    throw error;
+  }
+
+  let text: string;
+  let extractionSource: "text" | "ocr" = "text";
+  let ocrConfidence: "High" | "Medium" | "Low" | undefined;
+  let ocrPageCount: number | undefined;
+  let ocrPagesProcessed: number | undefined;
+  try {
+    text = await extractReadablePdfText(file.buffer);
+  } catch (error) {
+    req.log.warn({ err: error }, "Unable to read embedded PDF text; trying OCR");
+    text = "";
+  }
+
+  if (text.length < 50) {
+    try {
+      const ocr = await extractScannedPdfText(file.buffer);
+      text = ocr.text;
+      extractionSource = "ocr";
+      ocrConfidence = ocr.confidence;
+      ocrPageCount = ocr.pageCount;
+      ocrPagesProcessed = ocr.pagesProcessed;
+      req.log.info(
+        { bytes: file.size, ocrConfidence, ocrPageCount, ocrPagesProcessed },
+        "Scanned contract transcribed with OCR",
+      );
+    } catch (error) {
+      req.log.warn({ err: error }, "Unable to OCR scanned PDF");
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        error.code === "OCR_INCOMPLETE"
+      ) {
+        throw new ExtractionError(
+          error instanceof Error
+            ? error.message
+            : "We could not fully transcribe this scanned PDF. Split it into smaller files and try again.",
+          422,
+        );
+      }
+      throw new ExtractionError(
+        "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
+        422,
+      );
+    }
+  }
+
+  try {
+    const result = await extractContractFromText(text, file.originalname, {
+      source: extractionSource,
+      ocrConfidence,
+      ...(extractionSource === "ocr" ? { ocrPageCount, ocrPagesProcessed } : {}),
+    });
+    if (result.extraction.contract) {
+      result.extraction.contract.source = {
+        ...sourceFiles[0],
+        hash: sourceFiles[0].hash!,
+      };
+    }
+    req.log.info({ bytes: file.size, hash: sourceFiles[0].hash }, "Contract extracted");
+    return result;
+  } catch (error) {
+    req.log.error({ err: error }, "Contract extraction failed");
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "CONTRACT_TEXT_TOO_LONG"
+    ) {
+      const pageDetails =
+        extractionSource === "ocr" && ocrPageCount !== undefined
+          ? ` OCR completed all ${ocrPagesProcessed ?? ocrPageCount} of ${ocrPageCount} pages before stopping.`
+          : "";
+      throw new ExtractionError(
+        `${error instanceof Error ? error.message : "This contract is too large to process."}${pageDetails}`,
+        422,
+      );
+    }
+    throw new ExtractionError(
+      "We could not extract this contract right now. Please try again.",
+      502,
+    );
+  }
+}
+
+function ingestHeaders(req: Request) {
+  const runId = req.header("x-ingest-run-id") || (typeof req.body?.ingestRunId === "string" ? req.body.ingestRunId : undefined);
+  const itemId = req.header("x-ingest-item-id") || (typeof req.body?.ingestItemId === "string" ? req.body.ingestItemId : undefined);
+  return runId && itemId ? { runId, itemId } : null;
+}
+
+async function persistIngestStart(
+  identifiers: { runId: string; itemId: string },
+  file: Express.Multer.File,
+) {
+  const hash = uploadedHash(file.buffer);
+  await db.insert(contractIngestRunsTable)
+    .values({ id: identifiers.runId })
+    .onConflictDoNothing();
+  await db.insert(contractIngestItemsTable)
+    .values({
+      id: identifiers.itemId,
+      runId: identifiers.runId,
+      filename: file.originalname.slice(0, 250),
+      size: file.size,
+      hash,
+      pdf: file.buffer.toString("base64"),
+      state: "processing",
+      message: null,
+      extraction: null,
+      handedOffAt: null,
+    })
+    .onConflictDoUpdate({
+      target: contractIngestItemsTable.id,
+      set: {
+        runId: identifiers.runId,
+        filename: file.originalname.slice(0, 250),
+        size: file.size,
+        hash,
+        pdf: file.buffer.toString("base64"),
+        state: "processing",
+        message: null,
+        extraction: null,
+        handedOffAt: null,
+        updatedAt: new Date(),
+      },
+    });
+}
+
+async function persistIngestOutcome(
+  identifiers: { runId: string; itemId: string },
+  outcome: { state: string; message: string | null; extraction: any | null },
+) {
+  await db.update(contractIngestItemsTable)
+    .set({ ...outcome, updatedAt: new Date() })
+    .where(and(
+      eq(contractIngestItemsTable.id, identifiers.itemId),
+      eq(contractIngestItemsTable.runId, identifiers.runId),
+    ));
+}
+
+async function deleteRunIfNoActionableItems(runId: string) {
+  await db.transaction(async (tx) => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
+    const remaining = await tx.select({ id: contractIngestItemsTable.id })
+      .from(contractIngestItemsTable)
+      .where(and(
+        eq(contractIngestItemsTable.runId, runId),
+        sql`${contractIngestItemsTable.handedOffAt} IS NULL`,
+        sql`${contractIngestItemsTable.state} IN ('ready', 'failed', 'processing')`,
+      ));
+    if (!remaining.length) {
+      await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+    }
+  });
+}
+
+function extractionErrorStatus(error: unknown) {
+  return error && typeof error === "object" && "status" in error && typeof error.status === "number"
+    ? error.status
+    : 502;
+}
+
+function extractionErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "We could not extract this contract right now. Please try again.";
 }
 
 router.get("/registry-views", async (_req: Request, res: Response): Promise<void> => {
@@ -355,105 +556,270 @@ router.post(
       return;
     }
 
-    const uploadSource = new UploadSource(
-      uploadedFiles.map((candidate) => ({
-        originalname: candidate.originalname,
-        size: candidate.size,
-        buffer: candidate.buffer,
-        id: uploadedHash(candidate.buffer),
-        hash: uploadedHash(candidate.buffer),
-      })),
-    );
-    const sourceFiles = await uploadSource.list();
-    if (await hasExistingSourceHash(sourceFiles[0].hash!)) {
-      res.status(409).json({ error: "This contract has already been uploaded. Duplicate skipped." });
-      return;
-    }
-
-    let text: string;
-    let extractionSource: "text" | "ocr" = "text";
-    let ocrConfidence: "High" | "Medium" | "Low" | undefined;
-    let ocrPageCount: number | undefined;
-    let ocrPagesProcessed: number | undefined;
+    const identifiers = ingestHeaders(req);
+    if (identifiers) await persistIngestStart(identifiers, file);
     try {
-      text = await extractReadablePdfText(file.buffer);
-    } catch (error) {
-      req.log.warn({ err: error }, "Unable to read embedded PDF text; trying OCR");
-      text = "";
-    }
-
-    if (text.length < 50) {
-      try {
-        const ocr = await extractScannedPdfText(file.buffer);
-        text = ocr.text;
-        extractionSource = "ocr";
-        ocrConfidence = ocr.confidence;
-        ocrPageCount = ocr.pageCount;
-        ocrPagesProcessed = ocr.pagesProcessed;
-        req.log.info(
-          { bytes: file.size, ocrConfidence, ocrPageCount, ocrPagesProcessed },
-          "Scanned contract transcribed with OCR",
-        );
-      } catch (error) {
-        req.log.warn({ err: error }, "Unable to OCR scanned PDF");
-        if (
-          error &&
-          typeof error === "object" &&
-          "code" in error &&
-          error.code === "OCR_INCOMPLETE"
-        ) {
-          res.status(422).json({
-            error:
-              error instanceof Error
-                ? error.message
-                : "We could not fully transcribe this scanned PDF. Split it into smaller files and try again.",
-          });
-          return;
+      if (identifiers) {
+        const [duplicateItem] = await db.select({ id: contractIngestItemsTable.id })
+          .from(contractIngestItemsTable)
+          .where(and(
+            eq(contractIngestItemsTable.runId, identifiers.runId),
+            ne(contractIngestItemsTable.id, identifiers.itemId),
+            eq(contractIngestItemsTable.hash, uploadedHash(file.buffer)),
+            eq(contractIngestItemsTable.state, "ready"),
+          ))
+          .limit(1);
+        if (duplicateItem) {
+          const duplicateError = new Error("This contract has already been uploaded. Duplicate skipped.");
+          (duplicateError as Error & { status?: number }).status = 409;
+          throw duplicateError;
         }
-        res.status(422).json({
-          error: "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
+      }
+      const result = await extractUploadedFile(file, req);
+      if (identifiers) {
+        result.ingestRunId = identifiers.runId;
+        result.ingestItemId = identifiers.itemId;
+        await persistIngestOutcome(identifiers, {
+          state: "ready",
+          message: "Ready for review",
+          extraction: result,
         });
-        return;
       }
-    }
-
-    try {
-      const result = await extractContractFromText(text, file.originalname, {
-        source: extractionSource,
-        ocrConfidence,
-        ...(extractionSource === "ocr" ? { ocrPageCount, ocrPagesProcessed } : {}),
-      });
-      if (result.extraction.contract) {
-        result.extraction.contract.source = {
-          ...sourceFiles[0],
-          hash: sourceFiles[0].hash!,
-        };
-      }
-      req.log.info({ bytes: file.size, hash: sourceFiles[0].hash }, "Contract extracted");
       res.json(result);
     } catch (error) {
-      req.log.error({ err: error }, "Contract extraction failed");
-      if (
-        error &&
-        typeof error === "object" &&
-        "code" in error &&
-        error.code === "CONTRACT_TEXT_TOO_LONG"
-      ) {
-        const pageDetails =
-          extractionSource === "ocr" && ocrPageCount !== undefined
-            ? ` OCR completed all ${ocrPagesProcessed ?? ocrPageCount} of ${ocrPageCount} pages before stopping.`
-            : "";
-        res.status(422).json({
-          error: `${error instanceof Error ? error.message : "This contract is too large to process."}${pageDetails}`,
+      const duplicate = extractionErrorStatus(error) === 409;
+      if (identifiers) {
+        await persistIngestOutcome(identifiers, {
+          state: duplicate ? "duplicate" : "failed",
+          message: duplicate ? "Duplicate skipped" : extractionErrorMessage(error),
+          extraction: null,
         });
-        return;
+        if (duplicate) await deleteRunIfNoActionableItems(identifiers.runId);
       }
-      res.status(502).json({
-        error: "We could not extract this contract right now. Please try again.",
+      res.status(duplicate ? 409 : extractionErrorStatus(error)).json({
+        error: duplicate ? "This contract has already been uploaded. Duplicate skipped." : extractionErrorMessage(error),
       });
     }
   },
 );
+
+function ingestItemResponse(item: typeof contractIngestItemsTable.$inferSelect) {
+  return {
+    id: item.id,
+    filename: item.filename,
+    state: item.handedOffAt ? "ready" : item.state,
+    message: item.message,
+    extraction: item.extraction,
+  };
+}
+
+router.post(
+  "/contracts/ingest-runs",
+  batchUpload.array("files", 20),
+  async (req: Request, res: Response): Promise<void> => {
+    const files = Array.isArray(req.files) ? req.files : [];
+    const runId = typeof req.body?.runId === "string" ? req.body.runId : "";
+    const rawItemIds = req.body?.itemIds;
+    const itemIds = Array.isArray(rawItemIds)
+      ? rawItemIds.filter((value): value is string => typeof value === "string")
+      : typeof rawItemIds === "string"
+        ? [rawItemIds]
+        : [];
+    if (!runId || !files.length || itemIds.length !== files.length) {
+      res.status(400).json({ error: "A run ID and one item ID per PDF are required." });
+      return;
+    }
+    if (files.some((file) => !isPdf(file))) {
+      res.status(400).json({ error: "Only valid PDF files can be uploaded." });
+      return;
+    }
+    await db.transaction(async (tx) => {
+      await tx.insert(contractIngestRunsTable).values({ id: runId }).onConflictDoNothing();
+      for (const [index, file] of files.entries()) {
+        await tx.insert(contractIngestItemsTable).values({
+          id: itemIds[index],
+          runId,
+          filename: file.originalname.slice(0, 250),
+          size: file.size,
+          hash: uploadedHash(file.buffer),
+          pdf: file.buffer.toString("base64"),
+          state: "failed",
+          message: "Processing was interrupted. Retry this PDF.",
+          extraction: null,
+          handedOffAt: null,
+        }).onConflictDoUpdate({
+          target: contractIngestItemsTable.id,
+          set: {
+            runId,
+            filename: file.originalname.slice(0, 250),
+            size: file.size,
+            hash: uploadedHash(file.buffer),
+            pdf: file.buffer.toString("base64"),
+            state: "failed",
+            message: "Processing was interrupted. Retry this PDF.",
+            extraction: null,
+            handedOffAt: null,
+            updatedAt: new Date(),
+          },
+        });
+      }
+    });
+    const items = await db.select().from(contractIngestItemsTable)
+      .where(eq(contractIngestItemsTable.runId, runId))
+      .orderBy(asc(contractIngestItemsTable.createdAt));
+    res.status(201).json({ id: runId, items: items.map(ingestItemResponse) });
+  },
+);
+
+router.get("/contracts/ingest-runs/current", async (_req: Request, res: Response): Promise<void> => {
+  const [run] = await db.select().from(contractIngestRunsTable)
+    .orderBy(desc(contractIngestRunsTable.updatedAt))
+    .limit(1);
+  if (!run) {
+    res.json(null);
+    return;
+  }
+  const items = await db.select().from(contractIngestItemsTable)
+    .where(eq(contractIngestItemsTable.runId, run.id))
+    .orderBy(asc(contractIngestItemsTable.createdAt));
+  if (!items.length) {
+    res.json(null);
+    return;
+  }
+  res.json({ id: run.id, items: items.filter((item) => !item.handedOffAt).map(ingestItemResponse) });
+});
+
+async function retryIngestItem(runId: string, itemId: string, req: Request) {
+  const [item] = await db.update(contractIngestItemsTable)
+    .set({
+      state: "processing",
+      message: null,
+      extraction: null,
+      updatedAt: new Date(),
+    })
+    .where(and(
+      eq(contractIngestItemsTable.id, itemId),
+      eq(contractIngestItemsTable.runId, runId),
+      eq(contractIngestItemsTable.state, "failed"),
+      sql`${contractIngestItemsTable.handedOffAt} IS NULL`,
+    ))
+    .returning();
+  if (!item) {
+    const [existing] = await db.select({ id: contractIngestItemsTable.id })
+      .from(contractIngestItemsTable)
+      .where(and(
+        eq(contractIngestItemsTable.id, itemId),
+        eq(contractIngestItemsTable.runId, runId),
+      ));
+    return existing
+      ? { status: 409, error: "Only failed ingest items can be retried." }
+      : null;
+  }
+  const file = {
+    fieldname: "file",
+    originalname: item.filename,
+    encoding: "7bit",
+    mimetype: "application/pdf",
+    size: item.size,
+    buffer: Buffer.from(item.pdf, "base64"),
+    destination: "",
+    filename: item.filename,
+    path: "",
+    stream: undefined,
+  } as unknown as Express.Multer.File;
+  try {
+    const result = await extractUploadedFile(file, req);
+    result.ingestRunId = runId;
+    result.ingestItemId = itemId;
+    await persistIngestOutcome({ runId, itemId }, {
+      state: "ready",
+      message: "Ready for review",
+      extraction: result,
+    });
+    return { result };
+  } catch (error) {
+    const duplicate = extractionErrorStatus(error) === 409;
+    await persistIngestOutcome({ runId, itemId }, {
+      state: duplicate ? "duplicate" : "failed",
+      message: duplicate ? "Duplicate skipped" : extractionErrorMessage(error),
+      extraction: null,
+    });
+    if (duplicate) await deleteRunIfNoActionableItems(runId);
+    return {
+      status: duplicate ? 409 : extractionErrorStatus(error),
+      error: duplicate ? "This contract has already been uploaded. Duplicate skipped." : extractionErrorMessage(error),
+    };
+  }
+}
+
+router.post("/contracts/ingest-runs/:runId/items/:itemId/retry", async (req: Request, res: Response): Promise<void> => {
+  const runId = Array.isArray(req.params.runId) ? req.params.runId[0] : req.params.runId;
+  const itemId = Array.isArray(req.params.itemId) ? req.params.itemId[0] : req.params.itemId;
+  const outcome = await retryIngestItem(runId, itemId, req);
+  if (!outcome) {
+    res.status(404).json({ error: "Ingest item not found." });
+    return;
+  }
+  if ("error" in outcome) {
+    res.status(outcome.status ?? 502).json({ error: outcome.error });
+    return;
+  }
+  res.json(outcome.result);
+});
+
+router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: Request, res: Response): Promise<void> => {
+  const runId = Array.isArray(req.params.runId) ? req.params.runId[0] : req.params.runId;
+  const itemId = Array.isArray(req.params.itemId) ? req.params.itemId[0] : req.params.itemId;
+  const completion = await db.transaction(async (tx) => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
+    const [completed] = await tx.select({ itemId: contractIngestCompletionsTable.itemId })
+      .from(contractIngestCompletionsTable)
+      .where(and(
+        eq(contractIngestCompletionsTable.itemId, itemId),
+        eq(contractIngestCompletionsTable.runId, runId),
+      ));
+    if (completed) return "completed" as const;
+    const [updated] = await tx.update(contractIngestItemsTable)
+      .set({ handedOffAt: new Date(), updatedAt: new Date() })
+      .where(and(
+        eq(contractIngestItemsTable.id, itemId),
+        eq(contractIngestItemsTable.runId, runId),
+        eq(contractIngestItemsTable.state, "ready"),
+        sql`${contractIngestItemsTable.handedOffAt} IS NULL`,
+      ))
+      .returning();
+    if (!updated) {
+      const [existing] = await tx.select({ id: contractIngestItemsTable.id })
+        .from(contractIngestItemsTable)
+        .where(and(
+          eq(contractIngestItemsTable.id, itemId),
+          eq(contractIngestItemsTable.runId, runId),
+        ));
+      return existing ? "invalid" as const : "missing" as const;
+    }
+    await tx.insert(contractIngestCompletionsTable)
+      .values({ itemId, runId })
+      .onConflictDoNothing();
+    const remaining = await tx.select({ id: contractIngestItemsTable.id })
+      .from(contractIngestItemsTable)
+      .where(and(
+        eq(contractIngestItemsTable.runId, runId),
+        sql`${contractIngestItemsTable.handedOffAt} IS NULL`,
+        sql`${contractIngestItemsTable.state} IN ('ready', 'failed', 'processing')`,
+      ));
+    if (!remaining.length) {
+      await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+    }
+    return "completed" as const;
+  });
+  if (completion !== "completed") {
+    res.status(completion === "invalid" ? 409 : 404).json({
+      error: completion === "invalid" ? "Only ready ingest items can be completed." : "Ingest item not found.",
+    });
+    return;
+  }
+  res.status(204).send();
+});
 
 router.use(
   (error: unknown, req: Request, res: Response, next: NextFunction): void => {

@@ -13,4 +13,8 @@ export interface ContractExtractionUpload {
      * @maxItems 20
      */
   files: Blob[];
+  /** Client-generated durable run identifier used to resume an unfinished batch. */
+  ingestRunId?: string;
+  /** Client-generated durable item identifier within the ingest run. */
+  ingestItemId?: string;
 }

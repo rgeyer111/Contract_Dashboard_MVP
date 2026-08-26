@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
@@ -71,6 +71,7 @@ export default function Dashboard() {
     isDragging,
     uploadError,
     extraction,
+    hasResumableRun,
     setIsDragging,
     removeFile,
     handleDrop,
@@ -79,6 +80,9 @@ export default function Dashboard() {
     retryFile,
     resetUpload,
   } = upload;
+  useEffect(() => {
+    if (hasResumableRun && !isActionItemsPage) setUploadOpen(true);
+  }, [hasResumableRun, isActionItemsPage]);
   const {
     searchTerm,
     documentTypeFilter,

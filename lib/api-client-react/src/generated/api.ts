@@ -22,6 +22,8 @@ import type {
 import type {
   ContractExtractionResult,
   ContractExtractionUpload,
+  ContractIngestRegistration,
+  ContractIngestRun,
   ContractSaveRequest,
   DismissAlertRequest,
   ErrorResponse,
@@ -586,6 +588,12 @@ export const getExtractContractUrl = () => {
 export const extractContract = async (contractExtractionUpload: ContractExtractionUpload, options?: Parameters<typeof customFetch>[1]): Promise<ContractExtractionResult> => {
     const formData = new FormData();
 contractExtractionUpload.files.forEach(value => formData.append(`files`, value));
+if(contractExtractionUpload.ingestRunId !== undefined) {
+ formData.append(`ingestRunId`, contractExtractionUpload.ingestRunId);
+ }
+if(contractExtractionUpload.ingestItemId !== undefined) {
+ formData.append(`ingestItemId`, contractExtractionUpload.ingestItemId);
+ }
 
   return customFetch<ContractExtractionResult>(getExtractContractUrl(),
   {
@@ -643,6 +651,304 @@ export const useExtractContract = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getExtractContractMutationOptions(options));
+    }
+
+export const getGetCurrentIngestRunUrl = () => {
+
+
+
+
+  return `/api/contracts/ingest-runs/current`
+}
+
+/**
+ * @summary Get the latest unfinished contract ingest run
+ */
+export const getCurrentIngestRun = async ( options?: Parameters<typeof customFetch>[1]): Promise<ContractIngestRun | null> => {
+
+  return customFetch<ContractIngestRun | null>(getGetCurrentIngestRunUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCurrentIngestRunQueryKey = () => {
+    return [
+    `/api/contracts/ingest-runs/current`
+    ] as const;
+    }
+
+
+export const getGetCurrentIngestRunQueryOptions = <TData = Awaited<ReturnType<typeof getCurrentIngestRun>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCurrentIngestRun>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCurrentIngestRunQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCurrentIngestRun>>> = ({ signal }) => getCurrentIngestRun({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCurrentIngestRun>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCurrentIngestRunQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrentIngestRun>>>
+export type GetCurrentIngestRunQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get the latest unfinished contract ingest run
+ */
+
+export function useGetCurrentIngestRun<TData = Awaited<ReturnType<typeof getCurrentIngestRun>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCurrentIngestRun>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCurrentIngestRunQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRegisterIngestRunUrl = () => {
+
+
+
+
+  return `/api/contracts/ingest-runs`
+}
+
+/**
+ * @summary Persist the PDFs in a new resumable ingest run
+ */
+export const registerIngestRun = async (contractIngestRegistration: ContractIngestRegistration, options?: Parameters<typeof customFetch>[1]): Promise<ContractIngestRun> => {
+    const formData = new FormData();
+contractIngestRegistration.files.forEach(value => formData.append(`files`, value));
+formData.append(`runId`, contractIngestRegistration.runId);
+contractIngestRegistration.itemIds.forEach(value => formData.append(`itemIds`, value));
+
+  return customFetch<ContractIngestRun>(getRegisterIngestRunUrl(),
+  {
+    ...options,
+    method: 'POST'
+    ,
+    body: formData
+  }
+);}
+
+
+
+
+
+export const getRegisterIngestRunMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerIngestRun>>, TError,{data: BodyType<ContractIngestRegistration>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof registerIngestRun>>, TError,{data: BodyType<ContractIngestRegistration>}, TContext> => {
+
+const mutationKey = ['registerIngestRun'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof registerIngestRun>>, {data: BodyType<ContractIngestRegistration>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  registerIngestRun(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RegisterIngestRunMutationResult = NonNullable<Awaited<ReturnType<typeof registerIngestRun>>>
+    export type RegisterIngestRunMutationBody = BodyType<ContractIngestRegistration>
+    export type RegisterIngestRunMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Persist the PDFs in a new resumable ingest run
+ */
+export const useRegisterIngestRun = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerIngestRun>>, TError,{data: BodyType<ContractIngestRegistration>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof registerIngestRun>>,
+        TError,
+        {data: BodyType<ContractIngestRegistration>},
+        TContext
+      > => {
+      return useMutation(getRegisterIngestRunMutationOptions(options));
+    }
+
+export const getRetryIngestItemUrl = (runId: string,
+    itemId: string,) => {
+
+
+
+
+  return `/api/contracts/ingest-runs/${runId}/items/${itemId}/retry`
+}
+
+/**
+ * @summary Retry a failed contract ingest item
+ */
+export const retryIngestItem = async (runId: string,
+    itemId: string, options?: Parameters<typeof customFetch>[1]): Promise<ContractExtractionResult> => {
+
+  return customFetch<ContractExtractionResult>(getRetryIngestItemUrl(runId,itemId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getRetryIngestItemMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof retryIngestItem>>, TError,{runId: string;itemId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof retryIngestItem>>, TError,{runId: string;itemId: string}, TContext> => {
+
+const mutationKey = ['retryIngestItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof retryIngestItem>>, {runId: string;itemId: string}> = (props) => {
+          const {runId,itemId} = props ?? {};
+
+          return  retryIngestItem(runId,itemId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RetryIngestItemMutationResult = NonNullable<Awaited<ReturnType<typeof retryIngestItem>>>
+
+    export type RetryIngestItemMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Retry a failed contract ingest item
+ */
+export const useRetryIngestItem = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof retryIngestItem>>, TError,{runId: string;itemId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof retryIngestItem>>,
+        TError,
+        {runId: string;itemId: string},
+        TContext
+      > => {
+      return useMutation(getRetryIngestItemMutationOptions(options));
+    }
+
+export const getCompleteIngestItemUrl = (runId: string,
+    itemId: string,) => {
+
+
+
+
+  return `/api/contracts/ingest-runs/${runId}/items/${itemId}/complete`
+}
+
+/**
+ * @summary Mark a reviewed ingest item as handed off
+ */
+export const completeIngestItem = async (runId: string,
+    itemId: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getCompleteIngestItemUrl(runId,itemId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getCompleteIngestItemMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completeIngestItem>>, TError,{runId: string;itemId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof completeIngestItem>>, TError,{runId: string;itemId: string}, TContext> => {
+
+const mutationKey = ['completeIngestItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof completeIngestItem>>, {runId: string;itemId: string}> = (props) => {
+          const {runId,itemId} = props ?? {};
+
+          return  completeIngestItem(runId,itemId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CompleteIngestItemMutationResult = NonNullable<Awaited<ReturnType<typeof completeIngestItem>>>
+
+    export type CompleteIngestItemMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Mark a reviewed ingest item as handed off
+ */
+export const useCompleteIngestItem = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completeIngestItem>>, TError,{runId: string;itemId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof completeIngestItem>>,
+        TError,
+        {runId: string;itemId: string},
+        TContext
+      > => {
+      return useMutation(getCompleteIngestItemMutationOptions(options));
     }
 
 export const getListContractsUrl = () => {

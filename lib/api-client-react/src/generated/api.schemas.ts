@@ -68,6 +68,24 @@ export interface ContractExtractionUpload {
      * @maxItems 20
      */
   files: Blob[];
+  /** Client-generated durable run identifier used to resume an unfinished batch. */
+  ingestRunId?: string;
+  /** Client-generated durable item identifier within the ingest run. */
+  ingestItemId?: string;
+}
+
+export interface ContractIngestRegistration {
+  /**
+     * @minItems 1
+     * @maxItems 20
+     */
+  files: Blob[];
+  runId: string;
+  /**
+     * @minItems 1
+     * @maxItems 20
+     */
+  itemIds: string[];
 }
 
 export type ProvenanceMetadataStatus = typeof ProvenanceMetadataStatus[keyof typeof ProvenanceMetadataStatus];
@@ -573,6 +591,34 @@ export type ContractExtractionResultExtraction = {
 export interface ContractExtractionResult {
   filename: string;
   extraction: ContractExtractionResultExtraction;
+  /** Durable ingest run containing this extraction, when the request belongs to a resumable run. */
+  ingestRunId?: string;
+  /** Durable ingest item containing this extraction, when the request belongs to a resumable run. */
+  ingestItemId?: string;
+}
+
+export type ContractIngestItemState = typeof ContractIngestItemState[keyof typeof ContractIngestItemState];
+
+
+export const ContractIngestItemState = {
+  processing: 'processing',
+  ready: 'ready',
+  duplicate: 'duplicate',
+  failed: 'failed',
+} as const;
+
+export interface ContractIngestItem {
+  id: string;
+  filename: string;
+  state: ContractIngestItemState;
+  /** @nullable */
+  message: string | null;
+  extraction: ContractExtractionResult | null;
+}
+
+export interface ContractIngestRun {
+  id: string;
+  items: ContractIngestItem[];
 }
 
 export interface ContractSaveRequest {
