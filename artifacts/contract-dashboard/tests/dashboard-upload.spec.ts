@@ -1,5 +1,78 @@
 import { expect, test } from "@playwright/test";
 
+const provenance = (value: unknown = null, note: string | null = null) => ({
+  value,
+  status: value === null ? "not_found" : "found",
+  confidence: value === null ? "low" : "high",
+  page: value === null ? null : 1,
+  clause: null,
+  quote: value === null ? null : "Verbatim source evidence.",
+  note,
+});
+
+const makeContract = ({
+  vendor = "Acme",
+  contractNumber = "AC-100",
+  contractTitle = "Support",
+  contractType = "maintenance",
+  contractValue = null,
+}: {
+  vendor?: string;
+  contractNumber?: string;
+  contractTitle?: string;
+  contractType?: string;
+  contractValue?: unknown;
+} = {}) => ({
+  fields: {
+    documentType: provenance("master_agreement"),
+    documentLanguage: provenance("en"),
+    vendorLegalName: provenance(vendor),
+    buyerLegalEntity: provenance("Example Buyer AG"),
+    contractTitle: provenance(contractTitle),
+    contractNumber: provenance(contractNumber),
+    contractType: provenance(contractType),
+    signatureDate: provenance("2025-12-20"),
+    effectiveDate: provenance("2026-01-01"),
+    initialTermLength: provenance({ amount: 12, unit: "months" }),
+    initialTermEndDate: provenance("2026-12-31"),
+    renewalMechanism: provenance("auto_renew"),
+    renewalTermLength: provenance({ amount: 12, unit: "months" }),
+    noticePeriod: provenance({
+      amount: 60,
+      unit: "days",
+      anchor: "term_end",
+      purpose: "non_renewal",
+    }),
+    noticeDeadline: provenance(null, "Computed by the application; never extracted from model output."),
+    noticeDelivery: provenance({ method: "email", address: "legal@example.com", cc: [] }),
+    contractValue: provenance(contractValue),
+    billingFrequency: provenance("annual"),
+  },
+  assignment: {
+    owner: "John Doe",
+    negotiationBufferDays: 30,
+    negotiationBufferSource: "global_default",
+    status: "Review Open",
+  },
+  computed: {
+    exitDate: "2026-12-31",
+    noticeDeadline: "2026-11-01",
+    actionDate: "2026-10-02",
+    status: "green",
+    reason: null,
+  },
+});
+
+const reviewerEdited = (value: unknown) => ({
+  value,
+  status: "ambiguous",
+  confidence: "low",
+  page: null,
+  clause: null,
+  quote: null,
+  note: "Reviewer-supplied value; original extraction evidence was cleared.",
+});
+
 test("shows upload success and API error states", async ({ page }) => {
   let responseMode: "success" | "error" = "success";
   await page.route("**/api/contracts", async (route) => {
@@ -28,28 +101,11 @@ test("shows upload success and API error states", async ({ page }) => {
       body: JSON.stringify({
         filename: "acme.pdf",
         extraction: {
-          contract: {
-            vendor: "Acme",
-            contractNumber: "AC-100",
-            contractName: "Support",
-            contractType: "Maintenance",
-            contractValue: { status: "unknown", amount: null, currency: null },
-            startDate: "2026-01-01",
-            contractDuration: "12 months",
-            endDate: "2026-12-31",
-            noticePeriod: "60 days",
-            noticeDeadline: "",
-            negotiationBuffer: "30 days",
-            owner: "John Doe",
-            status: "Review Open",
-          },
-          confidence: Object.fromEntries(
-            [
-              "vendor", "contractNumber", "contractName", "contractType",
-              "contractValue", "startDate", "contractDuration", "endDate",
-              "noticePeriod", "noticeDeadline", "negotiationBuffer", "owner", "status",
-            ].map((key) => [key, "High"]),
-          ),
+          contract: makeContract(),
+          source: "text",
+          ocrConfidence: null,
+          ocrPageCount: null,
+          ocrPagesProcessed: null,
         },
       }),
     });
@@ -67,7 +123,7 @@ test("shows upload success and API error states", async ({ page }) => {
   await expect(page.getByText("acme.pdf")).toBeVisible();
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page).toHaveURL(/\/review$/);
-  await expect(page.getByRole("heading", { name: "Review Extracted Contract" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Review Contract Details" })).toBeVisible();
   await expect(page.getByText(/acme\.pdf/)).toBeVisible();
 
   await page.goto("/dashboard");
@@ -83,28 +139,7 @@ test("shows upload success and API error states", async ({ page }) => {
 });
 
 test("shows OCR scan warnings for every legibility level but not embedded text", async ({ page }) => {
-  const contract = {
-    vendor: "Acme",
-    contractNumber: "AC-100",
-    contractName: "Support",
-    contractType: "Maintenance",
-    contractValue: { status: "unknown", amount: null, currency: null },
-    startDate: "2026-01-01",
-    contractDuration: "12 months",
-    endDate: "2026-12-31",
-    noticePeriod: "60 days",
-    noticeDeadline: "",
-    negotiationBuffer: "30 days",
-    owner: "John Doe",
-    status: "Review Open",
-  };
-  const confidence = Object.fromEntries(
-    [
-      "vendor", "contractNumber", "contractName", "contractType",
-      "contractValue", "startDate", "contractDuration", "endDate",
-      "noticePeriod", "noticeDeadline", "negotiationBuffer", "owner", "status",
-    ].map((key) => [key, "High"]),
-  );
+  const contract = makeContract();
   let source: "text" | "ocr" = "ocr";
   let ocrConfidence: "High" | "Medium" | "Low" = "High";
 
@@ -121,7 +156,13 @@ test("shows OCR scan warnings for every legibility level but not embedded text",
       contentType: "application/json",
       body: JSON.stringify({
         filename: "scan.pdf",
-        extraction: { contract, confidence, source, ocrConfidence: source === "ocr" ? ocrConfidence : null },
+        extraction: {
+          contract,
+          source,
+          ocrConfidence: source === "ocr" ? ocrConfidence : null,
+          ocrPageCount: source === "ocr" ? 1 : null,
+          ocrPagesProcessed: source === "ocr" ? 1 : null,
+        },
       }),
     });
   });
@@ -138,10 +179,11 @@ test("shows OCR scan warnings for every legibility level but not embedded text",
     });
     await page.getByRole("button", { name: "Extract contract" }).click();
     await expect(page).toHaveURL(/\/review$/);
-    const warning = page.getByRole("alert");
+    const warning = page
+      .locator("div.mt-4.inline-flex")
+      .filter({ hasText: "OCR used for this scan" });
     await expect(warning).toContainText("OCR used for this scan");
     await expect(warning).toContainText(`${level} legibility`);
-    await expect(warning).toBeVisible();
     await page.goto("/dashboard");
   }
 
@@ -154,43 +196,26 @@ test("shows OCR scan warnings for every legibility level but not embedded text",
   });
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page).toHaveURL(/\/review$/);
-  await expect(page.getByRole("alert")).toHaveCount(0);
-  await expect(page.getByText("OCR used for this scan")).toHaveCount(0);
+  await expect(page.getByText(/OCR used for this scan/)).toHaveCount(0);
 });
 
 test("keeps a confirmed contract available after reload and update", async ({ page }) => {
-  const confidence = Object.fromEntries(
-    [
-      "vendor", "contractNumber", "contractName", "contractType",
-      "contractValue", "startDate", "contractDuration", "endDate",
-      "noticePeriod", "noticeDeadline", "negotiationBuffer", "owner", "status",
-    ].map((key) => [key, "High"]),
-  );
-  const contract = {
+  const contract = makeContract({
     vendor: "Northstar Sourcing",
     contractNumber: "NS-2026-014",
-    contractName: "Sourcing Agreement",
-    contractType: "Software License",
-    contractValue: { status: "stated", amount: 240000, currency: "USD" },
-    startDate: "2026-01-01",
-    contractDuration: "12 months",
-    endDate: "2026-12-31",
-    noticePeriod: "60 days",
-    noticeDeadline: "2026-11-01",
-    negotiationBuffer: "30 days",
-    owner: "John Doe",
-    status: "Review Open",
-  };
+    contractTitle: "Sourcing Agreement",
+    contractType: "software_license",
+    contractValue: { amount: 240000, currency: "USD", basis: "annual" },
+  });
   const saved = {
     id: "saved-northstar-contract",
     filename: "northstar.pdf",
     contract,
-    confidence,
     createdAt: "2026-01-01T00:00:00.000Z",
     updatedAt: "2026-01-01T00:00:00.000Z",
   };
-  let createPayload: { filename: string; contract: typeof contract; confidence: typeof confidence } | undefined;
-  let updatePayload: { filename: string; contract: typeof contract; confidence: typeof confidence } | undefined;
+  let createPayload: Record<string, unknown> | undefined;
+  let updatePayload: Record<string, unknown> | undefined;
 
   await page.route("**/api/contracts", async (route) => {
     if (route.request().method() === "GET") {
@@ -201,7 +226,6 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
       createPayload = body;
       saved.filename = body.filename;
       saved.contract = body.contract;
-      saved.confidence = body.confidence;
       return route.fulfill({ status: 201, json: saved });
     }
     return route.continue();
@@ -215,7 +239,6 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
       updatePayload = body;
       saved.filename = body.filename;
       saved.contract = body.contract;
-      saved.confidence = body.confidence;
       saved.updatedAt = "2026-01-02T00:00:00.000Z";
       return route.fulfill({ json: saved });
     }
@@ -223,10 +246,19 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   });
 
   await page.goto("/review");
-  await page.evaluate(({ filename, contract, confidence }) => {
+  await page.evaluate(({ filename, contract }) => {
     sessionStorage.setItem(
       "contract-dashboard.extraction",
-      JSON.stringify({ filename, extraction: { contract, confidence } }),
+      JSON.stringify({
+        filename,
+        extraction: {
+          contract,
+          source: "text",
+          ocrConfidence: null,
+          ocrPageCount: null,
+          ocrPagesProcessed: null,
+        },
+      }),
     );
   }, saved);
   await page.reload();
@@ -237,7 +269,6 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   expect(createPayload).toEqual({
     filename: "northstar.pdf",
     contract,
-    confidence,
   });
   await expect(page.getByText("Northstar Sourcing", { exact: true })).toBeVisible();
 
@@ -245,11 +276,7 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
   await expect(page.getByText("Northstar Sourcing", { exact: true })).toBeVisible();
   await page.getByText("Northstar Sourcing", { exact: true }).click();
   await expect(page).toHaveURL(/\/review\?id=saved-northstar-contract$/);
-  const vendorInput = page
-    .locator("label")
-    .filter({ hasText: "Vendor" })
-    .locator("..")
-    .locator("input");
+  const vendorInput = page.getByPlaceholder("e.g. Acme Corp LLC");
   await expect(vendorInput).toBeVisible();
 
   await vendorInput.fill("Northstar Sourcing GmbH");
@@ -259,11 +286,12 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
     filename: "northstar.pdf",
     contract: {
       ...contract,
-      vendor: "Northstar Sourcing GmbH",
+      fields: {
+        ...contract.fields,
+        vendorLegalName: reviewerEdited("Northstar Sourcing GmbH"),
+      },
     },
-    confidence,
   });
-  expect(saved.confidence).toEqual(confidence);
   await expect(page.getByText("Northstar Sourcing GmbH", { exact: true })).toBeVisible();
 
   await page.reload();
@@ -273,38 +301,7 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
 test("confirmed contracts persist through reload and reopen with edits intact", async ({ page }) => {
   const contractId = "saved-contract-regression";
   let savedContract: Record<string, unknown> | null = null;
-  const contract = {
-    vendor: "Acme",
-    contractNumber: "AC-100",
-    contractName: "Support",
-    contractType: "Maintenance",
-    contractValue: { status: "unknown", amount: null, currency: null },
-    startDate: "2026-01-01",
-    contractDuration: "12 months",
-    endDate: "2026-12-31",
-    noticePeriod: "60 days",
-    noticeDeadline: "",
-    negotiationBuffer: "30 days",
-    owner: "John Doe",
-    status: "Review Open",
-  };
-  const confidence = Object.fromEntries(
-    [
-      "vendor",
-      "contractNumber",
-      "contractName",
-      "contractType",
-      "contractValue",
-      "startDate",
-      "contractDuration",
-      "endDate",
-      "noticePeriod",
-      "noticeDeadline",
-      "negotiationBuffer",
-      "owner",
-      "status",
-    ].map((field) => [field, "High"]),
-  );
+  const contract = makeContract();
 
   await page.route("**/api/contracts/extract", async (route) => {
     await route.fulfill({
@@ -314,9 +311,10 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
         filename: "acme.pdf",
         extraction: {
           contract,
-          confidence,
           source: "text",
           ocrConfidence: null,
+          ocrPageCount: null,
+          ocrPagesProcessed: null,
         },
       }),
     });
@@ -391,11 +389,7 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page).toHaveURL(/\/review$/);
 
-  const vendorInput = page
-    .locator("label")
-    .filter({ hasText: "Vendor" })
-    .locator("..")
-    .locator("input");
+  const vendorInput = page.getByPlaceholder("e.g. Acme Corp LLC");
   await vendorInput.fill("Edited Acme");
   await page.getByRole("button", { name: "Confirm contract" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
@@ -411,13 +405,11 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await page.getByRole("row").filter({ hasText: "Edited Acme" }).click();
   await expect(page).toHaveURL(new RegExp(`/review\\?id=${contractId}$`));
   await expect(vendorInput).toHaveValue("Edited Acme");
-  await expect(page.getByRole("button", { name: "Unknown / Not Stated" })).toHaveClass(/text-destructive/);
-  await expect(page.getByText("Value Flagged for Review")).toBeVisible();
-  await expect(
-    page
-      .locator("label")
-      .filter({ hasText: "Owner" })
-      .locator("..")
-      .locator("input"),
-  ).toHaveValue("John Doe");
+  const contractValueField = page
+    .getByText("Contract Value", { exact: true })
+    .locator("xpath=../..");
+  await expect(contractValueField.getByText("not found", { exact: true })).toHaveClass(
+    /text-destructive/,
+  );
+  await expect(page.getByPlaceholder("e.g. John Doe")).toHaveValue("John Doe");
 });
