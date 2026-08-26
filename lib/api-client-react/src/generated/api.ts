@@ -23,6 +23,7 @@ import type {
   ContractExtractionResult,
   ContractExtractionUpload,
   ContractSaveRequest,
+  DismissAlertRequest,
   ErrorResponse,
   HealthStatus,
   SavedContract
@@ -501,5 +502,77 @@ export const useUpdateContract = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getUpdateContractMutationOptions(options));
+    }
+
+export const getDismissContractAlertUrl = (id: string,) => {
+
+
+
+
+  return `/api/contracts/${id}/alert/dismiss`
+}
+
+/**
+ * @summary Dismiss a contract alert
+ */
+export const dismissContractAlert = async (id: string,
+    dismissAlertRequest: DismissAlertRequest, options?: Parameters<typeof customFetch>[1]): Promise<SavedContract> => {
+
+  return customFetch<SavedContract>(getDismissContractAlertUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(dismissAlertRequest)
+  }
+);}
+
+
+
+
+
+export const getDismissContractAlertMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof dismissContractAlert>>, TError,{id: string;data: BodyType<DismissAlertRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof dismissContractAlert>>, TError,{id: string;data: BodyType<DismissAlertRequest>}, TContext> => {
+
+const mutationKey = ['dismissContractAlert'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof dismissContractAlert>>, {id: string;data: BodyType<DismissAlertRequest>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  dismissContractAlert(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DismissContractAlertMutationResult = NonNullable<Awaited<ReturnType<typeof dismissContractAlert>>>
+    export type DismissContractAlertMutationBody = BodyType<DismissAlertRequest>
+    export type DismissContractAlertMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Dismiss a contract alert
+ */
+export const useDismissContractAlert = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof dismissContractAlert>>, TError,{id: string;data: BodyType<DismissAlertRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof dismissContractAlert>>,
+        TError,
+        {id: string;data: BodyType<DismissAlertRequest>},
+        TContext
+      > => {
+      return useMutation(getDismissContractAlertMutationOptions(options));
     }
 

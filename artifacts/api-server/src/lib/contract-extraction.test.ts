@@ -105,6 +105,7 @@ describe("normalizeExtraction", () => {
 
     expect(result.contract.assignment).toEqual({
       owner: "John Doe",
+      ownerEmail: "john.doe@example.com",
       negotiationBufferDays: 30,
       negotiationBufferSource: "global_default",
       status: "Review Open",

@@ -1,4 +1,5 @@
 import { useState, type DragEvent, type ChangeEvent } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
   FileText, 
@@ -14,10 +15,12 @@ import {
   Upload,
   FileUp,
   LoaderCircle,
-  X
+  X,
+  Mail,
+  Ban
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useExtractContract, useListContracts } from "@workspace/api-client-react";
+import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts } from "@workspace/api-client-react";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -25,8 +28,21 @@ export default function Dashboard() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [dismissingId, setDismissingId] = useState<string | null>(null);
+  const [dismissReason, setDismissReason] = useState("");
+  const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
+  const alerts = contracts.filter((saved) => saved.contract.alert);
+  const dismissAlert = useDismissContractAlert({
+    mutation: {
+      onSuccess: async () => {
+        setDismissingId(null);
+        setDismissReason("");
+        await queryClient.invalidateQueries({ queryKey: getListContractsQueryKey() });
+      },
+    },
+  });
   const extraction = useExtractContract({
     mutation: {
       onSuccess: (result) => {
@@ -93,10 +109,10 @@ export default function Dashboard() {
             <Clock className="h-4 w-4" />
             Renewals
           </div>
-          <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors cursor-not-allowed">
+          <a href="#action-items" className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors">
             <AlertCircle className="h-4 w-4" />
             Action Items
-          </div>
+          </a>
         </nav>
         
         <div className="p-4 border-t space-y-1">
@@ -284,6 +300,52 @@ export default function Dashboard() {
               <p className="text-sm font-medium text-muted-foreground relative z-10">In total contract value saved</p>
             </div>
           </div>
+
+          <section id="action-items" className="space-y-4 scroll-mt-24">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Action Items</h2>
+                <p className="mt-1 text-sm font-medium text-muted-foreground">Who needs to act, on what, and by when.</p>
+              </div>
+              <span className="rounded-full border bg-card px-3 py-1 text-xs font-bold">{alerts.filter((saved) => saved.contract.alert?.state !== 'dismissed').length} open</span>
+            </div>
+            <div className="grid gap-3">
+              {alerts.map((saved) => {
+                const alert = saved.contract.alert!;
+                const vendor = saved.contract.fields.vendorLegalName.value || 'Unknown Vendor';
+                const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(`Contract action: ${vendor}`)}&body=${encodeURIComponent(`Hi ${alert.owner},\n\n${vendor} needs attention.\nStart action by: ${alert.actionDate}\nLegal notice deadline: ${alert.noticeDeadline}\n\nOpen contract: ${window.location.origin}/review?id=${saved.id}`)}`;
+                return (
+                  <article key={saved.id} className={`rounded-xl border bg-card p-5 shadow-sm ${alert.state === 'dismissed' ? 'opacity-60' : ''}`}>
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className={`rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${alert.state === 'overdue' ? 'bg-destructive/10 text-destructive' : alert.state === 'due' ? 'bg-amber-500/10 text-amber-700' : alert.state === 'dismissed' ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>{alert.state}</span>
+                          <span className="text-xs font-semibold text-muted-foreground">Act {alert.actionDate}</span>
+                        </div>
+                        <h3 className="mt-2 font-extrabold">{vendor}</h3>
+                        <p className="mt-1 text-xs font-medium text-muted-foreground">{alert.owner} · {alert.ownerEmail} · Notice deadline {alert.noticeDeadline}</p>
+                        {alert.dismissedReason && <p className="mt-2 text-xs font-semibold">Dismissed: {alert.dismissedReason}</p>}
+                      </div>
+                      {alert.state !== 'dismissed' && (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <a href={mailto} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm"><Mail className="h-3.5 w-3.5" />Send now</a>
+                          <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => setDismissingId(saved.id)}><Ban className="h-3.5 w-3.5" />Dismiss</Button>
+                        </div>
+                      )}
+                    </div>
+                    {dismissingId === saved.id && (
+                      <div className="mt-4 flex flex-col gap-2 border-t pt-4 sm:flex-row">
+                        <input value={dismissReason} onChange={(event) => setDismissReason(event.target.value)} placeholder="Why is this handled?" className="h-9 flex-1 rounded-md border bg-background px-3 text-sm" />
+                        <Button size="sm" disabled={!dismissReason.trim() || dismissAlert.isPending} onClick={() => dismissAlert.mutate({ id: saved.id, data: { reason: dismissReason.trim() } })}>Confirm dismissal</Button>
+                        <Button size="sm" variant="ghost" onClick={() => { setDismissingId(null); setDismissReason(""); }}>Cancel</Button>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+              {!contractsQuery.isLoading && alerts.length === 0 && <div className="rounded-xl border border-dashed bg-card p-8 text-center text-sm font-medium text-muted-foreground">No actionable alerts. Blocked and expired contracts are excluded.</div>}
+            </div>
+          </section>
           
           {/* Recent Contracts Section */}
           <div className="space-y-4 pt-4">

@@ -10,7 +10,7 @@ import {
   CONTRACT_EXTRACTION_PROMPT_VERSION,
   CONTRACT_EXTRACTION_SYSTEM_PROMPT,
 } from "./contract-extraction-prompt";
-import { computeContractDates } from "./contract-computation";
+import { computeContractAlert, computeContractDates } from "./contract-computation";
 
 const extractionConfidence = ["High", "Medium", "Low"] as const;
 const provenanceStatuses = ["found", "not_found", "ambiguous", "conflicting"] as const;
@@ -254,15 +254,18 @@ export function normalizeExtraction(raw: unknown) {
       },
       assignment: {
         owner: "John Doe",
+        ownerEmail: "john.doe@example.com",
         negotiationBufferDays: 30,
         negotiationBufferSource: "global_default" as const,
         status: "Review Open" as const,
       },
     };
+  const computed = computeContractDates(contract);
   return {
     contract: {
       ...contract,
-      computed: computeContractDates(contract),
+      computed,
+      alert: computeContractAlert(computed, contract.assignment),
     },
   };
 }

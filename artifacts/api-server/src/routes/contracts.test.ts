@@ -62,6 +62,7 @@ const contract = {
   },
   assignment: {
     owner: "John Doe",
+    ownerEmail: "john.doe@example.com",
     negotiationBufferDays: 30,
     negotiationBufferSource: "global_default",
     status: "Review Open",
@@ -72,6 +73,14 @@ const contract = {
     actionDate: "2026-10-02",
     status: "green",
     reason: null,
+  },
+  alert: {
+    owner: "John Doe",
+    ownerEmail: "john.doe@example.com",
+    actionDate: "2026-10-02",
+    noticeDeadline: "2026-11-01",
+    state: "pending",
+    dismissedReason: null,
   },
 };
 
@@ -155,6 +164,29 @@ describe("saved contract persistence", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.error).toMatch(/provenance is inconsistent/i);
+  });
+
+  it("persists a dismissed alert and its reason", async () => {
+    const filename = `dismiss-alert-${crypto.randomUUID()}.pdf`;
+    const created = await request(app).post("/api/contracts").send({ filename, contract });
+    expect(created.status).toBe(201);
+    const id = created.body.id as string;
+    try {
+      expect(created.body.contract.alert.state).toBe("pending");
+      const dismissed = await request(app)
+        .post(`/api/contracts/${id}/alert/dismiss`)
+        .send({ reason: "Renewal already approved" });
+      expect(dismissed.status).toBe(200);
+      expect(dismissed.body.contract.alert).toMatchObject({
+        state: "dismissed",
+        dismissedReason: "Renewal already approved",
+      });
+      const reopened = await request(app).get(`/api/contracts/${id}`);
+      expect(reopened.body.contract.alert.state).toBe("dismissed");
+      expect(reopened.body.contract.alert.dismissedReason).toBe("Renewal already approved");
+    } finally {
+      await db.delete(contractsTable).where(eq(contractsTable.id, id));
+    }
   });
 });
 

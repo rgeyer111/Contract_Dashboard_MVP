@@ -35,6 +35,7 @@ export function createEmptyContractReviewRecord(): ContractReviewRecord {
     },
     assignment: {
       owner: '',
+      ownerEmail: 'john.doe@example.com',
       negotiationBufferDays: 30,
       negotiationBufferSource: 'global_default',
       status: 'Review Open',
@@ -46,6 +47,7 @@ export function createEmptyContractReviewRecord(): ContractReviewRecord {
       status: 'blocked',
       reason: 'blocked — not enough contract data to compute dates',
     },
+    alert: null,
   };
 }
 

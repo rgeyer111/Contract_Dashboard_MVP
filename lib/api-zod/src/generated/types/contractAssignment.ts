@@ -11,6 +11,8 @@ import type { ContractAssignmentStatus } from './contractAssignmentStatus';
 export interface ContractAssignment {
   /** @minLength 1 */
   owner: string;
+  /** @pattern ^[^@\s]+@[^@\s]+\.[^@\s]+$ */
+  ownerEmail: string;
   /**
      * @minimum 0
      * @maximum 365

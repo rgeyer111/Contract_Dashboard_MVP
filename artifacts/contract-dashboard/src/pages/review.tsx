@@ -512,6 +512,18 @@ export default function Review() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-foreground flex items-center gap-1">
+                      <User className="h-3 w-3" /> Owner Email <span className="text-destructive">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={draft.assignment.ownerEmail}
+                      onChange={e => updateAssignment('ownerEmail', e.target.value)}
+                      placeholder="owner@example.com"
+                      className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all hover:border-border/80"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-foreground flex items-center gap-1">
                       <Clock className="h-3 w-3" /> Negotiation Buffer (Days)
                     </label>
                     <input 

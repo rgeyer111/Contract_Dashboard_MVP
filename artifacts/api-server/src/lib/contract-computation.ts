@@ -19,6 +19,14 @@ export type ComputedContractDates = {
   status: "green" | "amber" | "red" | "expired" | "blocked";
   reason: string | null;
 };
+export type ComputedContractAlert = {
+  owner: string;
+  ownerEmail: string;
+  actionDate: string;
+  noticeDeadline: string;
+  state: "pending" | "due" | "overdue" | "dismissed";
+  dismissedReason: string | null;
+};
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -216,5 +224,44 @@ export function computeContractDates(
       status === "expired"
         ? "expired — the fixed contract end date has passed. Confirm whether the contract ended or renewed, then update the renewal terms before relying on this deadline."
         : null,
+  };
+}
+
+export function computeContractAlert(
+  computed: ComputedContractDates,
+  assignment: { owner: string; ownerEmail: string },
+  previous?: Partial<ComputedContractAlert> | null,
+  now = new Date(),
+): ComputedContractAlert | null {
+  if (
+    computed.status === "blocked" ||
+    computed.status === "expired" ||
+    !computed.actionDate ||
+    !computed.noticeDeadline
+  ) {
+    return null;
+  }
+  const today = formatDate(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())));
+  const sameDeadline =
+    previous?.actionDate === computed.actionDate &&
+    previous.noticeDeadline === computed.noticeDeadline &&
+    previous.owner === assignment.owner;
+  let state: ComputedContractAlert["state"];
+  if (sameDeadline && previous?.state === "dismissed") {
+    state = "dismissed";
+  } else if (today > computed.noticeDeadline) {
+    state = "overdue";
+  } else if (today >= computed.actionDate) {
+    state = "due";
+  } else {
+    state = "pending";
+  }
+  return {
+    owner: assignment.owner,
+    ownerEmail: assignment.ownerEmail,
+    actionDate: computed.actionDate,
+    noticeDeadline: computed.noticeDeadline,
+    state,
+    dismissedReason: state === "dismissed" && sameDeadline ? previous?.dismissedReason ?? null : null,
   };
 }

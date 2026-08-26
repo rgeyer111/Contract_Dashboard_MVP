@@ -151,6 +151,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}/alert/dismiss:
+    post:
+      operationId: dismissContractAlert
+      tags: [contracts]
+      summary: Dismiss a contract alert
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DismissAlertRequest"
+      responses:
+        "200":
+          description: Contract with dismissed alert
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedContract"
+        "400":
+          description: Invalid alert dismissal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -389,9 +424,10 @@ components:
         billingFrequency: { $ref: "#/components/schemas/ProvenanceBillingFrequencyField" }
     ContractAssignment:
       type: object
-      required: [owner, negotiationBufferDays, negotiationBufferSource, status]
+      required: [owner, ownerEmail, negotiationBufferDays, negotiationBufferSource, status]
       properties:
         owner: { type: string, minLength: 1 }
+        ownerEmail: { type: string, pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$' }
         negotiationBufferDays: { type: number, minimum: 0, maximum: 365, multipleOf: 1 }
         negotiationBufferSource:
           type: string
@@ -412,9 +448,27 @@ components:
         actionDate: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
         status: { $ref: "#/components/schemas/ContractComputedStatus" }
         reason: { type: ["string", "null"], maxLength: 300 }
+    ContractAlertState:
+      type: string
+      enum: [pending, due, overdue, dismissed]
+    ContractAlert:
+      type: object
+      required: [owner, ownerEmail, actionDate, noticeDeadline, state, dismissedReason]
+      properties:
+        owner: { type: string }
+        ownerEmail: { type: string, pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$' }
+        actionDate: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
+        noticeDeadline: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
+        state: { $ref: "#/components/schemas/ContractAlertState" }
+        dismissedReason: { type: ["string", "null"], maxLength: 300 }
+    DismissAlertRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 1, maxLength: 300 }
     ContractReviewRecord:
       type: object
-      required: [fields, assignment, computed]
+      required: [fields, assignment, computed, alert]
       properties:
         fields:
           $ref: "#/components/schemas/ContractProvenance"
@@ -422,6 +476,10 @@ components:
           $ref: "#/components/schemas/ContractAssignment"
         computed:
           $ref: "#/components/schemas/ContractComputedDates"
+        alert:
+          oneOf:
+            - $ref: "#/components/schemas/ContractAlert"
+            - type: "null"
     ContractExtractionResult:
       type: object
       required:

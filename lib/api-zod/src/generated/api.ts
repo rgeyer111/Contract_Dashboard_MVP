@@ -184,6 +184,7 @@ export const extractContractResponseExtractionContractFieldsBillingFrequencyOneQ
 export const extractContractResponseExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
 
 
+export const extractContractResponseExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
 export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMin = 0;
 export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMax = 365;
 export const extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf = 1;
@@ -192,6 +193,11 @@ export const extractContractResponseExtractionContractComputedExitDateRegExp = n
 export const extractContractResponseExtractionContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractComputedReasonMax = 300;
+
+export const extractContractResponseExtractionContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const extractContractResponseExtractionContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const extractContractResponseExtractionContractAlertOneDismissedReasonMax = 300;
 
 
 export const extractContractResponseExtractionOcrPagesProcessedMin = 0;
@@ -410,6 +416,7 @@ export const ExtractContractResponse = zod.object({
 }),
   "assignment": zod.object({
   "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(extractContractResponseExtractionContractAssignmentOwnerEmailRegExp),
   "negotiationBufferDays": zod.number().min(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMin).max(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMax).multipleOf(extractContractResponseExtractionContractAssignmentNegotiationBufferDaysMultipleOf),
   "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
@@ -420,7 +427,15 @@ export const ExtractContractResponse = zod.object({
   "actionDate": zod.string().regex(extractContractResponseExtractionContractComputedActionDateRegExp).nullable(),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(extractContractResponseExtractionContractComputedReasonMax).nullable()
-})
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(extractContractResponseExtractionContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(extractContractResponseExtractionContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(extractContractResponseExtractionContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(extractContractResponseExtractionContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 }),
   "source": zod.enum(['text', 'ocr']).describe('Whether the contract fields came from embedded PDF text or OCR.'),
   "ocrConfidence": zod.union([zod.literal('High'),zod.literal('Medium'),zod.literal('Low'),zod.literal(null)]).nullable().describe('OCR legibility confidence; null when embedded PDF text was used.'),
@@ -593,6 +608,7 @@ export const listContractsResponseOneContractFieldsBillingFrequencyOneQuoteMax =
 export const listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
 
 
+export const listContractsResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
 export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const listContractsResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
@@ -601,6 +617,11 @@ export const listContractsResponseOneContractComputedExitDateRegExp = new RegExp
 export const listContractsResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractComputedReasonMax = 300;
+
+export const listContractsResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const listContractsResponseOneContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContractsResponseOneContractAlertOneDismissedReasonMax = 300;
 
 
 
@@ -815,6 +836,7 @@ export const ListContractsResponseItem = zod.object({
 }),
   "assignment": zod.object({
   "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(listContractsResponseOneContractAssignmentOwnerEmailRegExp),
   "negotiationBufferDays": zod.number().min(listContractsResponseOneContractAssignmentNegotiationBufferDaysMin).max(listContractsResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(listContractsResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
@@ -825,7 +847,15 @@ export const ListContractsResponseItem = zod.object({
   "actionDate": zod.string().regex(listContractsResponseOneContractComputedActionDateRegExp).nullable(),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(listContractsResponseOneContractComputedReasonMax).nullable()
-})
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(listContractsResponseOneContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(listContractsResponseOneContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(listContractsResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(listContractsResponseOneContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -998,6 +1028,7 @@ export const createContractBodyContractFieldsBillingFrequencyOneQuoteMax = 300;
 export const createContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
 
 
+export const createContractBodyContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
 export const createContractBodyContractAssignmentNegotiationBufferDaysMin = 0;
 export const createContractBodyContractAssignmentNegotiationBufferDaysMax = 365;
 export const createContractBodyContractAssignmentNegotiationBufferDaysMultipleOf = 1;
@@ -1006,6 +1037,11 @@ export const createContractBodyContractComputedExitDateRegExp = new RegExp('^\\d
 export const createContractBodyContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractComputedReasonMax = 300;
+
+export const createContractBodyContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const createContractBodyContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractBodyContractAlertOneDismissedReasonMax = 300;
 
 
 
@@ -1220,6 +1256,7 @@ export const CreateContractBody = zod.object({
 }),
   "assignment": zod.object({
   "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(createContractBodyContractAssignmentOwnerEmailRegExp),
   "negotiationBufferDays": zod.number().min(createContractBodyContractAssignmentNegotiationBufferDaysMin).max(createContractBodyContractAssignmentNegotiationBufferDaysMax).multipleOf(createContractBodyContractAssignmentNegotiationBufferDaysMultipleOf),
   "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
@@ -1230,7 +1267,15 @@ export const CreateContractBody = zod.object({
   "actionDate": zod.string().regex(createContractBodyContractComputedActionDateRegExp).nullable(),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(createContractBodyContractComputedReasonMax).nullable()
-})
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(createContractBodyContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(createContractBodyContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(createContractBodyContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(createContractBodyContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 })
 })
 
@@ -1394,6 +1439,7 @@ export const createContractResponseOneContractFieldsBillingFrequencyOneQuoteMax 
 export const createContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
 
 
+export const createContractResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
 export const createContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const createContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const createContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
@@ -1402,6 +1448,11 @@ export const createContractResponseOneContractComputedExitDateRegExp = new RegEx
 export const createContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractComputedReasonMax = 300;
+
+export const createContractResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const createContractResponseOneContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContractResponseOneContractAlertOneDismissedReasonMax = 300;
 
 
 
@@ -1616,6 +1667,7 @@ export const CreateContractResponse = zod.object({
 }),
   "assignment": zod.object({
   "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(createContractResponseOneContractAssignmentOwnerEmailRegExp),
   "negotiationBufferDays": zod.number().min(createContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(createContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(createContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
@@ -1626,7 +1678,15 @@ export const CreateContractResponse = zod.object({
   "actionDate": zod.string().regex(createContractResponseOneContractComputedActionDateRegExp).nullable(),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(createContractResponseOneContractComputedReasonMax).nullable()
-})
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(createContractResponseOneContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(createContractResponseOneContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(createContractResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(createContractResponseOneContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -1802,6 +1862,7 @@ export const getContractResponseOneContractFieldsBillingFrequencyOneQuoteMax = 3
 export const getContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
 
 
+export const getContractResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
 export const getContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const getContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const getContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
@@ -1810,6 +1871,11 @@ export const getContractResponseOneContractComputedExitDateRegExp = new RegExp('
 export const getContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractComputedReasonMax = 300;
+
+export const getContractResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const getContractResponseOneContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContractResponseOneContractAlertOneDismissedReasonMax = 300;
 
 
 
@@ -2024,6 +2090,7 @@ export const GetContractResponse = zod.object({
 }),
   "assignment": zod.object({
   "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(getContractResponseOneContractAssignmentOwnerEmailRegExp),
   "negotiationBufferDays": zod.number().min(getContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(getContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(getContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
@@ -2034,7 +2101,15 @@ export const GetContractResponse = zod.object({
   "actionDate": zod.string().regex(getContractResponseOneContractComputedActionDateRegExp).nullable(),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(getContractResponseOneContractComputedReasonMax).nullable()
-})
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(getContractResponseOneContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(getContractResponseOneContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(getContractResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(getContractResponseOneContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 })
 }).and(zod.object({
   "id": zod.string(),
@@ -2210,6 +2285,7 @@ export const updateContractBodyContractFieldsBillingFrequencyOneQuoteMax = 300;
 export const updateContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
 
 
+export const updateContractBodyContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
 export const updateContractBodyContractAssignmentNegotiationBufferDaysMin = 0;
 export const updateContractBodyContractAssignmentNegotiationBufferDaysMax = 365;
 export const updateContractBodyContractAssignmentNegotiationBufferDaysMultipleOf = 1;
@@ -2218,6 +2294,11 @@ export const updateContractBodyContractComputedExitDateRegExp = new RegExp('^\\d
 export const updateContractBodyContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractComputedReasonMax = 300;
+
+export const updateContractBodyContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const updateContractBodyContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractBodyContractAlertOneDismissedReasonMax = 300;
 
 
 
@@ -2432,6 +2513,7 @@ export const UpdateContractBody = zod.object({
 }),
   "assignment": zod.object({
   "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(updateContractBodyContractAssignmentOwnerEmailRegExp),
   "negotiationBufferDays": zod.number().min(updateContractBodyContractAssignmentNegotiationBufferDaysMin).max(updateContractBodyContractAssignmentNegotiationBufferDaysMax).multipleOf(updateContractBodyContractAssignmentNegotiationBufferDaysMultipleOf),
   "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
@@ -2442,7 +2524,15 @@ export const UpdateContractBody = zod.object({
   "actionDate": zod.string().regex(updateContractBodyContractComputedActionDateRegExp).nullable(),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(updateContractBodyContractComputedReasonMax).nullable()
-})
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(updateContractBodyContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(updateContractBodyContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(updateContractBodyContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(updateContractBodyContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 })
 })
 
@@ -2606,6 +2696,7 @@ export const updateContractResponseOneContractFieldsBillingFrequencyOneQuoteMax 
 export const updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
 
 
+export const updateContractResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
 export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
 export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
 export const updateContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
@@ -2614,6 +2705,11 @@ export const updateContractResponseOneContractComputedExitDateRegExp = new RegEx
 export const updateContractResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractComputedReasonMax = 300;
+
+export const updateContractResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const updateContractResponseOneContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContractResponseOneContractAlertOneDismissedReasonMax = 300;
 
 
 
@@ -2828,6 +2924,7 @@ export const UpdateContractResponse = zod.object({
 }),
   "assignment": zod.object({
   "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(updateContractResponseOneContractAssignmentOwnerEmailRegExp),
   "negotiationBufferDays": zod.number().min(updateContractResponseOneContractAssignmentNegotiationBufferDaysMin).max(updateContractResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(updateContractResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
   "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
   "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
@@ -2838,7 +2935,446 @@ export const UpdateContractResponse = zod.object({
   "actionDate": zod.string().regex(updateContractResponseOneContractComputedActionDateRegExp).nullable(),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
   "reason": zod.string().max(updateContractResponseOneContractComputedReasonMax).nullable()
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(updateContractResponseOneContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(updateContractResponseOneContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(updateContractResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(updateContractResponseOneContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 })
+}).and(zod.object({
+  "id": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Dismiss a contract alert
+ */
+export const DismissContractAlertParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const dismissContractAlertBodyReasonMax = 300;
+
+
+
+export const DismissContractAlertBody = zod.object({
+  "reason": zod.string().min(1).max(dismissContractAlertBodyReasonMax)
+})
+
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractTitleOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractTitleOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractTitleOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractTypeOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractTypeOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractTypeOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp = new RegExp('^[A-Z]{3}$');
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOnePageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+
+export const dismissContractAlertResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const dismissContractAlertResponseOneContractAssignmentNegotiationBufferDaysMin = 0;
+export const dismissContractAlertResponseOneContractAssignmentNegotiationBufferDaysMax = 365;
+export const dismissContractAlertResponseOneContractAssignmentNegotiationBufferDaysMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractComputedExitDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractComputedNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractComputedActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractComputedReasonMax = 300;
+
+export const dismissContractAlertResponseOneContractAlertOneOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+export const dismissContractAlertResponseOneContractAlertOneActionDateRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractAlertOneNoticeDeadlineRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const dismissContractAlertResponseOneContractAlertOneDismissedReasonMax = 300;
+
+
+
+export const DismissContractAlertResponse = zod.object({
+  "filename": zod.string(),
+  "contract": zod.object({
+  "fields": zod.object({
+  "documentType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsDocumentTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "documentLanguage": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsDocumentLanguageOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "vendorLegalName": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsVendorLegalNameOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "buyerLegalEntity": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractTitle": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractTitleOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractNumber": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractNumberOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().nullable()
+})),
+  "contractType": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractTypeOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
+})),
+  "signatureDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsSignatureDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
+})),
+  "effectiveDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsEffectiveDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
+})),
+  "initialTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "initialTermEndDate": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
+})),
+  "renewalMechanism": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalMechanismOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
+})),
+  "renewalTermLength": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years'])
+}),zod.null()])
+})),
+  "noticePeriod": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+}),zod.array(zod.object({
+  "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
+  "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
+})),zod.null()])
+})),
+  "noticeDeadline": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
+})),
+  "noticeDelivery": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
+  "address": zod.string().nullable(),
+  "cc": zod.array(zod.string())
+}),zod.null()])
+})),
+  "contractValue": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractValueOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.object({
+  "amount": zod.number().min(dismissContractAlertResponseOneContractFieldsContractValueTwoValueOneAmountMin),
+  "currency": zod.string().regex(dismissContractAlertResponseOneContractFieldsContractValueTwoValueOneCurrencyRegExp),
+  "basis": zod.enum(['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'])
+}),zod.null()])
+})),
+  "billingFrequency": zod.object({
+  "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
+  "confidence": zod.enum(['high', 'medium', 'low']),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsBillingFrequencyOnePageMultipleOf).nullable(),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
+  "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
+  "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable()
+}).and(zod.object({
+  "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
+}))
+}),
+  "assignment": zod.object({
+  "owner": zod.string().min(1),
+  "ownerEmail": zod.string().regex(dismissContractAlertResponseOneContractAssignmentOwnerEmailRegExp),
+  "negotiationBufferDays": zod.number().min(dismissContractAlertResponseOneContractAssignmentNegotiationBufferDaysMin).max(dismissContractAlertResponseOneContractAssignmentNegotiationBufferDaysMax).multipleOf(dismissContractAlertResponseOneContractAssignmentNegotiationBufferDaysMultipleOf),
+  "negotiationBufferSource": zod.enum(['contract_override', 'contract_type_default', 'global_default']).describe('Why this human-assigned buffer applies.'),
+  "status": zod.enum(['At Risk', 'Review Open', 'In Negotiation'])
+}),
+  "computed": zod.object({
+  "exitDate": zod.string().regex(dismissContractAlertResponseOneContractComputedExitDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(dismissContractAlertResponseOneContractComputedNoticeDeadlineRegExp).nullable(),
+  "actionDate": zod.string().regex(dismissContractAlertResponseOneContractComputedActionDateRegExp).nullable(),
+  "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reason": zod.string().max(dismissContractAlertResponseOneContractComputedReasonMax).nullable()
+}),
+  "alert": zod.union([zod.object({
+  "owner": zod.string(),
+  "ownerEmail": zod.string().regex(dismissContractAlertResponseOneContractAlertOneOwnerEmailRegExp),
+  "actionDate": zod.string().regex(dismissContractAlertResponseOneContractAlertOneActionDateRegExp).nullable(),
+  "noticeDeadline": zod.string().regex(dismissContractAlertResponseOneContractAlertOneNoticeDeadlineRegExp).nullable(),
+  "state": zod.enum(['pending', 'due', 'overdue', 'dismissed']),
+  "dismissedReason": zod.string().max(dismissContractAlertResponseOneContractAlertOneDismissedReasonMax).nullable()
+}),zod.null()])
 })
 }).and(zod.object({
   "id": zod.string(),

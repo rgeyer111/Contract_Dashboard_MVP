@@ -12,7 +12,7 @@ import {
   extractReadablePdfText,
   extractScannedPdfText,
 } from "../lib/contract-extraction";
-import { computeContractDates } from "../lib/contract-computation";
+import { computeContractDates, computeContractAlert } from "../lib/contract-computation";
 
 const maximumUploadBytes = 10 * 1024 * 1024;
 const upload = multer({
@@ -110,6 +110,10 @@ function withComputedDates(value: Record<string, unknown>) {
     ...value,
     assignment: {
       ...assignment,
+      ownerEmail:
+        typeof assignment.ownerEmail === "string" && assignment.ownerEmail
+          ? assignment.ownerEmail
+          : "john.doe@example.com",
       negotiationBufferSource:
         assignment.negotiationBufferSource === "contract_override" ||
         assignment.negotiationBufferSource === "contract_type_default"
@@ -124,6 +128,16 @@ function withComputedDates(value: Record<string, unknown>) {
         fields: Record<string, unknown>;
         assignment: { negotiationBufferDays: number };
       },
+    ),
+    alert: computeContractAlert(
+      computeContractDates(
+        contract as unknown as {
+          fields: Record<string, unknown>;
+          assignment: { negotiationBufferDays: number };
+        },
+      ),
+      contract.assignment as unknown as { owner: string; ownerEmail: string },
+      isRecord(value.alert) ? value.alert as any : null,
     ),
   };
 }
@@ -186,6 +200,7 @@ function upgradeContract(value: unknown) {
     },
     assignment: {
       owner: typeof legacy.owner === "string" && legacy.owner ? legacy.owner : "John Doe",
+      ownerEmail: "john.doe@example.com",
       negotiationBufferDays: parseLegacyPeriod(legacy.negotiationBuffer)?.amount ?? 30,
       negotiationBufferSource: "global_default",
       status: ["At Risk", "Review Open", "In Negotiation"].includes(String(legacy.status))
@@ -217,6 +232,32 @@ router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(404).json({ error: "Contract not found." });
     return;
   }
+  res.json(responseFor(record));
+});
+
+router.post("/contracts/:id/alert/dismiss", async (req: Request, res: Response): Promise<void> => {
+  const reason = typeof req.body?.reason === "string" ? req.body.reason.trim().slice(0, 300) : "";
+  if (!reason) {
+    res.status(400).json({ error: "A reason is required to dismiss an alert." });
+    return;
+  }
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [existing] = await db.select().from(contractsTable).where(eq(contractsTable.id, id));
+  if (!existing) {
+    res.status(404).json({ error: "Contract not found." });
+    return;
+  }
+  const contract = upgradeContract(existing.contract) as unknown as Record<string, unknown>;
+  const alert = isRecord(contract.alert) ? contract.alert : null;
+  if (!alert) {
+    res.status(400).json({ error: "This contract has no actionable alert." });
+    return;
+  }
+  const dismissed = { ...alert, state: "dismissed", dismissedReason: reason };
+  const [record] = await db.update(contractsTable)
+    .set({ contract: { ...contract, alert: dismissed }, updatedAt: new Date() })
+    .where(eq(contractsTable.id, id))
+    .returning();
   res.json(responseFor(record));
 });
 

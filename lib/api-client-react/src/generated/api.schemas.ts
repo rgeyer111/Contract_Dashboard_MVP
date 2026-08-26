@@ -338,6 +338,8 @@ export const ContractAssignmentStatus = {
 export interface ContractAssignment {
   /** @minLength 1 */
   owner: string;
+  /** @pattern ^[^@\s]+@[^@\s]+\.[^@\s]+$ */
+  ownerEmail: string;
   /**
      * @minimum 0
      * @maximum 365
@@ -383,10 +385,51 @@ export interface ContractComputedDates {
   reason: string | null;
 }
 
+export type ContractAlertState = typeof ContractAlertState[keyof typeof ContractAlertState];
+
+
+export const ContractAlertState = {
+  pending: 'pending',
+  due: 'due',
+  overdue: 'overdue',
+  dismissed: 'dismissed',
+} as const;
+
+export interface ContractAlert {
+  owner: string;
+  /** @pattern ^[^@\s]+@[^@\s]+\.[^@\s]+$ */
+  ownerEmail: string;
+  /**
+     * @nullable
+     * @pattern ^\d{4}-\d{2}-\d{2}$
+     */
+  actionDate: string | null;
+  /**
+     * @nullable
+     * @pattern ^\d{4}-\d{2}-\d{2}$
+     */
+  noticeDeadline: string | null;
+  state: ContractAlertState;
+  /**
+     * @maxLength 300
+     * @nullable
+     */
+  dismissedReason: string | null;
+}
+
+export interface DismissAlertRequest {
+  /**
+     * @minLength 1
+     * @maxLength 300
+     */
+  reason: string;
+}
+
 export interface ContractReviewRecord {
   fields: ContractProvenance;
   assignment: ContractAssignment;
   computed: ContractComputedDates;
+  alert: ContractAlert | null;
 }
 
 /**
