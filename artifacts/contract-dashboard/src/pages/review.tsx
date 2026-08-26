@@ -546,21 +546,36 @@ export default function Review() {
                     </select>
                   </div>
                   <div className="col-span-1 md:col-span-3">
-                    <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-lg border bg-muted/20 p-4">
-                      {[
-                        ['Exit date', draft.computed.exitDate],
-                        ['Legal notice deadline', draft.computed.noticeDeadline],
-                        ['Start negotiation', draft.computed.actionDate],
-                      ].map(([label, value]) => (
-                        <div key={label}>
-                          <div className="text-[10px] uppercase tracking-wide font-bold text-muted-foreground">{label}</div>
-                          <div className="mt-1 text-sm font-extrabold">{value || 'Not computable'}</div>
+                    {draft.computed.status === 'blocked' ? (
+                      <div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/5 p-4 flex items-start gap-3">
+                        <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-extrabold text-destructive">Deadline unavailable</p>
+                          <p className="mt-1 text-xs font-semibold leading-relaxed text-destructive/90">
+                            {draft.computed.reason || 'Confirm the missing contract timing fields and their source clauses to calculate a deadline.'}
+                          </p>
+                          <p className="mt-2 text-[11px] font-bold text-destructive/80">
+                            No dates are shown until the contract timing can be trusted.
+                          </p>
                         </div>
-                      ))}
-                      {draft.computed.reason && (
-                        <p className="sm:col-span-3 text-xs font-semibold text-destructive">{draft.computed.reason}</p>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-lg border bg-muted/20 p-4">
+                        {[
+                          ['Exit date', draft.computed.exitDate],
+                          ['Legal notice deadline', draft.computed.noticeDeadline],
+                          ['Start negotiation', draft.computed.actionDate],
+                        ].map(([label, value]) => (
+                          <div key={label}>
+                            <div className="text-[10px] uppercase tracking-wide font-bold text-muted-foreground">{label}</div>
+                            <div className="mt-1 text-sm font-extrabold">{value || 'Not computable'}</div>
+                          </div>
+                        ))}
+                        {draft.computed.reason && (
+                          <p className="sm:col-span-3 text-xs font-semibold text-destructive">{draft.computed.reason}</p>
+                        )}
+                      </div>
+                    )}
                     <p className="text-xs text-muted-foreground font-medium">
                       These settings dictate how this contract is tracked internally and are not extracted from the document itself. 
                       The <strong className="text-foreground">Owner</strong> will receive notices based on the negotiation buffer.

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { computeContractDates } from "./contract-computation";
 
-const field = (value: unknown, status = "found") => ({ value, status });
+const field = (value: unknown, status = "found", confidence = "high") => ({ value, status, confidence });
 const contract = (overrides: Record<string, unknown> = {}) => ({
   fields: {
     effectiveDate: field("2026-01-01"),
@@ -46,6 +46,61 @@ describe("computeContractDates", () => {
     expect(result.status).toBe("blocked");
     expect(result.reason).toMatch(/anchor unclear/i);
     expect(result.noticeDeadline).toBeNull();
+  });
+
+  it("explains how to unblock a missing notice clause", () => {
+    const result = computeContractDates(
+      contract({ noticePeriod: field(null, "not_found", "low") }),
+      new Date("2026-05-01T12:00:00Z"),
+    );
+
+    expect(result).toMatchObject({
+      status: "blocked",
+      exitDate: null,
+      noticeDeadline: null,
+      actionDate: null,
+    });
+    expect(result.reason).toMatch(/no notice clause.*add or confirm/i);
+  });
+
+  it("explains when timing evidence is too poor to trust", () => {
+    const result = computeContractDates(
+      contract({ initialTermEndDate: field("2026-12-31", "found", "low") }),
+      new Date("2026-05-01T12:00:00Z"),
+    );
+
+    expect(result.status).toBe("blocked");
+    expect(result.reason).toMatch(/scan.*uncertain.*clearer scan.*confirm/i);
+    expect(result.exitDate).toBeNull();
+    expect(result.noticeDeadline).toBeNull();
+    expect(result.actionDate).toBeNull();
+  });
+
+  it("explains how to resolve conflicting timing values", () => {
+    const result = computeContractDates(
+      contract({
+        noticePeriod: field(
+          { amount: 3, unit: "months", anchor: "term_end" },
+          "conflicting",
+        ),
+      }),
+      new Date("2026-05-01T12:00:00Z"),
+    );
+
+    expect(result.status).toBe("blocked");
+    expect(result.reason).toMatch(/conflicting.*confirm.*controlling contract/i);
+    expect(result.noticeDeadline).toBeNull();
+  });
+
+  it("explains why an expired contract needs renewal confirmation", () => {
+    const result = computeContractDates(
+      contract({ renewalMechanism: field("expires") }),
+      new Date("2027-01-15T12:00:00Z"),
+    );
+
+    expect(result.status).toBe("expired");
+    expect(result.reason).toMatch(/end date has passed.*ended or renewed/i);
+    expect(result.noticeDeadline).toBe("2026-09-30");
   });
 
   it("advances an auto-renewing contract to its next exit date", () => {
