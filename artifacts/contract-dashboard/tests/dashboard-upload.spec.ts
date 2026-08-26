@@ -413,3 +413,152 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   );
   await expect(page.getByPlaceholder("e.g. John Doe")).toHaveValue("John Doe");
 });
+
+test("keeps the family registry schema and effective values reachable on narrow screens", async ({ page }) => {
+  const rootId = "saved-family-parent";
+  const amendmentId = "saved-family-amendment";
+  const parentContract = makeContract({
+    vendor: "Legacy Parent Vendor",
+    contractNumber: "PARENT-001",
+    contractTitle: "Original Support Agreement",
+    contractValue: { amount: 120000, currency: "USD", basis: "annual" },
+  });
+  const effectiveBase = makeContract({
+    vendor: "Northstar Sourcing GmbH",
+    contractNumber: "PARENT-001",
+    contractTitle: "Sourcing Agreement",
+    contractType: "software_license",
+    contractValue: { amount: 240000, currency: "USD", basis: "annual" },
+  });
+  const effectiveContract = {
+    ...effectiveBase,
+    fields: {
+      ...effectiveBase.fields,
+      initialTermEndDate: provenance("2027-12-31"),
+      renewalMechanism: provenance("manual_renewal"),
+      noticePeriod: provenance({
+        amount: 90,
+        unit: "days",
+        anchor: "term_end",
+        purpose: "non_renewal",
+      }),
+    },
+    assignment: {
+      ...effectiveBase.assignment,
+      owner: "Avery Stone",
+    },
+    computed: {
+      ...effectiveBase.computed,
+      noticeDeadline: "2027-10-02",
+      actionDate: "2027-09-02",
+    },
+  };
+  const family = {
+    id: rootId,
+    documentCount: 2,
+    effectiveContract,
+    documents: [
+      {
+        id: rootId,
+        filename: "parent-agreement.pdf",
+        documentType: "master_agreement",
+        effectiveDate: "2026-01-01",
+        isParent: true,
+        isCurrent: false,
+        fieldValues: {},
+      },
+      {
+        id: amendmentId,
+        filename: "commercial-amendment.pdf",
+        documentType: "amendment",
+        effectiveDate: "2027-01-01",
+        isParent: false,
+        isCurrent: true,
+        fieldValues: {},
+      },
+    ],
+  };
+  const savedContracts = [
+    {
+      id: rootId,
+      filename: "parent-agreement.pdf",
+      parentContractId: null,
+      documentType: "master_agreement",
+      contract: parentContract,
+      family,
+    },
+    {
+      id: amendmentId,
+      filename: "commercial-amendment.pdf",
+      parentContractId: rootId,
+      documentType: "amendment",
+      contract: effectiveContract,
+      family,
+    },
+  ];
+  let listRequests = 0;
+
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      listRequests += 1;
+      await route.fulfill({ json: savedContracts });
+      return;
+    }
+    await route.continue();
+  });
+
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto("/dashboard");
+
+  const headers = page.locator("table thead th");
+  await expect(headers).toHaveCount(5);
+  await expect(headers).toHaveText([
+    "Family / commercial context",
+    "Renewal",
+    "Notice runway",
+    "Owner",
+    "Signal",
+  ]);
+  for (const removedHeader of ["Contract family", "Type", "Value", "Notice / action", "Actions"]) {
+    await expect(headers.filter({ hasText: new RegExp(`^${removedHeader}$`) })).toHaveCount(0);
+  }
+
+  const registryRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
+  await expect(registryRow).toHaveCount(1);
+  await expect(registryRow).toContainText("2 documents");
+  await expect(registryRow).toContainText("Sourcing Agreement");
+  await expect(registryRow).toContainText("software license");
+  await expect(registryRow).toContainText("USD 240,000 · annual");
+  await expect(registryRow).toContainText("2027-12-31");
+  await expect(registryRow).toContainText("manual renewal");
+  await expect(registryRow).toContainText("90 days before term end");
+  await expect(registryRow).toContainText("2027-10-02");
+  await expect(registryRow).toContainText("Avery Stone");
+  await expect(registryRow).not.toContainText("Legacy Parent Vendor");
+
+  const scrollerMetrics = await page.locator("table").evaluate((table) => {
+    const scroller = table.parentElement;
+    return {
+      clientWidth: scroller?.clientWidth ?? 0,
+      scrollWidth: scroller?.scrollWidth ?? 0,
+      overflowX: scroller ? getComputedStyle(scroller).overflowX : "",
+    };
+  });
+  expect(scrollerMetrics.overflowX).toBe("auto");
+  expect(scrollerMetrics.scrollWidth).toBeGreaterThan(scrollerMetrics.clientWidth);
+
+  await page.reload();
+  const reloadedRegistryRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
+  await expect(reloadedRegistryRow).toHaveCount(1);
+  await expect(reloadedRegistryRow).toContainText("2 documents");
+  await expect(reloadedRegistryRow).toContainText("USD 240,000 · annual");
+  await expect(reloadedRegistryRow).toContainText("2027-10-02");
+  await expect(reloadedRegistryRow).toContainText("Avery Stone");
+  expect(listRequests).toBeGreaterThanOrEqual(2);
+
+  await page.goto("/action-items");
+  await expect(page).toHaveURL(/\/action-items$/);
+  await expect(page.locator("main h1")).toHaveText("Action Items");
+  await expect(page.getByRole("heading", { name: "Contract Registry", exact: true })).toHaveCount(0);
+  await expect(page.locator("table")).toHaveCount(0);
+});
