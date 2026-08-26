@@ -593,6 +593,13 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await page.reload();
+  await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
+  await expect(documentTypeFilter).toHaveValue("amendment");
+  await expect(page.getByRole("button", { name: "Copy filtered view link" })).toBeVisible();
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear document type filter" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
@@ -641,7 +648,8 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
 
   await page.reload();
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
+  await expect(documentTypeFilter).toHaveValue("amendment");
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
   const reloadedAmendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
   await expect(reloadedAmendmentRow).toHaveCount(1);
   await expect(reloadedAmendmentRow).toContainText("USD 240,000 · annual");

@@ -1,4 +1,4 @@
-import { useState, type DragEvent, type ChangeEvent } from "react";
+import { useEffect, useState, type DragEvent, type ChangeEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
@@ -53,10 +53,11 @@ function formatPeriod(value: unknown) {
     .join(" · ") || "Notice terms not stated";
 }
 
-function getDocumentTypeFilterFromLocation(location: string) {
-  const query = location.includes("?") ? location.slice(location.indexOf("?")) : "";
-  const value = new URLSearchParams(query).get("documentType");
-  return documentTypeOptions.includes(value as typeof documentTypeOptions[number]) ? value ?? "" : "";
+const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
+
+function getDocumentTypeFromUrl() {
+  const value = new URLSearchParams(window.location.search).get(DOCUMENT_TYPE_QUERY_PARAM);
+  return value && documentTypeOptions.some((option) => option === value) ? value : "";
 }
 
 function getSearchTermFromLocation(location: string) {
@@ -76,11 +77,21 @@ export default function Dashboard() {
   const [dismissReason, setDismissReason] = useState("");
   const [searchTerm, setSearchTerm] = useState(() => getSearchTermFromLocation(window.location.search));
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
-  const [documentTypeFilter, setDocumentTypeFilter] = useState(() => getDocumentTypeFilterFromLocation(window.location.search));
+  const [documentTypeFilter, setDocumentTypeFilter] = useState(getDocumentTypeFromUrl);
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
   const documentTypeCounts = getDocumentTypeCounts(contracts);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setDocumentTypeFilter(getDocumentTypeFromUrl());
+      setShareStatus("idle");
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   const normalizedSearch = searchTerm.trim().toLowerCase();
   const filteredContracts = contracts.filter((saved) => {
     const documentType = getSavedContractDocumentType(saved);
@@ -111,14 +122,15 @@ export default function Dashboard() {
   const updateDocumentTypeFilter = (value: string) => {
     const params = new URLSearchParams(window.location.search);
     if (value) {
-      params.set("documentType", value);
+      params.set(DOCUMENT_TYPE_QUERY_PARAM, value);
     } else {
-      params.delete("documentType");
+      params.delete(DOCUMENT_TYPE_QUERY_PARAM);
     }
     const nextQuery = params.toString();
     setDocumentTypeFilter(value);
     setShareStatus("idle");
-    setLocation(`${location.split("?")[0]}${nextQuery ? `?${nextQuery}` : ""}`);
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${window.location.hash}`;
+    window.history.replaceState(window.history.state, "", nextUrl);
   };
 
   const updateSearchTerm = (value: string) => {
