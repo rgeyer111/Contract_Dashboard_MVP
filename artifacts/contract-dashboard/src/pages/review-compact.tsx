@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
   Bell,
@@ -23,197 +22,29 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  useCreateContract,
-  useGetContract,
-  useUpdateContract,
-  type ContractExtractionResult,
-  type ContractReviewRecord,
-  type ProvenanceMetadata,
-} from "@workspace/api-client-react";
-import {
   assignmentStatusOptions,
   billingFrequencyOptions,
   contractTypeOptions,
   contractValueBasisOptions,
-  createEmptyContractReviewRecord,
   documentTypeOptions,
   languageOptions,
   periodUnitOptions,
   renewalMechanismOptions,
 } from "@/lib/contracts";
-
-const extractionStorageKey = "contract-dashboard.extraction";
-const extractionQueueStorageKey = "contract-dashboard.extraction-queue";
-const reviewerEditNote = "Reviewer-supplied value; original extraction evidence was cleared.";
-const noticeAnchorOptions = [
-  "term_end",
-  "renewal_date",
-  "anniversary",
-  "period_end_month",
-  "period_end_quarter",
-  "period_end_year",
-  "any_time",
-  "unknown",
-] as const;
-
-type FieldKey = keyof ContractReviewRecord["fields"];
-type AnyField = ProvenanceMetadata & { value: any };
-
-type IssueDefinition = {
-  key: FieldKey;
-  label: string;
-  section: string;
-  prompt: string;
-  hint: string;
-};
-
-const issueDefinitions: IssueDefinition[] = [
-  {
-    key: "vendorLegalName",
-    label: "Vendor legal name",
-    section: "Identity",
-    prompt: "Which legal entity is the supplier?",
-    hint: "This name is used across the registry and owner notifications.",
-  },
-  {
-    key: "contractType",
-    label: "Contract type",
-    section: "Commercial terms",
-    prompt: "Which contract category best matches this agreement?",
-    hint: "Used to compare similar renewal exposure.",
-  },
-  {
-    key: "contractNumber",
-    label: "Contract number",
-    section: "Identity",
-    prompt: "What identifier should the team use to find this agreement?",
-    hint: "Use the document number, reference, or internal ID.",
-  },
-  {
-    key: "effectiveDate",
-    label: "Effective date",
-    section: "Timing",
-    prompt: "When did this agreement become effective?",
-    hint: "The effective date anchors the contract timeline.",
-  },
-  {
-    key: "initialTermLength",
-    label: "Initial term length",
-    section: "Timing",
-    prompt: "How long is the initial term?",
-    hint: "Enter the duration exactly as the agreement defines it.",
-  },
-  {
-    key: "initialTermEndDate",
-    label: "Initial term end date",
-    section: "Timing",
-    prompt: "When does the current term end?",
-    hint: "This is the anchor for renewal and notice calculations.",
-  },
-  {
-    key: "renewalMechanism",
-    label: "Renewal mechanism",
-    section: "Renewal",
-    prompt: "How does this agreement continue or end?",
-    hint: "Choose the clause behavior, not the business team's preference.",
-  },
-  {
-    key: "noticePeriod",
-    label: "Notice period",
-    section: "Renewal",
-    prompt: "How much notice is required before the term ends?",
-    hint: "The legal notice deadline is calculated from this value.",
-  },
-  {
-    key: "contractValue",
-    label: "Contract value",
-    section: "Commercial terms",
-    prompt: "What value should the registry track?",
-    hint: "Leave it as not stated when the document provides no reliable value.",
-  },
-];
-
-const detailGroups: Array<{ title: string; fields: Array<{ key: FieldKey; label: string; kind: "text" | "select" | "period" | "json" | "value" }> }> = [
-  {
-    title: "Document",
-    fields: [
-      { key: "documentType", label: "Document type", kind: "select" },
-      { key: "documentLanguage", label: "Language", kind: "select" },
-      { key: "contractTitle", label: "Contract title", kind: "text" },
-      { key: "buyerLegalEntity", label: "Buyer legal entity", kind: "text" },
-    ],
-  },
-  {
-    title: "Dates & renewal",
-    fields: [
-      { key: "signatureDate", label: "Signature date", kind: "text" },
-      { key: "renewalTermLength", label: "Renewal term length", kind: "period" },
-      { key: "noticeDelivery", label: "Notice delivery", kind: "json" },
-      { key: "billingFrequency", label: "Billing frequency", kind: "select" },
-    ],
-  },
-];
-
-function readStoredExtraction(): ContractExtractionResult | null {
-  try {
-    const saved = sessionStorage.getItem(extractionStorageKey);
-    if (!saved) return null;
-    const parsed = JSON.parse(saved) as ContractExtractionResult;
-    return parsed?.filename && parsed?.extraction?.contract ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-function readExtractionQueue(): ContractExtractionResult[] {
-  try {
-    const saved = sessionStorage.getItem(extractionQueueStorageKey);
-    const parsed = saved ? JSON.parse(saved) : [];
-    return Array.isArray(parsed)
-      ? parsed.filter((item) => item?.filename && item?.extraction?.contract)
-      : [];
-  } catch {
-    return [];
-  }
-}
-
-function getField(record: ContractReviewRecord, key: FieldKey): AnyField {
-  return record.fields[key] as AnyField;
-}
-
-function hasValue(value: unknown) {
-  if (value === null || value === undefined || value === "") return false;
-  if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === "object") return Object.values(value as Record<string, unknown>).some((item) => item !== null && item !== "");
-  return true;
-}
-
-function displayValue(value: any): string {
-  if (!hasValue(value)) return "Not stated";
-  if (typeof value === "object") {
-    if ("amount" in value) return `${value.amount ?? ""} ${value.unit ?? ""}`.trim();
-    if ("currency" in value) return `${value.currency ?? ""} ${value.amount?.toLocaleString?.() ?? ""}`.trim();
-    return Object.entries(value)
-      .map(([key, item]) => `${key}: ${Array.isArray(item) ? item.join(", ") : item}`)
-      .join(" · ");
-  }
-  return String(value).replace(/_/g, " ");
-}
-
-function statusLabel(status: AnyField["status"]) {
-  return status.replace("_", " ");
-}
-
-function isIssue(field: AnyField) {
-  return !field.reviewed && (field.status !== "found" || !hasValue(field.value));
-}
-
-function formatDate(value: string | null | undefined) {
-  if (!value) return "Not calculated";
-  const [year, month, day] = value.split("-");
-  if (!year || !month || !day) return value;
-  return `${day}.${month}.${year}`;
-}
+import {
+  detailGroups,
+  displayValue,
+  formatDate,
+  getField,
+  hasValue,
+  noticeAnchorOptions,
+  reviewerEditNote,
+  statusLabel,
+  type AnyField,
+  type FieldKey,
+  type IssueDefinition,
+} from "@/lib/review";
+import { useContractReview } from "@/hooks/use-contract-review";
 
 function TextInput({
   value,
@@ -491,142 +322,26 @@ function IssueCard({
 
 export default function ReviewCompact() {
   const [, setLocation] = useLocation();
-  const queryClient = useQueryClient();
-  const savedId = new URLSearchParams(window.location.search).get("id") ?? "";
-  const savedContractQuery = useGetContract(savedId, {
-    query: {
-      enabled: Boolean(savedId),
-      queryKey: [`/api/contracts/${savedId}`],
-    },
-  });
-  const [storedExtraction] = useState(readStoredExtraction);
-  const [draft, setDraft] = useState<ContractReviewRecord>(() =>
-    storedExtraction ? storedExtraction.extraction.contract : createEmptyContractReviewRecord(),
-  );
-  const [filename, setFilename] = useState(storedExtraction?.filename ?? "confirmed-contract.pdf");
-  const [resolvedKeys, setResolvedKeys] = useState<Set<FieldKey>>(new Set());
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (savedContractQuery.data) {
-      setFilename(savedContractQuery.data.filename);
-      setDraft(savedContractQuery.data.contract);
-      setResolvedKeys(new Set());
-    }
-  }, [savedContractQuery.data]);
-
-  const updateField = (key: FieldKey, value: any) => {
-    const populated = hasValue(value);
-    setDraft((previous) => ({
-      ...previous,
-      fields: {
-        ...previous.fields,
-        [key]: {
-          ...previous.fields[key],
-          value: populated ? value : null,
-          status: populated ? "ambiguous" : "not_found",
-          confidence: populated ? "low" : "low",
-          page: null,
-          clause: null,
-          quote: null,
-          note: populated ? reviewerEditNote : null,
-          reviewed: false,
-        },
-      },
-    }));
-  };
-
-  const resolveField = (key: FieldKey) => {
-    setDraft((previous) => ({
-      ...previous,
-      fields: {
-        ...previous.fields,
-        [key]: {
-          ...previous.fields[key],
-          reviewed: true,
-        },
-      },
-    }));
-    setResolvedKeys((previous) => new Set(previous).add(key));
-  };
-
-  const updateAssignment = (key: keyof ContractReviewRecord["assignment"], value: any) => {
-    setDraft((previous) => ({
-      ...previous,
-      assignment: { ...previous.assignment, [key]: value },
-    }));
-  };
-
-  const updateNegotiationBuffer = (value: string) => {
-    const parsed = Number.parseInt(value, 10);
-    const negotiationBufferDays = Number.isFinite(parsed)
-      ? Math.max(0, Math.min(365, parsed))
-      : 0;
-    setDraft((previous) => ({
-      ...previous,
-      assignment: {
-        ...previous.assignment,
-        negotiationBufferDays,
-        negotiationBufferSource: "contract_override",
-      },
-    }));
-  };
-
-  const openIssues = useMemo(
-    () => issueDefinitions.filter((issue) => !resolvedKeys.has(issue.key) && isIssue(getField(draft, issue.key))),
-    [draft, resolvedKeys],
-  );
-
-  const requiredKeys: FieldKey[] = [
-    "vendorLegalName",
-    "contractType",
-    "contractNumber",
-    "effectiveDate",
-    "initialTermLength",
-    "initialTermEndDate",
-    "noticePeriod",
-  ];
-  const missingRequired = requiredKeys.filter((key) => !hasValue(getField(draft, key).value));
-  const ownerMissing = !draft.assignment.owner.trim() || !draft.assignment.ownerEmail.trim();
-  const totalOpenIssues = openIssues.length + (ownerMissing ? 1 : 0);
-  const isComplete = missingRequired.length === 0 && !ownerMissing;
-  const progress = Math.round(((issueDefinitions.length + 1 - totalOpenIssues) / (issueDefinitions.length + 1)) * 100);
-  const createContract = useCreateContract();
-  const updateContract = useUpdateContract();
-  const isSaving = createContract.isPending || updateContract.isPending;
-
-  const handleConfirm = async () => {
-    if (!isComplete) return;
-    setSaveError(null);
-    try {
-      if (savedId) {
-        await updateContract.mutateAsync({
-          id: savedId,
-          data: { filename, contract: draft },
-        });
-      } else {
-        await createContract.mutateAsync({
-          data: { filename, contract: draft },
-        });
-      }
-      await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
-      const queue = readExtractionQueue();
-      const next = queue.shift();
-      if (next) {
-        sessionStorage.setItem(extractionStorageKey, JSON.stringify(next));
-        sessionStorage.setItem(extractionQueueStorageKey, JSON.stringify(queue));
-        setLocation("/review?batch=next");
-        window.setTimeout(() => window.location.reload(), 0);
-      } else {
-        sessionStorage.removeItem(extractionStorageKey);
-        sessionStorage.removeItem(extractionQueueStorageKey);
-        setLocation("/dashboard");
-      }
-    } catch (error) {
-      setSaveError(error instanceof Error ? error.message : "We could not save this contract. Please try again.");
-    }
-  };
+  const {
+    savedContractQuery,
+    storedExtraction,
+    draft,
+    filename,
+    saveError,
+    openIssues,
+    missingRequired,
+    ownerMissing,
+    totalOpenIssues,
+    isComplete,
+    progress,
+    isSaving,
+    updateField,
+    resolveField,
+    updateAssignment,
+    updateNegotiationBuffer,
+    handleConfirm,
+  } = useContractReview();
 
   const vendor = getField(draft, "vendorLegalName").value || "Untitled contract";
   const title = getField(draft, "contractTitle").value || filename;

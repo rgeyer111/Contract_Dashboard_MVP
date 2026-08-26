@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type DragEvent, type ChangeEvent } from "react";
+import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
@@ -30,136 +30,32 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   getListContractsQueryKey,
-  getListRegistryViewsQueryKey,
-  useCreateRegistryView,
-  useDeleteRegistryView,
   useDismissContractAlert,
-  useExtractContract,
   useListContracts,
-  useListRegistryViews,
-  usePinRegistryView,
-  useReorderRegistryViews,
   useUpdateContract,
-  useUpdateRegistryView,
-  type ContractExtractionResult,
-  type RegistryViewSaveRequestDocumentType,
-  type SavedRegistryView,
 } from "@workspace/api-client-react";
-import { contractTypeOptions, documentTypeOptions, getDocumentTypeCounts, getSavedContractDocumentType } from "@/lib/contracts";
-
-function formatContractType(value: string | null) {
-  return value ? value.replace(/_/g, " ") : "Type not stated";
-}
-
-function formatDocumentType(value: string) {
-  return value.replace(/_/g, " ");
-}
-
-function formatContractValue(value: { amount?: number; currency?: string; basis?: string } | null) {
-  if (!value || value.amount === undefined || !value.currency || !value.basis) {
-    return "Value not stated";
-  }
-  return `${value.currency} ${value.amount.toLocaleString()} · ${value.basis.replace(/_/g, " ")}`;
-}
-
-function formatPeriod(value: unknown) {
-  const periods = Array.isArray(value) ? value : value ? [value] : [];
-  return periods
-    .map((period) => {
-      if (!period || typeof period !== "object") return null;
-      const item = period as { amount?: number; unit?: string; anchor?: string };
-      if (item.amount === undefined || !item.unit) return null;
-      const anchor = item.anchor ? ` before ${item.anchor.replace(/_/g, " ")}` : "";
-      return `${item.amount} ${item.unit}${anchor}`;
-    })
-    .filter(Boolean)
-    .join(" · ") || "Notice terms not stated";
-}
-
-function formatDaysRemaining(value: number | null) {
-  if (value === null) return "Action date unavailable";
-  if (value === 0) return "Action starts today";
-  if (value > 0) return `${value} day${value === 1 ? "" : "s"} until action`;
-  const overdueDays = Math.abs(value);
-  return `${overdueDays} day${overdueDays === 1 ? "" : "s"} past action date`;
-}
-
-function formatRegistryDate(value: string | null | undefined) {
-  if (!value) return "Not stated";
-  const [year, month, day] = value.split("-");
-  return year && month && day ? `${day}.${month}.${year}` : value;
-}
-
-function formatLabel(value: string | null | undefined, fallback = "Not stated") {
-  return value ? value.replace(/_/g, " ") : fallback;
-}
-
-function statusClasses(status: string) {
-  return status === "red"
-    ? "bg-destructive/10 text-destructive border-destructive/20"
-    : status === "expired"
-      ? "bg-orange-500/10 text-orange-700 border-orange-500/20"
-      : status === "amber"
-        ? "bg-amber-500/10 text-amber-700 border-amber-500/20"
-        : status === "green"
-          ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
-          : "bg-destructive/10 text-destructive border-destructive/20";
-}
-
-function statusRowClasses(status: string) {
-  return status === "red"
-    ? "bg-destructive/[0.035]"
-    : status === "amber"
-      ? "bg-amber-500/[0.045]"
-      : status === "expired" || status === "blocked"
-        ? "bg-orange-500/[0.035]"
-        : "";
-}
-
-const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
-const SEARCH_QUERY_PARAM = "search";
-
-function getDocumentTypeFromUrl() {
-  const value = new URLSearchParams(window.location.search).get(DOCUMENT_TYPE_QUERY_PARAM);
-  return value && documentTypeOptions.some((option) => option === value) ? value : "";
-}
-
-function getSearchTermFromLocation(location: string) {
-  const query = location.includes("?") ? location.slice(location.indexOf("?")) : "";
-  return new URLSearchParams(query).get(SEARCH_QUERY_PARAM) ?? "";
-}
-
-function updateRegistryUrl(params: URLSearchParams, mode: "push" | "replace") {
-  const url = new URL(window.location.href);
-  url.search = params.toString();
-  const nextUrl = `${url.pathname}${url.search}${url.hash}`;
-  if (mode === "push") {
-    window.history.pushState(window.history.state, "", nextUrl);
-  } else {
-    window.history.replaceState(window.history.state, "", nextUrl);
-  }
-}
+import { contractTypeOptions, documentTypeOptions, getDocumentTypeCounts } from "@/lib/contracts";
+import {
+  formatContractType,
+  formatDocumentType,
+  formatContractValue,
+  formatDaysRemaining,
+  formatLabel,
+  formatPeriod,
+  formatRegistryDate,
+  statusClasses,
+  statusRowClasses,
+} from "@/lib/registry";
+import { useContractUpload } from "@/hooks/use-contract-upload";
+import { useRegistryFilters } from "@/hooks/use-registry-filters";
+import { useSavedRegistryViews } from "@/hooks/use-saved-registry-views";
 
 export default function Dashboard() {
   const [location, setLocation] = useLocation();
   const isActionItemsPage = location.split("?")[0] === "/action-items";
   const [uploadOpen, setUploadOpen] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [runLog, setRunLog] = useState<Array<{ name: string; state: "processing" | "ready" | "duplicate" | "failed"; message?: string }>>([]);
-  const [isDragging, setIsDragging] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
   const [dismissingId, setDismissingId] = useState<string | null>(null);
   const [dismissReason, setDismissReason] = useState("");
-  const [searchTerm, setSearchTerm] = useState(() => getSearchTermFromLocation(window.location.search));
-  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
-  const [documentTypeFilter, setDocumentTypeFilter] = useState(getDocumentTypeFromUrl);
-  const [saveViewOpen, setSaveViewOpen] = useState(false);
-  const [savedViewName, setSavedViewName] = useState("");
-  const [editingViewId, setEditingViewId] = useState<string | null>(null);
-  const [editingViewName, setEditingViewName] = useState("");
-  const [deletingViewId, setDeletingViewId] = useState<string | null>(null);
-  const [savedViewError, setSavedViewError] = useState<string | null>(null);
-  const [savedViewMoveStatus, setSavedViewMoveStatus] = useState<string | null>(null);
   const [savingContractTypeId, setSavingContractTypeId] = useState<string | null>(null);
   const [contractTypeErrorId, setContractTypeErrorId] = useState<string | null>(null);
   const [contractTypeSaveError, setContractTypeSaveError] = useState<string | null>(null);
@@ -167,47 +63,60 @@ export default function Dashboard() {
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
   const documentTypeCounts = getDocumentTypeCounts(contracts);
-  const registryViewsQuery = useListRegistryViews();
-  const savedViews = registryViewsQuery.data ?? [];
-
-  useEffect(() => {
-    const syncFiltersFromUrl = () => {
-      setSearchTerm(getSearchTermFromLocation(window.location.search));
-      setDocumentTypeFilter(getDocumentTypeFromUrl());
-      setShareStatus("idle");
-    };
-    syncFiltersFromUrl();
-    window.addEventListener("popstate", syncFiltersFromUrl);
-    return () => window.removeEventListener("popstate", syncFiltersFromUrl);
-  }, [location]);
-
-  const normalizedSearch = searchTerm.trim().toLowerCase();
-  const filteredContracts = contracts.filter((saved) => {
-    const documentType = getSavedContractDocumentType(saved);
-    const matchesType = !documentTypeFilter || documentType === documentTypeFilter;
-    if (!matchesType) return false;
-    if (!normalizedSearch) return true;
-    const searchableText = [
-      saved.filename,
-      saved.contract.fields.vendorLegalName.value,
-      saved.contract.fields.contractTitle.value,
-      saved.contract.fields.contractNumber.value,
-    ].filter(Boolean).join(" ").toLowerCase();
-    return searchableText.includes(normalizedSearch);
-  });
-  const sortedFilteredContracts = useMemo(
-    () => [...filteredContracts].sort((left, right) => {
-      const leftDays = left.contract.computed.daysRemaining;
-      const rightDays = right.contract.computed.daysRemaining;
-      if (leftDays === null && rightDays !== null) return 1;
-      if (leftDays !== null && rightDays === null) return -1;
-      if (leftDays !== null && rightDays !== null && leftDays !== rightDays) return leftDays - rightDays;
-      const leftVendor = left.contract.fields.vendorLegalName.value || left.filename;
-      const rightVendor = right.contract.fields.vendorLegalName.value || right.filename;
-      return leftVendor.localeCompare(rightVendor);
-    }),
-    [filteredContracts],
-  );
+  const upload = useContractUpload(setLocation);
+  const {
+    selectedFiles,
+    runLog,
+    isDragging,
+    uploadError,
+    extraction,
+    setIsDragging,
+    handleDrop,
+    handleInput,
+    processFiles,
+    resetUpload,
+  } = upload;
+  const {
+    searchTerm,
+    documentTypeFilter,
+    shareStatus,
+    filteredContracts,
+    sortedFilteredContracts,
+    updateDocumentTypeFilter,
+    updateSearchTerm,
+    copyFilteredViewLink,
+    openSavedView,
+  } = useRegistryFilters(contracts, location);
+  const savedViewState = useSavedRegistryViews(searchTerm, documentTypeFilter);
+  const {
+    registryViewsQuery,
+    savedViews,
+    savedViewName,
+    setSavedViewName,
+    saveViewOpen,
+    setSaveViewOpen,
+    editingViewId,
+    setEditingViewId,
+    editingViewName,
+    setEditingViewName,
+    deletingViewId,
+    setDeletingViewId,
+    savedViewError,
+    setSavedViewError,
+    savedViewMoveStatus,
+    createRegistryView,
+    updateRegistryView,
+    pinRegistryView,
+    reorderRegistryViews,
+    deleteRegistryView,
+    saveCurrentView,
+    startRename,
+    renameView,
+    confirmDelete,
+    deleteView,
+    togglePin,
+    movePinnedView,
+  } = savedViewState;
   const alerts = contracts.filter((saved) => saved.contract.alert);
   const openAlerts = alerts.filter((saved) => saved.contract.alert?.state !== "dismissed");
   const dismissAlert = useDismissContractAlert({
@@ -233,58 +142,6 @@ export default function Dashboard() {
       },
     },
   });
-  const extraction = useExtractContract();
-  const createRegistryView = useCreateRegistryView({
-    mutation: {
-      onSuccess: async () => {
-        setSaveViewOpen(false);
-        setSavedViewName("");
-        setSavedViewError(null);
-        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
-      },
-      onError: () => setSavedViewError("This view could not be saved. Check the name and try again."),
-    },
-  });
-  const updateRegistryView = useUpdateRegistryView({
-    mutation: {
-      onSuccess: async () => {
-        setEditingViewId(null);
-        setEditingViewName("");
-        setSavedViewError(null);
-        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
-      },
-      onError: () => setSavedViewError("This view could not be renamed. Check the name and try again."),
-    },
-  });
-  const pinRegistryView = usePinRegistryView({
-    mutation: {
-      onSuccess: async () => {
-        setSavedViewError(null);
-        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
-      },
-      onError: () => setSavedViewError("This view's pin state could not be updated. Please try again."),
-    },
-  });
-  const reorderRegistryViews = useReorderRegistryViews({
-    mutation: {
-      onSuccess: async () => {
-        setSavedViewError(null);
-        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
-      },
-      onError: () => setSavedViewError("This view order could not be saved. Please try again."),
-    },
-  });
-  const deleteRegistryView = useDeleteRegistryView({
-    mutation: {
-      onSuccess: async () => {
-        setDeletingViewId(null);
-        setSavedViewError(null);
-        await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
-      },
-      onError: () => setSavedViewError("This view could not be deleted. Please try again."),
-    },
-  });
-
   const saveContractType = (saved: typeof contracts[number], value: typeof contractTypeOptions[number]) => {
     if (value === saved.contract.fields.contractType.value || updateContract.isPending) return;
     setSavingContractTypeId(saved.id);
@@ -307,195 +164,6 @@ export default function Dashboard() {
         },
       },
     });
-  };
-
-  const updateDocumentTypeFilter = (value: string) => {
-    const params = new URLSearchParams(window.location.search);
-    if (value) {
-      params.set(DOCUMENT_TYPE_QUERY_PARAM, value);
-    } else {
-      params.delete(DOCUMENT_TYPE_QUERY_PARAM);
-    }
-    setDocumentTypeFilter(value);
-    setShareStatus("idle");
-    updateRegistryUrl(params, "push");
-  };
-
-  const updateSearchTerm = (value: string) => {
-    const params = new URLSearchParams(window.location.search);
-    const hadSearchTerm = Boolean(params.get(SEARCH_QUERY_PARAM)?.trim());
-    if (value.trim()) {
-      params.set(SEARCH_QUERY_PARAM, value);
-    } else {
-      params.delete(SEARCH_QUERY_PARAM);
-    }
-    setSearchTerm(value);
-    setShareStatus("idle");
-    const hasSearchTerm = Boolean(value.trim());
-    updateRegistryUrl(params, hadSearchTerm === hasSearchTerm ? "replace" : "push");
-  };
-
-  const copyFilteredViewLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShareStatus("copied");
-      window.setTimeout(() => setShareStatus("idle"), 2400);
-    } catch {
-      setShareStatus("error");
-    }
-  };
-
-  const openSavedView = (view: SavedRegistryView) => {
-    const params = new URLSearchParams(window.location.search);
-    if (view.search) {
-      params.set(SEARCH_QUERY_PARAM, view.search);
-    } else {
-      params.delete(SEARCH_QUERY_PARAM);
-    }
-    if (view.documentType) {
-      params.set(DOCUMENT_TYPE_QUERY_PARAM, view.documentType);
-    } else {
-      params.delete(DOCUMENT_TYPE_QUERY_PARAM);
-    }
-    setSearchTerm(view.search);
-    setDocumentTypeFilter(view.documentType ?? "");
-    setShareStatus("idle");
-    updateRegistryUrl(params, "push");
-  };
-
-  const saveCurrentView = () => {
-    const name = savedViewName.trim();
-    if (!name) {
-      setSavedViewError("Give this view a clear name before saving.");
-      return;
-    }
-    setSavedViewError(null);
-    createRegistryView.mutate({
-      data: {
-        name,
-        search: searchTerm,
-        documentType: (documentTypeFilter || null) as RegistryViewSaveRequestDocumentType,
-      },
-    });
-  };
-
-  const startRename = (view: SavedRegistryView) => {
-    setSavedViewError(null);
-    setDeletingViewId(null);
-    setEditingViewId(view.id);
-    setEditingViewName(view.name);
-  };
-
-  const renameView = (view: SavedRegistryView) => {
-    const name = editingViewName.trim();
-    if (!name) {
-      setSavedViewError("A saved view needs a name.");
-      return;
-    }
-    setSavedViewError(null);
-    updateRegistryView.mutate({
-      id: view.id,
-      data: {
-        name,
-        search: view.search,
-        documentType: view.documentType,
-      },
-    });
-  };
-
-  const confirmDelete = (view: SavedRegistryView) => {
-    setSavedViewError(null);
-    setEditingViewId(null);
-    setDeletingViewId(view.id);
-  };
-
-  const deleteView = (view: SavedRegistryView) => {
-    deleteRegistryView.mutate({ id: view.id });
-  };
-
-  const togglePin = (view: SavedRegistryView) => {
-    setSavedViewError(null);
-    pinRegistryView.mutate({
-      id: view.id,
-      data: { pinned: !view.isPinned },
-    });
-  };
-
-  const movePinnedView = (viewId: string, direction: "up" | "down") => {
-    const pinnedViews = savedViews.filter((view) => view.isPinned);
-    const currentIndex = pinnedViews.findIndex((view) => view.id === viewId);
-    const nextIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
-    if (currentIndex < 0 || nextIndex < 0 || nextIndex >= pinnedViews.length || reorderRegistryViews.isPending) {
-      return;
-    }
-    const reordered = [...pinnedViews];
-    const [movedView] = reordered.splice(currentIndex, 1);
-    reordered.splice(nextIndex, 0, movedView);
-    const successMessage = `${movedView.name} moved ${direction}. Position ${nextIndex + 1} of ${pinnedViews.length}.`;
-    setSavedViewMoveStatus(null);
-    reorderRegistryViews.mutate(
-      { data: { orderedIds: reordered.map((item) => item.id) } },
-      { onSuccess: () => setSavedViewMoveStatus(successMessage) },
-    );
-  };
-
-  const chooseFiles = (files: File[]) => {
-    const validFiles = files.filter((file) => {
-      const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-      return isPdf && file.size <= 10 * 1024 * 1024;
-    });
-    if (validFiles.length !== files.length) {
-      setUploadError("Only PDF files up to 10 MB can be added.");
-    } else {
-      setUploadError(null);
-    }
-    setSelectedFiles(validFiles.slice(0, 20));
-    setRunLog([]);
-  };
-
-  const processFiles = async () => {
-    const results: ContractExtractionResult[] = [];
-    const batchHashes = new Set<string>();
-    setUploadError(null);
-    for (const file of selectedFiles) {
-      setRunLog((current) => [...current, { name: file.name, state: "processing" }]);
-      try {
-        const result = await extraction.mutateAsync({ data: { files: [file] } });
-        const hash = result.extraction.contract.source?.hash;
-        if (hash && batchHashes.has(hash)) {
-          setRunLog((current) => current.map((entry) => entry.name === file.name ? { ...entry, state: "duplicate", message: "Duplicate skipped" } : entry));
-          continue;
-        }
-        if (hash) batchHashes.add(hash);
-        results.push(result);
-        setRunLog((current) => current.map((entry) => entry.name === file.name ? { ...entry, state: "ready", message: "Ready for review" } : entry));
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "Could not process this PDF.";
-        const duplicate = /duplicate|already been uploaded/i.test(message);
-        setRunLog((current) => current.map((entry) => entry.name === file.name ? { ...entry, state: duplicate ? "duplicate" : "failed", message: duplicate ? "Duplicate skipped" : message } : entry));
-      }
-    }
-    if (results.length > 0) {
-      sessionStorage.setItem("contract-dashboard.extraction", JSON.stringify(results[0]));
-      sessionStorage.setItem("contract-dashboard.extraction-queue", JSON.stringify(results.slice(1)));
-      setLocation("/review");
-    }
-  };
-
-  const chooseFilesFromDrop = (files: FileList | File[]) => {
-    chooseFiles(Array.from(files));
-    setUploadError(null);
-  };
-
-  const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
-    event.preventDefault();
-    setIsDragging(false);
-    chooseFilesFromDrop(event.dataTransfer.files);
-  };
-
-  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) chooseFilesFromDrop(event.target.files);
-    event.currentTarget.value = "";
   };
 
   return (
@@ -610,9 +278,7 @@ export default function Dashboard() {
                   onClick={() => {
                     if (!extraction.isPending) {
                       setUploadOpen(false);
-                      setSelectedFiles([]);
-                      setRunLog([]);
-                      setUploadError(null);
+                      resetUpload();
                     }
                   }}
                   disabled={extraction.isPending}
