@@ -889,20 +889,6 @@ export default function Dashboard() {
                 </div>
                </div>
              </div>
-             <div
-               data-testid="agreement-type-counts"
-               aria-label="Agreement type counts"
-               className="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-muted-foreground"
-             >
-               <span className="rounded-full border bg-card px-2.5 py-1">
-                 All documents <span className="font-extrabold text-foreground">{contracts.length}</span>
-               </span>
-               {documentTypeOptions.map((option) => (
-                 <span key={option} className="rounded-full border bg-card px-2.5 py-1 capitalize">
-                    {formatDocumentType(option)} <span className="font-extrabold text-foreground">{documentTypeCounts[option] ?? 0}</span>
-                 </span>
-               ))}
-             </div>
               {(documentTypeFilter || searchTerm) && (
                <p className="text-xs font-semibold text-muted-foreground">
                  Showing {filteredContracts.length} of {contracts.length} contracts

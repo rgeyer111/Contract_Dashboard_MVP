@@ -55,7 +55,7 @@ export function createEmptyContractReviewRecord(): ContractReviewRecord {
   };
 }
 
-export const documentTypeOptions = ['master_agreement', 'order_form', 'sow', 'amendment', 'renewal_letter', 'termination_notice', 'quote_or_proposal', 'unknown'] as const;
+export const documentTypeOptions = ['master_agreement', 'order_form', 'amendment', 'renewal_letter', 'termination_notice', 'quote_or_proposal', 'unknown'] as const;
 
 export function getSavedContractDocumentType(saved: Pick<SavedContract, "documentType" | "contract">) {
   return saved.documentType ?? saved.contract.fields.documentType.value;

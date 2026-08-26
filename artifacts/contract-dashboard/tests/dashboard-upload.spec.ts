@@ -1,5 +1,15 @@
 import { expect, test } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/registry-views", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+});
+
 const provenance = (value: unknown = null, note: string | null = null) => ({
   value,
   status: value === null ? "not_found" : "found",
@@ -545,18 +555,12 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);
   await expect(page.getByTestId("contract-family-history")).toHaveCount(0);
 
-  const typeCounts = page.getByTestId("agreement-type-counts");
-  await expect(typeCounts).toContainText("All documents 2");
-  await expect(typeCounts).toContainText("master agreement 1");
-  await expect(typeCounts).toContainText("amendment 1");
-
   const documentTypeFilter = page.getByRole("combobox", { name: "Filter by document type" });
   await expect(documentTypeFilter).toBeVisible();
   await expect(documentTypeFilter.locator("option")).toHaveText([
     "All document types (2)",
     "master agreement (1)",
     "order form (0)",
-    "sow (0)",
     "amendment (1)",
     "renewal letter (0)",
     "termination notice (0)",
