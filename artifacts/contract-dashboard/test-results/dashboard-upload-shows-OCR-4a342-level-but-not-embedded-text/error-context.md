@@ -6,22 +6,22 @@
 
 # Test info
 
-- Name: dashboard-upload.spec.ts >> keeps a confirmed contract available after reload and update
-- Location: tests/dashboard-upload.spec.ts:202:1
+- Name: dashboard-upload.spec.ts >> shows OCR scan warnings for every legibility level but not embedded text
+- Location: tests/dashboard-upload.spec.ts:141:1
 
 # Error details
 
 ```
-Error: expect(locator).toBeEnabled() failed
+Error: expect(locator).toContainText(expected) failed
 
-Locator: getByRole('button', { name: 'Confirm contract' })
-Expected: enabled
+Locator: locator('div.mt-4.inline-flex').filter({ hasText: 'OCR used for this scan' })
+Expected substring: "OCR used for this scan"
 Timeout: 5000ms
 Error: element(s) not found
 
 Call log:
-  - Expect "toBeEnabled" with timeout 5000ms
-  - waiting for getByRole('button', { name: 'Confirm contract' })
+  - Expect "toContainText" with timeout 5000ms
+  - waiting for locator('div.mt-4.inline-flex').filter({ hasText: 'OCR used for this scan' })
 
 ```
 
@@ -37,6 +37,87 @@ Call log:
 # Test source
 
 ```ts
+  85  |       return;
+  86  |     }
+  87  |     await route.continue();
+  88  |   });
+  89  |   await page.route("**/api/contracts/extract", async (route) => {
+  90  |     if (route.request().method() !== "POST") return route.continue();
+  91  |     if (responseMode === "error") {
+  92  |       return route.fulfill({
+  93  |         status: 422,
+  94  |         contentType: "application/json",
+  95  |         body: JSON.stringify({ error: "This PDF has no readable contract text." }),
+  96  |       });
+  97  |     }
+  98  |     await route.fulfill({
+  99  |       status: 200,
+  100 |       contentType: "application/json",
+  101 |       body: JSON.stringify({
+  102 |         filename: "acme.pdf",
+  103 |         extraction: {
+  104 |           contract: makeContract(),
+  105 |           source: "text",
+  106 |           ocrConfidence: null,
+  107 |           ocrPageCount: null,
+  108 |           ocrPagesProcessed: null,
+  109 |         },
+  110 |       }),
+  111 |     });
+  112 |   });
+  113 | 
+  114 |   await page.goto("/dashboard");
+  115 |   await page.getByRole("button", { name: "New Contract" }).click();
+  116 |   await expect(page.getByRole("heading", { name: "Upload a PDF to extract its details" })).toBeVisible();
+  117 | 
+  118 |   await page.locator("#contract-pdf-file").setInputFiles({
+  119 |     name: "acme.pdf",
+  120 |     mimeType: "application/pdf",
+  121 |     buffer: Buffer.from("%PDF-1.7\ncontract text"),
+  122 |   });
+  123 |   await expect(page.getByText("acme.pdf")).toBeVisible();
+  124 |   await page.getByRole("button", { name: "Extract contract" }).click();
+  125 |   await expect(page).toHaveURL(/\/review$/);
+  126 |   await expect(page.getByRole("heading", { name: "Review Contract Details" })).toBeVisible();
+  127 |   await expect(page.getByText(/acme\.pdf/)).toBeVisible();
+  128 | 
+  129 |   await page.goto("/dashboard");
+  130 |   responseMode = "error";
+  131 |   await page.getByRole("button", { name: "New Contract" }).click();
+  132 |   await page.locator("#contract-pdf-file").setInputFiles({
+  133 |     name: "blank.pdf",
+  134 |     mimeType: "application/pdf",
+  135 |     buffer: Buffer.from("%PDF-1.7\nblank"),
+  136 |   });
+  137 |   await page.getByRole("button", { name: "Extract contract" }).click();
+  138 |   await expect(page.getByText("This PDF has no readable contract text.")).toBeVisible();
+  139 | });
+  140 | 
+  141 | test("shows OCR scan warnings for every legibility level but not embedded text", async ({ page }) => {
+  142 |   const contract = makeContract();
+  143 |   let source: "text" | "ocr" = "ocr";
+  144 |   let ocrConfidence: "High" | "Medium" | "Low" = "High";
+  145 | 
+  146 |   await page.route("**/api/contracts", async (route) => {
+  147 |     if (route.request().method() === "GET") {
+  148 |       await route.fulfill({ json: [] });
+  149 |       return;
+  150 |     }
+  151 |     await route.continue();
+  152 |   });
+  153 |   await page.route("**/api/contracts/extract", async (route) => {
+  154 |     await route.fulfill({
+  155 |       status: 200,
+  156 |       contentType: "application/json",
+  157 |       body: JSON.stringify({
+  158 |         filename: "scan.pdf",
+  159 |         extraction: {
+  160 |           contract,
+  161 |           source,
+  162 |           ocrConfidence: source === "ocr" ? ocrConfidence : null,
+  163 |           ocrPageCount: source === "ocr" ? 1 : null,
+  164 |           ocrPagesProcessed: source === "ocr" ? 1 : null,
+  165 |         },
   166 |       }),
   167 |     });
   168 |   });
@@ -56,7 +137,8 @@ Call log:
   182 |     const warning = page
   183 |       .locator("div.mt-4.inline-flex")
   184 |       .filter({ hasText: "OCR used for this scan" });
-  185 |     await expect(warning).toContainText("OCR used for this scan");
+> 185 |     await expect(warning).toContainText("OCR used for this scan");
+      |                           ^ Error: expect(locator).toContainText(expected) failed
   186 |     await expect(warning).toContainText(`${level} legibility`);
   187 |     await page.goto("/dashboard");
   188 |   }
@@ -137,8 +219,7 @@ Call log:
   263 |   }, saved);
   264 |   await page.reload();
   265 | 
-> 266 |   await expect(page.getByRole("button", { name: "Confirm contract" })).toBeEnabled();
-      |                                                                        ^ Error: expect(locator).toBeEnabled() failed
+  266 |   await expect(page.getByRole("button", { name: "Confirm contract" })).toBeEnabled();
   267 |   await page.getByRole("button", { name: "Confirm contract" }).click();
   268 |   await expect(page).toHaveURL(/\/dashboard$/);
   269 |   expect(createPayload).toEqual({
@@ -158,85 +239,4 @@ Call log:
   283 |   await page.getByRole("button", { name: "Confirm contract" }).click();
   284 |   await expect(page).toHaveURL(/\/dashboard$/);
   285 |   expect(updatePayload).toEqual({
-  286 |     filename: "northstar.pdf",
-  287 |     contract: {
-  288 |       ...contract,
-  289 |       fields: {
-  290 |         ...contract.fields,
-  291 |         vendorLegalName: reviewerEdited("Northstar Sourcing GmbH"),
-  292 |       },
-  293 |     },
-  294 |   });
-  295 |   await expect(page.getByText("Northstar Sourcing GmbH", { exact: true })).toBeVisible();
-  296 | 
-  297 |   await page.reload();
-  298 |   await expect(page.getByText("Northstar Sourcing GmbH", { exact: true })).toBeVisible();
-  299 | });
-  300 | 
-  301 | test("confirmed contracts persist through reload and reopen with edits intact", async ({ page }) => {
-  302 |   const contractId = "saved-contract-regression";
-  303 |   let savedContract: Record<string, unknown> | null = null;
-  304 |   const contract = makeContract();
-  305 | 
-  306 |   await page.route("**/api/contracts/extract", async (route) => {
-  307 |     await route.fulfill({
-  308 |       status: 200,
-  309 |       contentType: "application/json",
-  310 |       body: JSON.stringify({
-  311 |         filename: "acme.pdf",
-  312 |         extraction: {
-  313 |           contract,
-  314 |           source: "text",
-  315 |           ocrConfidence: null,
-  316 |           ocrPageCount: null,
-  317 |           ocrPagesProcessed: null,
-  318 |         },
-  319 |       }),
-  320 |     });
-  321 |   });
-  322 | 
-  323 |   await page.route("**/api/contracts", async (route) => {
-  324 |     const request = route.request();
-  325 | 
-  326 |     if (request.method() === "GET") {
-  327 |       await route.fulfill({
-  328 |         status: 200,
-  329 |         contentType: "application/json",
-  330 |         body: JSON.stringify(savedContract ? [savedContract] : []),
-  331 |       });
-  332 |       return;
-  333 |     }
-  334 | 
-  335 |     if (request.method() === "POST") {
-  336 |       const body = request.postDataJSON() as Record<string, unknown>;
-  337 |       savedContract = {
-  338 |         id: contractId,
-  339 |         ...body,
-  340 |         createdAt: "2026-08-25T00:00:00.000Z",
-  341 |         updatedAt: "2026-08-25T00:00:00.000Z",
-  342 |       };
-  343 |       await route.fulfill({
-  344 |         status: 201,
-  345 |         contentType: "application/json",
-  346 |         body: JSON.stringify(savedContract),
-  347 |       });
-  348 |       return;
-  349 |     }
-  350 | 
-  351 |     await route.continue();
-  352 |   });
-  353 |   await page.route(`**/api/contracts/${contractId}`, async (route) => {
-  354 |     const request = route.request();
-  355 |     if (request.method() === "GET") {
-  356 |       await route.fulfill({
-  357 |         status: savedContract ? 200 : 404,
-  358 |         contentType: "application/json",
-  359 |         body: JSON.stringify(savedContract ?? { error: "Contract not found." }),
-  360 |       });
-  361 |       return;
-  362 |     }
-  363 | 
-  364 |     if (request.method() === "PUT") {
-  365 |       const body = request.postDataJSON() as Record<string, unknown>;
-  366 |       savedContract = {
 ```

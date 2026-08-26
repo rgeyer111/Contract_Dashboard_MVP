@@ -526,32 +526,52 @@ export default function Dashboard() {
                         {isExpanded && (
                           <tr className="bg-muted/20">
                              <td colSpan={5} className="px-8 py-5">
-                              <div className="space-y-4">
+                               <div className="space-y-4" data-testid="contract-family-history">
                                 <div className="flex items-center justify-between">
                                   <div>
                                     <h3 className="text-sm font-extrabold">Contract family history</h3>
                                     <p className="text-xs font-medium text-muted-foreground">Replayed by effective date. An amendment changes only fields it explicitly addresses.</p>
                                   </div>
                                 </div>
-                                <div className="grid gap-3 lg:grid-cols-3">
-                                  {(["contractValue", "noticePeriod", "vendorLegalName"] as const).map((key) => {
+                                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                                   {(["contractValue", "noticePeriod", "vendorLegalName", "renewalMechanism", "initialTermEndDate"] as const).map((key) => {
                                     const history = familyDocuments
                                       .map((document) => {
                                         const field = document.fieldValues[key] as { value?: unknown; sourceFilename?: string } | undefined;
-                                        return field?.value == null ? null : { document, field };
+                                         return field?.value == null ? null : {
+                                           document,
+                                           field,
+                                           sourceFilename: field.sourceFilename || document.filename,
+                                         };
                                       })
-                                      .filter(Boolean) as Array<{ document: typeof familyDocuments[number]; field: { value?: unknown; sourceFilename?: string } }>;
-                                    if (history.length < 2) return null;
+                                       .filter(Boolean) as Array<{
+                                         document: typeof familyDocuments[number];
+                                         field: { value?: unknown; sourceFilename?: string };
+                                         sourceFilename: string;
+                                       }>;
+                                     if (history.length === 0) return null;
                                     return (
-                                      <div key={key} className="rounded-lg border bg-card p-3">
+                                       <div key={key} data-testid={`family-history-${key}`} className="rounded-lg border bg-card p-3">
                                         <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{key.replace(/([A-Z])/g, " $1")}</div>
                                         <div className="mt-2 space-y-2">
-                                          {history.map(({ document, field }, index) => (
+                                          {history.map(({ document, field, sourceFilename }, index) => (
                                             <div key={document.id} className="flex items-start gap-2 text-xs">
                                               <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${index === history.length - 1 ? "bg-primary" : "bg-muted-foreground/40"}`} />
-                                              <div>
+                                               <div className="min-w-0">
                                                 <div className={index === history.length - 1 ? "font-extrabold" : "font-semibold line-through decoration-muted-foreground/50"}>{formatHistoryValue(key, field.value)}</div>
-                                                <button type="button" onClick={() => setLocation(`/review?id=${document.id}`)} className="text-[10px] font-semibold text-primary hover:underline">{field.sourceFilename}</button>
+                                                 <div className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                                                   <span className={`shrink-0 text-[9px] font-bold uppercase tracking-wide ${index === history.length - 1 ? "text-primary" : "text-muted-foreground"}`}>
+                                                     {index === history.length - 1 ? "Current" : "Superseded"}
+                                                   </span>
+                                                   <button
+                                                     type="button"
+                                                     aria-label={`Open ${sourceFilename}`}
+                                                     onClick={() => setLocation(`/review?id=${document.id}`)}
+                                                     className="min-w-0 break-all text-left text-[10px] font-semibold text-primary hover:underline"
+                                                   >
+                                                     {sourceFilename}
+                                                   </button>
+                                                 </div>
                                               </div>
                                             </div>
                                           ))}
@@ -562,11 +582,11 @@ export default function Dashboard() {
                                 </div>
                                 <div className="space-y-2">
                                   {familyDocuments.map((document, index) => (
-                                    <button key={document.id} type="button" onClick={() => setLocation(`/review?id=${document.id}`)} className="flex w-full items-center justify-between rounded-lg border bg-card px-4 py-3 text-left hover:border-primary/30 hover:bg-primary/[0.02]">
-                                      <div className="flex items-center gap-3">
+                                   <button key={document.id} data-testid={`family-document-${document.id}`} type="button" onClick={() => setLocation(`/review?id=${document.id}`)} className="flex w-full flex-col gap-3 rounded-lg border bg-card px-4 py-3 text-left hover:border-primary/30 hover:bg-primary/[0.02] sm:flex-row sm:items-center sm:justify-between">
+                                     <div className="flex min-w-0 items-center gap-3">
                                         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-extrabold text-primary">{index + 1}</span>
-                                        <div>
-                                          <div className="text-xs font-extrabold">{document.filename}</div>
+                                       <div className="min-w-0">
+                                         <div className="break-all text-xs font-extrabold">{document.filename}</div>
                                           <div className="mt-0.5 text-[10px] font-semibold text-muted-foreground">{document.documentType?.replace(/_/g, " ") ?? "unknown type"} · Effective {document.effectiveDate ?? "date unknown"}</div>
                                         </div>
                                       </div>

@@ -12,31 +12,35 @@
 # Error details
 
 ```
-Error: expect(locator).toBeVisible() failed
+Test timeout of 30000ms exceeded.
+```
 
-Locator: getByText('Edited Acme')
-Expected: visible
-Timeout: 5000ms
-Error: element(s) not found
-
+```
+Error: locator.fill: Test timeout of 30000ms exceeded.
 Call log:
-  - Expect "toBeVisible" with timeout 5000ms
-  - waiting for getByText('Edited Acme')
+  - waiting for getByPlaceholder('e.g. Acme Corp LLC')
 
 ```
 
+# Page snapshot
+
 ```yaml
-- heading "Something went wrong" [level=1]
-- paragraph: This part of the app hit an error. The rest of the app is still running.
-- text: Cannot read properties of undefined (reading 'id')
-- button "Try again"
-- region "Notifications (F8)":
-  - list
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - heading "Something went wrong" [level=1] [ref=e5]
+    - paragraph [ref=e6]: This part of the app hit an error. The rest of the app is still running.
+    - generic [ref=e7]: Cannot read properties of undefined (reading 'trim')
+    - button "Try again" [ref=e8]
+  - region "Notifications (F8)":
+    - list
 ```
 
 # Test source
 
 ```ts
+  293 |     },
+  294 |   });
+  295 |   await expect(page.getByText("Northstar Sourcing GmbH", { exact: true })).toBeVisible();
   296 | 
   297 |   await page.reload();
   298 |   await expect(page.getByText("Northstar Sourcing GmbH", { exact: true })).toBeVisible();
@@ -134,11 +138,11 @@ Call log:
   390 |   await expect(page).toHaveURL(/\/review$/);
   391 | 
   392 |   const vendorInput = page.getByPlaceholder("e.g. Acme Corp LLC");
-  393 |   await vendorInput.fill("Edited Acme");
+> 393 |   await vendorInput.fill("Edited Acme");
+      |                     ^ Error: locator.fill: Test timeout of 30000ms exceeded.
   394 |   await page.getByRole("button", { name: "Confirm contract" }).click();
   395 |   await expect(page).toHaveURL(/\/dashboard$/);
-> 396 |   await expect(page.getByText("Edited Acme")).toBeVisible();
-      |                                               ^ Error: expect(locator).toBeVisible() failed
+  396 |   await expect(page.getByText("Edited Acme")).toBeVisible();
   397 | 
   398 |   await page.reload();
   399 |   await expect(page.getByText("Edited Acme")).toBeVisible();
@@ -158,4 +162,82 @@ Call log:
   413 |   );
   414 |   await expect(page.getByPlaceholder("e.g. John Doe")).toHaveValue("John Doe");
   415 | });
+  416 | 
+  417 | test("keeps the family registry schema and effective values reachable on narrow screens", async ({ page }) => {
+  418 |   const rootId = "saved-family-parent";
+  419 |   const amendmentId = "saved-family-amendment";
+  420 |   const parentContract = makeContract({
+  421 |     vendor: "Legacy Parent Vendor",
+  422 |     contractNumber: "PARENT-001",
+  423 |     contractTitle: "Original Support Agreement",
+  424 |     contractValue: { amount: 120000, currency: "USD", basis: "annual" },
+  425 |   });
+  426 |   const effectiveBase = makeContract({
+  427 |     vendor: "Northstar Sourcing GmbH",
+  428 |     contractNumber: "PARENT-001",
+  429 |     contractTitle: "Sourcing Agreement",
+  430 |     contractType: "software_license",
+  431 |     contractValue: { amount: 240000, currency: "USD", basis: "annual" },
+  432 |   });
+  433 |   const effectiveContract = {
+  434 |     ...effectiveBase,
+  435 |     fields: {
+  436 |       ...effectiveBase.fields,
+  437 |       initialTermEndDate: provenance("2027-12-31"),
+  438 |       renewalMechanism: provenance("manual_renewal"),
+  439 |       noticePeriod: provenance({
+  440 |         amount: 90,
+  441 |         unit: "days",
+  442 |         anchor: "term_end",
+  443 |         purpose: "non_renewal",
+  444 |       }),
+  445 |     },
+  446 |     assignment: {
+  447 |       ...effectiveBase.assignment,
+  448 |       owner: "Avery Stone",
+  449 |     },
+  450 |     computed: {
+  451 |       ...effectiveBase.computed,
+  452 |       noticeDeadline: "2027-10-02",
+  453 |       actionDate: "2027-09-02",
+  454 |     },
+  455 |   };
+  456 |   const familyField = (value: unknown, sourceDocumentId: string, sourceFilename: string) => ({
+  457 |     value,
+  458 |     sourceDocumentId,
+  459 |     sourceFilename,
+  460 |   });
+  461 |   const family = {
+  462 |     id: rootId,
+  463 |     documentCount: 2,
+  464 |     effectiveContract,
+  465 |     documents: [
+  466 |       {
+  467 |         id: rootId,
+  468 |         filename: "parent-agreement.pdf",
+  469 |         documentType: "master_agreement",
+  470 |         effectiveDate: "2026-01-01",
+  471 |         isParent: true,
+  472 |         isCurrent: false,
+  473 |         fieldValues: {
+  474 |           vendorLegalName: familyField("Legacy Parent Vendor", rootId, "parent-agreement.pdf"),
+  475 |           contractValue: familyField({ amount: 120000, currency: "USD", basis: "annual" }, rootId, "parent-agreement.pdf"),
+  476 |           noticePeriod: familyField({ amount: 60, unit: "days", anchor: "term_end", purpose: "non_renewal" }, rootId, "parent-agreement.pdf"),
+  477 |           renewalMechanism: familyField("auto_renew", rootId, "parent-agreement.pdf"),
+  478 |           initialTermEndDate: familyField("2026-12-31", rootId, "parent-agreement.pdf"),
+  479 |         },
+  480 |       },
+  481 |       {
+  482 |         id: amendmentId,
+  483 |         filename: "commercial-amendment.pdf",
+  484 |         documentType: "amendment",
+  485 |         effectiveDate: "2027-01-01",
+  486 |         isParent: false,
+  487 |         isCurrent: true,
+  488 |         fieldValues: {
+  489 |           vendorLegalName: familyField("Northstar Sourcing GmbH", amendmentId, "commercial-amendment.pdf"),
+  490 |           contractValue: familyField({ amount: 240000, currency: "USD", basis: "annual" }, amendmentId, "commercial-amendment.pdf"),
+  491 |           noticePeriod: familyField({ amount: 90, unit: "days", anchor: "term_end", purpose: "non_renewal" }, amendmentId, "commercial-amendment.pdf"),
+  492 |           renewalMechanism: familyField("manual_renewal", amendmentId, "commercial-amendment.pdf"),
+  493 |           initialTermEndDate: familyField("2027-12-31", amendmentId, "commercial-amendment.pdf"),
 ```

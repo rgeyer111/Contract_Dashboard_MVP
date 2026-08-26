@@ -453,6 +453,11 @@ test("keeps the family registry schema and effective values reachable on narrow 
       actionDate: "2027-09-02",
     },
   };
+  const familyField = (value: unknown, sourceDocumentId: string, sourceFilename: string) => ({
+    value,
+    sourceDocumentId,
+    sourceFilename,
+  });
   const family = {
     id: rootId,
     documentCount: 2,
@@ -465,7 +470,13 @@ test("keeps the family registry schema and effective values reachable on narrow 
         effectiveDate: "2026-01-01",
         isParent: true,
         isCurrent: false,
-        fieldValues: {},
+        fieldValues: {
+          vendorLegalName: familyField("Legacy Parent Vendor", rootId, "parent-agreement.pdf"),
+          contractValue: familyField({ amount: 120000, currency: "USD", basis: "annual" }, rootId, "parent-agreement.pdf"),
+          noticePeriod: familyField({ amount: 60, unit: "days", anchor: "term_end", purpose: "non_renewal" }, rootId, "parent-agreement.pdf"),
+          renewalMechanism: familyField("auto_renew", rootId, "parent-agreement.pdf"),
+          initialTermEndDate: familyField("2026-12-31", rootId, "parent-agreement.pdf"),
+        },
       },
       {
         id: amendmentId,
@@ -474,7 +485,13 @@ test("keeps the family registry schema and effective values reachable on narrow 
         effectiveDate: "2027-01-01",
         isParent: false,
         isCurrent: true,
-        fieldValues: {},
+        fieldValues: {
+          vendorLegalName: familyField("Northstar Sourcing GmbH", amendmentId, "commercial-amendment.pdf"),
+          contractValue: familyField({ amount: 240000, currency: "USD", basis: "annual" }, amendmentId, "commercial-amendment.pdf"),
+          noticePeriod: familyField({ amount: 90, unit: "days", anchor: "term_end", purpose: "non_renewal" }, amendmentId, "commercial-amendment.pdf"),
+          renewalMechanism: familyField("manual_renewal", amendmentId, "commercial-amendment.pdf"),
+          initialTermEndDate: familyField("2027-12-31", amendmentId, "commercial-amendment.pdf"),
+        },
       },
     ],
   };
@@ -535,6 +552,27 @@ test("keeps the family registry schema and effective values reachable on narrow 
   await expect(registryRow).toContainText("2027-10-02");
   await expect(registryRow).toContainText("Avery Stone");
   await expect(registryRow).not.toContainText("Legacy Parent Vendor");
+
+  await registryRow.getByRole("button", { name: "Expand contract family" }).click();
+  const history = page.getByTestId("contract-family-history");
+  await expect(history).toBeVisible();
+  await expect(history.getByRole("heading", { name: "Contract family history" })).toBeVisible();
+  for (const key of ["contractValue", "noticePeriod", "vendorLegalName", "renewalMechanism", "initialTermEndDate"]) {
+    const fieldHistory = page.getByTestId(`family-history-${key}`);
+    await expect(fieldHistory).toBeVisible();
+    await expect(fieldHistory.getByText("Current", { exact: true })).toBeVisible();
+    await expect(fieldHistory.getByText("Superseded", { exact: true })).toBeVisible();
+    await expect(fieldHistory).toContainText("commercial-amendment.pdf");
+    await expect(fieldHistory).toContainText("parent-agreement.pdf");
+  }
+  await expect(page.getByTestId(`family-document-${rootId}`).getByText("Parent", { exact: true })).toBeVisible();
+  await expect(page.getByTestId(`family-document-${amendmentId}`).getByText("Current", { exact: true })).toBeVisible();
+  const historyMetrics = await history.evaluate((element) => ({
+    width: element.getBoundingClientRect().width,
+    height: element.getBoundingClientRect().height,
+  }));
+  expect(historyMetrics.width).toBeGreaterThan(0);
+  expect(historyMetrics.height).toBeGreaterThan(0);
 
   const scrollerMetrics = await page.locator("table").evaluate((table) => {
     const scroller = table.parentElement;
