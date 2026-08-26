@@ -1,6 +1,7 @@
-import {
+import type {
   ContractReviewRecord,
   ProvenanceMetadata,
+  SavedContract,
 } from "@workspace/api-client-react";
 
 export function createEmptyProvenanceMetadata(): ProvenanceMetadata {
@@ -55,6 +56,21 @@ export function createEmptyContractReviewRecord(): ContractReviewRecord {
 }
 
 export const documentTypeOptions = ['master_agreement', 'order_form', 'sow', 'amendment', 'renewal_letter', 'termination_notice', 'quote_or_proposal', 'unknown'] as const;
+
+export function getSavedContractDocumentType(saved: Pick<SavedContract, "documentType" | "contract">) {
+  return saved.documentType ?? saved.contract.fields.documentType.value;
+}
+
+export function getDocumentTypeCounts(savedContracts: SavedContract[]) {
+  return savedContracts.reduce<Record<string, number>>((counts, saved) => {
+    const documentType = getSavedContractDocumentType(saved);
+    if (documentType) {
+      counts[documentType] = (counts[documentType] ?? 0) + 1;
+    }
+    return counts;
+  }, {});
+}
+
 export const languageOptions = ['en', 'de', 'fr', 'it', 'other'] as const;
 export const contractTypeOptions = ['maintenance', 'software_license', 'saas_subscription', 'real_estate', 'infrastructure', 'professional_services', 'data_services', 'equipment_lease', 'other'] as const;
 export const renewalMechanismOptions = ['auto_renew', 'expires', 'by_mutual_agreement', 'indefinite', 'unknown'] as const;

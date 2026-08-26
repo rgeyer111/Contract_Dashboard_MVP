@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
-import { documentTypeOptions } from "@/lib/contracts";
+import { documentTypeOptions, getDocumentTypeCounts, getSavedContractDocumentType } from "@/lib/contracts";
 
 function formatContractType(value: string | null) {
   return value ? value.replace(/_/g, " ") : "Type not stated";
@@ -66,19 +66,10 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
-  const documentTypeCounts = documentTypeOptions.reduce<Record<string, number>>((counts, option) => {
-    counts[option] = 0;
-    return counts;
-  }, {});
-  contracts.forEach((saved) => {
-    const documentType = saved.documentType ?? saved.contract.fields.documentType.value;
-    if (documentType && documentType in documentTypeCounts) {
-      documentTypeCounts[documentType] += 1;
-    }
-  });
+  const documentTypeCounts = getDocumentTypeCounts(contracts);
   const normalizedSearch = searchTerm.trim().toLowerCase();
   const filteredContracts = contracts.filter((saved) => {
-    const documentType = saved.documentType ?? saved.contract.fields.documentType.value;
+    const documentType = getSavedContractDocumentType(saved);
     const matchesType = !documentTypeFilter || documentType === documentTypeFilter;
     if (!matchesType) return false;
     if (!normalizedSearch) return true;
@@ -469,7 +460,7 @@ export default function Dashboard() {
                  >
                    <option value="">All document types ({contracts.length})</option>
                    {documentTypeOptions.map((option) => (
-                     <option key={option} value={option}>{formatDocumentType(option)} ({documentTypeCounts[option]})</option>
+                      <option key={option} value={option}>{formatDocumentType(option)} ({documentTypeCounts[option] ?? 0})</option>
                    ))}
                  </select>
                 {documentTypeFilter && (
@@ -502,7 +493,7 @@ export default function Dashboard() {
                </span>
                {documentTypeOptions.map((option) => (
                  <span key={option} className="rounded-full border bg-card px-2.5 py-1 capitalize">
-                   {formatDocumentType(option)} <span className="font-extrabold text-foreground">{documentTypeCounts[option]}</span>
+                    {formatDocumentType(option)} <span className="font-extrabold text-foreground">{documentTypeCounts[option] ?? 0}</span>
                  </span>
                ))}
              </div>

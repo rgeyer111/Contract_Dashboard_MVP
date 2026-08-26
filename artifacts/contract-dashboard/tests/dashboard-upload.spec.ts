@@ -572,8 +572,17 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
 
   const documentTypeFilter = page.getByRole("combobox", { name: "Filter by document type" });
   await expect(documentTypeFilter).toBeVisible();
-  await expect(documentTypeFilter).toContainText("All document types (2)");
-  await expect(documentTypeFilter).toContainText("amendment (1)");
+  await expect(documentTypeFilter.locator("option")).toHaveText([
+    "All document types (2)",
+    "master agreement (1)",
+    "order form (0)",
+    "sow (0)",
+    "amendment (1)",
+    "renewal letter (0)",
+    "termination notice (0)",
+    "quote or proposal (0)",
+    "unknown (0)",
+  ]);
   await documentTypeFilter.selectOption("amendment");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
