@@ -26,7 +26,8 @@ import { Button } from "@/components/ui/button";
 import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
 
 export default function Dashboard() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  const isActionItemsPage = location === "/action-items";
   const [uploadOpen, setUploadOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [runLog, setRunLog] = useState<Array<{ name: string; state: "processing" | "ready" | "duplicate" | "failed"; message?: string }>>([]);
@@ -122,7 +123,7 @@ export default function Dashboard() {
         </div>
         
         <nav className="flex-1 p-4 space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-md font-semibold text-sm transition-colors">
+          <Link href="/dashboard" className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-semibold text-sm transition-colors ${!isActionItemsPage ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}>
             <FileText className="h-4 w-4" />
             Contracts
           </Link>
@@ -130,10 +131,10 @@ export default function Dashboard() {
             <Clock className="h-4 w-4" />
             Renewals
           </div>
-          <a href="#action-items" className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors">
+          <Link href="/action-items" className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium text-sm transition-colors ${isActionItemsPage ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-muted/50"}`}>
             <AlertCircle className="h-4 w-4" />
             Action Items
-          </a>
+          </Link>
         </nav>
         
         <div className="p-4 border-t space-y-1">
@@ -181,16 +182,18 @@ export default function Dashboard() {
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Welcome back, John</h1>
-              <p className="text-muted-foreground mt-1 font-medium text-sm">Here's the status of your contract renewals this week.</p>
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">{isActionItemsPage ? "Action Items" : "Welcome back, John"}</h1>
+              <p className="text-muted-foreground mt-1 font-medium text-sm">{isActionItemsPage ? "Stay ahead of the contract decisions that need your attention." : "Here's the status of your contract renewals this week."}</p>
             </div>
-            <Button onClick={() => setUploadOpen(true)} className="shrink-0 gap-2 shadow-sm font-semibold">
-              <Plus className="h-4 w-4" />
-              New Contract
-            </Button>
+            {!isActionItemsPage && (
+              <Button onClick={() => setUploadOpen(true)} className="shrink-0 gap-2 shadow-sm font-semibold">
+                <Plus className="h-4 w-4" />
+                New Contract
+              </Button>
+            )}
           </div>
 
-          {uploadOpen && (
+          {!isActionItemsPage && uploadOpen && (
             <section className="bg-card border rounded-xl shadow-sm p-5 sm:p-6 animate-in fade-in slide-in-from-top-2 duration-300" aria-labelledby="upload-contract-heading">
               <div className="flex items-start justify-between gap-4 mb-5">
                 <div>
@@ -299,8 +302,7 @@ export default function Dashboard() {
             </section>
           )}
           
-          {/* Metric Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {!isActionItemsPage && <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Card 1 */}
             <div className="bg-card border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
               <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
@@ -339,9 +341,9 @@ export default function Dashboard() {
               <div className="text-4xl font-extrabold mb-1 relative z-10">$1.2M</div>
               <p className="text-sm font-medium text-muted-foreground relative z-10">In total contract value saved</p>
             </div>
-          </div>
+          </div>}
 
-          <section id="action-items" className="space-y-4 scroll-mt-24">
+          {isActionItemsPage && <section id="action-items" className="space-y-4 scroll-mt-24">
             <div className="flex items-end justify-between gap-4">
               <div>
                 <h2 className="text-xl font-bold tracking-tight">Action Items</h2>
@@ -385,10 +387,10 @@ export default function Dashboard() {
               })}
               {!contractsQuery.isLoading && alerts.length === 0 && <div className="rounded-xl border border-dashed bg-card p-8 text-center text-sm font-medium text-muted-foreground">No actionable alerts. Blocked and expired contracts are excluded.</div>}
             </div>
-          </section>
+          </section>}
           
           {/* Recent Contracts Section */}
-          <div className="space-y-4 pt-4">
+          {!isActionItemsPage && <div className="space-y-4 pt-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold tracking-tight">Contract Registry</h2>
               <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
@@ -584,7 +586,7 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
-          </div>
+          </div>}
           
         </div>
       </main>
