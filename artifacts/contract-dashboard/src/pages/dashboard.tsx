@@ -17,6 +17,8 @@ import {
   X,
   Mail,
   Ban,
+  Link2,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getListContractsQueryKey, useDismissContractAlert, useExtractContract, useListContracts, type ContractExtractionResult } from "@workspace/api-client-react";
@@ -51,9 +53,15 @@ function formatPeriod(value: unknown) {
     .join(" · ") || "Notice terms not stated";
 }
 
+function getDocumentTypeFilterFromLocation(location: string) {
+  const query = location.includes("?") ? location.slice(location.indexOf("?")) : "";
+  const value = new URLSearchParams(query).get("documentType");
+  return documentTypeOptions.includes(value as typeof documentTypeOptions[number]) ? value ?? "" : "";
+}
+
 export default function Dashboard() {
   const [location, setLocation] = useLocation();
-  const isActionItemsPage = location === "/action-items";
+  const isActionItemsPage = location.split("?")[0] === "/action-items";
   const [uploadOpen, setUploadOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [runLog, setRunLog] = useState<Array<{ name: string; state: "processing" | "ready" | "duplicate" | "failed"; message?: string }>>([]);
@@ -62,7 +70,8 @@ export default function Dashboard() {
   const [dismissingId, setDismissingId] = useState<string | null>(null);
   const [dismissReason, setDismissReason] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [documentTypeFilter, setDocumentTypeFilter] = useState("");
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [documentTypeFilter, setDocumentTypeFilter] = useState(() => getDocumentTypeFilterFromLocation(window.location.search));
   const queryClient = useQueryClient();
   const contractsQuery = useListContracts();
   const contracts = contractsQuery.data ?? [];
@@ -93,6 +102,30 @@ export default function Dashboard() {
     },
   });
   const extraction = useExtractContract();
+
+  const updateDocumentTypeFilter = (value: string) => {
+    const query = location.includes("?") ? location.slice(location.indexOf("?")) : "";
+    const params = new URLSearchParams(query);
+    if (value) {
+      params.set("documentType", value);
+    } else {
+      params.delete("documentType");
+    }
+    const nextQuery = params.toString();
+    setDocumentTypeFilter(value);
+    setShareStatus("idle");
+    setLocation(`${location.split("?")[0]}${nextQuery ? `?${nextQuery}` : ""}`);
+  };
+
+  const copyFilteredViewLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareStatus("copied");
+      window.setTimeout(() => setShareStatus("idle"), 2400);
+    } catch {
+      setShareStatus("error");
+    }
+  };
 
   const chooseFiles = (files: File[]) => {
     const validFiles = files.filter((file) => {
@@ -455,7 +488,7 @@ export default function Dashboard() {
                   id="document-type-filter"
                   aria-label="Filter by document type"
                    value={documentTypeFilter}
-                   onChange={(event) => setDocumentTypeFilter(event.target.value)}
+                    onChange={(event) => updateDocumentTypeFilter(event.target.value)}
                    className="h-9 rounded-md border border-input bg-background px-3 text-xs font-semibold capitalize outline-none focus:ring-2 focus:ring-primary/20"
                  >
                    <option value="">All document types ({contracts.length})</option>
@@ -468,7 +501,7 @@ export default function Dashboard() {
                      type="button"
                      variant="ghost"
                      size="sm"
-                    onClick={() => setDocumentTypeFilter("")}
+                     onClick={() => updateDocumentTypeFilter("")}
                     aria-label="Clear document type filter"
                     title="Clear document type filter"
                      className="gap-1.5 text-primary hover:text-primary/80 font-semibold"
@@ -477,6 +510,20 @@ export default function Dashboard() {
                     Clear type
                    </Button>
                  )}
+                  {documentTypeFilter && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={copyFilteredViewLink}
+                      aria-label="Copy filtered view link"
+                      title="Copy filtered view link"
+                      className="gap-1.5 font-semibold"
+                    >
+                      {shareStatus === "copied" ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Link2 className="h-3.5 w-3.5" />}
+                      {shareStatus === "copied" ? "Link copied" : shareStatus === "error" ? "Copy failed — try again" : "Copy view link"}
+                    </Button>
+                  )}
                  {!documentTypeFilter && !searchTerm && (
                    <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">View All</Button>
                  )}

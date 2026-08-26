@@ -12,3 +12,4 @@
 - [Contract alert lifecycle](contract-alert-lifecycle.md) — blocked/expired contracts have no alert; dismissal survives only while alert inputs remain unchanged.
 - [Contract ingestion sources](contract-ingestion-sources.md) — ingestion is source-agnostic; deduplicate by SHA-256 bytes and never by filename.
 - [Reviewer resolutions](reviewer-resolutions.md) — persist human resolution separately from extraction provenance so reviewed unknowns stay honest and durable.
+- [Wouter query-backed state](wouter-query-backed-state.md) — do not assume useLocation exposes query changes; synchronize controlled state with window.location.search.

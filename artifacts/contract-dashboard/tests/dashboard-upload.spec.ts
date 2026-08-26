@@ -584,10 +584,18 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
     "unknown (0)",
   ]);
   await documentTypeFilter.selectOption("amendment");
+  await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
+  const copyViewLinkButton = page.getByRole("button", { name: "Copy filtered view link" });
+  await expect(copyViewLinkButton).toBeVisible();
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+  await copyViewLinkButton.click();
+  await expect(page.getByRole("button", { name: "Copy filtered view link" })).toContainText("Link copied");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear document type filter" }).click();
+  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
   await expect(page.getByTestId("active-contract-count")).toHaveText("2");
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
 
@@ -616,6 +624,11 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear document type filter" }).click();
+
+  await page.goto("/dashboard?documentType=amendment");
+  await expect(documentTypeFilter).toHaveValue("amendment");
+  await expect(page.getByTestId("active-contract-count")).toHaveText("1");
+  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
 
   await page.reload();
   await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
