@@ -565,8 +565,15 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);
   await expect(page.getByTestId("contract-family-history")).toHaveCount(0);
 
+  const typeCounts = page.getByTestId("agreement-type-counts");
+  await expect(typeCounts).toContainText("All documents 2");
+  await expect(typeCounts).toContainText("master agreement 1");
+  await expect(typeCounts).toContainText("amendment 1");
+
   const documentTypeFilter = page.getByRole("combobox", { name: "Filter by document type" });
   await expect(documentTypeFilter).toBeVisible();
+  await expect(documentTypeFilter).toContainText("All document types (2)");
+  await expect(documentTypeFilter).toContainText("amendment (1)");
   await documentTypeFilter.selectOption("amendment");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
