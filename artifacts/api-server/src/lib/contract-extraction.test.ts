@@ -323,7 +323,9 @@ describe("OCR extraction metadata", () => {
     await extractContractFromText("--- Page 1 --- Contract text with sufficient evidence.", "prompt.pdf");
 
     const systemPrompt = mocks.create.mock.calls[0][0].messages[0].content as string;
-    expect(systemPrompt).toContain("provenance-v1");
+    expect(systemPrompt).toContain("provenance-v2");
+    expect(systemPrompt).toContain('"zum Quartalsende"');
+    expect(systemPrompt).toContain("Never convert months or weeks into days");
     expect(systemPrompt).toContain("Do not return noticeDeadline");
     expect(systemPrompt).toContain("Do not extract owner");
   });

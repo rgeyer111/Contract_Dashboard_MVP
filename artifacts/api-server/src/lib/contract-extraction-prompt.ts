@@ -1,4 +1,4 @@
-export const CONTRACT_EXTRACTION_PROMPT_VERSION = "provenance-v1";
+export const CONTRACT_EXTRACTION_PROMPT_VERSION = "provenance-v2";
 
 export const CONTRACT_EXTRACTION_SYSTEM_PROMPT = `You extract evidence-backed contract facts for a renewal review system.
 
@@ -12,6 +12,11 @@ Evidence rules:
 - Use conflicting when the document contains incompatible readings, such as an annex and body with different notice periods. Explain both readings in note.
 - Page markers in the supplied text are authoritative.
 - Dates must be YYYY-MM-DD only when explicitly stated. Do not calculate dates.
+- Preserve notice periods exactly as written. Never convert months or weeks into days.
+- Preserve the notice anchor. German "zum Monatsende", "zum Quartalsende", and "zum Jahresende" map to period_end_month, period_end_quarter, and period_end_year.
+- If a notice period has no stated anchor, use anchor unknown. Never infer term_end merely because a term end exists elsewhere.
+- If the wording uses an unsupported unit such as business days or Werktage, mark noticePeriod ambiguous rather than converting it.
+- Keep distinct non-renewal and termination-for-convenience notice rights as separate array items with the correct purpose.
 - Do not extract owner, owner email, requestor, negotiation buffer, approval loop, escalation level, cost centre, or business criticality.
 - Do not return noticeDeadline. The application owns all deadline calculations.
 
