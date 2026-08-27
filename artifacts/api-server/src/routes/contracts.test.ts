@@ -35,6 +35,14 @@ const reviewerEdited = (value: unknown) => ({
   note: "Reviewer-supplied value; original extraction evidence was cleared.",
   reviewed: false,
 });
+const utcToday = new Date();
+const todayAtUtcMidnight = Date.UTC(
+  utcToday.getUTCFullYear(),
+  utcToday.getUTCMonth(),
+  utcToday.getUTCDate(),
+);
+const daysUntil = (date: string) =>
+  Math.round((new Date(`${date}T00:00:00.000Z`).getTime() - todayAtUtcMidnight) / (24 * 60 * 60 * 1000));
 const contract = {
   fields: {
     documentType: found("master_agreement"),
@@ -72,7 +80,7 @@ const contract = {
     exitDate: "2026-12-31",
     noticeDeadline: "2026-11-01",
     actionDate: "2026-10-02",
-    daysRemaining: 37,
+    daysRemaining: daysUntil("2026-10-02"),
     status: "green",
     reason: null,
   },
@@ -425,295 +433,7 @@ describe("saved contract persistence", () => {
     }
   });
 
-  it.skip("replays amendments by effective date without blanking untouched fields", async () => {
-    let parentId: string | undefined;
-    let amendmentId: string | undefined;
-    let secondParentId: string | undefined;
-    const suffix = Date.now();
-    const amendment = {
-      ...contract,
-      fields: {
-        ...Object.fromEntries(Object.keys(contract.fields).map((key) => [key, { ...missing }])),
-        documentType: found("amendment"),
-        documentLanguage: found("en"),
-        contractTitle: found("Regression Price Amendment"),
-        contractNumber: found(`AMD-${suffix}`),
-        effectiveDate: found("2026-06-01"),
-        contractValue: found({ amount: 280000, currency: "USD", basis: "annual" }),
-      },
-    };
-
-    try {
-      const parent = await request(app)
-        .post("/api/contracts")
-        .send({ filename: `family-parent-${suffix}.pdf`, parentContractId: null, contract });
-      expect(parent.status).toBe(201);
-      parentId = parent.body.id;
-
-      const child = await request(app)
-        .post("/api/contracts")
-        .send({ filename: `family-amendment-${suffix}.pdf`, parentContractId: parentId, contract: amendment });
-      expect(child.status).toBe(201);
-      amendmentId = child.body.id;
-
-      const invalidNestedChild = await request(app)
-        .post("/api/contracts")
-        .send({
-          filename: `family-nested-${suffix}.pdf`,
-          parentContractId: amendmentId,
-          contract: amendment,
-        });
-      expect(invalidNestedChild.status).toBe(400);
-      expect(invalidNestedChild.body.error).toMatch(/directly to a root agreement/i);
-
-      const amendmentUpdate = await request(app)
-        .put(`/api/contracts/${amendmentId}`)
-        .send({
-          filename: `family-amendment-${suffix}.pdf`,
-          contract: amendment,
-        });
-      expect(amendmentUpdate.status).toBe(200);
-      expect(amendmentUpdate.body.parentContractId).toBe(parentId);
-
-      const secondParent = await request(app)
-        .post("/api/contracts")
-        .send({
-          filename: `family-second-parent-${suffix}.pdf`,
-          parentContractId: null,
-          contract: {
-            ...contract,
-            fields: {
-              ...contract.fields,
-              contractNumber: found(`ROOT-SECOND-${suffix}`),
-            },
-          },
-        });
-      expect(secondParent.status).toBe(201);
-      secondParentId = secondParent.body.id;
-
-      const invalidRootMove = await request(app)
-        .put(`/api/contracts/${parentId}`)
-        .send({
-          filename: `family-parent-${suffix}.pdf`,
-          parentContractId: secondParentId,
-          contract,
-        });
-      expect(invalidRootMove.status).toBe(400);
-      expect(invalidRootMove.body.error).toMatch(/related documents cannot be reparented/i);
-
-      const family = await request(app).get(`/api/contracts/${parentId}`);
-      expect(family.status).toBe(200);
-      expect(family.body.family.documentCount).toBe(2);
-      expect(family.body.family.documents.map((document: { id: string }) => document.id)).toEqual([
-        parentId,
-        amendmentId,
-      ]);
-      expect(family.body.family.effectiveContract.fields.contractValue.value).toEqual({
-        amount: 280000,
-        currency: "USD",
-        basis: "annual",
-      });
-      expect(family.body.family.effectiveContract.fields.noticePeriod.value).toEqual(
-        contract.fields.noticePeriod.value,
-      );
-      expect(family.body.family.effectiveContract.fields.vendorLegalName.value).toBe(
-        "Regression Vendor GmbH",
-      );
-      expect(family.body.family.documents[1].fieldValues.contractValue).toMatchObject({
-        value: amendment.fields.contractValue.value,
-        sourceFilename: `family-amendment-${suffix}.pdf`,
-        provenance: "document",
-      });
-
-      const reviewerValue = { amount: 310000, currency: "USD", basis: "annual" };
-      const reviewerUpdate = await request(app)
-        .put(`/api/contracts/${amendmentId}`)
-        .send({
-          filename: `family-amendment-${suffix}.pdf`,
-          contract: {
-            ...amendment,
-            fields: {
-              ...amendment.fields,
-              contractValue: reviewerEdited(reviewerValue),
-            },
-          },
-        });
-      expect(reviewerUpdate.status).toBe(200);
-
-      const reloadedFamily = await request(app).get(`/api/contracts/${parentId}`);
-      expect(reloadedFamily.status).toBe(200);
-      expect(reloadedFamily.body.family.effectiveContract.fields.contractValue.value).toEqual(
-        reviewerValue,
-      );
-      expect(reloadedFamily.body.family.documents[1].fieldValues.contractValue).toMatchObject({
-        value: reviewerValue,
-        sourceFilename: `family-amendment-${suffix}.pdf`,
-        provenance: "reviewer_supplied",
-      });
-    } finally {
-      if (secondParentId) await db.delete(contractsTable).where(eq(contractsTable.id, secondParentId));
-      if (amendmentId) await db.delete(contractsTable).where(eq(contractsTable.id, amendmentId));
-      if (parentId) await db.delete(contractsTable).where(eq(contractsTable.id, parentId));
-    }
-  });
-
-  it.skip("lets a later-effective root supersede an earlier linked document", async () => {
-    let parentId: string | undefined;
-    let amendmentId: string | undefined;
-    const suffix = crypto.randomUUID();
-    const earlierAmendment = {
-      ...contract,
-      fields: {
-        ...Object.fromEntries(Object.keys(contract.fields).map((key) => [key, { ...missing }])),
-        documentType: found("amendment"),
-        documentLanguage: found("en"),
-        contractTitle: found("Earlier Price Amendment"),
-        contractNumber: found(`AMD-EARLY-${suffix}`),
-        effectiveDate: found("2025-06-01"),
-        contractValue: found({ amount: 500000, currency: "USD", basis: "annual" }),
-      },
-    };
-
-    try {
-      const parent = await request(app)
-        .post("/api/contracts")
-        .send({ filename: `later-root-${suffix}.pdf`, parentContractId: null, contract });
-      expect(parent.status).toBe(201);
-      parentId = parent.body.id;
-
-      const child = await request(app)
-        .post("/api/contracts")
-        .send({
-          filename: `earlier-amendment-${suffix}.pdf`,
-          parentContractId: parentId,
-          contract: earlierAmendment,
-        });
-      expect(child.status).toBe(201);
-      amendmentId = child.body.id;
-
-      const family = await request(app).get(`/api/contracts/${parentId}`);
-      expect(family.status).toBe(200);
-      expect(family.body.family.effectiveContract.fields.contractValue.value).toEqual(
-        contract.fields.contractValue.value,
-      );
-      expect(family.body.family.documents).toEqual([
-        expect.objectContaining({ id: amendmentId, isCurrent: false }),
-        expect.objectContaining({ id: parentId, isCurrent: true }),
-      ]);
-    } finally {
-      if (amendmentId) await db.delete(contractsTable).where(eq(contractsTable.id, amendmentId));
-      if (parentId) await db.delete(contractsTable).where(eq(contractsTable.id, parentId));
-    }
-  });
-
-  it.skip("dismisses an alert produced by the effective family replay", async () => {
-    let parentId: string | undefined;
-    let amendmentId: string | undefined;
-    const suffix = crypto.randomUUID();
-    const blockedRoot = {
-      ...contract,
-      fields: {
-        ...contract.fields,
-        noticePeriod: { ...missing },
-      },
-    };
-    const actionableAmendment = {
-      ...contract,
-      fields: {
-        ...Object.fromEntries(Object.keys(contract.fields).map((key) => [key, { ...missing }])),
-        documentType: found("amendment"),
-        documentLanguage: found("en"),
-        contractTitle: found("Notice Amendment"),
-        contractNumber: found(`AMD-NOTICE-${suffix}`),
-        effectiveDate: found("2026-06-01"),
-        noticePeriod: contract.fields.noticePeriod,
-      },
-    };
-
-    try {
-      const parent = await request(app)
-        .post("/api/contracts")
-        .send({ filename: `blocked-root-${suffix}.pdf`, parentContractId: null, contract: blockedRoot });
-      expect(parent.status).toBe(201);
-      parentId = parent.body.id;
-      expect(parent.body.contract.alert).toBeNull();
-
-      const child = await request(app)
-        .post("/api/contracts")
-        .send({
-          filename: `notice-amendment-${suffix}.pdf`,
-          parentContractId: parentId,
-          contract: actionableAmendment,
-        });
-      expect(child.status).toBe(201);
-      amendmentId = child.body.id;
-
-      const actionableFamily = await request(app).get(`/api/contracts/${parentId}`);
-      expect(actionableFamily.body.family.effectiveContract.alert.state).toBe("pending");
-
-      const dismissed = await request(app)
-        .post(`/api/contracts/${parentId}/alert/dismiss`)
-        .send({ reason: "Family renewal handled" });
-      expect(dismissed.status).toBe(200);
-      expect(dismissed.body.family.effectiveContract.alert).toMatchObject({
-        state: "dismissed",
-        dismissedReason: "Family renewal handled",
-      });
-
-      const reopened = await request(app).get(`/api/contracts/${parentId}`);
-      expect(reopened.body.family.effectiveContract.alert).toMatchObject({
-        state: "dismissed",
-        dismissedReason: "Family renewal handled",
-      });
-
-      const nonAlertUpdate = {
-        ...blockedRoot,
-        fields: {
-          ...blockedRoot.fields,
-          vendorLegalName: found("Updated Vendor Name"),
-        },
-      };
-      const updated = await request(app)
-        .put(`/api/contracts/${parentId}`)
-        .send({
-          filename: `blocked-root-${suffix}.pdf`,
-          contract: nonAlertUpdate,
-        });
-      expect(updated.status).toBe(200);
-
-      const stillDismissed = await request(app).get(`/api/contracts/${amendmentId}`);
-      expect(stillDismissed.body.family.effectiveContract.alert).toMatchObject({
-        state: "dismissed",
-        dismissedReason: "Family renewal handled",
-      });
-
-      const ownerUpdate = {
-        ...nonAlertUpdate,
-        assignment: {
-          ...nonAlertUpdate.assignment,
-          owner: "Jane Smith",
-          ownerEmail: "jane.smith@example.com",
-        },
-      };
-      const reassigned = await request(app)
-        .put(`/api/contracts/${parentId}`)
-        .send({
-          filename: `blocked-root-${suffix}.pdf`,
-          contract: ownerUpdate,
-        });
-      expect(reassigned.status).toBe(200);
-      expect(reassigned.body.family.effectiveContract.alert).toMatchObject({
-        owner: "Jane Smith",
-        state: "pending",
-        dismissedReason: null,
-      });
-    } finally {
-      if (amendmentId) await db.delete(contractsTable).where(eq(contractsTable.id, amendmentId));
-      if (parentId) await db.delete(contractsTable).where(eq(contractsTable.id, parentId));
-    }
-  });
-
-  it("stores agreements and amendments as independent contracts", async () => {
+  it("stores every document as an independent contract", async () => {
     let agreementId: string | undefined;
     let amendmentId: string | undefined;
     const suffix = crypto.randomUUID();
@@ -739,7 +459,6 @@ describe("saved contract persistence", () => {
         .post("/api/contracts")
         .send({
           filename: `amendment-${suffix}.pdf`,
-          parentContractId: agreementId,
           contract: amendment,
         });
       expect(savedAmendment.status).toBe(201);

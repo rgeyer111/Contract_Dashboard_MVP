@@ -1,5 +1,6 @@
 - [Contract value review](contract-value-review.md) — unknown contract values are allowed but must stay visibly flagged in red.
 - [Contract ownership](contract-ownership.md) — new contracts default to the uploader as owner.
+- [Contract record independence](contract-record-independence.md) — every uploaded document is managed independently; family replay stays retired.
 - [Contract confirmation](contract-confirmation.md) — confirmation requires core renewal fields plus contractual timing and identity data.
 - [Contract taxonomy](contract-taxonomy.md) — MVP contract types are intentionally limited to four fixed categories.
 - [Extraction confidence](extraction-confidence.md) — extraction returns High, Medium, or Low confidence for every contract field.

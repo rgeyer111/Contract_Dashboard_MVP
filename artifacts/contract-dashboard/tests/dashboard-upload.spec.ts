@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
+  await page.route("**/api/contracts/ingest-runs/current", async (route) => {
+    await route.fulfill({ json: null });
+  });
   await page.route("**/api/registry-views", async (route) => {
     if (route.request().method() === "GET") {
       await route.fulfill({ json: [] });
@@ -87,24 +90,7 @@ const reviewerEdited = (value: unknown) => ({
 
 const savedResponse = <T extends { id: string; filename: string; contract: ReturnType<typeof makeContract> }>(saved: T) => ({
   ...saved,
-  parentContractId: null,
   documentType: "master_agreement",
-  family: {
-    id: saved.id,
-    documentCount: 1,
-    effectiveContract: saved.contract,
-    documents: [
-      {
-        id: saved.id,
-        filename: saved.filename,
-        documentType: "master_agreement",
-        effectiveDate: saved.contract.fields.effectiveDate.value,
-        isParent: true,
-        isCurrent: true,
-        fieldValues: {},
-      },
-    ],
-  },
 });
 
 test("shows upload success and API error states", async ({ page }) => {
@@ -746,12 +732,12 @@ test("sorts the register by urgency and persists auditable contract-type correct
   await expect(page.getByText("Edited · extracted maintenance", { exact: true })).toBeVisible();
 });
 
-test("keeps standalone contract rows reachable on narrow screens", async ({ page }) => {
-  const rootId = "saved-family-parent";
-  const amendmentId = "saved-family-amendment";
-  const parentContract = makeContract({
-    vendor: "Legacy Parent Vendor",
-    contractNumber: "PARENT-001",
+test("keeps independent contract rows reachable on narrow screens", async ({ page }) => {
+  const masterId = "saved-standalone-master";
+  const amendmentId = "saved-standalone-amendment";
+  const masterContract = makeContract({
+    vendor: "Legacy Master Vendor",
+    contractNumber: "MASTER-001",
     contractTitle: "Original Support Agreement",
     contractValue: { amount: 120000, currency: "USD", basis: "annual" },
   });
@@ -788,10 +774,10 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   };
   const savedContracts = [
     {
-      id: rootId,
-      filename: "parent-agreement.pdf",
+      id: masterId,
+      filename: "master-agreement.pdf",
       documentType: "master_agreement",
-      contract: parentContract,
+      contract: masterContract,
     },
     {
       id: amendmentId,
@@ -832,11 +818,11 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
     "Owner",
     "Negotiation buffer",
   ]);
-  for (const removedHeader of ["Contract family", "Family / commercial context", "Notice / action", "Actions"]) {
+  for (const removedHeader of ["Notice / action", "Actions"]) {
     await expect(headers.filter({ hasText: new RegExp(`^${removedHeader}$`) })).toHaveCount(0);
   }
 
-  const agreementRow = page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" });
+  const agreementRow = page.getByRole("row").filter({ hasText: "Legacy Master Vendor" });
   const amendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
   await expect(agreementRow).toHaveCount(1);
   await expect(amendmentRow).toHaveCount(1);
@@ -849,8 +835,6 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(amendmentRow).toContainText("02.09.2027");
   await expect(amendmentRow).toContainText("02.10.2027");
   await expect(amendmentRow).toContainText("Avery Stone");
-  await expect(page.getByRole("button", { name: /contract family/i })).toHaveCount(0);
-  await expect(page.getByTestId("contract-family-history")).toHaveCount(0);
 
   const documentTypeFilter = page.getByRole("combobox", { name: "Filter by document type" });
   await expect(documentTypeFilter).toBeVisible();
@@ -882,19 +866,19 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toContainText("Link copied");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
   await page.reload();
   await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toBeVisible();
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear document type filter" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
   await expect(page.getByTestId("active-contract-count")).toHaveText("2");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(1);
 
   await page.getByLabel("Search contracts").fill(specialSearch);
   expect(new URL(page.url()).searchParams.get("search")).toBe(specialSearch);
@@ -909,7 +893,7 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page).toHaveURL(/\/dashboard\?search=C%26A\+%2B\+100%25$/);
   await expect(page.getByLabel("Search contracts")).toHaveValue(specialSearch);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
@@ -942,7 +926,7 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByLabel("Search contracts")).toHaveValue(sharedSearchTerm);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
 
   await page.reload();
   await expect(page).toHaveURL(/\/dashboard\?documentType=amendment&search=Northstar\+%26\+Sourcing$/);
@@ -950,14 +934,14 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(page.getByLabel("Search contracts")).toHaveValue(sharedSearchTerm);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
 
   await page.goto(`/dashboard?documentType=amendment&search=${encodeURIComponent(sharedSearchTerm)}`);
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByLabel("Search contracts")).toHaveValue(sharedSearchTerm);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
   await expect(documentTypeFilter).toHaveValue("amendment");
@@ -979,7 +963,7 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
   await expect(documentTypeFilter).toBeVisible();
   await documentTypeFilter.selectOption("master_agreement");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(1);
   await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear document type filter" }).click();
 
@@ -990,7 +974,7 @@ test("keeps standalone contract rows reachable on narrow screens", async ({ page
 
   await page.reload();
   await expect(documentTypeFilter).toHaveValue("amendment");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Parent Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
   const reloadedAmendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
   await expect(reloadedAmendmentRow).toHaveCount(1);
   await expect(reloadedAmendmentRow).toContainText("USD 240,000 · annual");

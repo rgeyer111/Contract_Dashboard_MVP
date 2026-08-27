@@ -90,25 +90,8 @@ test("hides blocked dates in registry and review while preserving expired histor
   const savedContract = (id: string, filename: string, contract: ReturnType<typeof makeContract>) => ({
     id,
     filename,
-    parentContractId: null,
     documentType: "master_agreement",
     contract,
-    family: {
-      id,
-      documentCount: 1,
-      effectiveContract: contract,
-      documents: [
-        {
-          id,
-          filename,
-          documentType: "master_agreement",
-          effectiveDate: contract.fields.effectiveDate.value,
-          isParent: true,
-          isCurrent: true,
-          fieldValues: {},
-        },
-      ],
-    },
   });
   const savedContracts = [
     savedContract("blocked-deadline", "blocked.pdf", blockedContract),

@@ -34,16 +34,18 @@ export function useContractUpload(navigate: (path: string) => void) {
   const isPending = extractionMutation.isPending || registerRun.isPending || retryMutation.isPending;
 
   useEffect(() => {
-    if (!currentRun.data?.items.length || selectedFiles.length > 0) return;
-    activeRunId.current = currentRun.data.id;
-    const entries = currentRun.data.items.map((item) => ({
+    const run = currentRun.data;
+    const items = run?.items;
+    if (!run || !items?.length || selectedFiles.length > 0) return;
+    activeRunId.current = run.id;
+    const entries = items.map((item) => ({
       id: item.id,
       name: item.filename,
       state: item.state,
       message: item.message ?? undefined,
     }));
     successfulExtractions.current.clear();
-    currentRun.data.items.forEach((item) => {
+    items.forEach((item) => {
       if (item.extraction) successfulExtractions.current.set(item.id, item.extraction);
     });
     setRunLog(entries);

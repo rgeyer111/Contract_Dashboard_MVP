@@ -564,7 +564,6 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     .update(contractsTable)
     .set({
       filename: parsed.data.filename.slice(0, 250),
-      parentContractId: null,
       documentType: contractDocumentType(contract),
       contract,
       confidence: {},
@@ -601,7 +600,6 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
   const [record] = await db.insert(contractsTable).values({
     id: randomUUID(),
     filename: parsed.data.filename.slice(0, 250),
-    parentContractId: null,
     documentType: contractDocumentType(contract),
     contract,
     confidence: {},
