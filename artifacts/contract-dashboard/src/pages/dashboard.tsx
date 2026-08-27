@@ -52,10 +52,12 @@ import { useContractUpload } from "@/hooks/use-contract-upload";
 import { useRegistryFilters } from "@/hooks/use-registry-filters";
 import { useSavedRegistryViews } from "@/hooks/use-saved-registry-views";
 import { LanguageSwitch, translateComputedReasonOrDetail, translateDomainOption, useLanguage } from "@/lib/i18n";
+import { demoNavigationPath, isDemoLocation, useDemoContracts } from "@/lib/demo-mode";
 
 export default function Dashboard() {
   const { language, t } = useLanguage();
   const [location, setLocation] = useLocation();
+  const isDemo = isDemoLocation();
   const isActionItemsPage = location.split("?")[0] === "/action-items";
   const [uploadOpen, setUploadOpen] = useState(false);
   const [dismissingId, setDismissingId] = useState<string | null>(null);
@@ -64,10 +66,17 @@ export default function Dashboard() {
   const [contractTypeErrorId, setContractTypeErrorId] = useState<string | null>(null);
   const [contractTypeSaveError, setContractTypeSaveError] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const contractsQuery = useListContracts();
+  const realContractsQuery = useListContracts({
+    query: {
+      enabled: !isDemo,
+      queryKey: getListContractsQueryKey(),
+    },
+  });
+  const demoContractsQuery = useDemoContracts(isDemo);
+  const contractsQuery = isDemo ? demoContractsQuery : realContractsQuery;
   const contracts = contractsQuery.data ?? [];
   const documentTypeCounts = getDocumentTypeCounts(contracts);
-  const upload = useContractUpload(setLocation);
+  const upload = useContractUpload(setLocation, !isDemo);
   const {
     selectedFiles,
     runLog,
@@ -84,8 +93,9 @@ export default function Dashboard() {
     resetUpload,
   } = upload;
   useEffect(() => {
-    if (hasResumableRun && !isActionItemsPage) setUploadOpen(true);
-  }, [hasResumableRun, isActionItemsPage]);
+    if (!isDemo && hasResumableRun && !isActionItemsPage) setUploadOpen(true);
+    if (isDemo) setUploadOpen(false);
+  }, [hasResumableRun, isActionItemsPage, isDemo]);
   const {
     searchTerm,
     documentTypeFilter,
@@ -97,7 +107,7 @@ export default function Dashboard() {
     copyFilteredViewLink,
     openSavedView,
   } = useRegistryFilters(contracts, location);
-  const savedViewState = useSavedRegistryViews(searchTerm, documentTypeFilter);
+  const savedViewState = useSavedRegistryViews(searchTerm, documentTypeFilter, !isDemo);
   const {
     registryViewsQuery,
     savedViews,
@@ -153,7 +163,7 @@ export default function Dashboard() {
     },
   });
   const saveContractType = (saved: typeof contracts[number], value: typeof contractTypeOptions[number]) => {
-    if (value === saved.contract.fields.contractType.value || updateContract.isPending) return;
+    if (isDemo || value === saved.contract.fields.contractType.value || updateContract.isPending) return;
     setSavingContractTypeId(saved.id);
     setContractTypeErrorId(saved.id);
     setContractTypeSaveError(null);
@@ -188,7 +198,7 @@ export default function Dashboard() {
         </div>
         
         <nav className="flex-1 p-4 space-y-1">
-          <Link href="/dashboard" className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-semibold text-sm transition-colors ${!isActionItemsPage ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}>
+          <Link data-testid="link-dashboard" href={demoNavigationPath("/dashboard", isDemo)} className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-semibold text-sm transition-colors ${!isActionItemsPage ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}>
             <FileText className="h-4 w-4" />
             {t("ui.contracts")}
           </Link>
@@ -196,7 +206,7 @@ export default function Dashboard() {
             <Clock className="h-4 w-4" />
             {t("ui.renewals")}
           </div>
-          <Link href="/action-items" className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium text-sm transition-colors ${isActionItemsPage ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-muted/50"}`}>
+          <Link data-testid="link-action-items" href={demoNavigationPath("/action-items", isDemo)} className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium text-sm transition-colors ${isActionItemsPage ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-muted/50"}`}>
             <AlertCircle className="h-4 w-4" />
             {t("ui.action.items")}
           </Link>
@@ -256,6 +266,12 @@ export default function Dashboard() {
         
         {/* Scrollable Area */}
         <div className="flex-1 overflow-auto p-6 lg:p-8 space-y-8 animate-in fade-in duration-500">
+          {isDemo && (
+            <div data-testid="banner-demo-mode" className="rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
+              <p className="text-sm font-extrabold text-primary">{t("demo.bannerTitle")}</p>
+              <p className="mt-0.5 text-xs font-medium text-muted-foreground">{t("demo.bannerExplanation")}</p>
+            </div>
+          )}
           
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -263,7 +279,7 @@ export default function Dashboard() {
               <h1 className="text-3xl font-extrabold tracking-tight text-foreground">{isActionItemsPage ? t("ui.action.items") : t("ui.welcome.back.john")}</h1>
               <p className="text-muted-foreground mt-1 font-medium text-sm">{isActionItemsPage ? t("ui.stay.ahead.of.the.contract.decisions.that.need.your.attention") : t("ui.here.s.the.status.of.your.contract.renewals.this.week")}</p>
             </div>
-            {!isActionItemsPage && (
+            {!isActionItemsPage && !isDemo && (
               <Button onClick={() => setUploadOpen(true)} className="shrink-0 gap-2 shadow-sm font-semibold">
                 <Plus className="h-4 w-4" />
                 {t("ui.new.contract")}
@@ -271,7 +287,7 @@ export default function Dashboard() {
             )}
           </div>
 
-          {!isActionItemsPage && uploadOpen && (
+          {!isActionItemsPage && !isDemo && uploadOpen && (
             <section className="bg-card border rounded-xl shadow-sm p-5 sm:p-6 animate-in fade-in slide-in-from-top-2 duration-300" aria-labelledby="upload-contract-heading">
               <div className="flex items-start justify-between gap-4 mb-5">
                 <div>
@@ -450,7 +466,7 @@ export default function Dashboard() {
             </div>
             
               {/* Card 3 */}
-              <button type="button" onClick={() => setLocation("/action-items")} className="w-full bg-card border rounded-xl p-6 text-left shadow-sm transition-shadow hover:shadow-md cursor-pointer relative overflow-hidden group">
+              <button type="button" data-testid="button-open-action-items" onClick={() => setLocation(demoNavigationPath("/action-items", isDemo))} className="w-full bg-card border rounded-xl p-6 text-left shadow-sm transition-shadow hover:shadow-md cursor-pointer relative overflow-hidden group">
                 <div className="absolute -top-4 -right-4 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-300">
                   <CheckCircle2 className="h-32 w-32 text-green-500" />
                 </div>
@@ -494,7 +510,7 @@ export default function Dashboard() {
                            <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{t("alert.legalDeadline", { date: formatRegistryDate(alert.noticeDeadline, language) })}</p>
                         </div>
                       </div>
-                      {alert.state !== 'dismissed' && (
+                      {alert.state !== 'dismissed' && !isDemo && (
                         <div className="flex flex-wrap items-center gap-2">
                           <a href={mailto} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm"><Mail className="h-3.5 w-3.5" />{t("ui.send.now")}</a>
                           <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => setDismissingId(saved.id)}><Ban className="h-3.5 w-3.5" />{t("ui.dismiss")}</Button>
@@ -516,7 +532,7 @@ export default function Dashboard() {
             </div>
           </section>}
           
-          {!isActionItemsPage && <section aria-labelledby="saved-views-heading" className="space-y-4 pt-2">
+          {!isActionItemsPage && !isDemo && <section aria-labelledby="saved-views-heading" className="space-y-4 pt-2">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <div className="flex items-center gap-2 text-primary">
@@ -841,7 +857,11 @@ export default function Dashboard() {
                        return (
                          <tr key={saved.id} data-testid={`contract-registry-row-${saved.id}`} className={`${statusRowClasses(status)} hover:bg-muted/30 transition-colors`}>
                            <td className="max-w-[190px] bg-muted/[0.12] px-4 py-3 align-top">
-                             <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="block max-w-full truncate text-left text-xs font-extrabold text-foreground hover:text-primary" title={vendor}>{vendor}</button>
+                              {isDemo ? (
+                                <span className="block max-w-full truncate text-left text-xs font-extrabold text-foreground" title={vendor}>{vendor}</span>
+                              ) : (
+                                <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="block max-w-full truncate text-left text-xs font-extrabold text-foreground hover:text-primary" title={vendor}>{vendor}</button>
+                              )}
                              <div className="mt-1 max-w-full truncate text-[10px] font-medium text-muted-foreground" title={title}>{title}</div>
                            </td>
                            <td className="bg-muted/[0.12] px-4 py-3 align-top">
@@ -849,9 +869,9 @@ export default function Dashboard() {
                                data-testid={`contract-type-select-${saved.id}`}
                                  aria-label={t("contract.typeFor", { name: vendor })}
                                value={contract.fields.contractType.value || ""}
-                               disabled={isContractTypeSaving || updateContract.isPending}
+                                disabled={isDemo || isContractTypeSaving || updateContract.isPending}
                                onChange={(event) => saveContractType(saved, event.target.value as typeof contractTypeOptions[number])}
-                               className="h-8 w-[150px] rounded-md border border-input bg-background px-2 text-xs font-bold capitalize outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-wait disabled:opacity-60"
+                                className="h-8 w-[150px] rounded-md border border-input bg-background px-2 text-xs font-bold capitalize outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
                              >
                                 {!contract.fields.contractType.value && <option value="" disabled>{t("ui.select.type")}</option>}
                                 {contractTypeOptions.map((option) => <option key={option} value={option}>{formatContractType(option, language)}</option>)}

@@ -13,7 +13,7 @@ import {
 } from "@workspace/api-client-react";
 import { useLanguage, type MessageId } from "@/lib/i18n";
 
-export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: string) {
+export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: string, enabled = true) {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [savedViewName, setSavedViewName] = useState("");
@@ -24,8 +24,13 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
   const [savedViewError, setSavedViewError] = useState<MessageId | null>(null);
   const [savedViewMoveStatus, setSavedViewMoveStatus] = useState<string | null>(null);
 
-  const registryViewsQuery = useListRegistryViews();
-  const savedViews = registryViewsQuery.data ?? [];
+  const registryViewsQuery = useListRegistryViews({
+    query: {
+      enabled,
+      queryKey: getListRegistryViewsQueryKey(),
+    },
+  });
+  const savedViews = enabled ? registryViewsQuery.data ?? [] : [];
   const createRegistryView = useCreateRegistryView({
     mutation: {
       onSuccess: async () => {

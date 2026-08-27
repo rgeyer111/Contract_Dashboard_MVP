@@ -36,6 +36,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
             <Link 
               href="/dashboard" 
+              data-testid="link-real-dashboard"
               className={cn(
                 buttonVariants({ size: "lg" }), 
                 "w-full sm:w-auto h-14 px-8 text-base shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
@@ -44,7 +45,24 @@ export default function Home() {
               {t("home.continue")}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
+            {import.meta.env.DEV && (
+              <Link
+                href="/dashboard?demo=1"
+                data-testid="link-demo-dashboard"
+                className={cn(
+                  buttonVariants({ size: "lg", variant: "outline" }),
+                  "w-full sm:w-auto h-14 px-8 text-base border-primary/30 bg-card/70",
+                )}
+              >
+                {t("demo.open")}
+              </Link>
+            )}
           </div>
+          {import.meta.env.DEV && (
+            <p data-testid="text-demo-explanation" className="max-w-xl text-sm font-medium text-muted-foreground">
+              {t("demo.homeExplanation")}
+            </p>
+          )}
           
           <div className="flex items-center gap-8 pt-12 text-sm text-muted-foreground font-medium">
             <div className="flex items-center gap-2">

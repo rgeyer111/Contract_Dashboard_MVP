@@ -36,7 +36,7 @@ function fileId(runId: string, index: number) {
   return `${runId}:${index}`;
 }
 
-export function useContractUpload(navigate: (path: string) => void) {
+export function useContractUpload(navigate: (path: string) => void, enabled = true) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [runLog, setRunLog] = useState<UploadRunEntry[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -47,7 +47,12 @@ export function useContractUpload(navigate: (path: string) => void) {
   const abandonMutation = useAbandonIngestRun();
   const registerRun = useRegisterIngestRun();
   const retryMutation = useRetryIngestItem();
-  const currentRun = useGetCurrentIngestRun();
+  const currentRun = useGetCurrentIngestRun({
+    query: {
+      enabled,
+      queryKey: ["/api/contracts/ingest-runs/current"],
+    },
+  });
   const isPending = extractionMutation.isPending || registerRun.isPending || retryMutation.isPending;
 
   useEffect(() => {

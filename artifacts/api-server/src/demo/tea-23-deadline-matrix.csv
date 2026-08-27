@@ -1,0 +1,8 @@
+"id","scenario","today","exit_date","notice_deadline","action_date","days_remaining","status","reason_code","alert_state"
+"tea23-quarter-end","Quarter-end notice","2026-06-15","2026-09-30","2026-08-31","2026-08-17","63","green","","pending"
+"tea23-evergreen","Evergreen / indefinite","2026-06-15","","","","","blocked","INDEFINITE_WITHOUT_FIXED_ANCHOR",""
+"tea23-conflicting-timing","Conflicting timing","2026-06-15","","","","","blocked","TIMING_VALUES_CONFLICT",""
+"tea23-unknown-anchor","Unknown notice anchor","2026-06-15","","","","","blocked","NOTICE_ANCHOR_UNKNOWN",""
+"tea23-expired","Expired fixed term","2026-06-15","2026-05-31","2026-05-01","2026-04-17","-59","expired","FIXED_CONTRACT_END_PASSED",""
+"tea23-blocked","Blocked missing end","2026-06-15","","","","","blocked","CONTRACT_END_UNESTABLISHED",""
+"tea23-overdue","Overdue notice","2026-06-15","2026-07-31","2026-06-01","2026-05-18","-28","red","","overdue"

@@ -431,6 +431,10 @@ const en = {
   "home.vendorApproved": () => "Vendor Approved",
   "home.savingsCaptured": () => "Savings Captured",
   "home.negotiatedRate": () => "Negotiated rate",
+  "demo.open": () => "Demo only",
+  "demo.homeExplanation": () => "Open a read-only synthetic register. Demo records never enter the real contract registry.",
+  "demo.bannerTitle": () => "Demo only · read-only sample register",
+  "demo.bannerExplanation": () => "These synthetic contracts are loaded from an isolated development fixture. Uploads, edits, dismissals, reviews, and saved-view changes are unavailable.",
   "notFound.title": () => "404 Page Not Found",
   "notFound.description": () => "Did you forget to add the page to the router?",
 } as const;
@@ -845,6 +849,10 @@ const de = {
   "home.vendorApproved": () => "Anbieter freigegeben",
   "home.savingsCaptured": () => "Einsparungen erfasst",
   "home.negotiatedRate": () => "Ausgehandelter Preis",
+  "demo.open": () => "Nur Demo",
+  "demo.homeExplanation": () => "Öffnen Sie ein schreibgeschütztes synthetisches Register. Demodatensätze gelangen nie in das echte Vertragsregister.",
+  "demo.bannerTitle": () => "Nur Demo · schreibgeschütztes Beispielregister",
+  "demo.bannerExplanation": () => "Diese synthetischen Verträge stammen aus einer isolierten Entwicklungsdatei. Uploads, Änderungen, Verwerfungen, Prüfungen und Änderungen an gespeicherten Ansichten sind nicht verfügbar.",
   "notFound.title": () => "404 Seite nicht gefunden",
   "notFound.description": () => "Wurde diese Seite noch nicht zum Router hinzugefügt?",
 } satisfies Catalog;
