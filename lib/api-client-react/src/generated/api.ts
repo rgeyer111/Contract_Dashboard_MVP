@@ -739,7 +739,7 @@ export const getRegisterIngestRunUrl = () => {
 }
 
 /**
- * @summary Persist the PDFs in a new resumable ingest run
+ * @summary Persist a new resumable ingest run
  */
 export const registerIngestRun = async (contractIngestRegistration: ContractIngestRegistration, options?: Parameters<typeof customFetch>[1]): Promise<ContractIngestRun> => {
     const formData = new FormData();
@@ -792,7 +792,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type RegisterIngestRunMutationError = ErrorType<ErrorResponse>
 
     /**
- * @summary Persist the PDFs in a new resumable ingest run
+ * @summary Persist a new resumable ingest run
  */
 export const useRegisterIngestRun = <TError = ErrorType<ErrorResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerIngestRun>>, TError,{data: BodyType<ContractIngestRegistration>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -876,6 +876,77 @@ export const useRetryIngestItem = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getRetryIngestItemMutationOptions(options));
+    }
+
+export const getAbandonIngestRunUrl = (runId: string,) => {
+
+
+
+
+  return `/api/contracts/ingest-runs/${runId}`
+}
+
+/**
+ * @summary Abandon an unfinished ingest run and delete its temporary PDFs
+ */
+export const abandonIngestRun = async (runId: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getAbandonIngestRunUrl(runId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getAbandonIngestRunMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abandonIngestRun>>, TError,{runId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof abandonIngestRun>>, TError,{runId: string}, TContext> => {
+
+const mutationKey = ['abandonIngestRun'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof abandonIngestRun>>, {runId: string}> = (props) => {
+          const {runId} = props ?? {};
+
+          return  abandonIngestRun(runId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AbandonIngestRunMutationResult = NonNullable<Awaited<ReturnType<typeof abandonIngestRun>>>
+
+    export type AbandonIngestRunMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Abandon an unfinished ingest run and delete its temporary PDFs
+ */
+export const useAbandonIngestRun = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abandonIngestRun>>, TError,{runId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof abandonIngestRun>>,
+        TError,
+        {runId: string},
+        TContext
+      > => {
+      return useMutation(getAbandonIngestRunMutationOptions(options));
     }
 
 export const getCompleteIngestItemUrl = (runId: string,

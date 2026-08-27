@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import {
+  useAbandonIngestRun,
   useExtractContract,
   useGetCurrentIngestRun,
   useRegisterIngestRun,
@@ -26,6 +27,7 @@ export function useContractUpload(navigate: (path: string) => void) {
   const successfulExtractions = useRef(new Map<string, ContractExtractionResult>());
   const activeRunId = useRef<string | null>(null);
   const extractionMutation = useExtractContract();
+  const abandonMutation = useAbandonIngestRun();
   const registerRun = useRegisterIngestRun();
   const retryMutation = useRetryIngestItem();
   const currentRun = useGetCurrentIngestRun();
@@ -59,6 +61,14 @@ export function useContractUpload(navigate: (path: string) => void) {
   };
 
   const chooseFiles = (files: File[]) => {
+    const previousRunId = activeRunId.current;
+    if (previousRunId && runLog.length > 0) {
+      void abandonMutation.mutateAsync({ runId: previousRunId })
+        .catch(() => undefined)
+        .finally(() => {
+          void currentRun.refetch();
+        });
+    }
     const validFiles = files.filter((file) => {
       const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
       return isPdf && file.size <= 10 * 1024 * 1024;
@@ -184,6 +194,14 @@ export function useContractUpload(navigate: (path: string) => void) {
   };
 
   const resetUpload = () => {
+    const runId = activeRunId.current;
+    if (runId && runLog.length > 0) {
+      void abandonMutation.mutateAsync({ runId })
+        .catch(() => undefined)
+        .finally(() => {
+          void currentRun.refetch();
+        });
+    }
     setSelectedFiles([]);
     setRunLog([]);
     setUploadError(null);

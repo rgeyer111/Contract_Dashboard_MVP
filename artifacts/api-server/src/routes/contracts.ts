@@ -5,6 +5,7 @@ import {
   db,
   contractIngestCompletionsTable,
   contractIngestItemsTable,
+  contractIngestObjectCleanupTable,
   contractIngestRunsTable,
   contractsTable,
   registryViewsTable,
@@ -34,6 +35,11 @@ import {
   upgradeContract,
   withComputedDates,
 } from "../lib/contract-normalization";
+import { readContractIngestPdf } from "../lib/contract-ingest-storage";
+import {
+  processContractIngestObjectCleanup,
+  reserveAndStoreContractIngestPdf,
+} from "../lib/contract-ingest-cleanup";
 
 const maximumUploadBytes = 10 * 1024 * 1024;
 const upload = multer({
@@ -184,37 +190,70 @@ async function persistIngestStart(
   file: Express.Multer.File,
 ) {
   const hash = uploadedHash(file.buffer);
-  await db.insert(contractIngestRunsTable)
-    .values({ id: identifiers.runId })
-    .onConflictDoNothing();
-  await db.insert(contractIngestItemsTable)
-    .values({
-      id: identifiers.itemId,
-      runId: identifiers.runId,
-      filename: file.originalname.slice(0, 250),
-      size: file.size,
-      hash,
-      pdf: file.buffer.toString("base64"),
-      state: "processing",
-      message: null,
-      extraction: null,
-      handedOffAt: null,
-    })
-    .onConflictDoUpdate({
-      target: contractIngestItemsTable.id,
-      set: {
-        runId: identifiers.runId,
-        filename: file.originalname.slice(0, 250),
-        size: file.size,
-        hash,
-        pdf: file.buffer.toString("base64"),
-        state: "processing",
-        message: null,
-        extraction: null,
-        handedOffAt: null,
-        updatedAt: new Date(),
-      },
+  const storagePath = await reserveAndStoreContractIngestPdf(file.buffer);
+  let replacedStoragePath: string | null = null;
+  try {
+    await db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${identifiers.runId}))`);
+      const [existing] = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, identifiers.itemId));
+      replacedStoragePath = existing?.storagePath ?? null;
+      await tx.insert(contractIngestRunsTable)
+        .values({ id: identifiers.runId })
+        .onConflictDoNothing();
+      await tx.insert(contractIngestItemsTable)
+        .values({
+          id: identifiers.itemId,
+          runId: identifiers.runId,
+          filename: file.originalname.slice(0, 250),
+          size: file.size,
+          hash,
+          storagePath,
+          state: "processing",
+          message: null,
+          extraction: null,
+          handedOffAt: null,
+        })
+        .onConflictDoUpdate({
+          target: contractIngestItemsTable.id,
+          set: {
+            runId: identifiers.runId,
+            filename: file.originalname.slice(0, 250),
+            size: file.size,
+            hash,
+            storagePath,
+            state: "processing",
+            message: null,
+            extraction: null,
+            handedOffAt: null,
+            updatedAt: new Date(),
+          },
+        });
+      await tx.delete(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      if (replacedStoragePath && replacedStoragePath !== storagePath) {
+        await tx.insert(contractIngestObjectCleanupTable)
+          .values({
+            storagePath: replacedStoragePath,
+            state: "cleanup_pending",
+          })
+          .onConflictDoUpdate({
+            target: contractIngestObjectCleanupTable.storagePath,
+            set: {
+              state: "cleanup_pending",
+              updatedAt: new Date(),
+            },
+          });
+      }
     });
+  } catch (error) {
+    await processContractIngestObjectCleanup([storagePath]);
+    throw error;
+  }
+  if (replacedStoragePath && replacedStoragePath !== storagePath) {
+    await processContractIngestObjectCleanup([replacedStoragePath]);
+  }
 }
 
 async function persistIngestOutcome(
@@ -230,7 +269,7 @@ async function persistIngestOutcome(
 }
 
 async function deleteRunIfNoActionableItems(runId: string) {
-  await db.transaction(async (tx) => {
+  const storagePaths = await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
     const remaining = await tx.select({ id: contractIngestItemsTable.id })
       .from(contractIngestItemsTable)
@@ -240,9 +279,29 @@ async function deleteRunIfNoActionableItems(runId: string) {
         sql`${contractIngestItemsTable.state} IN ('ready', 'failed', 'processing')`,
       ));
     if (!remaining.length) {
+      const items = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.runId, runId));
+      if (items.length) {
+        await tx.insert(contractIngestObjectCleanupTable)
+          .values(items.map((item) => ({
+            storagePath: item.storagePath,
+            state: "cleanup_pending",
+          })))
+          .onConflictDoUpdate({
+            target: contractIngestObjectCleanupTable.storagePath,
+            set: {
+              state: "cleanup_pending",
+              updatedAt: new Date(),
+            },
+          });
+      }
       await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      return items.map((item) => item.storagePath);
     }
+    return [];
   });
+  if (storagePaths.length) await processContractIngestObjectCleanup(storagePaths);
 }
 
 function extractionErrorStatus(error: unknown) {
@@ -633,37 +692,78 @@ router.post(
       res.status(400).json({ error: "Only valid PDF files can be uploaded." });
       return;
     }
-    await db.transaction(async (tx) => {
-      await tx.insert(contractIngestRunsTable).values({ id: runId }).onConflictDoNothing();
-      for (const [index, file] of files.entries()) {
-        await tx.insert(contractIngestItemsTable).values({
-          id: itemIds[index],
-          runId,
-          filename: file.originalname.slice(0, 250),
-          size: file.size,
-          hash: uploadedHash(file.buffer),
-          pdf: file.buffer.toString("base64"),
-          state: "failed",
-          message: "Processing was interrupted. Retry this PDF.",
-          extraction: null,
-          handedOffAt: null,
-        }).onConflictDoUpdate({
-          target: contractIngestItemsTable.id,
-          set: {
+    const storedFiles: Array<{ file: Express.Multer.File; storagePath: string }> = [];
+    try {
+      for (const file of files) {
+        storedFiles.push({ file, storagePath: await reserveAndStoreContractIngestPdf(file.buffer) });
+      }
+    } catch (error) {
+      await processContractIngestObjectCleanup(storedFiles.map(({ storagePath }) => storagePath));
+      throw error;
+    }
+    const replacedStoragePaths: string[] = [];
+    try {
+      await db.transaction(async (tx) => {
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
+        await tx.insert(contractIngestRunsTable).values({ id: runId }).onConflictDoNothing();
+        for (const [index, { file, storagePath }] of storedFiles.entries()) {
+          const [existing] = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
+            .from(contractIngestItemsTable)
+            .where(eq(contractIngestItemsTable.id, itemIds[index]));
+          if (existing && existing.storagePath !== storagePath) {
+            replacedStoragePaths.push(existing.storagePath);
+          }
+          await tx.insert(contractIngestItemsTable).values({
+            id: itemIds[index],
             runId,
             filename: file.originalname.slice(0, 250),
             size: file.size,
             hash: uploadedHash(file.buffer),
-            pdf: file.buffer.toString("base64"),
+            storagePath,
             state: "failed",
             message: "Processing was interrupted. Retry this PDF.",
             extraction: null,
             handedOffAt: null,
-            updatedAt: new Date(),
-          },
-        });
-      }
-    });
+          }).onConflictDoUpdate({
+            target: contractIngestItemsTable.id,
+            set: {
+              runId,
+              filename: file.originalname.slice(0, 250),
+              size: file.size,
+              hash: uploadedHash(file.buffer),
+              storagePath,
+              state: "failed",
+              message: "Processing was interrupted. Retry this PDF.",
+              extraction: null,
+              handedOffAt: null,
+              updatedAt: new Date(),
+            },
+          });
+          await tx.delete(contractIngestObjectCleanupTable)
+            .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+        }
+        if (replacedStoragePaths.length) {
+          await tx.insert(contractIngestObjectCleanupTable)
+            .values(replacedStoragePaths.map((storagePath) => ({
+              storagePath,
+              state: "cleanup_pending",
+            })))
+            .onConflictDoUpdate({
+              target: contractIngestObjectCleanupTable.storagePath,
+              set: {
+                state: "cleanup_pending",
+                updatedAt: new Date(),
+              },
+            });
+        }
+      });
+    } catch (error) {
+      await processContractIngestObjectCleanup(storedFiles.map(({ storagePath }) => storagePath));
+      throw error;
+    }
+    if (replacedStoragePaths.length) {
+      await processContractIngestObjectCleanup(replacedStoragePaths);
+    }
     const items = await db.select().from(contractIngestItemsTable)
       .where(eq(contractIngestItemsTable.runId, runId))
       .orderBy(asc(contractIngestItemsTable.createdAt));
@@ -672,6 +772,7 @@ router.post(
 );
 
 router.get("/contracts/ingest-runs/current", async (_req: Request, res: Response): Promise<void> => {
+  await processContractIngestObjectCleanup();
   const [run] = await db.select().from(contractIngestRunsTable)
     .orderBy(desc(contractIngestRunsTable.updatedAt))
     .limit(1);
@@ -689,21 +790,78 @@ router.get("/contracts/ingest-runs/current", async (_req: Request, res: Response
   res.json({ id: run.id, items: items.filter((item) => !item.handedOffAt).map(ingestItemResponse) });
 });
 
+router.delete("/contracts/ingest-runs/:runId", async (req: Request, res: Response): Promise<void> => {
+  const runId = Array.isArray(req.params.runId) ? req.params.runId[0] : req.params.runId;
+  const outcome = await db.transaction(async (tx) => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
+    const [run] = await tx.select({ id: contractIngestRunsTable.id })
+      .from(contractIngestRunsTable)
+      .where(eq(contractIngestRunsTable.id, runId));
+    if (!run) return null;
+    const [processingItem] = await tx.select({ id: contractIngestItemsTable.id })
+      .from(contractIngestItemsTable)
+      .where(and(
+        eq(contractIngestItemsTable.runId, runId),
+        eq(contractIngestItemsTable.state, "processing"),
+      ))
+      .limit(1);
+    if (processingItem) return { state: "processing" as const, storagePaths: [] };
+    const items = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
+      .from(contractIngestItemsTable)
+      .where(eq(contractIngestItemsTable.runId, runId));
+    if (items.length) {
+      await tx.insert(contractIngestObjectCleanupTable)
+        .values(items.map((item) => ({
+          storagePath: item.storagePath,
+          state: "cleanup_pending",
+        })))
+        .onConflictDoUpdate({
+          target: contractIngestObjectCleanupTable.storagePath,
+          set: {
+            state: "cleanup_pending",
+            updatedAt: new Date(),
+          },
+        });
+    }
+    await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+    return {
+      state: "abandoned" as const,
+      storagePaths: items.map((item) => item.storagePath),
+    };
+  });
+  if (!outcome) {
+    res.status(404).json({ error: "Ingest run not found." });
+    return;
+  }
+  if (outcome.state === "processing") {
+    res.status(409).json({ error: "Wait for active PDF processing to finish before abandoning this run." });
+    return;
+  }
+  if (outcome.storagePaths.length) {
+    await processContractIngestObjectCleanup(outcome.storagePaths);
+  }
+  res.status(204).send();
+});
+
 async function retryIngestItem(runId: string, itemId: string, req: Request) {
-  const [item] = await db.update(contractIngestItemsTable)
-    .set({
-      state: "processing",
-      message: null,
-      extraction: null,
-      updatedAt: new Date(),
-    })
-    .where(and(
-      eq(contractIngestItemsTable.id, itemId),
-      eq(contractIngestItemsTable.runId, runId),
-      eq(contractIngestItemsTable.state, "failed"),
-      sql`${contractIngestItemsTable.handedOffAt} IS NULL`,
-    ))
-    .returning();
+  const item = await db.transaction(async (tx) => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
+    const [updated] = await tx.update(contractIngestItemsTable)
+      .set({
+        state: "processing",
+        message: null,
+        extraction: null,
+        updatedAt: new Date(),
+      })
+      .where(and(
+        eq(contractIngestItemsTable.id, itemId),
+        eq(contractIngestItemsTable.runId, runId),
+        eq(contractIngestItemsTable.state, "failed"),
+        sql`${contractIngestItemsTable.handedOffAt} IS NULL`,
+      ))
+      .returning();
+    return updated;
+  });
   if (!item) {
     const [existing] = await db.select({ id: contractIngestItemsTable.id })
       .from(contractIngestItemsTable)
@@ -715,19 +873,19 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
       ? { status: 409, error: "Only failed ingest items can be retried." }
       : null;
   }
-  const file = {
-    fieldname: "file",
-    originalname: item.filename,
-    encoding: "7bit",
-    mimetype: "application/pdf",
-    size: item.size,
-    buffer: Buffer.from(item.pdf, "base64"),
-    destination: "",
-    filename: item.filename,
-    path: "",
-    stream: undefined,
-  } as unknown as Express.Multer.File;
   try {
+    const file = {
+      fieldname: "file",
+      originalname: item.filename,
+      encoding: "7bit",
+      mimetype: "application/pdf",
+      size: item.size,
+      buffer: await readContractIngestPdf(item.storagePath),
+      destination: "",
+      filename: item.filename,
+      path: "",
+      stream: undefined,
+    } as unknown as Express.Multer.File;
     const result = await extractUploadedFile(file, req);
     result.ingestRunId = runId;
     result.ingestItemId = itemId;
@@ -778,7 +936,7 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
         eq(contractIngestCompletionsTable.itemId, itemId),
         eq(contractIngestCompletionsTable.runId, runId),
       ));
-    if (completed) return "completed" as const;
+    if (completed) return { status: "completed" as const, storagePaths: [] };
     const [updated] = await tx.update(contractIngestItemsTable)
       .set({ handedOffAt: new Date(), updatedAt: new Date() })
       .where(and(
@@ -795,7 +953,9 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
           eq(contractIngestItemsTable.id, itemId),
           eq(contractIngestItemsTable.runId, runId),
         ));
-      return existing ? "invalid" as const : "missing" as const;
+      return existing
+        ? { status: "invalid" as const, storagePaths: [] }
+        : { status: "missing" as const, storagePaths: [] };
     }
     await tx.insert(contractIngestCompletionsTable)
       .values({ itemId, runId })
@@ -808,15 +968,36 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
         sql`${contractIngestItemsTable.state} IN ('ready', 'failed', 'processing')`,
       ));
     if (!remaining.length) {
+      const items = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.runId, runId));
+      if (items.length) {
+        await tx.insert(contractIngestObjectCleanupTable)
+          .values(items.map((item) => ({
+            storagePath: item.storagePath,
+            state: "cleanup_pending",
+          })))
+          .onConflictDoUpdate({
+            target: contractIngestObjectCleanupTable.storagePath,
+            set: {
+              state: "cleanup_pending",
+              updatedAt: new Date(),
+            },
+          });
+      }
       await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      return { status: "completed" as const, storagePaths: items.map((item) => item.storagePath) };
     }
-    return "completed" as const;
+    return { status: "completed" as const, storagePaths: [] };
   });
-  if (completion !== "completed") {
-    res.status(completion === "invalid" ? 409 : 404).json({
-      error: completion === "invalid" ? "Only ready ingest items can be completed." : "Ingest item not found.",
+  if (completion.status !== "completed") {
+    res.status(completion.status === "invalid" ? 409 : 404).json({
+      error: completion.status === "invalid" ? "Only ready ingest items can be completed." : "Ingest item not found.",
     });
     return;
+  }
+  if (completion.storagePaths.length) {
+    await processContractIngestObjectCleanup(completion.storagePaths);
   }
   res.status(204).send();
 });

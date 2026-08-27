@@ -1116,7 +1116,7 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
 
 
 /**
- * @summary Persist the PDFs in a new resumable ingest run
+ * @summary Persist a new resumable ingest run
  */
 export const registerIngestRunBodyFilesMax = 20;
 
@@ -2057,6 +2057,16 @@ export const RetryIngestItemResponse = zod.object({
   "ingestRunId": zod.string().optional().describe('Durable ingest run containing this extraction, when the request belongs to a resumable run.'),
   "ingestItemId": zod.string().optional().describe('Durable ingest item containing this extraction, when the request belongs to a resumable run.')
 })
+
+
+/**
+ * @summary Abandon an unfinished ingest run and delete its temporary PDFs
+ */
+export const AbandonIngestRunParams = zod.object({
+  "runId": zod.coerce.string()
+})
+
+export const AbandonIngestRunResponse = zod.void()
 
 
 /**

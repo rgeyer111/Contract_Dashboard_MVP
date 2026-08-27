@@ -43,11 +43,20 @@ export const contractIngestItemsTable = pgTable("contract_ingest_items", {
   filename: text("filename").notNull(),
   size: integer("size").notNull(),
   hash: text("hash").notNull(),
-  pdf: text("pdf").notNull(),
+  storagePath: text("storage_path").notNull(),
   state: text("state").notNull().default("processing"),
   message: text("message"),
   extraction: jsonb("extraction"),
   handedOffAt: timestamp("handed_off_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const contractIngestObjectCleanupTable = pgTable("contract_ingest_object_cleanup", {
+  storagePath: text("storage_path").primaryKey(),
+  state: text("state").notNull().default("uploading"),
+  attempts: integer("attempts").notNull().default(0),
+  lastError: text("last_error"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
@@ -62,4 +71,5 @@ export type ContractRecord = typeof contractsTable.$inferSelect;
 export type RegistryViewRecord = typeof registryViewsTable.$inferSelect;
 export type ContractIngestRunRecord = typeof contractIngestRunsTable.$inferSelect;
 export type ContractIngestItemRecord = typeof contractIngestItemsTable.$inferSelect;
+export type ContractIngestObjectCleanupRecord = typeof contractIngestObjectCleanupTable.$inferSelect;
 export type ContractIngestCompletionRecord = typeof contractIngestCompletionsTable.$inferSelect;

@@ -226,7 +226,7 @@ paths:
     post:
       operationId: registerIngestRun
       tags: [contracts]
-      summary: Persist the PDFs in a new resumable ingest run
+      summary: Persist a new resumable ingest run
       requestBody:
         required: true
         content:
@@ -235,7 +235,7 @@ paths:
               $ref: "#/components/schemas/ContractIngestRegistration"
       responses:
         "201":
-          description: Registered ingest run
+          description: Registered ingest run; temporary PDFs are stored in App Storage
           content:
             application/json:
               schema:
@@ -287,6 +287,31 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "502":
           description: Extraction service failure
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/ingest-runs/{runId}:
+    parameters:
+      - name: runId
+        in: path
+        required: true
+        schema: { type: string }
+    delete:
+      operationId: abandonIngestRun
+      tags: [contracts]
+      summary: Abandon an unfinished ingest run and delete its temporary PDFs
+      responses:
+        "204":
+          description: Ingest run abandoned
+        "404":
+          description: Ingest run not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Ingest run has an item that is actively processing
           content:
             application/json:
               schema:

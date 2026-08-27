@@ -2,6 +2,10 @@ import app from "./app";
 import { logger } from "./lib/logger";
 import { contractIngestItemsTable, db } from "@workspace/db";
 import { eq } from "drizzle-orm";
+import {
+  expireContractIngestUploadReservations,
+  processContractIngestObjectCleanup,
+} from "./lib/contract-ingest-cleanup";
 
 const rawPort = process.env["PORT"];
 
@@ -24,6 +28,15 @@ await db.update(contractIngestItemsTable)
     updatedAt: new Date(),
   })
   .where(eq(contractIngestItemsTable.state, "processing"));
+
+await expireContractIngestUploadReservations();
+await processContractIngestObjectCleanup();
+const cleanupTimer = setInterval(() => {
+  void processContractIngestObjectCleanup().catch((error) => {
+    logger.warn({ err: error }, "Unable to process contract ingest object cleanup queue");
+  });
+}, 60_000);
+cleanupTimer.unref();
 
 app.listen(port, (err) => {
   if (err) {

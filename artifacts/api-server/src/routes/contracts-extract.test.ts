@@ -13,9 +13,22 @@ const mocks = vi.hoisted(() => ({
   extractContractFromText: vi.fn(),
   extractReadablePdfText: vi.fn(),
   extractScannedPdfText: vi.fn(),
+  storeContractIngestPdf: vi.fn(),
+  createContractIngestStoragePath: vi.fn(),
+  readContractIngestPdf: vi.fn(),
+  deleteContractIngestPdfs: vi.fn(),
+  deleteContractIngestPdf: vi.fn(),
+  storedPdfs: new Map<string, Buffer>(),
 }));
 
 vi.mock("../lib/contract-extraction", () => mocks);
+vi.mock("../lib/contract-ingest-storage", () => ({
+  storeContractIngestPdf: mocks.storeContractIngestPdf,
+  createContractIngestStoragePath: mocks.createContractIngestStoragePath,
+  readContractIngestPdf: mocks.readContractIngestPdf,
+  deleteContractIngestPdfs: mocks.deleteContractIngestPdfs,
+  deleteContractIngestPdf: mocks.deleteContractIngestPdf,
+}));
 
 import app from "../app";
 
@@ -45,6 +58,31 @@ beforeEach(() => {
   mocks.extractContractFromText.mockReset();
   mocks.extractReadablePdfText.mockReset();
   mocks.extractScannedPdfText.mockReset();
+  mocks.storeContractIngestPdf.mockReset();
+  mocks.createContractIngestStoragePath.mockReset();
+  mocks.readContractIngestPdf.mockReset();
+  mocks.deleteContractIngestPdfs.mockReset();
+  mocks.deleteContractIngestPdf.mockReset();
+  mocks.storedPdfs.clear();
+  mocks.createContractIngestStoragePath.mockImplementation(
+    () => `/objects/uploads/contract-ingest/${randomUUID()}`,
+  );
+  mocks.storeContractIngestPdf.mockImplementation(async (pdf: Buffer, objectPath?: string) => {
+    const path = objectPath ?? mocks.createContractIngestStoragePath();
+    mocks.storedPdfs.set(path, Buffer.from(pdf));
+    return path;
+  });
+  mocks.readContractIngestPdf.mockImplementation(async (path: string) => {
+    const pdf = mocks.storedPdfs.get(path);
+    if (!pdf) throw new Error("Stored PDF missing");
+    return Buffer.from(pdf);
+  });
+  mocks.deleteContractIngestPdfs.mockImplementation(async (paths: string[]) => {
+    paths.forEach((path) => mocks.storedPdfs.delete(path));
+  });
+  mocks.deleteContractIngestPdf.mockImplementation(async (path: string) => {
+    mocks.storedPdfs.delete(path);
+  });
 });
 
 describe("POST /api/contracts/extract extraction source metadata", () => {
@@ -215,6 +253,11 @@ describe("resumable contract ingest runs", () => {
         { id: firstItemId, filename: "first.pdf", state: "failed" },
         { id: secondItemId, filename: "second.pdf", state: "failed" },
       ]);
+      const registeredItems = await db.select().from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.runId, runId));
+      expect(registeredItems).toHaveLength(2);
+      expect(registeredItems.every((item) => item.storagePath.startsWith("/objects/"))).toBe(true);
+      expect(registeredItems.some((item) => "pdf" in item)).toBe(false);
 
       const firstResponse = await request(app)
         .post("/api/contracts/extract")
@@ -262,6 +305,9 @@ describe("resumable contract ingest runs", () => {
         .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/retry`);
       expect(retryResponse.status).toBe(200);
       expect(retryResponse.body).toMatchObject({ ingestRunId: runId, ingestItemId: secondItemId });
+      const [retriedItem] = await db.select().from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, secondItemId));
+      expect(mocks.readContractIngestPdf).toHaveBeenCalledWith(retriedItem.storagePath);
 
       const completionResponses = await Promise.all([
         request(app)
@@ -273,6 +319,33 @@ describe("resumable contract ingest runs", () => {
       expect((await request(app)
         .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/complete`)).status).toBe(204);
 
+      const [remainingRun] = await db.select({ id: contractIngestRunsTable.id })
+        .from(contractIngestRunsTable)
+        .where(eq(contractIngestRunsTable.id, runId));
+      expect(remainingRun).toBeUndefined();
+      expect(mocks.storedPdfs.size).toBe(0);
+    } finally {
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
+      await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));
+      await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+    }
+  });
+
+  it("deletes temporary App Storage objects when a run is abandoned", async () => {
+    const runId = randomUUID();
+    const itemId = `${runId}:0`;
+    try {
+      const registered = await request(app)
+        .post("/api/contracts/ingest-runs")
+        .field("runId", runId)
+        .field("itemIds", itemId)
+        .attach("files", pdfLike, { filename: "abandoned.pdf", contentType: "application/pdf" });
+      expect(registered.status).toBe(201);
+      expect(mocks.storedPdfs.size).toBe(1);
+
+      const abandoned = await request(app).delete(`/api/contracts/ingest-runs/${runId}`);
+      expect(abandoned.status).toBe(204);
+      expect(mocks.storedPdfs.size).toBe(0);
       const [remainingRun] = await db.select({ id: contractIngestRunsTable.id })
         .from(contractIngestRunsTable)
         .where(eq(contractIngestRunsTable.id, runId));
