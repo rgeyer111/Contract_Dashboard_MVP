@@ -116,7 +116,8 @@ test("hides blocked dates in registry and review while preserving expired histor
 
   const blockedRow = page.getByRole("row").filter({ hasText: "Blocked Vendor" });
   await expect(blockedRow).toHaveCount(1);
-  await expect(blockedRow.getByText("Not computable", { exact: true })).toHaveCount(3);
+  await expect(blockedRow.getByText("Not computable", { exact: true })).toHaveCount(4);
+  await expect(blockedRow).not.toContainText("31.12.2026");
   await expect(blockedRow).not.toContainText(blockedDates.exitDate);
   await expect(blockedRow).not.toContainText(blockedDates.noticeDeadline);
   await expect(blockedRow).not.toContainText(blockedDates.actionDate);

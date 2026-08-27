@@ -773,8 +773,9 @@ export default function Dashboard() {
                  <table className="w-full min-w-[1780px] text-sm text-left">
                    <thead className="border-b text-xs uppercase tracking-wider">
                      <tr className="border-b bg-muted/20 text-[10px] font-extrabold tracking-[0.14em]">
-                       <th colSpan={6} className="border-r border-border px-4 py-2.5 text-left text-primary">Extracted contract details</th>
+                        <th colSpan={5} className="border-r border-border px-4 py-2.5 text-left text-primary">Extracted contract details</th>
                        <th colSpan={5} className="border-r border-border bg-primary/[0.035] px-4 py-2.5 text-left text-primary">Computed runway</th>
+                        <th className="border-r border-border bg-muted/30 px-4 py-2.5 text-left text-primary">Extracted value</th>
                        <th colSpan={2} className="bg-amber-500/[0.04] px-4 py-2.5 text-left text-amber-700 dark:text-amber-300">Assigned ownership</th>
                      </tr>
                     <tr>
@@ -782,13 +783,13 @@ export default function Dashboard() {
                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Contract type</th>
                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">End date</th>
                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Renewal mechanism</th>
-                       <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Notice period</th>
-                       <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Value</th>
+                        <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Notice period</th>
                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Action date</th>
                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Notice deadline</th>
                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Days remaining</th>
                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Status</th>
                        <th className="border-r border-border bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">Status reason</th>
+                        <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">Value</th>
                        <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">Owner</th>
                        <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">Negotiation buffer</th>
                     </tr>
@@ -840,19 +841,15 @@ export default function Dashboard() {
                              {contractTypeErrorId === saved.id && contractTypeSaveError && !isContractTypeSaving && <div className="mt-1 max-w-[150px] text-[10px] font-bold text-destructive">{contractTypeSaveError}</div>}
                            </td>
                            <td className="bg-muted/[0.12] px-4 py-3 align-top">
-                             <div className="text-xs font-extrabold text-foreground">{formatRegistryDate(contract.fields.initialTermEndDate.value)}</div>
-                             <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Contract end</div>
+                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? "Not computable" : formatRegistryDate(contract.computed.exitDate)}</div>
+                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Computed exit</div>
                            </td>
                            <td className="bg-muted/[0.12] px-4 py-3 align-top">
                              <div className="max-w-[150px] text-xs font-bold capitalize text-foreground">{formatLabel(contract.fields.renewalMechanism.value)}</div>
                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Extracted rule</div>
                            </td>
-                           <td className="bg-muted/[0.12] px-4 py-3 align-top">
+                            <td className="border-r border-border bg-muted/[0.12] px-4 py-3 align-top">
                              <div className="max-w-[170px] text-xs font-bold text-foreground">{formatPeriod(contract.fields.noticePeriod.value)}</div>
-                           </td>
-                           <td className="border-r border-border bg-muted/[0.12] px-4 py-3 align-top">
-                             <div className={`max-w-[150px] text-xs font-extrabold ${valueIsUnknown ? "text-destructive" : "text-foreground"}`}>{formatContractValue(value)}</div>
-                             {valueIsUnknown && <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-destructive">Needs review</div>}
                            </td>
                            <td className="bg-primary/[0.02] px-4 py-3 align-top">
                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? "Not computable" : formatRegistryDate(contract.computed.actionDate)}</div>
@@ -867,11 +864,15 @@ export default function Dashboard() {
                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{isBlocked ? "Not computable" : "Until action"}</div>
                            </td>
                            <td className="bg-primary/[0.02] px-4 py-3 align-top">
-                             <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider ${statusClasses(status)}`}>{status}</span>
+                              <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider ${statusClasses(status)}`}>{status === "red" ? "overdue" : status}</span>
                            </td>
                            <td className="max-w-[240px] border-r border-border bg-primary/[0.02] px-4 py-3 align-top">
                              <div className={`max-w-[230px] truncate text-xs font-semibold ${status === "green" ? "text-muted-foreground" : "text-destructive"}`} title={statusReason}>{statusReason}</div>
                            </td>
+                            <td className="border-r border-border bg-muted/[0.12] px-4 py-3 align-top">
+                              <div className={`max-w-[150px] text-xs font-extrabold ${valueIsUnknown ? "text-destructive" : "text-foreground"}`}>{formatContractValue(value)}</div>
+                              {valueIsUnknown && <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-destructive">Needs review</div>}
+                            </td>
                            <td className="bg-amber-500/[0.025] px-4 py-3 align-top">
                              <div className={`text-xs font-bold ${contract.assignment.owner ? "text-foreground" : "text-destructive"}`}>{contract.assignment.owner || "Unassigned"}</div>
                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">Assigned owner</div>

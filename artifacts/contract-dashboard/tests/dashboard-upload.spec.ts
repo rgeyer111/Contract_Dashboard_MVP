@@ -673,6 +673,8 @@ test("sorts the register by urgency and persists auditable contract-type correct
   urgentContract.computed.daysRemaining = 5;
   urgentContract.computed.actionDate = "2026-08-31";
   urgentContract.computed.noticeDeadline = "2026-09-30";
+  urgentContract.computed.exitDate = "2027-12-31";
+  urgentContract.computed.status = "red";
 
   const laterContract = makeContract({ vendor: "Later Vendor", contractTitle: "Later renewal" });
   laterContract.computed.daysRemaining = 40;
@@ -728,6 +730,9 @@ test("sorts the register by urgency and persists auditable contract-type correct
   const rows = page.locator('[data-testid^="contract-registry-row-"]');
   await expect(rows).toHaveCount(3);
   await expect(rows.nth(0)).toContainText("Urgent Vendor");
+  await expect(rows.nth(0)).toContainText("31.12.2027");
+  await expect(rows.nth(0)).not.toContainText("31.12.2026");
+  await expect(rows.nth(0)).toContainText("overdue");
   await expect(rows.nth(1)).toContainText("Later Vendor");
   await expect(rows.nth(2)).toContainText("Blocked Vendor");
 
@@ -772,6 +777,7 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
     },
     computed: {
       ...amendmentBase.computed,
+      exitDate: "2027-12-31",
       noticeDeadline: "2027-10-02",
       actionDate: "2027-09-02",
     },
@@ -821,12 +827,12 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
     "End date",
     "Renewal mechanism",
     "Notice period",
-    "Value",
     "Action date",
     "Notice deadline",
     "Days remaining",
     "Status",
     "Status reason",
+    "Value",
     "Owner",
     "Negotiation buffer",
   ]);
@@ -843,6 +849,8 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(amendmentRow).toContainText("USD 240,000 · annual");
   await expect(amendmentRow).toContainText("31.12.2027");
   await expect(amendmentRow).toContainText("manual renewal");
+  await expect(amendmentRow).toContainText("90 days");
+  await expect(amendmentRow).not.toContainText("before term end");
   await expect(amendmentRow).toContainText("37 days until action");
   await expect(amendmentRow).toContainText("02.09.2027");
   await expect(amendmentRow).toContainText("02.10.2027");

@@ -26,7 +26,9 @@ export function formatPeriod(value: unknown) {
       if (!period || typeof period !== "object") return null;
       const item = period as { amount?: number; unit?: string; anchor?: string };
       if (item.amount === undefined || !item.unit) return null;
-      const anchor = item.anchor ? ` before ${item.anchor.replace(/_/g, " ")}` : "";
+      const anchor = item.anchor && item.anchor !== "term_end"
+        ? ` before ${item.anchor.replace(/_/g, " ")}`
+        : "";
       return `${item.amount} ${item.unit}${anchor}`;
     })
     .filter(Boolean)
