@@ -1,5 +1,6 @@
 import request from "supertest";
 import { eq } from "drizzle-orm";
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { db, contractsTable } from "@workspace/db";
 import app from "../app";
@@ -96,6 +97,49 @@ const contract = {
 };
 
 describe("saved contract persistence", () => {
+  it("rejects fetched saved PDF bytes before extraction using their persisted SHA-256", async () => {
+    const bytes = pdfLike("%PDF-1.7\npersisted SHA-256 duplicate regression");
+    const hash = createHash("sha256").update(bytes).digest("hex");
+    const filename = `persisted-hash-${crypto.randomUUID()}.pdf`;
+    const contractWithSource = {
+      ...contract,
+      source: {
+        id: "stored-object-id",
+        name: filename,
+        modifiedAt: null,
+        size: bytes.length,
+        hash,
+      },
+    };
+
+    try {
+      const saved = await request(app)
+        .post("/api/contracts")
+        .send({ filename, contract: contractWithSource });
+      expect(saved.status).toBe(201);
+
+      const refetched = await request(app).get(`/api/contracts/${saved.body.id}`);
+      expect(refetched.status).toBe(200);
+      expect(refetched.body.contract.source.hash).toBe(hash);
+
+      for (const uploadName of ["same-after-refetch.pdf", "same-on-repeat.pdf"]) {
+        const duplicate = await request(app)
+          .post("/api/contracts/extract")
+          .attach("file", bytes, { filename: uploadName, contentType: "application/pdf" });
+        expect(duplicate.status).toBe(409);
+        expect(duplicate.body.error).toMatch(/already been uploaded/i);
+      }
+
+      const records = await db
+        .select({ id: contractsTable.id })
+        .from(contractsTable)
+        .where(eq(contractsTable.fileHash, hash));
+      expect(records).toHaveLength(1);
+    } finally {
+      await db.delete(contractsTable).where(eq(contractsTable.fileHash, hash));
+    }
+  });
+
   it("enforces one saved contract per PDF hash even for concurrent requests", async () => {
     const hash = crypto.randomUUID().replaceAll("-", "").padEnd(64, "0").slice(0, 64);
     const contractWithSource = {

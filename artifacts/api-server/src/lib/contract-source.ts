@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 export interface SourceFile {
   id: string;
   name: string;
@@ -9,6 +11,31 @@ export interface SourceFile {
 export interface ContractSource {
   list(): Promise<SourceFile[]>;
   fetch(id: string): Promise<Buffer>;
+}
+
+export interface LoadedSourceFile extends SourceFile {
+  bytes: Buffer;
+  hash: string;
+}
+
+/**
+ * Load a source file through the durable source boundary. Hashes supplied as
+ * metadata are intentionally not trusted for content identity: the persisted
+ * SHA-256 always describes the bytes that extraction actually receives.
+ */
+export async function loadContractSourceFile(
+  source: ContractSource,
+  id: string,
+): Promise<LoadedSourceFile> {
+  const metadata = (await source.list()).find((file) => file.id === id);
+  if (!metadata) throw new Error(`Contract source file ${id} was not found.`);
+
+  const bytes = await source.fetch(id);
+  return {
+    ...metadata,
+    bytes,
+    hash: createHash("sha256").update(bytes).digest("hex"),
+  };
 }
 
 export class UploadSource implements ContractSource {

@@ -25,7 +25,11 @@ import {
   extractReadablePdfText,
   extractScannedPdfText,
 } from "../lib/contract-extraction";
-import { UploadSource } from "../lib/contract-source";
+import {
+  type ContractSource,
+  loadContractSourceFile,
+  UploadSource,
+} from "../lib/contract-source";
 import {
   enforceProvenanceConsistency,
   isRecord,
@@ -96,16 +100,27 @@ class ExtractionError extends Error {
   }
 }
 
-async function extractUploadedFile(file: Express.Multer.File, req: Request): Promise<any> {
-  const uploadSource = new UploadSource([{
-    originalname: file.originalname,
-    size: file.size,
-    buffer: file.buffer,
-    id: uploadedHash(file.buffer),
-    hash: uploadedHash(file.buffer),
-  }]);
-  const sourceFiles = await uploadSource.list();
-  if (await hasExistingSourceHash(sourceFiles[0].hash!)) {
+function uploadSourceFor(file: Express.Multer.File): { source: ContractSource; id: string } {
+  const id = uploadedHash(file.buffer);
+  return {
+    source: new UploadSource([{
+      originalname: file.originalname,
+      size: file.size,
+      buffer: file.buffer,
+      id,
+      hash: id,
+    }]),
+    id,
+  };
+}
+
+export async function extractSourceFile(
+  source: ContractSource,
+  id: string,
+  req: Pick<Request, "log">,
+): Promise<any> {
+  const sourceFile = await loadContractSourceFile(source, id);
+  if (await hasExistingSourceHash(sourceFile.hash)) {
     const error = new Error("This contract has already been uploaded. Duplicate skipped.");
     (error as Error & { status?: number }).status = 409;
     throw error;
@@ -117,7 +132,7 @@ async function extractUploadedFile(file: Express.Multer.File, req: Request): Pro
   let ocrPageCount: number | undefined;
   let ocrPagesProcessed: number | undefined;
   try {
-    text = await extractReadablePdfText(file.buffer);
+    text = await extractReadablePdfText(sourceFile.bytes);
   } catch (error) {
     req.log.warn({ err: error }, "Unable to read embedded PDF text; trying OCR");
     text = "";
@@ -125,14 +140,14 @@ async function extractUploadedFile(file: Express.Multer.File, req: Request): Pro
 
   if (text.length < 50) {
     try {
-      const ocr = await extractScannedPdfText(file.buffer);
+      const ocr = await extractScannedPdfText(sourceFile.bytes);
       text = ocr.text;
       extractionSource = "ocr";
       ocrConfidence = ocr.confidence;
       ocrPageCount = ocr.pageCount;
       ocrPagesProcessed = ocr.pagesProcessed;
       req.log.info(
-        { bytes: file.size, ocrConfidence, ocrPageCount, ocrPagesProcessed },
+        { bytes: sourceFile.size, ocrConfidence, ocrPageCount, ocrPagesProcessed },
         "Scanned contract transcribed with OCR",
       );
     } catch (error) {
@@ -158,18 +173,21 @@ async function extractUploadedFile(file: Express.Multer.File, req: Request): Pro
   }
 
   try {
-    const result = await extractContractFromText(text, file.originalname, {
+    const result = await extractContractFromText(text, sourceFile.name, {
       source: extractionSource,
       ocrConfidence,
       ...(extractionSource === "ocr" ? { ocrPageCount, ocrPagesProcessed } : {}),
     });
     if (result.extraction.contract) {
       result.extraction.contract.source = {
-        ...sourceFiles[0],
-        hash: sourceFiles[0].hash!,
+        id: sourceFile.id,
+        name: sourceFile.name,
+        modifiedAt: sourceFile.modifiedAt,
+        size: sourceFile.size,
+        hash: sourceFile.hash,
       };
     }
-    req.log.info({ bytes: file.size, hash: sourceFiles[0].hash }, "Contract extracted");
+    req.log.info({ bytes: sourceFile.size, hash: sourceFile.hash }, "Contract extracted");
     return result;
   } catch (error) {
     req.log.error({ err: error }, "Contract extraction failed");
@@ -193,6 +211,11 @@ async function extractUploadedFile(file: Express.Multer.File, req: Request): Pro
       502,
     );
   }
+}
+
+async function extractUploadedFile(file: Express.Multer.File, req: Request): Promise<any> {
+  const { source, id } = uploadSourceFor(file);
+  return extractSourceFile(source, id, req);
 }
 
 function ingestHeaders(req: Request) {
@@ -952,19 +975,15 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
       : null;
   }
   try {
-    const file = {
-      fieldname: "file",
+    const bytes = await readContractIngestPdf(item.storagePath);
+    const source = new UploadSource([{
       originalname: item.filename,
-      encoding: "7bit",
-      mimetype: "application/pdf",
       size: item.size,
-      buffer: await readContractIngestPdf(item.storagePath),
-      destination: "",
-      filename: item.filename,
-      path: "",
-      stream: undefined,
-    } as unknown as Express.Multer.File;
-    const result = await extractUploadedFile(file, req);
+      buffer: bytes,
+      id: item.hash,
+      hash: item.hash,
+    }]);
+    const result = await extractSourceFile(source, item.hash, req);
     result.ingestRunId = runId;
     result.ingestItemId = itemId;
     const persisted = await persistIngestOutcome({ runId, itemId }, {

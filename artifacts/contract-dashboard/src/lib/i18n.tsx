@@ -9,6 +9,7 @@ import {
 export type UiLanguage = "en" | "de-CH";
 
 const LANGUAGE_STORAGE_KEY = "contract-dashboard.language";
+const missingUiMessages = new Set<string>();
 
 const de: Record<string, string> = {
   "English": "Englisch",
@@ -345,6 +346,19 @@ const de: Record<string, string> = {
   "fixed term": "befristet",
   "manual renewal": "manuelle Verlängerung",
   "non renewal": "Nichtverlängerung",
+  "Operations Workspace": "Operationsbereich",
+  "Stay ahead of": "Behalten Sie",
+  "contract renewals.": "Vertragsverlängerungen im Blick.",
+  "Contract Dashboard is the dedicated workspace for operations teams to track, manage, and negotiate agreements before they expire. No surprises, just leverage.": "Contract Dashboard ist der zentrale Arbeitsbereich für Operations-Teams, um Verträge vor ihrem Ablauf zu verfolgen, zu verwalten und neu zu verhandeln. Keine Überraschungen, sondern Handlungsspielraum.",
+  "Continue to Contract Dashboard": "Weiter zu Contract Dashboard",
+  "Enterprise Grade": "Für Unternehmen geeignet",
+  "Real-time Alerts": "Hinweise in Echtzeit",
+  "Expires in 3d": "Läuft in 3 Tagen ab",
+  "Vendor Approved": "Anbieter freigegeben",
+  "Savings Captured": "Einsparungen erfasst",
+  "Negotiated rate": "Ausgehandelter Preis",
+  "404 Page Not Found": "404 Seite nicht gefunden",
+  "Did you forget to add the page to the router?": "Wurde diese Seite noch nicht zum Router hinzugefügt?",
 };
 
 export function localize(language: UiLanguage, value: string) {
@@ -395,6 +409,25 @@ export function localize(language: UiLanguage, value: string) {
   return value;
 }
 
+export function translateUiMessage(language: UiLanguage, text: string) {
+  const translated = localize(language, text);
+  if (language === "de-CH" && !(text in de) && translated === text) {
+    missingUiMessages.add(text);
+    if (import.meta.env.DEV) {
+      console.error(`[i18n] Missing de-CH interface translation: ${JSON.stringify(text)}`);
+    }
+  }
+  return translated;
+}
+
+export function getMissingUiMessages() {
+  return [...missingUiMessages];
+}
+
+export function resetMissingUiMessages() {
+  missingUiMessages.clear();
+}
+
 type LanguageContextValue = {
   language: UiLanguage;
   setLanguage: (language: UiLanguage) => void;
@@ -421,7 +454,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     <LanguageContext.Provider value={{
       language,
       setLanguage,
-      t: (text) => localize(language, text),
+      t: (text) => translateUiMessage(language, text),
     }}>
       {children}
     </LanguageContext.Provider>

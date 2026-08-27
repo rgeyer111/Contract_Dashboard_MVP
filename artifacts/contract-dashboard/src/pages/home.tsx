@@ -2,8 +2,10 @@ import { Link } from "wouter";
 import { ArrowRight, FileText, ShieldCheck, Zap } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 
 export default function Home() {
+  const { t } = useLanguage();
   return (
     <div className="min-h-[100dvh] w-full bg-background flex flex-col relative overflow-hidden">
       {/* Abstract Background Elements */}
@@ -19,16 +21,16 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
             </span>
-            Operations Workspace
+            {t("Operations Workspace")}
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
-            Stay ahead of <br />
-            <span className="text-primary">contract renewals.</span>
+            {t("Stay ahead of")} <br />
+            <span className="text-primary">{t("contract renewals.")}</span>
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
-            Contract Dashboard is the dedicated workspace for operations teams to track, manage, and negotiate agreements before they expire. No surprises, just leverage.
+            {t("Contract Dashboard is the dedicated workspace for operations teams to track, manage, and negotiate agreements before they expire. No surprises, just leverage.")}
           </p>
           
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
@@ -39,7 +41,7 @@ export default function Home() {
                 "w-full sm:w-auto h-14 px-8 text-base shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
               )}
             >
-              Continue to Contract Dashboard
+              {t("Continue to Contract Dashboard")}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
@@ -47,11 +49,11 @@ export default function Home() {
           <div className="flex items-center gap-8 pt-12 text-sm text-muted-foreground font-medium">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-primary/70" />
-              <span>Enterprise Grade</span>
+              <span>{t("Enterprise Grade")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-primary/70" />
-              <span>Real-time Alerts</span>
+              <span>{t("Real-time Alerts")}</span>
             </div>
           </div>
         </div>
@@ -70,7 +72,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="h-8 px-3 bg-destructive/10 rounded-full flex items-center justify-center border border-destructive/20">
-                <span className="text-xs font-bold text-destructive">Expires in 3d</span>
+                 <span className="text-xs font-bold text-destructive">{t("Expires in 3d")}</span>
               </div>
             </div>
             
@@ -98,7 +100,7 @@ export default function Home() {
           <div className="absolute -left-16 top-24 bg-card border shadow-xl rounded-xl p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 fill-mode-both z-20">
              <div className="h-3 w-3 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
              <div>
-               <p className="text-sm font-bold text-foreground">Vendor Approved</p>
+               <p className="text-sm font-bold text-foreground">{t("Vendor Approved")}</p>
                <p className="text-xs font-medium text-muted-foreground">Alpine Cloud AG</p>
              </div>
           </div>
@@ -109,8 +111,8 @@ export default function Home() {
                 <span className="text-sm font-bold text-primary">CHF 12'000</span>
              </div>
              <div>
-               <p className="text-sm font-bold text-foreground">Savings Captured</p>
-               <p className="text-xs font-medium text-muted-foreground">Negotiated rate</p>
+               <p className="text-sm font-bold text-foreground">{t("Savings Captured")}</p>
+               <p className="text-xs font-medium text-muted-foreground">{t("Negotiated rate")}</p>
              </div>
           </div>
         </div>

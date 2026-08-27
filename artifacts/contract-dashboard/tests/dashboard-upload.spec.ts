@@ -378,6 +378,69 @@ test("retries only a failed PDF and preserves the review queue", async ({ page }
   })).toEqual(["retry.pdf"]);
 });
 
+test("processes ten PDFs independently when one extraction fails", async ({ page }) => {
+  const requestedFiles: string[] = [];
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/extract", async (route) => {
+    if (route.request().method() !== "POST") return route.continue();
+    const body = route.request().postDataBuffer()?.toString("latin1") ?? "";
+    const filename = body.match(/filename="([^"]+)"/)?.[1] ?? "";
+    requestedFiles.push(filename);
+    if (filename === "contract-05.pdf") {
+      await route.fulfill({
+        status: 422,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "contract-05 could not be extracted" }),
+      });
+      return;
+    }
+    const contract = makeContract({ contractNumber: `TEN-${filename}` });
+    Object.assign(contract, {
+      source: { id: filename, hash: `hash-${filename}`, name: filename, size: 100 },
+    });
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        filename,
+        extraction: {
+          contract,
+          source: "text",
+          ocrConfidence: null,
+          ocrPageCount: null,
+          ocrPagesProcessed: null,
+        },
+      }),
+    });
+  });
+
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "New Contract" }).click();
+  const filenames = Array.from({ length: 10 }, (_, index) =>
+    `contract-${String(index + 1).padStart(2, "0")}.pdf`);
+  await page.locator("#contract-pdf-file").setInputFiles(filenames.map((name) => ({
+    name,
+    mimeType: "application/pdf",
+    buffer: Buffer.from(`%PDF-1.7\n${name}`),
+  })));
+  await page.getByRole("button", { name: "Extract contract" }).click();
+
+  await expect(page.getByText("10/10 complete", { exact: true })).toBeVisible();
+  for (const filename of filenames) {
+    await expect(page.getByText(filename, { exact: true })).toHaveCount(2);
+    await expect(page.getByText(filename, { exact: true }).nth(1)).toBeVisible();
+  }
+  await expect(page.getByText("Ready for review", { exact: true })).toHaveCount(9);
+  await expect(page.getByText(/HTTP 422 .*contract-05 could not be extracted/)).toBeVisible();
+  expect(requestedFiles.sort()).toEqual([...filenames].sort());
+});
+
 test("shows invalid file feedback and queues a valid PDF without extracting", async ({ page }) => {
   let extractionRequests = 0;
   await page.route("**/api/contracts", async (route) => {
@@ -1342,4 +1405,41 @@ test("localizes German upload validation and known extraction errors", async ({ 
   });
   await page.getByRole("button", { name: "Vertrag extrahieren" }).click();
   await expect(page.getByText("Dieses PDF enthält keinen lesbaren Vertragstext.")).toBeVisible();
+});
+
+test("localizes active public routes while preserving contract example data", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => localStorage.setItem("contract-dashboard.language", "de-CH"));
+  await page.reload();
+
+  await expect(page.getByText("Operationsbereich", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Behalten Sie Vertragsverlängerungen im Blick." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Weiter zu Contract Dashboard" })).toBeVisible();
+  await expect(page.getByText("Alpine Cloud AG", { exact: true })).toBeVisible();
+  await expect(page.getByText("CHF 12'000", { exact: true })).toBeVisible();
+
+  await page.goto("/missing-route");
+  await expect(page.getByRole("heading", { name: "404 Seite nicht gefunden" })).toBeVisible();
+  await expect(page.getByText("Wurde diese Seite noch nicht zum Router hinzugefügt?", { exact: true })).toBeVisible();
+});
+
+test("reports missing interface translations without translating source data", async ({ page }) => {
+  await page.goto("/");
+  const diagnostic = await page.evaluate(async () => {
+    const i18n = await import("/src/lib/i18n.tsx");
+    i18n.resetMissingUiMessages();
+    const uiText = i18n.translateUiMessage("de-CH", "Uncatalogued interface test message");
+    const sourceText = i18n.localize("de-CH", "Alpine Cloud AG");
+    return {
+      uiText,
+      sourceText,
+      missing: i18n.getMissingUiMessages(),
+    };
+  });
+
+  expect(diagnostic).toEqual({
+    uiText: "Uncatalogued interface test message",
+    sourceText: "Alpine Cloud AG",
+    missing: ["Uncatalogued interface test message"],
+  });
 });
