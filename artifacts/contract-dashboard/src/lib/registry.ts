@@ -1,5 +1,6 @@
 import type { SavedContract } from "@workspace/api-client-react";
 import { documentTypeOptions } from "./contracts";
+import { localize, type UiLanguage } from "./i18n";
 
 export const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
 export const SEARCH_QUERY_PARAM = "search";
@@ -11,22 +12,22 @@ export function formatSwissNumber(value: number) {
   }).format(value);
 }
 
-export function formatContractType(value: string | null) {
-  return value ? value.replace(/_/g, " ") : "Type not stated";
+export function formatContractType(value: string | null, language: UiLanguage = "en") {
+  return value ? localize(language, value.replace(/_/g, " ")) : localize(language, "Type not stated");
 }
 
-export function formatDocumentType(value: string) {
-  return value.replace(/_/g, " ");
+export function formatDocumentType(value: string, language: UiLanguage = "en") {
+  return localize(language, value.replace(/_/g, " "));
 }
 
-export function formatContractValue(value: { amount?: number; currency?: string; basis?: string } | null) {
+export function formatContractValue(value: { amount?: number; currency?: string; basis?: string } | null, language: UiLanguage = "en") {
   if (!value || value.amount === undefined || !value.currency || !value.basis) {
-    return "Value not stated";
+    return localize(language, "Value not stated");
   }
-  return `${value.currency} ${formatSwissNumber(value.amount)} · ${value.basis.replace(/_/g, " ")}`;
+  return `${value.currency} ${formatSwissNumber(value.amount)} · ${localize(language, value.basis.replace(/_/g, " "))}`;
 }
 
-export function formatPeriod(value: unknown) {
+export function formatPeriod(value: unknown, language: UiLanguage = "en") {
   const periods = Array.isArray(value) ? value : value ? [value] : [];
   return periods
     .map((period) => {
@@ -34,30 +35,34 @@ export function formatPeriod(value: unknown) {
       const item = period as { amount?: number; unit?: string; anchor?: string };
       if (item.amount === undefined || !item.unit) return null;
       const anchor = item.anchor && item.anchor !== "term_end"
-        ? ` before ${item.anchor.replace(/_/g, " ")}`
+        ? ` ${localize(language, "before")} ${localize(language, item.anchor.replace(/_/g, " "))}`
         : "";
-      return `${item.amount} ${item.unit}${anchor}`;
+      return `${item.amount} ${localize(language, item.unit)}${anchor}`;
     })
     .filter(Boolean)
-    .join(" · ") || "Notice terms not stated";
+    .join(" · ") || localize(language, "Notice terms not stated");
 }
 
-export function formatDaysRemaining(value: number | null) {
-  if (value === null) return "Action date unavailable";
-  if (value === 0) return "Action starts today";
-  if (value > 0) return `${value} day${value === 1 ? "" : "s"} until action`;
+export function formatDaysRemaining(value: number | null, language: UiLanguage = "en") {
+  if (value === null) return localize(language, "Action date unavailable");
+  if (value === 0) return localize(language, "Action starts today");
+  if (value > 0) return language === "de-CH"
+    ? `${value} Tag${value === 1 ? "" : "e"} bis zur Aktion`
+    : `${value} day${value === 1 ? "" : "s"} until action`;
   const overdueDays = Math.abs(value);
-  return `${overdueDays} day${overdueDays === 1 ? "" : "s"} past action date`;
+  return language === "de-CH"
+    ? `${overdueDays} Tag${overdueDays === 1 ? "" : "e"} nach dem Aktionsdatum`
+    : `${overdueDays} day${overdueDays === 1 ? "" : "s"} past action date`;
 }
 
-export function formatRegistryDate(value: string | null | undefined) {
-  if (!value) return "Not stated";
+export function formatRegistryDate(value: string | null | undefined, language: UiLanguage = "en") {
+  if (!value) return localize(language, "Not stated");
   const [year, month, day] = value.split("-");
   return year && month && day ? `${day}.${month}.${year}` : value;
 }
 
-export function formatLabel(value: string | null | undefined, fallback = "Not stated") {
-  return value ? value.replace(/_/g, " ") : fallback;
+export function formatLabel(value: string | null | undefined, fallback = "Not stated", language: UiLanguage = "en") {
+  return value ? localize(language, value.replace(/_/g, " ")) : localize(language, fallback);
 }
 
 export function statusClasses(status: string) {

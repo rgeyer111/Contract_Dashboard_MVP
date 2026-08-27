@@ -16,3 +16,4 @@
 - [Wouter query-backed state](wouter-query-backed-state.md) — do not assume useLocation exposes query changes; synchronize controlled state with window.location.search.
 - [Shared test data](shared-test-data.md) — browser regression tests can leave fixture contracts in the development registry; isolate or clean them explicitly.
 - [Temporary object ownership](temporary-object-ownership.md) — reserve App Storage paths durably and transfer or queue ownership transactionally.
+- [Contract UI localization](contract-ui-localization.md) — localize UI declaratively; never traverse rendered contract content or mutate source evidence.

@@ -1203,3 +1203,143 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(page.getByRole("heading", { name: "Contract Registry", exact: true })).toHaveCount(0);
   await expect(page.locator("table")).toHaveCount(0);
 });
+
+test("switches the dashboard to Swiss German and persists the language", async ({ page }) => {
+  const contract = makeContract({
+    vendor: "Zürich Digital Services AG",
+    contractValue: { amount: 1234567.5, currency: "CHF", basis: "annual" },
+  });
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({
+        json: [savedResponse({
+          id: "german-dashboard-contract",
+          filename: "zuerich.pdf",
+          contract,
+          createdAt: "2026-01-01T00:00:00.000Z",
+          updatedAt: "2026-01-01T00:00:00.000Z",
+        })],
+      });
+      return;
+    }
+    await route.continue();
+  });
+
+  await page.goto("/dashboard");
+  await page.getByLabel("Interface language").selectOption("de-CH");
+
+  await expect(page.locator("main h1")).toHaveText("Willkommen zurück, John");
+  await expect(page.getByRole("heading", { name: "Vertragsregister" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Neuer Vertrag" })).toBeVisible();
+  await expect(page.getByText("CHF 1'234'567.5 · jährlich", { exact: true })).toBeVisible();
+  await expect(page.getByText("31.12.2026", { exact: true }).first()).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem("contract-dashboard.language"))).toBe("de-CH");
+
+  await page.reload();
+  await expect(page.getByLabel("Oberflächensprache")).toHaveValue("de-CH");
+  await expect(page.locator("main h1")).toHaveText("Willkommen zurück, John");
+  await page.getByRole("link", { name: "Aufgaben", exact: true }).click();
+  await expect(page.locator("main h1")).toHaveText("Aufgaben");
+});
+
+test("keeps Swiss German through the review flow and translates issue definitions", async ({ page }) => {
+  const contract = makeContract({
+    vendor: "Alpine Cloud AG",
+    contractValue: { amount: 12000, currency: "CHF", basis: "annual" },
+  });
+  contract.fields.vendorLegalName = reviewerEdited("Alpine Cloud AG");
+  contract.fields.vendorLegalName.page = 2;
+  contract.fields.vendorLegalName.clause = "4.2";
+  Object.assign(contract, {
+    alert: {
+      owner: "John Doe",
+      ownerEmail: "john.doe@example.com",
+      actionDate: "2026-10-02",
+      noticeDeadline: "2026-11-01",
+      state: "due",
+      dismissedReason: null,
+    },
+  });
+  contract.computed.status = "blocked";
+  contract.computed.reason = "Dates blocked — review required";
+  const saved = {
+    id: "german-review-contract",
+    filename: "alpine.pdf",
+    contract,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  };
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [savedResponse(saved)] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/german-review-contract", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: savedResponse(saved) });
+      return;
+    }
+    await route.continue();
+  });
+
+  await page.goto("/dashboard");
+  await page.getByLabel("Interface language").selectOption("de-CH");
+  await page.getByRole("link", { name: "Aufgaben", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Jetzt senden" })).toBeVisible();
+  await page.getByRole("button", { name: "Verwerfen" }).click();
+  await expect(page.getByPlaceholder("Warum ist dies erledigt?")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Verwerfen bestätigen" })).toBeVisible();
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "Alpine Cloud AG", exact: true }).click();
+
+  await expect(page).toHaveURL(/\/review\?id=german-review-contract$/);
+  await expect(page.getByRole("heading", { name: "Offene Entscheidungen klären" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Rechtlicher Anbietername" })).toBeVisible();
+  await expect(page.getByText("Welche Rechtseinheit ist der Anbieter?", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Prüfung bestätigen" })).toBeVisible();
+  await expect(page.getByText("CHF 12'000", { exact: true })).toBeVisible();
+  await expect(page.getByText("31.12.2026", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Seite 2 · Klausel 4.2", { exact: true })).toBeVisible();
+  await expect(page.getByText("Frist nicht verfügbar", { exact: true }).first()).toBeVisible();
+  await page.getByRole("button", { name: /Vollständige Extraktion/ }).click();
+  await expect(page.getByRole("option", { name: "Rahmenvertrag" })).not.toHaveCount(0);
+
+  await page.reload();
+  await expect(page.getByLabel("Oberflächensprache")).toHaveValue("de-CH");
+  await expect(page.getByRole("heading", { name: "Offene Entscheidungen klären" })).toBeVisible();
+});
+
+test("localizes German upload validation and known extraction errors", async ({ page }) => {
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") return route.fulfill({ json: [] });
+    await route.continue();
+  });
+  await page.route("**/api/contracts/extract", async (route) => {
+    await route.fulfill({
+      status: 422,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "This PDF has no readable contract text." }),
+    });
+  });
+
+  await page.goto("/dashboard");
+  await page.getByLabel("Interface language").selectOption("de-CH");
+  await page.getByRole("button", { name: "Neuer Vertrag" }).click();
+  await expect(page.getByRole("heading", { name: "PDF hochladen und Vertragsdetails extrahieren" })).toBeVisible();
+  await expect(page.getByLabel("Vertragsupload schliessen")).toBeVisible();
+  await page.locator("#contract-pdf-file").setInputFiles({
+    name: "notes.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("not a PDF"),
+  });
+  await expect(page.getByText("Es können nur PDF-Dateien bis 10 MB hinzugefügt werden.")).toBeVisible();
+  await page.locator("#contract-pdf-file").setInputFiles({
+    name: "blank.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF-1.7\nblank"),
+  });
+  await page.getByRole("button", { name: "Vertrag extrahieren" }).click();
+  await expect(page.getByText("Dieses PDF enthält keinen lesbaren Vertragstext.")).toBeVisible();
+});

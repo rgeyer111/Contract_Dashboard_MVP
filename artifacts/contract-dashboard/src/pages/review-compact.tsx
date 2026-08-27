@@ -45,6 +45,7 @@ import {
   type IssueDefinition,
 } from "@/lib/review";
 import { useContractReview } from "@/hooks/use-contract-review";
+import { LanguageSwitch, localize, useLanguage } from "@/lib/i18n";
 
 function TextInput({
   value,
@@ -75,21 +76,23 @@ function SelectInput({
   onChange: (value: string) => void;
   options: readonly string[];
 }) {
+  const { language, t } = useLanguage();
   return (
     <select
       value={value || ""}
       onChange={(event) => onChange(event.target.value)}
       className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none transition focus:ring-2 focus:ring-primary/20"
     >
-      <option value="" disabled>Select an option</option>
+      <option value="" disabled>{t("Select an option")}</option>
       {options.map((option) => (
-        <option key={option} value={option}>{option.replace(/_/g, " ")}</option>
+        <option key={option} value={option}>{localize(language, option.replace(/_/g, " "))}</option>
       ))}
     </select>
   );
 }
 
 function PeriodInput({ value, onChange }: { value: any; onChange: (value: any) => void }) {
+  const { language, t } = useLanguage();
   const amount = value?.amount ?? "";
   const unit = value?.unit ?? "months";
   return (
@@ -100,20 +103,21 @@ function PeriodInput({ value, onChange }: { value: any; onChange: (value: any) =
         value={amount}
         onChange={(event) => onChange({ amount: Number(event.target.value) || 0, unit })}
         className="h-10 w-24 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20"
-        placeholder="Amount"
+        placeholder={t("Amount")}
       />
       <select
         value={unit}
         onChange={(event) => onChange({ amount: Number(amount) || 0, unit: event.target.value })}
         className="h-10 flex-1 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20"
       >
-        {periodUnitOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+        {periodUnitOptions.map((option) => <option key={option} value={option}>{localize(language, option)}</option>)}
       </select>
     </div>
   );
 }
 
 function NoticePeriodInput({ value, onChange }: { value: any; onChange: (value: any) => void }) {
+  const { language, t } = useLanguage();
   const current = Array.isArray(value) ? value[0] : value;
   const amount = current?.amount ?? "";
   const unit = current?.unit ?? "days";
@@ -130,20 +134,21 @@ function NoticePeriodInput({ value, onChange }: { value: any; onChange: (value: 
         value={amount}
         onChange={(event) => update({ amount: Number(event.target.value) || 0 })}
         className="h-10 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20"
-        placeholder="Days"
-        aria-label="Notice period amount"
+        placeholder={t("Days")}
+        aria-label={t("Notice period amount")}
       />
-      <select value={unit} onChange={(event) => update({ unit: event.target.value })} className="h-10 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20" aria-label="Notice period unit">
-        {periodUnitOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+      <select value={unit} onChange={(event) => update({ unit: event.target.value })} className="h-10 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20" aria-label={t("Notice period unit")}>
+        {periodUnitOptions.map((option) => <option key={option} value={option}>{localize(language, option)}</option>)}
       </select>
-      <select value={anchor} onChange={(event) => update({ anchor: event.target.value })} className="h-10 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20" aria-label="Notice period anchor">
-        {noticeAnchorOptions.map((option) => <option key={option} value={option}>{option.replace(/_/g, " ")}</option>)}
+      <select value={anchor} onChange={(event) => update({ anchor: event.target.value })} className="h-10 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20" aria-label={t("Notice period anchor")}>
+        {noticeAnchorOptions.map((option) => <option key={option} value={option}>{localize(language, option.replace(/_/g, " "))}</option>)}
       </select>
     </div>
   );
 }
 
 function ContractValueInput({ value, onChange }: { value: any; onChange: (value: any) => void }) {
+  const { language, t } = useLanguage();
   const amount = value?.amount ?? "";
   const currency = value?.currency ?? "CHF";
   const basis = value?.basis ?? "annual";
@@ -156,7 +161,7 @@ function ContractValueInput({ value, onChange }: { value: any; onChange: (value:
           value={amount}
           onChange={(event) => onChange({ amount: Number(event.target.value) || 0, currency, basis })}
           className="h-10 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20"
-          placeholder="Amount"
+          placeholder={t("Amount")}
         />
         <input
           type="text"
@@ -165,7 +170,7 @@ function ContractValueInput({ value, onChange }: { value: any; onChange: (value:
           onChange={(event) => onChange({ amount: Number(amount) || 0, currency: event.target.value.toUpperCase(), basis })}
           className="h-10 w-20 rounded-md border border-input bg-background px-3 text-sm font-semibold uppercase outline-none focus:ring-2 focus:ring-primary/20"
           placeholder="CHF"
-          aria-label="Currency"
+          aria-label={t("Currency")}
         />
       </div>
       <select
@@ -173,14 +178,15 @@ function ContractValueInput({ value, onChange }: { value: any; onChange: (value:
         onChange={(event) => onChange({ amount: Number(amount) || 0, currency, basis: event.target.value })}
         className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20"
       >
-        {contractValueBasisOptions.map((option) => <option key={option} value={option}>{option.replace(/_/g, " ")}</option>)}
+        {contractValueBasisOptions.map((option) => <option key={option} value={option}>{localize(language, option.replace(/_/g, " "))}</option>)}
       </select>
-      <p className="text-[11px] font-medium text-muted-foreground">Leave blank to record “not stated”.</p>
+      <p className="text-[11px] font-medium text-muted-foreground">{t("Leave blank to record “not stated”.")}</p>
     </div>
   );
 }
 
 function JsonInput({ value, onChange }: { value: any; onChange: (value: any) => void }) {
+  const { t } = useLanguage();
   const [text, setText] = useState(() => value ? JSON.stringify(value, null, 2) : "");
   const [hasError, setHasError] = useState(false);
 
@@ -203,8 +209,8 @@ function JsonInput({ value, onChange }: { value: any; onChange: (value: any) => 
         }
       }}
       className={`min-h-20 w-full rounded-md border bg-background p-3 font-mono text-xs outline-none focus:ring-2 focus:ring-primary/20 ${hasError ? "border-destructive" : "border-input"}`}
-      placeholder="Enter JSON"
-      aria-label="Structured contract value"
+      placeholder={t("Enter JSON")}
+      aria-label={t("Structured contract value")}
     />
   );
 }
@@ -220,6 +226,7 @@ function FieldEditor({
   kind: "text" | "select" | "period" | "notice" | "json" | "value" | "computed";
   onChange: (value: any) => void;
 }) {
+  const { language, t } = useLanguage();
   if (kind === "select") {
     const options = fieldKey === "documentType"
       ? documentTypeOptions
@@ -239,25 +246,26 @@ function FieldEditor({
   if (kind === "computed") {
     return (
       <div className="rounded-md border border-dashed bg-muted/30 px-3 py-2 text-sm font-semibold text-muted-foreground">
-        {displayValue(field.value)} · computed by the application
+        {displayValue(field.value, language)} · {t("computed by the application")}
       </div>
     );
   }
-  return <TextInput value={field.value} onChange={onChange} placeholder="Enter a value" />;
+  return <TextInput value={field.value} onChange={onChange} placeholder={t("Enter a value")} />;
 }
 
 function StatusPill({ field }: { field: AnyField }) {
+  const { language, t } = useLanguage();
   if (field.note === reviewerEditNote) {
     return (
       <span className="inline-flex items-center rounded-full border border-violet-500/20 bg-violet-500/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-violet-700">
-        reviewer supplied
+        {t("reviewer supplied")}
       </span>
     );
   }
   if (field.reviewed) {
     return (
       <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary">
-        reviewed
+        {t("reviewed")}
       </span>
     );
   }
@@ -268,12 +276,13 @@ function StatusPill({ field }: { field: AnyField }) {
       : "border-destructive/20 bg-destructive/10 text-destructive";
   return (
     <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${tone}`}>
-      {statusLabel(field.status)}
+      {statusLabel(field.status, language)}
     </span>
   );
 }
 
 function FieldEvidence({ field }: { field: AnyField }) {
+  const { language, t } = useLanguage();
   const hasOriginalValue =
     field.originalValue !== undefined &&
     JSON.stringify(field.originalValue) !== JSON.stringify(field.value);
@@ -281,37 +290,37 @@ function FieldEvidence({ field }: { field: AnyField }) {
     <div className="space-y-2 rounded-md border border-border bg-muted/20 px-3 py-2.5 text-xs">
       <div className="grid gap-2 sm:grid-cols-2">
         <div>
-          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Confidence</span>
-          <div className="mt-0.5 font-semibold capitalize">{field.confidence}</div>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">{t("Confidence")}</span>
+          <div className="mt-0.5 font-semibold capitalize">{localize(language, field.confidence)}</div>
         </div>
         <div>
-          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Source</span>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">{t("Source")}</span>
           <div className="mt-0.5 font-semibold">
-            {field.page ? `Page ${field.page}${field.clause ? ` · clause ${field.clause}` : ""}` : "No source page"}
+            {field.page ? `${t("Page")} ${field.page}${field.clause ? ` · ${t("clause")} ${field.clause}` : ""}` : t("No source page")}
           </div>
         </div>
       </div>
       <div>
-        <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Verbatim quote</span>
+        <span className="font-extrabold uppercase tracking-wide text-muted-foreground">{t("Verbatim quote")}</span>
         <div className={`mt-0.5 font-medium ${field.quote ? "italic" : "text-muted-foreground"}`}>
-          {field.quote ? `“${field.quote}”` : "No quote in the source document"}
+          {field.quote ? `“${field.quote}”` : t("No quote in the source document")}
         </div>
       </div>
       {field.note && field.note !== reviewerEditNote && (
         <div>
-          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Extraction note</span>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">{t("Extraction note")}</span>
           <div className="mt-0.5 whitespace-pre-wrap font-medium">{field.note}</div>
         </div>
       )}
       {field.alternatives && field.alternatives.length > 0 && (
         <div>
-          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Competing readings</span>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">{t("Competing readings")}</span>
           <div className="mt-1 space-y-1.5">
             {field.alternatives.map((alternative, index) => (
               <div key={`${alternative.page}-${index}`} className="rounded border bg-background px-2.5 py-2">
-                <div className="font-extrabold">Reading {index + 1}: {displayValue(alternative.value)}</div>
+                <div className="font-extrabold">{t("Reading")} {index + 1}: {displayValue(alternative.value, language)}</div>
                 <div className="mt-0.5 font-medium text-muted-foreground">
-                  Page {alternative.page}{alternative.clause ? ` · clause ${alternative.clause}` : ""} · “{alternative.quote}”
+                  {t("Page")} {alternative.page}{alternative.clause ? ` · ${t("clause")} ${alternative.clause}` : ""} · “{alternative.quote}”
                 </div>
               </div>
             ))}
@@ -320,8 +329,8 @@ function FieldEvidence({ field }: { field: AnyField }) {
       )}
       {hasOriginalValue && (
         <div>
-          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Originally extracted</span>
-          <div className="mt-0.5 font-semibold">{displayValue(field.originalValue)}</div>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">{t("Originally extracted")}</span>
+          <div className="mt-0.5 font-semibold">{displayValue(field.originalValue, language)}</div>
         </div>
       )}
     </div>
@@ -341,6 +350,7 @@ function IssueCard({
   onResolve: () => void;
   canResolve: boolean;
 }) {
+  const { language, t } = useLanguage();
   return (
     <article className="rounded-xl border border-amber-500/25 bg-card shadow-sm">
       <div className="flex flex-col gap-4 p-4 sm:p-5">
@@ -350,22 +360,22 @@ function IssueCard({
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-amber-700">{issue.section}</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-amber-700">{localize(language, issue.section)}</span>
               <StatusPill field={field} />
             </div>
-            <h3 className="mt-1 text-base font-extrabold tracking-tight">{issue.label}</h3>
-            <p className="mt-1 text-sm font-medium text-muted-foreground">{issue.prompt}</p>
+            <h3 className="mt-1 text-base font-extrabold tracking-tight">{localize(language, issue.label)}</h3>
+            <p className="mt-1 text-sm font-medium text-muted-foreground">{localize(language, issue.prompt)}</p>
           </div>
         </div>
         <FieldEvidence field={field} />
         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
           <div>
-            <label className="mb-1.5 block text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Resolution</label>
+            <label className="mb-1.5 block text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Resolution")}</label>
             {children}
-            <p className="mt-1.5 text-[11px] font-medium text-muted-foreground">{issue.hint}</p>
+            <p className="mt-1.5 text-[11px] font-medium text-muted-foreground">{localize(language, issue.hint)}</p>
           </div>
           <Button type="button" onClick={onResolve} disabled={!canResolve} className="gap-2 sm:min-w-28">
-            <Check className="h-3.5 w-3.5" /> Resolve
+            <Check className="h-3.5 w-3.5" /> {t("Resolve")}
           </Button>
         </div>
       </div>
@@ -374,6 +384,7 @@ function IssueCard({
 }
 
 export default function ReviewCompact() {
+  const { language, t } = useLanguage();
   const [, setLocation] = useLocation();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const {
@@ -398,18 +409,18 @@ export default function ReviewCompact() {
     handleConfirm,
   } = useContractReview();
 
-  const vendor = getField(draft, "vendorLegalName").value || "Untitled contract";
+  const vendor = getField(draft, "vendorLegalName").value || t("Untitled contract");
   const title = getField(draft, "contractTitle").value || filename;
   const value = getField(draft, "contractValue").value;
   const source = storedExtraction?.extraction.source;
   const ocrConfidence = storedExtraction?.extraction.ocrConfidence;
   const actionIssue = assignmentInvalid
     ? ownerMissing
-      ? "Set an application owner so notices have a clear recipient."
-      : "Enter a valid owner email so alerts can be delivered."
+      ? t("Set an application owner so notices have a clear recipient.")
+      : t("Enter a valid owner email so alerts can be delivered.")
     : missingRequired.length
-      ? `${missingRequired.length} required ${missingRequired.length === 1 ? "field remains" : "fields remain"} before confirmation.`
-      : "All confirmation fields are ready.";
+      ? t(`${missingRequired.length} required ${missingRequired.length === 1 ? "field remains" : "fields remain"} before confirmation.`)
+      : t("All confirmation fields are ready.");
 
   return (
     <div className="min-h-[100dvh] w-full bg-muted/20 md:flex">
@@ -420,23 +431,23 @@ export default function ReviewCompact() {
           </div>
           <div>
             <div className="font-bold tracking-tight text-lg">Contract Dash</div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Review workspace</div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{t("Review workspace")}</div>
           </div>
         </div>
         <nav className="flex-1 space-y-1 p-4">
           <Link href="/dashboard" className="flex items-center gap-3 rounded-md bg-primary/10 px-3 py-2.5 text-sm font-semibold text-primary">
-            <FileText className="h-4 w-4" /> Contracts
+            <FileText className="h-4 w-4" /> {t("Contracts")}
           </Link>
           <Link href="/action-items" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-muted/50">
-            <AlertCircle className="h-4 w-4" /> Action Items
+            <AlertCircle className="h-4 w-4" /> {t("Action Items")}
           </Link>
         </nav>
         <div className="space-y-1 border-t p-4">
           <div className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground">
-            <Settings className="h-4 w-4" /> Settings
+            <Settings className="h-4 w-4" /> {t("Settings")}
           </div>
           <Link href="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-muted/50">
-            <LogOut className="h-4 w-4" /> Log out
+            <LogOut className="h-4 w-4" /> {t("Log out")}
           </Link>
         </div>
       </aside>
@@ -445,10 +456,11 @@ export default function ReviewCompact() {
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b bg-card px-4 shadow-sm sm:px-6">
           <div className="relative hidden w-full max-w-sm sm:block">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input disabled placeholder="Search contracts..." className="h-9 w-full rounded-md border bg-muted/30 pl-9 pr-4 text-sm font-medium outline-none" />
+            <input disabled placeholder={t("Search contracts...")} aria-label={t("Search contracts")} className="h-9 w-full rounded-md border bg-muted/30 pl-9 pr-4 text-sm font-medium outline-none" />
           </div>
           <div className="ml-auto flex items-center gap-3">
-            <button type="button" className="relative rounded-full p-2 text-muted-foreground hover:bg-muted" aria-label="Notifications">
+            <LanguageSwitch />
+            <button type="button" className="relative rounded-full p-2 text-muted-foreground hover:bg-muted" aria-label={t("Notifications")}>
               <Bell className="h-5 w-5" />
               {totalOpenIssues > 0 && <span className="absolute right-2 top-2 h-2 w-2 rounded-full border border-card bg-destructive" />}
             </button>
@@ -461,21 +473,21 @@ export default function ReviewCompact() {
             <div className="flex flex-col gap-4 border-b pb-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <button type="button" onClick={() => setLocation("/dashboard")} className="mb-3 inline-flex items-center text-xs font-bold text-muted-foreground transition hover:text-foreground">
-                  <ChevronLeft className="mr-1 h-4 w-4" /> Back to registry
+                  <ChevronLeft className="mr-1 h-4 w-4" /> {t("Back to registry")}
                 </button>
                 <div className="flex flex-wrap items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.16em] text-primary">
-                  <span>Contract review</span>
+                  <span>{t("Contract review")}</span>
                 </div>
                 <h1 className="mt-2 flex items-center gap-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
-                  <ShieldCheck className="h-7 w-7 text-primary" /> Resolve the open decisions
+                  <ShieldCheck className="h-7 w-7 text-primary" /> {t("Resolve the open decisions")}
                 </h1>
                 <p className="mt-1 max-w-2xl text-sm font-medium text-muted-foreground">
-                  Confirm only what is uncertain. The full extracted record stays available when you need it.
+                  {t("Confirm only what is uncertain. The full extracted record stays available when you need it.")}
                 </p>
               </div>
               <div className="flex flex-col items-stretch gap-2 sm:items-end">
                 <Button onClick={handleConfirm} disabled={!isComplete || isSaving || savedContractQuery.isLoading} className="h-10 gap-2 px-5 font-bold">
-                  <Save className="h-4 w-4" /> Confirm review
+                  <Save className="h-4 w-4" /> {t("Confirm review")}
                 </Button>
                 {!isComplete && <span className="text-right text-[11px] font-bold text-destructive">{actionIssue}</span>}
                 {saveError && <span className="max-w-sm text-right text-[11px] font-bold text-destructive">{saveError}</span>}
@@ -486,32 +498,32 @@ export default function ReviewCompact() {
               <div className="flex items-start gap-3 rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3">
                 <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
                 <div>
-                  <p className="text-sm font-extrabold text-destructive">No contract loaded</p>
-                  <p className="mt-1 text-xs font-semibold text-destructive/80">Return to the dashboard to upload a PDF or choose a saved contract.</p>
+                  <p className="text-sm font-extrabold text-destructive">{t("No contract loaded")}</p>
+                  <p className="mt-1 text-xs font-semibold text-destructive/80">{t("Return to the dashboard to upload a PDF or choose a saved contract.")}</p>
                 </div>
               </div>
             )}
 
             <section className="grid gap-3 rounded-xl border bg-card p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
               <div className="min-w-0">
-                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Vendor</div>
+                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Vendor")}</div>
                 <div className="mt-1 truncate text-sm font-extrabold">{vendor}</div>
                 <div className="truncate text-xs font-medium text-muted-foreground">{title}</div>
               </div>
               <div>
-                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Contract value</div>
-                <div className={`mt-1 text-sm font-extrabold ${hasValue(value) ? "text-foreground" : "text-destructive"}`}>{displayValue(value)}</div>
-                <div className="text-xs font-medium text-muted-foreground">{hasValue(value) ? value.basis?.replace(/_/g, " ") : "Value status is unresolved"}</div>
+                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Contract value")}</div>
+                <div className={`mt-1 text-sm font-extrabold ${hasValue(value) ? "text-foreground" : "text-destructive"}`}>{displayValue(value, language)}</div>
+                <div className="text-xs font-medium text-muted-foreground">{hasValue(value) ? localize(language, value.basis?.replace(/_/g, " ") ?? "") : t("Value status is unresolved")}</div>
               </div>
               <div>
-                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Current term ends</div>
-                <div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.exitDate || getField(draft, "initialTermEndDate").value)}</div>
-                <div className="text-xs font-medium text-muted-foreground">{draft.computed.status === "blocked" ? "Deadline unavailable" : `${formatDate(draft.computed.noticeDeadline)} notice deadline`}</div>
+                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Current term ends")}</div>
+                <div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.exitDate || getField(draft, "initialTermEndDate").value, language)}</div>
+                <div className="text-xs font-medium text-muted-foreground">{draft.computed.status === "blocked" ? t("Deadline unavailable") : `${formatDate(draft.computed.noticeDeadline, language)} ${t("notice deadline")}`}</div>
               </div>
               <div>
-                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Source document</div>
+                <div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Source document")}</div>
                 <div className="mt-1 truncate text-sm font-extrabold">{filename}</div>
-                <div className="text-xs font-medium text-muted-foreground">{source === "ocr" ? `OCR · ${ocrConfidence ?? "unknown"} legibility` : "Embedded text extraction"}</div>
+                <div className="text-xs font-medium text-muted-foreground">{source === "ocr" ? `OCR · ${localize(language, ocrConfidence ?? "unknown")} ${t("legibility")}` : t("Embedded text extraction")}</div>
               </div>
             </section>
 
@@ -520,36 +532,36 @@ export default function ReviewCompact() {
                 <div className="flex items-end justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-extrabold tracking-tight">Needs your decision</h2>
+                      <h2 className="text-lg font-extrabold tracking-tight">{t("Needs your decision")}</h2>
                       <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${totalOpenIssues ? "bg-amber-500/10 text-amber-700" : "bg-emerald-500/10 text-emerald-700"}`}>
-                        {totalOpenIssues ? `${totalOpenIssues} open` : "All clear"}
+                        {totalOpenIssues ? t(`${totalOpenIssues} open`) : t("All clear")}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs font-medium text-muted-foreground">Resolve the flagged points below; confirmed fields stay out of your way.</p>
+                    <p className="mt-1 text-xs font-medium text-muted-foreground">{t("Resolve the flagged points below; confirmed fields stay out of your way.")}</p>
                   </div>
                 </div>
 
                 <article className={`rounded-xl border bg-card shadow-sm ${assignmentInvalid ? "border-destructive/25" : "border-border"}`}>
                     <div className="flex items-start gap-3 p-4 sm:p-5">
-                       <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${assignmentInvalid ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}><User className="h-4 w-4" /></div>
+                      <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${assignmentInvalid ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}><User className="h-4 w-4" /></div>
                       <div className="min-w-0 flex-1">
-                         <div className={`text-[10px] font-extrabold uppercase tracking-[0.14em] ${assignmentInvalid ? "text-destructive" : "text-primary"}`}>Assignment · required</div>
-                        <h3 className="mt-1 text-base font-extrabold">Who owns the renewal decision?</h3>
-                         <p className="mt-1 text-sm font-medium text-muted-foreground">Confirm the accountable person and a deliverable address for renewal alerts.</p>
+                        <div className={`text-[10px] font-extrabold uppercase tracking-[0.14em] ${assignmentInvalid ? "text-destructive" : "text-primary"}`}>{t("Assignment · required")}</div>
+                        <h3 className="mt-1 text-base font-extrabold">{t("Who owns the renewal decision?")}</h3>
+                        <p className="mt-1 text-sm font-medium text-muted-foreground">{t("Confirm the accountable person and a deliverable address for renewal alerts.")}</p>
                         <div className="mt-4 grid gap-3 sm:grid-cols-2">
                           <label className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-                            Owner
-                            <input value={draft.assignment.owner} onChange={(event) => updateAssignment("owner", event.target.value)} placeholder="e.g. John Doe" className="mt-1.5 h-10 w-full rounded-md border border-input bg-background px-3 text-sm font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20" />
+                            {t("Owner")}
+                            <input value={draft.assignment.owner} onChange={(event) => updateAssignment("owner", event.target.value)} placeholder={t("e.g. John Doe")} className="mt-1.5 h-10 w-full rounded-md border border-input bg-background px-3 text-sm font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20" />
                           </label>
                           <label className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-                            Owner email
-                             <input type="email" aria-invalid={ownerEmailInvalid} value={draft.assignment.ownerEmail} onChange={(event) => updateAssignment("ownerEmail", event.target.value)} placeholder="owner@example.com" className={`mt-1.5 h-10 w-full rounded-md border bg-background px-3 text-sm font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20 ${ownerEmailInvalid ? "border-destructive" : "border-input"}`} />
-                             {ownerEmailInvalid && <span className="mt-1.5 block text-[11px] font-semibold normal-case tracking-normal text-destructive">Enter a valid email address.</span>}
+                            {t("Owner email")}
+                            <input type="email" aria-invalid={ownerEmailInvalid} value={draft.assignment.ownerEmail} onChange={(event) => updateAssignment("ownerEmail", event.target.value)} placeholder="owner@example.com" className={`mt-1.5 h-10 w-full rounded-md border bg-background px-3 text-sm font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20 ${ownerEmailInvalid ? "border-destructive" : "border-input"}`} />
+                            {ownerEmailInvalid && <span className="mt-1.5 block text-[11px] font-semibold normal-case tracking-normal text-destructive">{t("Enter a valid email address.")}</span>}
                           </label>
                         </div>
                       </div>
                     </div>
-                </article>
+                  </article>
 
                 {openIssues.map((issue) => {
                   const field = getField(draft, issue.key);
@@ -586,8 +598,8 @@ export default function ReviewCompact() {
                   <div className="flex items-start gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
                     <div>
-                      <p className="text-sm font-extrabold text-emerald-800">The review is resolved</p>
-                      <p className="mt-1 text-xs font-semibold text-emerald-700/80">All tracked decisions have a value or an explicit reviewer resolution.</p>
+                      <p className="text-sm font-extrabold text-emerald-800">{t("The review is resolved")}</p>
+                      <p className="mt-1 text-xs font-semibold text-emerald-700/80">{t("All tracked decisions have a value or an explicit reviewer resolution.")}</p>
                     </div>
                   </div>
                 )}
@@ -597,8 +609,8 @@ export default function ReviewCompact() {
                     <div className="flex items-center gap-3">
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"><Layers3 className="h-4 w-4" /></div>
                       <div>
-                        <h2 className="text-sm font-extrabold">Full extraction</h2>
-                        <p className="mt-0.5 text-xs font-medium text-muted-foreground">Secondary view · {Object.keys(draft.fields).length} extracted fields</p>
+                        <h2 className="text-sm font-extrabold">{t("Full extraction")}</h2>
+                        <p className="mt-0.5 text-xs font-medium text-muted-foreground">{t("Secondary view ·")} {t(`${Object.keys(draft.fields).length} extracted fields`)}</p>
                       </div>
                     </div>
                     {detailsOpen ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
@@ -607,18 +619,18 @@ export default function ReviewCompact() {
                     <div className="space-y-5 border-t bg-muted/10 p-4 sm:p-5">
                       {detailGroups.map((group) => (
                         <div key={group.title}>
-                          <h3 className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground">{group.title}</h3>
+                          <h3 className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground">{t(group.title)}</h3>
                           <div className="mt-3 grid gap-3 md:grid-cols-2">
                             {group.fields.map(({ key, label, kind }) => {
                               const field = getField(draft, key);
                               return (
                                 <div key={key} className="rounded-lg border bg-card p-3">
                                   <div className="mb-2 flex items-center justify-between gap-2">
-                                    <label className="text-xs font-extrabold">{label}</label>
+                                    <label className="text-xs font-extrabold">{t(label)}</label>
                                     <StatusPill field={field} />
                                   </div>
                                   <FieldEditor fieldKey={key} field={field} kind={kind} onChange={(value) => updateField(key, value)} />
-                                   <div className="mt-3"><FieldEvidence field={field} /></div>
+                                  <div className="mt-3"><FieldEvidence field={field} /></div>
                                 </div>
                               );
                             })}
@@ -633,30 +645,30 @@ export default function ReviewCompact() {
               <aside className="space-y-4 xl:sticky xl:top-20">
                 <section className="rounded-xl border bg-card p-5 shadow-sm">
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 text-sm font-extrabold"><CheckCircle2 className="h-4 w-4 text-primary" /> Review progress</div>
+                    <div className="flex items-center gap-2 text-sm font-extrabold"><CheckCircle2 className="h-4 w-4 text-primary" /> {t("Review progress")}</div>
                     <span className="text-sm font-extrabold text-primary">{Math.max(0, Math.min(100, progress))}%</span>
                   </div>
                   <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${Math.max(0, Math.min(100, progress))}%` }} /></div>
-                  <p className="mt-3 text-xs font-medium leading-relaxed text-muted-foreground">{totalOpenIssues ? `${totalOpenIssues} decision${totalOpenIssues === 1 ? "" : "s"} still needs attention.` : "Nothing else is blocking confirmation."}</p>
+                  <p className="mt-3 text-xs font-medium leading-relaxed text-muted-foreground">{totalOpenIssues ? t(`${totalOpenIssues} decision${totalOpenIssues === 1 ? "" : "s"} still needs attention.`) : t("Nothing else is blocking confirmation.")}</p>
                 </section>
 
                 <section className={`rounded-xl border p-5 shadow-sm ${draft.computed.status === "blocked" ? "border-destructive/20 bg-destructive/5" : "bg-card"}`}>
-                  <div className="flex items-center gap-2 text-sm font-extrabold"><CalendarClock className={`h-4 w-4 ${draft.computed.status === "blocked" ? "text-destructive" : "text-primary"}`} /> Renewal timeline</div>
+                  <div className="flex items-center gap-2 text-sm font-extrabold"><CalendarClock className={`h-4 w-4 ${draft.computed.status === "blocked" ? "text-destructive" : "text-primary"}`} /> {t("Renewal timeline")}</div>
                   {draft.computed.status === "blocked" ? (
                     <div className="mt-3">
-                      <p className="text-sm font-extrabold text-destructive">Deadline unavailable</p>
-                      <p className="mt-1 text-xs font-semibold leading-relaxed text-destructive/80">{draft.computed.reason || "Resolve the timing fields to calculate this contract's deadlines."}</p>
+                      <p className="text-sm font-extrabold text-destructive">{t("Deadline unavailable")}</p>
+                      <p className="mt-1 text-xs font-semibold leading-relaxed text-destructive/80">{draft.computed.reason ? t(draft.computed.reason) : t("Resolve the timing fields to calculate this contract's deadlines.")}</p>
                     </div>
                   ) : (
                     <div className="mt-4">
                       <div className="grid grid-cols-2 gap-3">
-                        <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Start negotiation</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.actionDate)}</div></div>
-                        <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Legal notice</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.noticeDeadline)}</div></div>
-                        <div className="col-span-2 border-t pt-3"><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Exit date</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.exitDate)}</div></div>
+                        <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Start negotiation")}</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.actionDate, language)}</div></div>
+                        <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Legal notice")}</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.noticeDeadline, language)}</div></div>
+                        <div className="col-span-2 border-t pt-3"><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">{t("Exit date")}</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.exitDate, language)}</div></div>
                       </div>
                       {draft.computed.status !== "expired" && draft.computed.actionDate && draft.assignment.owner && (
                         <p className="mt-4 rounded-md bg-primary/5 px-3 py-2 text-xs font-bold text-primary">
-                          Alert due {formatDate(draft.computed.actionDate)} to {draft.assignment.owner}
+                          {t(`Alert due ${formatDate(draft.computed.actionDate, language)} to ${draft.assignment.owner}`)}
                         </p>
                       )}
                     </div>
@@ -664,14 +676,14 @@ export default function ReviewCompact() {
                 </section>
 
                 <section className="rounded-xl border bg-card p-5 shadow-sm">
-                  <div className="flex items-center gap-2 text-sm font-extrabold"><WalletCards className="h-4 w-4 text-primary" /> Assignment</div>
+                  <div className="flex items-center gap-2 text-sm font-extrabold"><WalletCards className="h-4 w-4 text-primary" /> {t("Assignment")}</div>
                   <div className="mt-3 space-y-2 text-xs">
-                    <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Owner</span><span className="font-extrabold">{draft.assignment.owner || "Unassigned"}</span></div>
-                     <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Email</span><span className="truncate font-extrabold">{draft.assignment.ownerEmail || "Missing"}</span></div>
-                    <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Status</span><span className="font-extrabold">{draft.assignment.status}</span></div>
+                    <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">{t("Owner")}</span><span className="font-extrabold">{draft.assignment.owner || t("Unassigned")}</span></div>
+                     <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">{t("Email")}</span><span className="truncate font-extrabold">{draft.assignment.ownerEmail || t("Missing")}</span></div>
+                    <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">{t("Status")}</span><span className="font-extrabold">{t(draft.assignment.status)}</span></div>
                   </div>
                   <label className="mt-4 block text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-                    Negotiation buffer (days)
+                    {t("Negotiation buffer (days)")}
                     <input
                       type="number"
                       min={0}
@@ -688,13 +700,13 @@ export default function ReviewCompact() {
                       : "border-border bg-muted text-muted-foreground"
                   }`}>
                     {draft.assignment.negotiationBufferSource === "contract_override"
-                      ? "Contract override"
+                      ? t("Contract override")
                       : draft.assignment.negotiationBufferSource === "contract_type_default"
-                        ? "Inherited from contract type"
-                        : "Inherited global default"}
+                        ? t("Inherited from contract type")
+                        : t("Inherited global default")}
                   </div>
                   <select value={draft.assignment.status} onChange={(event) => updateAssignment("status", event.target.value)} className="mt-4 h-9 w-full rounded-md border border-input bg-background px-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-primary/20">
-                    {assignmentStatusOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                    {assignmentStatusOptions.map((option) => <option key={option} value={option}>{t(option)}</option>)}
                   </select>
                 </section>
               </aside>

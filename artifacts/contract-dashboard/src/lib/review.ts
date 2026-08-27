@@ -4,6 +4,7 @@ import type {
   ProvenanceMetadata,
 } from "@workspace/api-client-react";
 import { formatSwissNumber } from "./registry";
+import { localize, type UiLanguage } from "./i18n";
 
 export const extractionStorageKey = "contract-dashboard.extraction";
 export const extractionQueueStorageKey = "contract-dashboard.extraction-queue";
@@ -170,14 +171,14 @@ export function hasValue(value: unknown) {
   return true;
 }
 
-export function displayValue(value: any): string {
-  if (!hasValue(value)) return "Not stated";
+export function displayValue(value: any, language: UiLanguage = "en"): string {
+  if (!hasValue(value)) return localize(language, "Not stated");
   if (typeof value === "object") {
     if ("currency" in value) {
       const amount = typeof value.amount === "number" ? formatSwissNumber(value.amount) : "";
       return `${value.currency ?? ""} ${amount}`.trim();
     }
-    if ("amount" in value) return `${value.amount ?? ""} ${value.unit ?? ""}`.trim();
+    if ("amount" in value) return `${value.amount ?? ""} ${localize(language, value.unit ?? "")}`.trim();
     return Object.entries(value)
       .map(([key, item]) => `${key}: ${Array.isArray(item) ? item.join(", ") : item}`)
       .join(" · ");
@@ -185,8 +186,8 @@ export function displayValue(value: any): string {
   return String(value).replace(/_/g, " ");
 }
 
-export function statusLabel(status: AnyField["status"]) {
-  return status.replace("_", " ");
+export function statusLabel(status: AnyField["status"], language: UiLanguage = "en") {
+  return localize(language, status.replace("_", " "));
 }
 
 export function isIssue(field: AnyField) {
@@ -201,8 +202,8 @@ export function isValidOwnerEmail(value: string) {
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value.trim());
 }
 
-export function formatDate(value: string | null | undefined) {
-  if (!value) return "Not calculated";
+export function formatDate(value: string | null | undefined, language: UiLanguage = "en") {
+  if (!value) return localize(language, "Not calculated");
   const [year, month, day] = value.split("-");
   if (!year || !month || !day) return value;
   return `${day}.${month}.${year}`;
