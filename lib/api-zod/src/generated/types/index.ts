@@ -12,6 +12,7 @@ export * from './contractAssignment';
 export * from './contractAssignmentNegotiationBufferSource';
 export * from './contractAssignmentStatus';
 export * from './contractComputedDates';
+export * from './contractComputedReasonCode';
 export * from './contractComputedStatus';
 export * from './contractExtractionResult';
 export * from './contractExtractionResultExtraction';

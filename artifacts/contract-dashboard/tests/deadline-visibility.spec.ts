@@ -36,6 +36,10 @@ const makeContract = (
     actionDate: string;
     daysRemaining: number | null;
     status: "blocked" | "expired";
+    reasonCode:
+      | "NOTICE_ANCHOR_UNKNOWN"
+      | "FIXED_CONTRACT_END_PASSED"
+      | null;
     reason: string;
   },
 ) => ({
@@ -79,12 +83,14 @@ test("hides blocked dates in registry and review while preserving expired histor
     ...blockedDates,
     daysRemaining: null,
     status: "blocked",
+    reasonCode: null,
     reason: "blocked — missing a trusted contract timing anchor",
   });
   const expiredContract = makeContract("Expired Vendor", {
     ...expiredDates,
     daysRemaining: -1,
     status: "expired",
+    reasonCode: "FIXED_CONTRACT_END_PASSED",
     reason: "expired — historical dates retained for reference",
   });
   const savedContract = (id: string, filename: string, contract: ReturnType<typeof makeContract>) => ({
@@ -127,6 +133,7 @@ test("hides blocked dates in registry and review while preserving expired histor
   await expect(expiredRow).toContainText("1 day past action date");
   await expect(expiredRow).toContainText("22.02.2020");
   await expect(expiredRow).toContainText("03.03.2020");
+  await expect(expiredRow).toContainText("The fixed contract end date has passed.");
   await expect(expiredRow).toContainText(expiredContract.computed.reason);
 
   await page.goto("/review?id=blocked-deadline");

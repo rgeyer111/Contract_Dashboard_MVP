@@ -888,6 +888,7 @@ export const ExtractContractResponse = zod.object({
   "actionDate": zod.string().regex(extractContractResponseExtractionContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(extractContractResponseExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(extractContractResponseExtractionContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -1623,6 +1624,7 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "actionDate": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -2372,6 +2374,7 @@ export const RegisterIngestRunResponse = zod.object({
   "actionDate": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -3107,6 +3110,7 @@ export const RetryIngestItemResponse = zod.object({
   "actionDate": zod.string().regex(retryIngestItemResponseExtractionContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(retryIngestItemResponseExtractionContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(retryIngestItemResponseExtractionContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -3852,6 +3856,7 @@ export const ListContractsResponseItem = zod.object({
   "actionDate": zod.string().regex(listContractsResponseOneContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(listContractsResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(listContractsResponseOneContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -4575,6 +4580,7 @@ export const CreateContractBody = zod.object({
   "actionDate": zod.string().regex(createContractBodyContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(createContractBodyContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(createContractBodyContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -5288,6 +5294,7 @@ export const CreateContractResponse = zod.object({
   "actionDate": zod.string().regex(createContractResponseOneContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(createContractResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(createContractResponseOneContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -6014,6 +6021,7 @@ export const GetContractResponse = zod.object({
   "actionDate": zod.string().regex(getContractResponseOneContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(getContractResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(getContractResponseOneContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -6740,6 +6748,7 @@ export const UpdateContractBody = zod.object({
   "actionDate": zod.string().regex(updateContractBodyContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(updateContractBodyContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(updateContractBodyContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -7453,6 +7462,7 @@ export const UpdateContractResponse = zod.object({
   "actionDate": zod.string().regex(updateContractResponseOneContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(updateContractResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(updateContractResponseOneContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({
@@ -8187,6 +8197,7 @@ export const DismissContractAlertResponse = zod.object({
   "actionDate": zod.string().regex(dismissContractAlertResponseOneContractComputedActionDateRegExp).nullable(),
   "daysRemaining": zod.number().multipleOf(dismissContractAlertResponseOneContractComputedDaysRemainingMultipleOf).nullable().describe('Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.'),
   "status": zod.enum(['green', 'amber', 'red', 'expired', 'blocked']),
+  "reasonCode": zod.union([zod.enum(['CONTRACT_END_UNESTABLISHED', 'INDEFINITE_WITHOUT_FIXED_ANCHOR', 'PAST_AUTO_RENEWAL_TERM_MISSING', 'NOTICE_CLAUSE_NOT_FOUND', 'TIMING_VALUES_CONFLICT', 'NOTICE_TIMING_AMBIGUOUS', 'MULTIPLE_NOTICE_PERIODS', 'NOTICE_PERIOD_INCOMPLETE', 'NOTICE_ANCHOR_UNKNOWN', 'TIMING_EVIDENCE_UNRELIABLE', 'NOTICE_ALLOWED_ANY_TIME', 'NOTICE_ANCHOR_UNRESOLVED', 'FIXED_CONTRACT_END_PASSED']),zod.null()]),
   "reason": zod.string().max(dismissContractAlertResponseOneContractComputedReasonMax).nullable()
 }),
   "alert": zod.union([zod.object({

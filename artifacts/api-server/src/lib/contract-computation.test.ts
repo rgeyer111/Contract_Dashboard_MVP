@@ -28,6 +28,7 @@ describe("computeContractDates", () => {
       actionDate: "2026-08-01",
       daysRemaining: 92,
       status: "green",
+      reasonCode: null,
       reason: null,
     });
   });
@@ -66,7 +67,8 @@ describe("computeContractDates", () => {
       new Date("2026-05-01T12:00:00Z"),
     );
     expect(result.status).toBe("blocked");
-    expect(result.reason).toMatch(/anchor unclear/i);
+    expect(result.reasonCode).toBe("NOTICE_ANCHOR_UNKNOWN");
+    expect(result.reason).toBeNull();
     expect(result.exitDate).toBeNull();
     expect(result.noticeDeadline).toBeNull();
     expect(result.actionDate).toBeNull();
@@ -81,12 +83,13 @@ describe("computeContractDates", () => {
 
     expect(result).toMatchObject({
       status: "blocked",
+      reasonCode: "NOTICE_CLAUSE_NOT_FOUND",
       exitDate: null,
       noticeDeadline: null,
       actionDate: null,
       daysRemaining: null,
     });
-    expect(result.reason).toMatch(/no notice clause.*add or confirm/i);
+    expect(result.reason).toBeNull();
   });
 
   it("explains when timing evidence is too poor to trust", () => {
@@ -96,7 +99,8 @@ describe("computeContractDates", () => {
     );
 
     expect(result.status).toBe("blocked");
-    expect(result.reason).toMatch(/scan.*uncertain.*clearer scan.*confirm/i);
+    expect(result.reasonCode).toBe("TIMING_EVIDENCE_UNRELIABLE");
+    expect(result.reason).toBeNull();
     expect(result.exitDate).toBeNull();
     expect(result.noticeDeadline).toBeNull();
     expect(result.actionDate).toBeNull();
@@ -114,7 +118,8 @@ describe("computeContractDates", () => {
     );
 
     expect(result.status).toBe("blocked");
-    expect(result.reason).toMatch(/conflicting.*confirm.*controlling contract/i);
+    expect(result.reasonCode).toBe("TIMING_VALUES_CONFLICT");
+    expect(result.reason).toBeNull();
     expect(result.noticeDeadline).toBeNull();
   });
 
@@ -125,7 +130,8 @@ describe("computeContractDates", () => {
     );
 
     expect(result.status).toBe("expired");
-    expect(result.reason).toMatch(/end date has passed.*ended or renewed/i);
+    expect(result.reasonCode).toBe("FIXED_CONTRACT_END_PASSED");
+    expect(result.reason).toBeNull();
     expect(result.noticeDeadline).toBe("2026-09-30");
   });
 

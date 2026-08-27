@@ -51,7 +51,7 @@ import {
 import { useContractUpload } from "@/hooks/use-contract-upload";
 import { useRegistryFilters } from "@/hooks/use-registry-filters";
 import { useSavedRegistryViews } from "@/hooks/use-saved-registry-views";
-import { LanguageSwitch, translateDomainOption, translateGeneratedReasonOrRaw, useLanguage } from "@/lib/i18n";
+import { LanguageSwitch, translateComputedReasonOrDetail, translateDomainOption, useLanguage } from "@/lib/i18n";
 
 export default function Dashboard() {
   const { language, t } = useLanguage();
@@ -822,8 +822,13 @@ export default function Dashboard() {
                        const status = contract.computed.status;
                        const isBlocked = status === "blocked";
                        const isContractTypeSaving = savingContractTypeId === saved.id;
-                        const statusReason = contract.computed.reason
-                          ? translateGeneratedReasonOrRaw(language, contract.computed.reason)
+                        const translatedReason = translateComputedReasonOrDetail(
+                          language,
+                          contract.computed.reasonCode,
+                          contract.computed.reason,
+                        );
+                        const statusReason = translatedReason
+                          ? translatedReason
                           : status === "green"
                             ? t("ui.within.action.runway")
                             : status === "amber"

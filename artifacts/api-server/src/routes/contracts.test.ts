@@ -84,6 +84,7 @@ const contract = {
     actionDate: "2026-10-02",
     daysRemaining: daysUntil("2026-10-02"),
     status: "green",
+    reasonCode: null,
     reason: null,
   },
   alert: {

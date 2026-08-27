@@ -471,6 +471,25 @@ export const ContractComputedStatus = {
   blocked: 'blocked',
 } as const;
 
+export type ContractComputedReasonCode = typeof ContractComputedReasonCode[keyof typeof ContractComputedReasonCode];
+
+
+export const ContractComputedReasonCode = {
+  CONTRACT_END_UNESTABLISHED: 'CONTRACT_END_UNESTABLISHED',
+  INDEFINITE_WITHOUT_FIXED_ANCHOR: 'INDEFINITE_WITHOUT_FIXED_ANCHOR',
+  PAST_AUTO_RENEWAL_TERM_MISSING: 'PAST_AUTO_RENEWAL_TERM_MISSING',
+  NOTICE_CLAUSE_NOT_FOUND: 'NOTICE_CLAUSE_NOT_FOUND',
+  TIMING_VALUES_CONFLICT: 'TIMING_VALUES_CONFLICT',
+  NOTICE_TIMING_AMBIGUOUS: 'NOTICE_TIMING_AMBIGUOUS',
+  MULTIPLE_NOTICE_PERIODS: 'MULTIPLE_NOTICE_PERIODS',
+  NOTICE_PERIOD_INCOMPLETE: 'NOTICE_PERIOD_INCOMPLETE',
+  NOTICE_ANCHOR_UNKNOWN: 'NOTICE_ANCHOR_UNKNOWN',
+  TIMING_EVIDENCE_UNRELIABLE: 'TIMING_EVIDENCE_UNRELIABLE',
+  NOTICE_ALLOWED_ANY_TIME: 'NOTICE_ALLOWED_ANY_TIME',
+  NOTICE_ANCHOR_UNRESOLVED: 'NOTICE_ANCHOR_UNRESOLVED',
+  FIXED_CONTRACT_END_PASSED: 'FIXED_CONTRACT_END_PASSED',
+} as const;
+
 export interface ContractComputedDates {
   /**
      * @nullable
@@ -493,6 +512,7 @@ export interface ContractComputedDates {
      */
   daysRemaining: number | null;
   status: ContractComputedStatus;
+  reasonCode: ContractComputedReasonCode | null;
   /**
      * @maxLength 300
      * @nullable

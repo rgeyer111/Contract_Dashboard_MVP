@@ -1,3 +1,5 @@
+import type { ContractComputedReasonCode } from "@workspace/api-zod";
+
 type Period = { amount: number; unit: "days" | "weeks" | "months" | "years" };
 type Notice = Period & {
   anchor:
@@ -18,6 +20,7 @@ export type ComputedContractDates = {
   actionDate: string | null;
   daysRemaining: number | null;
   status: "green" | "amber" | "red" | "expired" | "blocked";
+  reasonCode: ContractComputedReasonCode | null;
   reason: string | null;
 };
 export type ComputedContractAlert = {
@@ -61,13 +64,17 @@ function addDays(date: Date, days: number) {
   return addPeriod(date, { amount: days, unit: "days" });
 }
 
-function blocked(reason: string): ComputedContractDates {
+function blocked(
+  reasonCode: ContractComputedReasonCode,
+  reason: string | null = null,
+): ComputedContractDates {
   return {
     exitDate: null,
     noticeDeadline: null,
     actionDate: null,
     daysRemaining: null,
     status: "blocked",
+    reasonCode,
     reason,
   };
 }
@@ -148,76 +155,52 @@ export function computeContractDates(
 
   if (!exitDate && effectiveDate && initialTerm) exitDate = addPeriod(effectiveDate, initialTerm);
   if (!exitDate) {
-    return blocked(
-      "blocked — contract end cannot be established. Add the initial term end date, or confirm the effective date and term length.",
-    );
+    return blocked("CONTRACT_END_UNESTABLISHED");
   }
 
   const renewal = fields.renewalMechanism?.value;
   const renewalTerm = fields.renewalTermLength?.value as Period | null;
   if (renewal === "indefinite") {
-    return blocked(
-      "blocked — this contract is indefinite, so there is no fixed exit date. Confirm a fixed contractual anchor or add a documented end date.",
-    );
+    return blocked("INDEFINITE_WITHOUT_FIXED_ANCHOR");
   }
   if (renewal === "auto_renew" && exitDate < today) {
     if (!renewalTerm) {
-      return blocked(
-        "blocked — the past-due auto-renewal term is missing. Add the renewal term length so the current exit date can be established.",
-      );
+      return blocked("PAST_AUTO_RENEWAL_TERM_MISSING");
     }
     while (exitDate < today) exitDate = addPeriod(exitDate, renewalTerm);
   }
 
   const noticeField = fields.noticePeriod;
   if (noticeField?.status === "not_found" || !noticeField?.value) {
-    return blocked(
-      "blocked — no notice clause was found. Add or confirm the applicable notice period and cite its contract clause.",
-    );
+    return blocked("NOTICE_CLAUSE_NOT_FOUND");
   }
   if (hasConflictingTimingValue(fields)) {
-    return blocked(
-      "blocked — conflicting contract timing values were found. Resolve the conflict by confirming the value in the controlling contract or amendment.",
-    );
+    return blocked("TIMING_VALUES_CONFLICT");
   }
   if (noticeField.status === "ambiguous") {
-    return blocked(
-      "blocked — more than one notice timing may apply. Confirm the single applicable notice period and its source clause.",
-    );
+    return blocked("NOTICE_TIMING_AMBIGUOUS");
   }
   const notices = Array.isArray(noticeField.value) ? noticeField.value : [noticeField.value];
   if (notices.length !== 1) {
-    return blocked(
-      "blocked — multiple applicable notice periods were found. Select the one that controls this renewal and cite its source clause.",
-    );
+    return blocked("MULTIPLE_NOTICE_PERIODS");
   }
   const notice = notices[0] as Notice;
   if (!notice || !notice.amount || !notice.unit) {
-    return blocked(
-      "blocked — the notice period is missing its amount or unit. Complete the notice period and confirm its source clause.",
-    );
+    return blocked("NOTICE_PERIOD_INCOMPLETE");
   }
   if (notice.anchor === "unknown") {
-    return blocked(
-      "blocked — notice period stated; anchor unclear. Confirm whether it runs from term end, renewal date, anniversary, or another documented date.",
-    );
+    return blocked("NOTICE_ANCHOR_UNKNOWN");
   }
   if (hasPoorTimingEvidence(fields)) {
-    return blocked(
-      "blocked — timing evidence from the scan is too uncertain to trust. Upload a clearer scan or confirm the highlighted timing fields and their source clauses.",
-    );
+    return blocked("TIMING_EVIDENCE_UNRELIABLE");
   }
   if (notice.anchor === "any_time") {
-    return blocked(
-      "blocked — the notice clause allows notice at any time, so no single deadline can be trusted. Confirm a fixed contractual anchor or record the applicable termination rule.",
-    );
+    return blocked("NOTICE_ALLOWED_ANY_TIME");
   }
 
   const anchorDate = resolveAnchorDate(exitDate, effectiveDate ?? exitDate, notice.anchor, today);
   if (!anchorDate) {
-    return blocked(
-      "blocked — the notice anchor cannot be resolved. Confirm the clause that fixes the date from which the notice period runs.",
-    );
+    return blocked("NOTICE_ANCHOR_UNRESOLVED");
   }
   const noticeDeadline = addPeriod(anchorDate, notice, -1);
   const actionDate = addDays(noticeDeadline, -(contract.assignment.negotiationBufferDays ?? 0));
@@ -230,10 +213,8 @@ export function computeContractDates(
     actionDate: formatDate(actionDate),
     daysRemaining,
     status,
-    reason:
-      status === "expired"
-        ? "expired — the fixed contract end date has passed. Confirm whether the contract ended or renewed, then update the renewal terms before relying on this deadline."
-        : null,
+    reasonCode: status === "expired" ? "FIXED_CONTRACT_END_PASSED" : null,
+    reason: null,
   };
 }
 

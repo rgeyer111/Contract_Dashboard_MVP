@@ -829,9 +829,25 @@ components:
     ContractComputedStatus:
       type: string
       enum: [green, amber, red, expired, blocked]
+    ContractComputedReasonCode:
+      type: string
+      enum:
+        - CONTRACT_END_UNESTABLISHED
+        - INDEFINITE_WITHOUT_FIXED_ANCHOR
+        - PAST_AUTO_RENEWAL_TERM_MISSING
+        - NOTICE_CLAUSE_NOT_FOUND
+        - TIMING_VALUES_CONFLICT
+        - NOTICE_TIMING_AMBIGUOUS
+        - MULTIPLE_NOTICE_PERIODS
+        - NOTICE_PERIOD_INCOMPLETE
+        - NOTICE_ANCHOR_UNKNOWN
+        - TIMING_EVIDENCE_UNRELIABLE
+        - NOTICE_ALLOWED_ANY_TIME
+        - NOTICE_ANCHOR_UNRESOLVED
+        - FIXED_CONTRACT_END_PASSED
     ContractComputedDates:
       type: object
-      required: [exitDate, noticeDeadline, actionDate, daysRemaining, status, reason]
+      required: [exitDate, noticeDeadline, actionDate, daysRemaining, status, reasonCode, reason]
       properties:
         exitDate: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
         noticeDeadline: { type: ["string", "null"], pattern: '^\d{4}-\d{2}-\d{2}$' }
@@ -841,6 +857,10 @@ components:
           multipleOf: 1
           description: Whole calendar days until actionDate. Zero means the negotiation window opens today; negative values mean actionDate has passed.
         status: { $ref: "#/components/schemas/ContractComputedStatus" }
+        reasonCode:
+          oneOf:
+            - $ref: "#/components/schemas/ContractComputedReasonCode"
+            - type: "null"
         reason: { type: ["string", "null"], maxLength: 300 }
     ContractAlertState:
       type: string

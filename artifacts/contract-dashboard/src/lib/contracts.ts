@@ -50,7 +50,8 @@ export function createEmptyContractReviewRecord(): ContractReviewRecord {
       actionDate: null,
       daysRemaining: null,
       status: 'blocked',
-      reason: 'blocked — not enough contract data to compute dates',
+      reasonCode: 'CONTRACT_END_UNESTABLISHED',
+      reason: null,
     },
     alert: null,
   };

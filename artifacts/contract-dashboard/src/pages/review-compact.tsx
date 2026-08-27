@@ -46,7 +46,7 @@ import {
   type IssueDefinition,
 } from "@/lib/review";
 import { useContractReview } from "@/hooks/use-contract-review";
-import { LanguageSwitch, translateDomainOption, translateGeneratedReasonOrRaw, useLanguage, type DomainOption } from "@/lib/i18n";
+import { LanguageSwitch, translateComputedReasonOrDetail, translateDomainOption, useLanguage, type DomainOption } from "@/lib/i18n";
 
 function TextInput({
   value,
@@ -658,7 +658,7 @@ export default function ReviewCompact() {
                   {draft.computed.status === "blocked" ? (
                     <div className="mt-3">
                       <p className="text-sm font-extrabold text-destructive">{t("ui.deadline.unavailable")}</p>
-                      <p className="mt-1 text-xs font-semibold leading-relaxed text-destructive/80">{draft.computed.reason ? translateGeneratedReasonOrRaw(language, draft.computed.reason) : t("ui.resolve.the.timing.fields.to.calculate.this.contract.s.deadlines")}</p>
+                      <p className="mt-1 text-xs font-semibold leading-relaxed text-destructive/80">{translateComputedReasonOrDetail(language, draft.computed.reasonCode, draft.computed.reason) ?? t("ui.resolve.the.timing.fields.to.calculate.this.contract.s.deadlines")}</p>
                     </div>
                   ) : (
                     <div className="mt-4">

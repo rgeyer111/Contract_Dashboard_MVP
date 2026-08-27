@@ -77,6 +77,7 @@ const makeContract = ({
     actionDate: "2026-10-02",
     daysRemaining: 37,
     status: "green",
+    reasonCode: null,
     reason: null,
   },
 });
@@ -872,6 +873,7 @@ test("sorts the register by urgency and persists auditable contract-type correct
     actionDate: null,
     daysRemaining: null,
     status: "blocked",
+    reasonCode: null,
     reason: "blocked — missing a trusted timing anchor",
   };
 
@@ -1336,6 +1338,7 @@ test("keeps Swiss German through the review flow and translates issue definition
     },
   });
   contract.computed.status = "blocked";
+  contract.computed.reasonCode = "NOTICE_ANCHOR_UNKNOWN";
   contract.computed.reason = "Dates blocked — review required";
   const saved = {
     id: "german-review-contract",
@@ -1378,6 +1381,8 @@ test("keeps Swiss German through the review flow and translates issue definition
   await expect(page.getByText("31.12.2026", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Seite 2 · Klausel 4.2", { exact: true })).toBeVisible();
   await expect(page.getByText("Frist nicht verfügbar", { exact: true }).first()).toBeVisible();
+  const deadlineExplanation = page.getByText(/Der Bezugstermin der Kündigungsfrist ist unklar\..*Dates blocked — review required/);
+  await expect(deadlineExplanation).toBeVisible();
   await page.getByRole("button", { name: /Vollständige Extraktion/ }).click();
   await expect(page.getByRole("option", { name: "Rahmenvertrag" })).not.toHaveCount(0);
 

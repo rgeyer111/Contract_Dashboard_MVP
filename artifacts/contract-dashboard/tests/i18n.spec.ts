@@ -2,9 +2,10 @@ import { expect, test } from "@playwright/test";
 import {
   translate,
   translateDomainOption,
-  translateGeneratedReasonOrRaw,
+  translateComputedReasonOrDetail,
 } from "../src/lib/i18n";
 import { displayEvidenceValue } from "../src/lib/review";
+import { createEmptyContractReviewRecord } from "../src/lib/contracts";
 
 test("German catalog translates every registered message", () => {
   expect(translate("de-CH", "ui.contracts")).toBe("Verträge");
@@ -28,11 +29,32 @@ test("interpolation preserves user and source values verbatim", () => {
   expect(displayEvidenceValue("Acme_Corp", "de-CH")).toBe("Acme_Corp");
   expect(displayEvidenceValue({ unit: "business_days" }, "de-CH"))
     .toBe('{"unit":"business_days"}');
-  expect(translateGeneratedReasonOrRaw("de-CH", "toString")).toBe("toString");
-  expect(translateGeneratedReasonOrRaw(
+  expect(translateComputedReasonOrDetail("de-CH", null, "toString")).toBe("toString");
+  expect(translateComputedReasonOrDetail(
     "de-CH",
-    "blocked — no notice clause was found. Add or confirm the applicable notice period and cite its contract clause.",
-  )).toBe("blockiert — unzureichende Vertragsdaten zur Berechnung der Fristen");
-  expect(translateGeneratedReasonOrRaw("de-CH", "Backend supplied reason — unchanged"))
+    "NOTICE_CLAUSE_NOT_FOUND",
+    null,
+  )).toBe("Es wurde keine Kündigungsklausel gefunden. Ergänzen oder bestätigen Sie die anwendbare Kündigungsfrist und die Vertragsstelle.");
+  expect(translateComputedReasonOrDetail(
+    "de-CH",
+    "NOTICE_CLAUSE_NOT_FOUND",
+    "Clause reference supplied by backend",
+  )).toBe("Es wurde keine Kündigungsklausel gefunden. Ergänzen oder bestätigen Sie die anwendbare Kündigungsfrist und die Vertragsstelle. — Clause reference supplied by backend");
+  expect(translateComputedReasonOrDetail("de-CH", null, "Backend supplied reason — unchanged"))
     .toBe("Backend supplied reason — unchanged");
+});
+
+test("fresh German reviews contain no English deadline fallback", () => {
+  const computed = createEmptyContractReviewRecord().computed;
+  const explanation = translateComputedReasonOrDetail(
+    "de-CH",
+    computed.reasonCode,
+    computed.reason,
+  );
+
+  expect(computed.reason).toBeNull();
+  expect(explanation).toBe(
+    "Das Vertragsende kann nicht bestimmt werden. Ergänzen Sie das Ende der Erstlaufzeit oder bestätigen Sie Wirksamkeitsdatum und Laufzeit.",
+  );
+  expect(explanation).not.toContain("blocked");
 });

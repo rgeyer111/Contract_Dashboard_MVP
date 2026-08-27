@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ContractComputedReasonCode } from './contractComputedReasonCode';
 import type { ContractComputedStatus } from './contractComputedStatus';
 
 export interface ContractComputedDates {
@@ -29,6 +30,7 @@ export interface ContractComputedDates {
      */
   daysRemaining: number | null;
   status: ContractComputedStatus;
+  reasonCode: ContractComputedReasonCode | null;
   /**
      * @maxLength 300
      * @nullable

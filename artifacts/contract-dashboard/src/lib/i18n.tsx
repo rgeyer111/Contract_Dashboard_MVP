@@ -4,6 +4,7 @@ import type {
   ContractAssignmentNegotiationBufferSource,
   ContractAssignmentStatus,
   ContractComputedStatus,
+  ContractComputedReasonCode,
   ContractValueValueBasis,
   NoticePeriodValueAnchor,
   PeriodValueUnit,
@@ -141,6 +142,19 @@ const en = {
   "ui.contract.end.date.has.passed": () => "Contract end date has passed",
   "ui.dates.blocked.review.required": () => "Dates blocked — review required",
   "ui.blocked.not.enough.contract.data.to.compute.dates": () => "blocked — not enough contract data to compute dates",
+  "deadline.contractEndUnestablished": () => "Contract end cannot be established. Add the initial term end date, or confirm the effective date and term length.",
+  "deadline.indefiniteWithoutFixedAnchor": () => "This contract is indefinite, so there is no fixed exit date. Confirm a fixed contractual anchor or add a documented end date.",
+  "deadline.pastAutoRenewalTermMissing": () => "The past-due auto-renewal term is missing. Add the renewal term length so the current exit date can be established.",
+  "deadline.noticeClauseNotFound": () => "No notice clause was found. Add or confirm the applicable notice period and cite its contract clause.",
+  "deadline.timingValuesConflict": () => "Conflicting contract timing values were found. Resolve the conflict in the controlling contract or amendment.",
+  "deadline.noticeTimingAmbiguous": () => "More than one notice timing may apply. Confirm the single applicable notice period and its source clause.",
+  "deadline.multipleNoticePeriods": () => "Multiple applicable notice periods were found. Select the one that controls this renewal and cite its source clause.",
+  "deadline.noticePeriodIncomplete": () => "The notice period is missing its amount or unit. Complete it and confirm its source clause.",
+  "deadline.noticeAnchorUnknown": () => "The notice anchor is unclear. Confirm the documented date from which the notice period runs.",
+  "deadline.timingEvidenceUnreliable": () => "Timing evidence is too uncertain to trust. Upload a clearer scan or confirm the highlighted timing fields and source clauses.",
+  "deadline.noticeAllowedAnyTime": () => "The notice clause allows notice at any time, so no single deadline can be trusted. Confirm the applicable termination rule.",
+  "deadline.noticeAnchorUnresolved": () => "The notice anchor cannot be resolved. Confirm the clause that fixes the date from which the notice period runs.",
+  "deadline.fixedContractEndPassed": () => "The fixed contract end date has passed. Confirm whether the contract ended or renewed before relying on this deadline.",
   "ui.select.type": () => "Select type",
   "ui.not.computable": () => "Not computable",
   "ui.computed.exit": () => "Computed exit",
@@ -542,6 +556,19 @@ const de = {
   "ui.contract.end.date.has.passed": () => "Vertragsenddatum ist verstrichen",
   "ui.dates.blocked.review.required": () => "Datumsberechnung blockiert — Prüfung erforderlich",
   "ui.blocked.not.enough.contract.data.to.compute.dates": () => "blockiert — unzureichende Vertragsdaten zur Berechnung der Fristen",
+  "deadline.contractEndUnestablished": () => "Das Vertragsende kann nicht bestimmt werden. Ergänzen Sie das Ende der Erstlaufzeit oder bestätigen Sie Wirksamkeitsdatum und Laufzeit.",
+  "deadline.indefiniteWithoutFixedAnchor": () => "Dieser Vertrag ist unbefristet und hat daher kein festes Austrittsdatum. Bestätigen Sie einen festen vertraglichen Bezugstermin.",
+  "deadline.pastAutoRenewalTermMissing": () => "Die Laufzeit der bereits erfolgten automatischen Verlängerung fehlt. Ergänzen Sie sie, damit das aktuelle Austrittsdatum bestimmt werden kann.",
+  "deadline.noticeClauseNotFound": () => "Es wurde keine Kündigungsklausel gefunden. Ergänzen oder bestätigen Sie die anwendbare Kündigungsfrist und die Vertragsstelle.",
+  "deadline.timingValuesConflict": () => "Es wurden widersprüchliche Vertragsfristen gefunden. Klären Sie den Widerspruch anhand des massgebenden Vertrags oder Nachtrags.",
+  "deadline.noticeTimingAmbiguous": () => "Mehrere Kündigungsfristen könnten anwendbar sein. Bestätigen Sie die eine anwendbare Frist und ihre Vertragsstelle.",
+  "deadline.multipleNoticePeriods": () => "Mehrere anwendbare Kündigungsfristen wurden gefunden. Wählen Sie die für diese Verlängerung massgebende Frist.",
+  "deadline.noticePeriodIncomplete": () => "Bei der Kündigungsfrist fehlt die Dauer oder Einheit. Vervollständigen Sie die Frist und bestätigen Sie ihre Vertragsstelle.",
+  "deadline.noticeAnchorUnknown": () => "Der Bezugstermin der Kündigungsfrist ist unklar. Bestätigen Sie das dokumentierte Datum, ab dem die Frist läuft.",
+  "deadline.timingEvidenceUnreliable": () => "Die Fristangaben sind zu unsicher. Laden Sie einen besser lesbaren Scan hoch oder bestätigen Sie die markierten Angaben und Vertragsstellen.",
+  "deadline.noticeAllowedAnyTime": () => "Die Klausel erlaubt eine Kündigung jederzeit; daher ist keine einzelne Frist verlässlich. Bestätigen Sie die anwendbare Kündigungsregel.",
+  "deadline.noticeAnchorUnresolved": () => "Der Bezugstermin der Kündigungsfrist kann nicht bestimmt werden. Bestätigen Sie die Klausel, die den Fristbeginn festlegt.",
+  "deadline.fixedContractEndPassed": () => "Das feste Vertragsende ist verstrichen. Bestätigen Sie, ob der Vertrag endete oder verlängert wurde, bevor Sie sich auf diese Frist verlassen.",
   "ui.select.type": () => "Typ auswählen",
   "ui.not.computable": () => "Nicht berechenbar",
   "ui.computed.exit": () => "Berechnetes Vertragsende",
@@ -875,20 +902,20 @@ const noticeAnchorMessageIds = {
 } as const satisfies Record<NoticePeriodValueAnchor, MessageId>;
 
 const computedReasonMessageIds = {
-  "blocked — contract end cannot be established. Add the initial term end date, or confirm the effective date and term length.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — this contract is indefinite, so there is no fixed exit date. Confirm a fixed contractual anchor or add a documented end date.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — the past-due auto-renewal term is missing. Add the renewal term length so the current exit date can be established.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — no notice clause was found. Add or confirm the applicable notice period and cite its contract clause.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — conflicting contract timing values were found. Resolve the conflict by confirming the value in the controlling contract or amendment.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — more than one notice timing may apply. Confirm the single applicable notice period and its source clause.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — multiple applicable notice periods were found. Select the one that controls this renewal and cite its source clause.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — the notice period is missing its amount or unit. Complete the notice period and confirm its source clause.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — notice period stated; anchor unclear. Confirm whether it runs from term end, renewal date, anniversary, or another documented date.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — timing evidence from the scan is too uncertain to trust. Upload a clearer scan or confirm the highlighted timing fields and their source clauses.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — the notice clause allows notice at any time, so no single deadline can be trusted. Confirm a fixed contractual anchor or record the applicable termination rule.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "blocked — the notice anchor cannot be resolved. Confirm the clause that fixes the date from which the notice period runs.": "ui.blocked.not.enough.contract.data.to.compute.dates",
-  "expired — the fixed contract end date has passed. Confirm whether the contract ended or renewed, then update the renewal terms before relying on this deadline.": "ui.contract.end.date.has.passed",
-} as const satisfies Record<string, MessageId>;
+  CONTRACT_END_UNESTABLISHED: "deadline.contractEndUnestablished",
+  INDEFINITE_WITHOUT_FIXED_ANCHOR: "deadline.indefiniteWithoutFixedAnchor",
+  PAST_AUTO_RENEWAL_TERM_MISSING: "deadline.pastAutoRenewalTermMissing",
+  NOTICE_CLAUSE_NOT_FOUND: "deadline.noticeClauseNotFound",
+  TIMING_VALUES_CONFLICT: "deadline.timingValuesConflict",
+  NOTICE_TIMING_AMBIGUOUS: "deadline.noticeTimingAmbiguous",
+  MULTIPLE_NOTICE_PERIODS: "deadline.multipleNoticePeriods",
+  NOTICE_PERIOD_INCOMPLETE: "deadline.noticePeriodIncomplete",
+  NOTICE_ANCHOR_UNKNOWN: "deadline.noticeAnchorUnknown",
+  TIMING_EVIDENCE_UNRELIABLE: "deadline.timingEvidenceUnreliable",
+  NOTICE_ALLOWED_ANY_TIME: "deadline.noticeAllowedAnyTime",
+  NOTICE_ANCHOR_UNRESOLVED: "deadline.noticeAnchorUnresolved",
+  FIXED_CONTRACT_END_PASSED: "deadline.fixedContractEndPassed",
+} as const satisfies Record<ContractComputedReasonCode, MessageId>;
 
 const periodUnitMessageIds = {
   days: "ui.days.2",
@@ -1004,8 +1031,14 @@ const domainOptionMessageIds = {
   Low: "ui.low",
 } as const satisfies Record<string, MessageId>;
 
-export function translateGeneratedReasonOrRaw(language: UiLanguage, value: string) {
-  return Object.prototype.hasOwnProperty.call(computedReasonMessageIds, value)
-    ? translate(language, computedReasonMessageIds[value as keyof typeof computedReasonMessageIds])
-    : value;
+export function translateComputedReasonOrDetail(
+  language: UiLanguage,
+  reasonCode: ContractComputedReasonCode | null,
+  detail: string | null,
+) {
+  if (reasonCode && Object.prototype.hasOwnProperty.call(computedReasonMessageIds, reasonCode)) {
+    const explanation = translate(language, computedReasonMessageIds[reasonCode]);
+    return detail ? `${explanation} — ${detail}` : explanation;
+  }
+  return detail;
 }
