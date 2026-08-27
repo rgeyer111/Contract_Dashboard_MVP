@@ -41,18 +41,91 @@ function parseLegacyPeriod(value: unknown) {
 }
 
 const reviewerEditNote = "Reviewer-supplied value; original extraction evidence was cleared.";
-const provenanceKeys = ["status", "confidence", "page", "clause", "quote", "note", "originalValue"] as const;
+const provenanceKeys = [
+  "status",
+  "confidence",
+  "page",
+  "clause",
+  "quote",
+  "note",
+  "alternatives",
+  "originalValue",
+] as const;
 
 function valuesMatch(left: unknown, right: unknown) {
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
+const alternativeEnums: Record<string, readonly string[]> = {
+  documentType: ["master_agreement", "order_form", "sow", "amendment", "renewal_letter", "termination_notice", "quote_or_proposal", "unknown"],
+  documentLanguage: ["de", "en", "fr", "it", "other"],
+  contractType: ["maintenance", "software_license", "saas_subscription", "real_estate", "infrastructure", "professional_services", "data_services", "equipment_lease", "other"],
+  renewalMechanism: ["auto_renew", "expires", "by_mutual_agreement", "indefinite", "unknown"],
+  billingFrequency: ["annual", "quarterly", "monthly", "one_time", "milestone", "usage"],
+};
+
+function validPeriod(value: unknown) {
+  return isRecord(value) &&
+    typeof value.amount === "number" &&
+    Number.isInteger(value.amount) &&
+    value.amount > 0 &&
+    ["days", "weeks", "months", "years"].includes(String(value.unit));
+}
+
+function validNoticePeriod(value: unknown): boolean {
+  if (Array.isArray(value)) return value.length > 0 && value.every(validNoticePeriod);
+  return validPeriod(value) &&
+    isRecord(value) &&
+    ["term_end", "renewal_date", "anniversary", "period_end_month", "period_end_quarter", "period_end_year", "any_time", "unknown"].includes(String(value.anchor)) &&
+    (value.purpose === null || ["non_renewal", "termination_for_convenience", "other"].includes(String(value.purpose)));
+}
+
+function validAlternativeValue(fieldKey: string, value: unknown) {
+  if (alternativeEnums[fieldKey]) {
+    return typeof value === "string" && alternativeEnums[fieldKey].includes(value);
+  }
+  if (["vendorLegalName", "buyerLegalEntity", "contractTitle", "contractNumber"].includes(fieldKey)) {
+    return typeof value === "string" && value.trim().length > 0;
+  }
+  if (["signatureDate", "effectiveDate", "initialTermEndDate", "noticeDeadline"].includes(fieldKey)) {
+    return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+  }
+  if (["initialTermLength", "renewalTermLength"].includes(fieldKey)) return validPeriod(value);
+  if (fieldKey === "noticePeriod") return validNoticePeriod(value);
+  if (fieldKey === "noticeDelivery") {
+    return isRecord(value) &&
+      ["email", "registered_post", "post", "portal", "any_written"].includes(String(value.method)) &&
+      (value.address === null || typeof value.address === "string") &&
+      Array.isArray(value.cc) &&
+      value.cc.every((item) => typeof item === "string");
+  }
+  if (fieldKey === "contractValue") {
+    return isRecord(value) &&
+      typeof value.amount === "number" &&
+      Number.isFinite(value.amount) &&
+      typeof value.currency === "string" &&
+      /^[A-Z]{3}$/.test(value.currency) &&
+      ["total_contract_value", "annual", "monthly", "per_unit", "not_to_exceed", "variable"].includes(String(value.basis));
+  }
+  return false;
+}
+
 export function enforceProvenanceConsistency(contract: Record<string, unknown>) {
   const fields = isRecord(contract.fields) ? contract.fields : {};
-  for (const field of Object.values(fields)) {
+  for (const [fieldKey, field] of Object.entries(fields)) {
     if (!isRecord(field)) continue;
     if (field.status === "found" && (field.page === null || !field.quote)) return false;
     if (field.status === "not_found" && field.value !== null) return false;
+    const alternatives = Array.isArray(field.alternatives) ? field.alternatives : [];
+    const isModelUncertainty =
+      (field.status === "ambiguous" || field.status === "conflicting") &&
+      field.note !== reviewerEditNote;
+    if (isModelUncertainty && alternatives.length < 2) return false;
+    for (const rawAlternative of alternatives) {
+      if (!isRecord(rawAlternative) || !validAlternativeValue(fieldKey, rawAlternative.value)) {
+        return false;
+      }
+    }
   }
   return true;
 }
@@ -82,10 +155,9 @@ export function sanitizeChangedFields(
           },
         ];
       }
-      const retainedOriginalValue =
-        key === "contractType"
-          ? (previousField.originalValue ?? previousField.value ?? null)
-          : undefined;
+      const retainedOriginalValue = Object.prototype.hasOwnProperty.call(previousField, "originalValue")
+        ? previousField.originalValue
+        : previousField.value ?? null;
       return [
         key,
         {
@@ -96,8 +168,9 @@ export function sanitizeChangedFields(
           clause: null,
           quote: null,
           note: reviewerEditNote,
+          alternatives: [],
           reviewed: field.reviewed === true,
-          ...(key === "contractType" ? { originalValue: retainedOriginalValue } : {}),
+          originalValue: retainedOriginalValue,
         },
       ];
     }),

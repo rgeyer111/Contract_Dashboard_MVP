@@ -589,6 +589,31 @@ components:
         reviewed:
           type: boolean
           description: True when a human reviewer explicitly resolved this field without changing the original extraction provenance.
+        originalValue:
+          description: The first extracted value when a reviewer changes the field. Its shape matches the field value.
+        alternatives:
+          type: array
+          maxItems: 5
+          description: Evidence-backed competing readings when extraction status is ambiguous or conflicting.
+          items:
+            $ref: "#/components/schemas/ProvenanceAlternative"
+    ProvenanceAlternative:
+      type: object
+      required: [value, page, clause, quote]
+      properties:
+        value:
+          description: One competing reading. Its shape matches the containing field value.
+        page:
+          type: number
+          minimum: 1
+          multipleOf: 1
+        clause:
+          type: ["string", "null"]
+          maxLength: 100
+        quote:
+          type: string
+          minLength: 1
+          maxLength: 300
     ProvenanceStringField:
       allOf:
         - $ref: "#/components/schemas/ProvenanceMetadata"
@@ -630,9 +655,6 @@ components:
           required: [value]
           properties:
             value:
-              type: ["string", "null"]
-              enum: [maintenance, software_license, saas_subscription, real_estate, infrastructure, professional_services, data_services, equipment_lease, other, null]
-            originalValue:
               type: ["string", "null"]
               enum: [maintenance, software_license, saas_subscription, real_estate, infrastructure, professional_services, data_services, equipment_lease, other, null]
     PeriodValue:

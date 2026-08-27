@@ -81,7 +81,39 @@ function notFound(note: string | null = null) {
     clause: null,
     quote: null,
     note,
+    alternatives: [],
   };
+}
+
+function normalizeAlternatives(raw: unknown) {
+  if (!Array.isArray(raw)) return [];
+  return raw.slice(0, 5).flatMap((candidate) => {
+    const alternative = asRecord(candidate);
+    const page =
+      typeof alternative.page === "number" &&
+      Number.isInteger(alternative.page) &&
+      alternative.page > 0
+        ? alternative.page
+        : null;
+    const quote =
+      typeof alternative.quote === "string"
+        ? alternative.quote.trim().slice(0, 300) || null
+        : null;
+    if (
+      !Object.prototype.hasOwnProperty.call(alternative, "value") ||
+      alternative.value === null ||
+      !page ||
+      !quote
+    ) {
+      return [];
+    }
+    return [{
+      value: alternative.value,
+      page,
+      clause: safeText(alternative.clause) || null,
+      quote,
+    }];
+  });
 }
 
 function normalizeMetadata(raw: unknown) {
@@ -99,10 +131,14 @@ function normalizeMetadata(raw: unknown) {
   const clause = safeText(field.clause) || null;
   const quote = typeof field.quote === "string" ? field.quote.trim().slice(0, 300) || null : null;
   const note = typeof field.note === "string" ? field.note.trim().slice(0, 500) || null : null;
+  const alternatives = normalizeAlternatives(field.alternatives);
 
   if (status === "not_found") return notFound();
   if (!quote || !page) return notFound("The model did not provide complete page and quote evidence.");
-  return { status, confidence, page, clause, quote, note };
+  if ((status === "ambiguous" || status === "conflicting") && alternatives.length < 2) {
+    return notFound("The model did not provide two evidence-backed competing readings.");
+  }
+  return { status, confidence, page, clause, quote, note, alternatives };
 }
 
 function normalizeField<T>(raw: unknown, parseValue: (value: unknown) => T | null) {
@@ -110,9 +146,15 @@ function normalizeField<T>(raw: unknown, parseValue: (value: unknown) => T | nul
   const metadata = normalizeMetadata(raw);
   if (metadata.status === "not_found") return metadata;
   const value = parseValue(field.value);
-  return value === null
-    ? notFound("The extracted value did not match the required field type.")
-    : { value, ...metadata };
+  if (value === null) return notFound("The extracted value did not match the required field type.");
+  const alternatives = metadata.alternatives.map((alternative) => {
+    const parsedValue = parseValue(alternative.value);
+    return parsedValue === null ? null : { ...alternative, value: parsedValue };
+  });
+  if (alternatives.some((alternative) => alternative === null)) {
+    return notFound("A competing reading did not match the required field type.");
+  }
+  return { value, ...metadata, alternatives: alternatives as Array<NonNullable<(typeof alternatives)[number]>> };
 }
 
 const enumValue =

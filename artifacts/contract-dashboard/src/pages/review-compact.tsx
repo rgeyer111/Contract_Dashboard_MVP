@@ -217,7 +217,7 @@ function FieldEditor({
 }: {
   fieldKey: FieldKey;
   field: AnyField;
-  kind: "text" | "select" | "period" | "notice" | "json" | "value";
+  kind: "text" | "select" | "period" | "notice" | "json" | "value" | "computed";
   onChange: (value: any) => void;
 }) {
   if (kind === "select") {
@@ -236,6 +236,13 @@ function FieldEditor({
   if (kind === "notice") return <NoticePeriodInput value={field.value} onChange={onChange} />;
   if (kind === "json") return <JsonInput value={field.value} onChange={onChange} />;
   if (kind === "value") return <ContractValueInput value={field.value} onChange={onChange} />;
+  if (kind === "computed") {
+    return (
+      <div className="rounded-md border border-dashed bg-muted/30 px-3 py-2 text-sm font-semibold text-muted-foreground">
+        {displayValue(field.value)} · computed by the application
+      </div>
+    );
+  }
   return <TextInput value={field.value} onChange={onChange} placeholder="Enter a value" />;
 }
 
@@ -263,6 +270,61 @@ function StatusPill({ field }: { field: AnyField }) {
     <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${tone}`}>
       {statusLabel(field.status)}
     </span>
+  );
+}
+
+function FieldEvidence({ field }: { field: AnyField }) {
+  const hasOriginalValue =
+    field.originalValue !== undefined &&
+    JSON.stringify(field.originalValue) !== JSON.stringify(field.value);
+  return (
+    <div className="space-y-2 rounded-md border border-border bg-muted/20 px-3 py-2.5 text-xs">
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Confidence</span>
+          <div className="mt-0.5 font-semibold capitalize">{field.confidence}</div>
+        </div>
+        <div>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Source</span>
+          <div className="mt-0.5 font-semibold">
+            {field.page ? `Page ${field.page}${field.clause ? ` · clause ${field.clause}` : ""}` : "No source page"}
+          </div>
+        </div>
+      </div>
+      <div>
+        <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Verbatim quote</span>
+        <div className={`mt-0.5 font-medium ${field.quote ? "italic" : "text-muted-foreground"}`}>
+          {field.quote ? `“${field.quote}”` : "No quote in the source document"}
+        </div>
+      </div>
+      {field.note && field.note !== reviewerEditNote && (
+        <div>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Extraction note</span>
+          <div className="mt-0.5 whitespace-pre-wrap font-medium">{field.note}</div>
+        </div>
+      )}
+      {field.alternatives && field.alternatives.length > 0 && (
+        <div>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Competing readings</span>
+          <div className="mt-1 space-y-1.5">
+            {field.alternatives.map((alternative, index) => (
+              <div key={`${alternative.page}-${index}`} className="rounded border bg-background px-2.5 py-2">
+                <div className="font-extrabold">Reading {index + 1}: {displayValue(alternative.value)}</div>
+                <div className="mt-0.5 font-medium text-muted-foreground">
+                  Page {alternative.page}{alternative.clause ? ` · clause ${alternative.clause}` : ""} · “{alternative.quote}”
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {hasOriginalValue && (
+        <div>
+          <span className="font-extrabold uppercase tracking-wide text-muted-foreground">Originally extracted</span>
+          <div className="mt-0.5 font-semibold">{displayValue(field.originalValue)}</div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -295,11 +357,7 @@ function IssueCard({
             <p className="mt-1 text-sm font-medium text-muted-foreground">{issue.prompt}</p>
           </div>
         </div>
-        {field.quote && (
-          <div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-xs font-medium italic text-muted-foreground">
-            “{field.quote}”
-          </div>
-        )}
+        <FieldEvidence field={field} />
         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
           <div>
             <label className="mb-1.5 block text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Resolution</label>
@@ -311,11 +369,6 @@ function IssueCard({
           </Button>
         </div>
       </div>
-      {(field.page || field.clause) && (
-        <div className="border-t bg-muted/20 px-5 py-2 text-[11px] font-semibold text-muted-foreground">
-          Source {field.page ? `page ${field.page}` : ""}{field.page && field.clause ? " · " : ""}{field.clause ? `clause ${field.clause}` : ""}
-        </div>
-      )}
     </article>
   );
 }
@@ -332,6 +385,8 @@ export default function ReviewCompact() {
     openIssues,
     missingRequired,
     ownerMissing,
+    ownerEmailInvalid,
+    assignmentInvalid,
     totalOpenIssues,
     isComplete,
     progress,
@@ -348,8 +403,10 @@ export default function ReviewCompact() {
   const value = getField(draft, "contractValue").value;
   const source = storedExtraction?.extraction.source;
   const ocrConfidence = storedExtraction?.extraction.ocrConfidence;
-  const actionIssue = ownerMissing
-    ? "Set an application owner and email so notices have a clear recipient."
+  const actionIssue = assignmentInvalid
+    ? ownerMissing
+      ? "Set an application owner so notices have a clear recipient."
+      : "Enter a valid owner email so alerts can be delivered."
     : missingRequired.length
       ? `${missingRequired.length} required ${missingRequired.length === 1 ? "field remains" : "fields remain"} before confirmation.`
       : "All confirmation fields are ready.";
@@ -472,14 +529,13 @@ export default function ReviewCompact() {
                   </div>
                 </div>
 
-                {ownerMissing && (
-                  <article className="rounded-xl border border-destructive/25 bg-card shadow-sm">
+                <article className={`rounded-xl border bg-card shadow-sm ${assignmentInvalid ? "border-destructive/25" : "border-border"}`}>
                     <div className="flex items-start gap-3 p-4 sm:p-5">
-                      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive"><User className="h-4 w-4" /></div>
+                       <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${assignmentInvalid ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}><User className="h-4 w-4" /></div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-destructive">Assignment · required</div>
+                         <div className={`text-[10px] font-extrabold uppercase tracking-[0.14em] ${assignmentInvalid ? "text-destructive" : "text-primary"}`}>Assignment · required</div>
                         <h3 className="mt-1 text-base font-extrabold">Who owns the renewal decision?</h3>
-                        <p className="mt-1 text-sm font-medium text-muted-foreground">This person receives the action alert and is accountable for the next move.</p>
+                         <p className="mt-1 text-sm font-medium text-muted-foreground">Confirm the accountable person and a deliverable address for renewal alerts.</p>
                         <div className="mt-4 grid gap-3 sm:grid-cols-2">
                           <label className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
                             Owner
@@ -487,13 +543,13 @@ export default function ReviewCompact() {
                           </label>
                           <label className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
                             Owner email
-                            <input type="email" value={draft.assignment.ownerEmail} onChange={(event) => updateAssignment("ownerEmail", event.target.value)} placeholder="owner@example.com" className="mt-1.5 h-10 w-full rounded-md border border-input bg-background px-3 text-sm font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20" />
+                             <input type="email" aria-invalid={ownerEmailInvalid} value={draft.assignment.ownerEmail} onChange={(event) => updateAssignment("ownerEmail", event.target.value)} placeholder="owner@example.com" className={`mt-1.5 h-10 w-full rounded-md border bg-background px-3 text-sm font-semibold normal-case tracking-normal outline-none focus:ring-2 focus:ring-primary/20 ${ownerEmailInvalid ? "border-destructive" : "border-input"}`} />
+                             {ownerEmailInvalid && <span className="mt-1.5 block text-[11px] font-semibold normal-case tracking-normal text-destructive">Enter a valid email address.</span>}
                           </label>
                         </div>
                       </div>
                     </div>
-                  </article>
-                )}
+                </article>
 
                 {openIssues.map((issue) => {
                   const field = getField(draft, issue.key);
@@ -526,7 +582,7 @@ export default function ReviewCompact() {
                   );
                 })}
 
-                {!openIssues.length && !ownerMissing && (
+                {!openIssues.length && !assignmentInvalid && (
                   <div className="flex items-start gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
                     <div>
@@ -562,7 +618,7 @@ export default function ReviewCompact() {
                                     <StatusPill field={field} />
                                   </div>
                                   <FieldEditor fieldKey={key} field={field} kind={kind} onChange={(value) => updateField(key, value)} />
-                                  {(field.quote || field.note) && <p className="mt-2 text-[11px] font-medium text-muted-foreground">{field.note || field.quote}</p>}
+                                   <div className="mt-3"><FieldEvidence field={field} /></div>
                                 </div>
                               );
                             })}
@@ -611,6 +667,7 @@ export default function ReviewCompact() {
                   <div className="flex items-center gap-2 text-sm font-extrabold"><WalletCards className="h-4 w-4 text-primary" /> Assignment</div>
                   <div className="mt-3 space-y-2 text-xs">
                     <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Owner</span><span className="font-extrabold">{draft.assignment.owner || "Unassigned"}</span></div>
+                     <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Email</span><span className="truncate font-extrabold">{draft.assignment.ownerEmail || "Missing"}</span></div>
                     <div className="flex items-center justify-between gap-3"><span className="font-medium text-muted-foreground">Status</span><span className="font-extrabold">{draft.assignment.status}</span></div>
                   </div>
                   <label className="mt-4 block text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">

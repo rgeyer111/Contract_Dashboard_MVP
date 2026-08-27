@@ -199,6 +199,14 @@ export const extractContractResponseExtractionContractFieldsDocumentTypeOneQuote
 
 export const extractContractResponseExtractionContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const extractContractResponseExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -206,6 +214,14 @@ export const extractContractResponseExtractionContractFieldsDocumentLanguageOneC
 export const extractContractResponseExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -215,6 +231,14 @@ export const extractContractResponseExtractionContractFieldsVendorLegalNameOneQu
 
 export const extractContractResponseExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -222,6 +246,14 @@ export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneC
 export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -231,6 +263,14 @@ export const extractContractResponseExtractionContractFieldsContractTitleOneQuot
 
 export const extractContractResponseExtractionContractFieldsContractTitleOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const extractContractResponseExtractionContractFieldsContractNumberOneClauseMax = 100;
@@ -238,6 +278,14 @@ export const extractContractResponseExtractionContractFieldsContractNumberOneCla
 export const extractContractResponseExtractionContractFieldsContractNumberOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -247,6 +295,14 @@ export const extractContractResponseExtractionContractFieldsContractTypeOneQuote
 
 export const extractContractResponseExtractionContractFieldsContractTypeOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const extractContractResponseExtractionContractFieldsSignatureDateOneClauseMax = 100;
@@ -254,6 +310,14 @@ export const extractContractResponseExtractionContractFieldsSignatureDateOneClau
 export const extractContractResponseExtractionContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -264,6 +328,14 @@ export const extractContractResponseExtractionContractFieldsEffectiveDateOneQuot
 
 export const extractContractResponseExtractionContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -272,6 +344,14 @@ export const extractContractResponseExtractionContractFieldsInitialTermLengthOne
 export const extractContractResponseExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -283,6 +363,14 @@ export const extractContractResponseExtractionContractFieldsInitialTermEndDateOn
 
 export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -292,6 +380,14 @@ export const extractContractResponseExtractionContractFieldsRenewalMechanismOneQ
 
 export const extractContractResponseExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -299,6 +395,14 @@ export const extractContractResponseExtractionContractFieldsRenewalTermLengthOne
 export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -309,6 +413,14 @@ export const extractContractResponseExtractionContractFieldsNoticePeriodOneClaus
 export const extractContractResponseExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -322,6 +434,14 @@ export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneQuo
 
 export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const extractContractResponseExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -331,6 +451,14 @@ export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneQuo
 
 export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const extractContractResponseExtractionContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const extractContractResponseExtractionContractFieldsContractValueOneClauseMax = 100;
@@ -338,6 +466,14 @@ export const extractContractResponseExtractionContractFieldsContractValueOneClau
 export const extractContractResponseExtractionContractFieldsContractValueOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsContractValueOneAlternativesMax = 5;
 
 export const extractContractResponseExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -349,6 +485,14 @@ export const extractContractResponseExtractionContractFieldsBillingFrequencyOneC
 export const extractContractResponseExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const extractContractResponseExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const extractContractResponseExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -389,7 +533,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -400,7 +551,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -411,7 +569,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -422,7 +587,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -433,7 +605,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -444,7 +623,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -455,10 +641,16 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -467,7 +659,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -478,7 +677,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -489,7 +695,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -503,7 +716,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -514,7 +734,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -525,7 +752,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -539,7 +773,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -560,7 +801,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(extractContractResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -571,7 +819,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -586,7 +841,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(extractContractResponseExtractionContractFieldsContractValueTwoValueOneAmountMin),
@@ -601,7 +863,14 @@ export const ExtractContractResponse = zod.object({
   "clause": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(extractContractResponseExtractionContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -658,6 +927,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -665,6 +942,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -674,6 +959,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -681,6 +974,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -690,6 +991,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax = 100;
@@ -697,6 +1006,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -706,6 +1023,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax = 100;
@@ -713,6 +1038,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -723,6 +1056,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -731,6 +1072,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -742,6 +1091,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -751,6 +1108,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -758,6 +1123,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -768,6 +1141,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -781,6 +1162,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -790,6 +1179,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax = 100;
@@ -797,6 +1194,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesMax = 5;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -808,6 +1213,14 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -855,7 +1268,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -866,7 +1286,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -877,7 +1304,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -888,7 +1322,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -899,7 +1340,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -910,7 +1358,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -921,10 +1376,16 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -933,7 +1394,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -944,7 +1412,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -955,7 +1430,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -969,7 +1451,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -980,7 +1469,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -991,7 +1487,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -1005,7 +1508,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -1026,7 +1536,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -1037,7 +1554,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -1052,7 +1576,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin),
@@ -1067,7 +1598,14 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -1138,6 +1676,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -1145,6 +1691,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -1154,6 +1708,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -1161,6 +1723,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -1170,6 +1740,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax = 100;
@@ -1177,6 +1755,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -1186,6 +1772,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax = 100;
@@ -1193,6 +1787,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -1203,6 +1805,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -1211,6 +1821,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -1222,6 +1840,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -1231,6 +1857,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -1238,6 +1872,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -1248,6 +1890,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -1261,6 +1911,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -1270,6 +1928,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax = 100;
@@ -1277,6 +1943,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesMax = 5;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -1288,6 +1962,14 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFi
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -1335,7 +2017,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1346,7 +2035,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -1357,7 +2053,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1368,7 +2071,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1379,7 +2089,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1390,7 +2107,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1401,10 +2125,16 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -1413,7 +2143,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -1424,7 +2161,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -1435,7 +2179,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -1449,7 +2200,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -1460,7 +2218,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1471,7 +2236,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -1485,7 +2257,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -1506,7 +2285,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -1517,7 +2303,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -1532,7 +2325,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsContractValueTwoValueOneAmountMin),
@@ -1547,7 +2347,14 @@ export const RegisterIngestRunResponse = zod.object({
   "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -1611,6 +2418,14 @@ export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneQuote
 
 export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -1618,6 +2433,14 @@ export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneC
 export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -1627,6 +2450,14 @@ export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneQu
 
 export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -1634,6 +2465,14 @@ export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneC
 export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -1643,6 +2482,14 @@ export const retryIngestItemResponseExtractionContractFieldsContractTitleOneQuot
 
 export const retryIngestItemResponseExtractionContractFieldsContractTitleOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const retryIngestItemResponseExtractionContractFieldsContractNumberOneClauseMax = 100;
@@ -1650,6 +2497,14 @@ export const retryIngestItemResponseExtractionContractFieldsContractNumberOneCla
 export const retryIngestItemResponseExtractionContractFieldsContractNumberOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsContractNumberOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -1659,6 +2514,14 @@ export const retryIngestItemResponseExtractionContractFieldsContractTypeOneQuote
 
 export const retryIngestItemResponseExtractionContractFieldsContractTypeOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneClauseMax = 100;
@@ -1666,6 +2529,14 @@ export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneClau
 export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -1676,6 +2547,14 @@ export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneQuot
 
 export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -1684,6 +2563,14 @@ export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOne
 export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -1695,6 +2582,14 @@ export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOn
 
 export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -1704,6 +2599,14 @@ export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneQ
 
 export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -1711,6 +2614,14 @@ export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOne
 export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -1721,6 +2632,14 @@ export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneClaus
 export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -1734,6 +2653,14 @@ export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneQuo
 
 export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -1743,6 +2670,14 @@ export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneQuo
 
 export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const retryIngestItemResponseExtractionContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const retryIngestItemResponseExtractionContractFieldsContractValueOneClauseMax = 100;
@@ -1750,6 +2685,14 @@ export const retryIngestItemResponseExtractionContractFieldsContractValueOneClau
 export const retryIngestItemResponseExtractionContractFieldsContractValueOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsContractValueOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesMax = 5;
 
 export const retryIngestItemResponseExtractionContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -1761,6 +2704,14 @@ export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneC
 export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const retryIngestItemResponseExtractionContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -1801,7 +2752,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1812,7 +2770,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -1823,7 +2788,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1834,7 +2806,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1845,7 +2824,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1856,7 +2842,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -1867,10 +2860,16 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -1879,7 +2878,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -1890,7 +2896,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -1901,7 +2914,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -1915,7 +2935,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -1926,7 +2953,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -1937,7 +2971,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -1951,7 +2992,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -1972,7 +3020,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(retryIngestItemResponseExtractionContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -1983,7 +3038,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -1998,7 +3060,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(retryIngestItemResponseExtractionContractFieldsContractValueTwoValueOneAmountMin),
@@ -2013,7 +3082,14 @@ export const RetryIngestItemResponse = zod.object({
   "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(retryIngestItemResponseExtractionContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -2091,6 +3167,14 @@ export const listContractsResponseOneContractFieldsDocumentTypeOneQuoteMax = 300
 
 export const listContractsResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const listContractsResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -2098,6 +3182,14 @@ export const listContractsResponseOneContractFieldsDocumentLanguageOneClauseMax 
 export const listContractsResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -2107,6 +3199,14 @@ export const listContractsResponseOneContractFieldsVendorLegalNameOneQuoteMax = 
 
 export const listContractsResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const listContractsResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -2114,6 +3214,14 @@ export const listContractsResponseOneContractFieldsBuyerLegalEntityOneClauseMax 
 export const listContractsResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -2123,6 +3231,14 @@ export const listContractsResponseOneContractFieldsContractTitleOneQuoteMax = 30
 
 export const listContractsResponseOneContractFieldsContractTitleOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const listContractsResponseOneContractFieldsContractNumberOneClauseMax = 100;
@@ -2130,6 +3246,14 @@ export const listContractsResponseOneContractFieldsContractNumberOneClauseMax = 
 export const listContractsResponseOneContractFieldsContractNumberOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -2139,6 +3263,14 @@ export const listContractsResponseOneContractFieldsContractTypeOneQuoteMax = 300
 
 export const listContractsResponseOneContractFieldsContractTypeOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const listContractsResponseOneContractFieldsSignatureDateOneClauseMax = 100;
@@ -2146,6 +3278,14 @@ export const listContractsResponseOneContractFieldsSignatureDateOneClauseMax = 1
 export const listContractsResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -2156,6 +3296,14 @@ export const listContractsResponseOneContractFieldsEffectiveDateOneQuoteMax = 30
 
 export const listContractsResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -2164,6 +3312,14 @@ export const listContractsResponseOneContractFieldsInitialTermLengthOneClauseMax
 export const listContractsResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -2175,6 +3331,14 @@ export const listContractsResponseOneContractFieldsInitialTermEndDateOneQuoteMax
 
 export const listContractsResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -2184,6 +3348,14 @@ export const listContractsResponseOneContractFieldsRenewalMechanismOneQuoteMax =
 
 export const listContractsResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const listContractsResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -2191,6 +3363,14 @@ export const listContractsResponseOneContractFieldsRenewalTermLengthOneClauseMax
 export const listContractsResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -2201,6 +3381,14 @@ export const listContractsResponseOneContractFieldsNoticePeriodOneClauseMax = 10
 export const listContractsResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -2214,6 +3402,14 @@ export const listContractsResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 3
 
 export const listContractsResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const listContractsResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -2223,6 +3419,14 @@ export const listContractsResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 3
 
 export const listContractsResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const listContractsResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const listContractsResponseOneContractFieldsContractValueOneClauseMax = 100;
@@ -2230,6 +3434,14 @@ export const listContractsResponseOneContractFieldsContractValueOneClauseMax = 1
 export const listContractsResponseOneContractFieldsContractValueOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsContractValueOneAlternativesMax = 5;
 
 export const listContractsResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -2241,6 +3453,14 @@ export const listContractsResponseOneContractFieldsBillingFrequencyOneClauseMax 
 export const listContractsResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const listContractsResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -2277,7 +3497,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2288,7 +3515,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -2299,7 +3533,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2310,7 +3551,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2321,7 +3569,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2332,7 +3587,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2343,10 +3605,16 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -2355,7 +3623,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -2366,7 +3641,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -2377,7 +3659,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -2391,7 +3680,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -2402,7 +3698,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2413,7 +3716,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -2427,7 +3737,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -2448,7 +3765,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(listContractsResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -2459,7 +3783,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -2474,7 +3805,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(listContractsResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -2489,7 +3827,14 @@ export const ListContractsResponseItem = zod.object({
   "clause": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(listContractsResponseOneContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -2545,6 +3890,14 @@ export const createContractBodyContractFieldsDocumentTypeOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const createContractBodyContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const createContractBodyContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -2552,6 +3905,14 @@ export const createContractBodyContractFieldsDocumentLanguageOneClauseMax = 100;
 export const createContractBodyContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const createContractBodyContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -2561,6 +3922,14 @@ export const createContractBodyContractFieldsVendorLegalNameOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const createContractBodyContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const createContractBodyContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -2568,6 +3937,14 @@ export const createContractBodyContractFieldsBuyerLegalEntityOneClauseMax = 100;
 export const createContractBodyContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -2577,6 +3954,14 @@ export const createContractBodyContractFieldsContractTitleOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsContractTitleOneNoteMax = 500;
 
+export const createContractBodyContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const createContractBodyContractFieldsContractNumberOneClauseMax = 100;
@@ -2584,6 +3969,14 @@ export const createContractBodyContractFieldsContractNumberOneClauseMax = 100;
 export const createContractBodyContractFieldsContractNumberOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsContractNumberOneNoteMax = 500;
+
+export const createContractBodyContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -2593,6 +3986,14 @@ export const createContractBodyContractFieldsContractTypeOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsContractTypeOneNoteMax = 500;
 
+export const createContractBodyContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const createContractBodyContractFieldsSignatureDateOneClauseMax = 100;
@@ -2600,6 +4001,14 @@ export const createContractBodyContractFieldsSignatureDateOneClauseMax = 100;
 export const createContractBodyContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsSignatureDateOneNoteMax = 500;
+
+export const createContractBodyContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -2610,6 +4019,14 @@ export const createContractBodyContractFieldsEffectiveDateOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const createContractBodyContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -2618,6 +4035,14 @@ export const createContractBodyContractFieldsInitialTermLengthOneClauseMax = 100
 export const createContractBodyContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const createContractBodyContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -2629,6 +4054,14 @@ export const createContractBodyContractFieldsInitialTermEndDateOneQuoteMax = 300
 
 export const createContractBodyContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const createContractBodyContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -2638,6 +4071,14 @@ export const createContractBodyContractFieldsRenewalMechanismOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const createContractBodyContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const createContractBodyContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -2645,6 +4086,14 @@ export const createContractBodyContractFieldsRenewalTermLengthOneClauseMax = 100
 export const createContractBodyContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const createContractBodyContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -2655,6 +4104,14 @@ export const createContractBodyContractFieldsNoticePeriodOneClauseMax = 100;
 export const createContractBodyContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const createContractBodyContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -2668,6 +4125,14 @@ export const createContractBodyContractFieldsNoticeDeadlineOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const createContractBodyContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -2677,6 +4142,14 @@ export const createContractBodyContractFieldsNoticeDeliveryOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const createContractBodyContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const createContractBodyContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const createContractBodyContractFieldsContractValueOneClauseMax = 100;
@@ -2684,6 +4157,14 @@ export const createContractBodyContractFieldsContractValueOneClauseMax = 100;
 export const createContractBodyContractFieldsContractValueOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsContractValueOneNoteMax = 500;
+
+export const createContractBodyContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsContractValueOneAlternativesMax = 5;
 
 export const createContractBodyContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -2695,6 +4176,14 @@ export const createContractBodyContractFieldsBillingFrequencyOneClauseMax = 100;
 export const createContractBodyContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const createContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const createContractBodyContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractBodyContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const createContractBodyContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const createContractBodyContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const createContractBodyContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -2731,7 +4220,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2742,7 +4238,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -2753,7 +4256,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2764,7 +4274,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2775,7 +4292,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2786,7 +4310,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -2797,10 +4328,16 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -2809,7 +4346,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -2820,7 +4364,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -2831,7 +4382,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -2845,7 +4403,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -2856,7 +4421,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -2867,7 +4439,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -2881,7 +4460,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -2902,7 +4488,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractBodyContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -2913,7 +4506,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -2928,7 +4528,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(createContractBodyContractFieldsContractValueTwoValueOneAmountMin),
@@ -2943,7 +4550,14 @@ export const CreateContractBody = zod.object({
   "clause": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractBodyContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractBodyContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractBodyContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(createContractBodyContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -2989,6 +4603,14 @@ export const createContractResponseOneContractFieldsDocumentTypeOneQuoteMax = 30
 
 export const createContractResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const createContractResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -2996,6 +4618,14 @@ export const createContractResponseOneContractFieldsDocumentLanguageOneClauseMax
 export const createContractResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -3005,6 +4635,14 @@ export const createContractResponseOneContractFieldsVendorLegalNameOneQuoteMax =
 
 export const createContractResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const createContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -3012,6 +4650,14 @@ export const createContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax
 export const createContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -3021,6 +4667,14 @@ export const createContractResponseOneContractFieldsContractTitleOneQuoteMax = 3
 
 export const createContractResponseOneContractFieldsContractTitleOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const createContractResponseOneContractFieldsContractNumberOneClauseMax = 100;
@@ -3028,6 +4682,14 @@ export const createContractResponseOneContractFieldsContractNumberOneClauseMax =
 export const createContractResponseOneContractFieldsContractNumberOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -3037,6 +4699,14 @@ export const createContractResponseOneContractFieldsContractTypeOneQuoteMax = 30
 
 export const createContractResponseOneContractFieldsContractTypeOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const createContractResponseOneContractFieldsSignatureDateOneClauseMax = 100;
@@ -3044,6 +4714,14 @@ export const createContractResponseOneContractFieldsSignatureDateOneClauseMax = 
 export const createContractResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -3054,6 +4732,14 @@ export const createContractResponseOneContractFieldsEffectiveDateOneQuoteMax = 3
 
 export const createContractResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -3062,6 +4748,14 @@ export const createContractResponseOneContractFieldsInitialTermLengthOneClauseMa
 export const createContractResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -3073,6 +4767,14 @@ export const createContractResponseOneContractFieldsInitialTermEndDateOneQuoteMa
 
 export const createContractResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -3082,6 +4784,14 @@ export const createContractResponseOneContractFieldsRenewalMechanismOneQuoteMax 
 
 export const createContractResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const createContractResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -3089,6 +4799,14 @@ export const createContractResponseOneContractFieldsRenewalTermLengthOneClauseMa
 export const createContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -3099,6 +4817,14 @@ export const createContractResponseOneContractFieldsNoticePeriodOneClauseMax = 1
 export const createContractResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -3112,6 +4838,14 @@ export const createContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 
 
 export const createContractResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const createContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -3121,6 +4855,14 @@ export const createContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 
 
 export const createContractResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const createContractResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const createContractResponseOneContractFieldsContractValueOneClauseMax = 100;
@@ -3128,6 +4870,14 @@ export const createContractResponseOneContractFieldsContractValueOneClauseMax = 
 export const createContractResponseOneContractFieldsContractValueOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsContractValueOneAlternativesMax = 5;
 
 export const createContractResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -3139,6 +4889,14 @@ export const createContractResponseOneContractFieldsBillingFrequencyOneClauseMax
 export const createContractResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const createContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const createContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const createContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const createContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const createContractResponseOneContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const createContractResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -3175,7 +4933,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3186,7 +4951,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3197,7 +4969,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3208,7 +4987,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3219,7 +5005,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3230,7 +5023,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3241,10 +5041,16 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -3253,7 +5059,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -3264,7 +5077,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -3275,7 +5095,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -3289,7 +5116,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -3300,7 +5134,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3311,7 +5152,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -3325,7 +5173,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -3346,7 +5201,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(createContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -3357,7 +5219,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -3372,7 +5241,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(createContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -3387,7 +5263,14 @@ export const CreateContractResponse = zod.object({
   "clause": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(createContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(createContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(createContractResponseOneContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -3446,6 +5329,14 @@ export const getContractResponseOneContractFieldsDocumentTypeOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const getContractResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -3453,6 +5344,14 @@ export const getContractResponseOneContractFieldsDocumentLanguageOneClauseMax = 
 export const getContractResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -3462,6 +5361,14 @@ export const getContractResponseOneContractFieldsVendorLegalNameOneQuoteMax = 30
 
 export const getContractResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const getContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -3469,6 +5376,14 @@ export const getContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 
 export const getContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -3478,6 +5393,14 @@ export const getContractResponseOneContractFieldsContractTitleOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsContractTitleOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const getContractResponseOneContractFieldsContractNumberOneClauseMax = 100;
@@ -3485,6 +5408,14 @@ export const getContractResponseOneContractFieldsContractNumberOneClauseMax = 10
 export const getContractResponseOneContractFieldsContractNumberOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -3494,6 +5425,14 @@ export const getContractResponseOneContractFieldsContractTypeOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsContractTypeOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const getContractResponseOneContractFieldsSignatureDateOneClauseMax = 100;
@@ -3501,6 +5440,14 @@ export const getContractResponseOneContractFieldsSignatureDateOneClauseMax = 100
 export const getContractResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -3511,6 +5458,14 @@ export const getContractResponseOneContractFieldsEffectiveDateOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -3519,6 +5474,14 @@ export const getContractResponseOneContractFieldsInitialTermLengthOneClauseMax =
 export const getContractResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -3530,6 +5493,14 @@ export const getContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax =
 
 export const getContractResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -3539,6 +5510,14 @@ export const getContractResponseOneContractFieldsRenewalMechanismOneQuoteMax = 3
 
 export const getContractResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const getContractResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -3546,6 +5525,14 @@ export const getContractResponseOneContractFieldsRenewalTermLengthOneClauseMax =
 export const getContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -3556,6 +5543,14 @@ export const getContractResponseOneContractFieldsNoticePeriodOneClauseMax = 100;
 export const getContractResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -3569,6 +5564,14 @@ export const getContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 300
 
 export const getContractResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const getContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -3578,6 +5581,14 @@ export const getContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 300
 
 export const getContractResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const getContractResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const getContractResponseOneContractFieldsContractValueOneClauseMax = 100;
@@ -3585,6 +5596,14 @@ export const getContractResponseOneContractFieldsContractValueOneClauseMax = 100
 export const getContractResponseOneContractFieldsContractValueOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsContractValueOneAlternativesMax = 5;
 
 export const getContractResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -3596,6 +5615,14 @@ export const getContractResponseOneContractFieldsBillingFrequencyOneClauseMax = 
 export const getContractResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const getContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const getContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const getContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const getContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const getContractResponseOneContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const getContractResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -3632,7 +5659,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3643,7 +5677,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -3654,7 +5695,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3665,7 +5713,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3676,7 +5731,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3687,7 +5749,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -3698,10 +5767,16 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -3710,7 +5785,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -3721,7 +5803,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -3732,7 +5821,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -3746,7 +5842,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -3757,7 +5860,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -3768,7 +5878,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -3782,7 +5899,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -3803,7 +5927,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(getContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -3814,7 +5945,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -3829,7 +5967,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(getContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -3844,7 +5989,14 @@ export const GetContractResponse = zod.object({
   "clause": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(getContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(getContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(getContractResponseOneContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -3903,6 +6055,14 @@ export const updateContractBodyContractFieldsDocumentTypeOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const updateContractBodyContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -3910,6 +6070,14 @@ export const updateContractBodyContractFieldsDocumentLanguageOneClauseMax = 100;
 export const updateContractBodyContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -3919,6 +6087,14 @@ export const updateContractBodyContractFieldsVendorLegalNameOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const updateContractBodyContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -3926,6 +6102,14 @@ export const updateContractBodyContractFieldsBuyerLegalEntityOneClauseMax = 100;
 export const updateContractBodyContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -3935,6 +6119,14 @@ export const updateContractBodyContractFieldsContractTitleOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsContractTitleOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const updateContractBodyContractFieldsContractNumberOneClauseMax = 100;
@@ -3942,6 +6134,14 @@ export const updateContractBodyContractFieldsContractNumberOneClauseMax = 100;
 export const updateContractBodyContractFieldsContractNumberOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsContractNumberOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -3951,6 +6151,14 @@ export const updateContractBodyContractFieldsContractTypeOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsContractTypeOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const updateContractBodyContractFieldsSignatureDateOneClauseMax = 100;
@@ -3958,6 +6166,14 @@ export const updateContractBodyContractFieldsSignatureDateOneClauseMax = 100;
 export const updateContractBodyContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsSignatureDateOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -3968,6 +6184,14 @@ export const updateContractBodyContractFieldsEffectiveDateOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -3976,6 +6200,14 @@ export const updateContractBodyContractFieldsInitialTermLengthOneClauseMax = 100
 export const updateContractBodyContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -3987,6 +6219,14 @@ export const updateContractBodyContractFieldsInitialTermEndDateOneQuoteMax = 300
 
 export const updateContractBodyContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -3996,6 +6236,14 @@ export const updateContractBodyContractFieldsRenewalMechanismOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const updateContractBodyContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -4003,6 +6251,14 @@ export const updateContractBodyContractFieldsRenewalTermLengthOneClauseMax = 100
 export const updateContractBodyContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -4013,6 +6269,14 @@ export const updateContractBodyContractFieldsNoticePeriodOneClauseMax = 100;
 export const updateContractBodyContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -4026,6 +6290,14 @@ export const updateContractBodyContractFieldsNoticeDeadlineOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractBodyContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -4035,6 +6307,14 @@ export const updateContractBodyContractFieldsNoticeDeliveryOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const updateContractBodyContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const updateContractBodyContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const updateContractBodyContractFieldsContractValueOneClauseMax = 100;
@@ -4042,6 +6322,14 @@ export const updateContractBodyContractFieldsContractValueOneClauseMax = 100;
 export const updateContractBodyContractFieldsContractValueOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsContractValueOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsContractValueOneAlternativesMax = 5;
 
 export const updateContractBodyContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -4053,6 +6341,14 @@ export const updateContractBodyContractFieldsBillingFrequencyOneClauseMax = 100;
 export const updateContractBodyContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const updateContractBodyContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const updateContractBodyContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractBodyContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const updateContractBodyContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const updateContractBodyContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const updateContractBodyContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -4089,7 +6385,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4100,7 +6403,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -4111,7 +6421,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4122,7 +6439,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4133,7 +6457,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4144,7 +6475,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4155,10 +6493,16 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -4167,7 +6511,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -4178,7 +6529,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -4189,7 +6547,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -4203,7 +6568,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -4214,7 +6586,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4225,7 +6604,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -4239,7 +6625,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -4260,7 +6653,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractBodyContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -4271,7 +6671,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -4286,7 +6693,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(updateContractBodyContractFieldsContractValueTwoValueOneAmountMin),
@@ -4301,7 +6715,14 @@ export const UpdateContractBody = zod.object({
   "clause": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractBodyContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractBodyContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractBodyContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(updateContractBodyContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -4347,6 +6768,14 @@ export const updateContractResponseOneContractFieldsDocumentTypeOneQuoteMax = 30
 
 export const updateContractResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const updateContractResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -4354,6 +6783,14 @@ export const updateContractResponseOneContractFieldsDocumentLanguageOneClauseMax
 export const updateContractResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -4363,6 +6800,14 @@ export const updateContractResponseOneContractFieldsVendorLegalNameOneQuoteMax =
 
 export const updateContractResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const updateContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -4370,6 +6815,14 @@ export const updateContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax
 export const updateContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -4379,6 +6832,14 @@ export const updateContractResponseOneContractFieldsContractTitleOneQuoteMax = 3
 
 export const updateContractResponseOneContractFieldsContractTitleOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const updateContractResponseOneContractFieldsContractNumberOneClauseMax = 100;
@@ -4386,6 +6847,14 @@ export const updateContractResponseOneContractFieldsContractNumberOneClauseMax =
 export const updateContractResponseOneContractFieldsContractNumberOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -4395,6 +6864,14 @@ export const updateContractResponseOneContractFieldsContractTypeOneQuoteMax = 30
 
 export const updateContractResponseOneContractFieldsContractTypeOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const updateContractResponseOneContractFieldsSignatureDateOneClauseMax = 100;
@@ -4402,6 +6879,14 @@ export const updateContractResponseOneContractFieldsSignatureDateOneClauseMax = 
 export const updateContractResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -4412,6 +6897,14 @@ export const updateContractResponseOneContractFieldsEffectiveDateOneQuoteMax = 3
 
 export const updateContractResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -4420,6 +6913,14 @@ export const updateContractResponseOneContractFieldsInitialTermLengthOneClauseMa
 export const updateContractResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -4431,6 +6932,14 @@ export const updateContractResponseOneContractFieldsInitialTermEndDateOneQuoteMa
 
 export const updateContractResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -4440,6 +6949,14 @@ export const updateContractResponseOneContractFieldsRenewalMechanismOneQuoteMax 
 
 export const updateContractResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const updateContractResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -4447,6 +6964,14 @@ export const updateContractResponseOneContractFieldsRenewalTermLengthOneClauseMa
 export const updateContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -4457,6 +6982,14 @@ export const updateContractResponseOneContractFieldsNoticePeriodOneClauseMax = 1
 export const updateContractResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -4470,6 +7003,14 @@ export const updateContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax = 
 
 export const updateContractResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const updateContractResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -4479,6 +7020,14 @@ export const updateContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax = 
 
 export const updateContractResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const updateContractResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const updateContractResponseOneContractFieldsContractValueOneClauseMax = 100;
@@ -4486,6 +7035,14 @@ export const updateContractResponseOneContractFieldsContractValueOneClauseMax = 
 export const updateContractResponseOneContractFieldsContractValueOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsContractValueOneAlternativesMax = 5;
 
 export const updateContractResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -4497,6 +7054,14 @@ export const updateContractResponseOneContractFieldsBillingFrequencyOneClauseMax
 export const updateContractResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const updateContractResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -4533,7 +7098,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4544,7 +7116,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -4555,7 +7134,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4566,7 +7152,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4577,7 +7170,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4588,7 +7188,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -4599,10 +7206,16 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -4611,7 +7224,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -4622,7 +7242,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -4633,7 +7260,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -4647,7 +7281,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -4658,7 +7299,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -4669,7 +7317,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -4683,7 +7338,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -4704,7 +7366,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(updateContractResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -4715,7 +7384,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -4730,7 +7406,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(updateContractResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -4745,7 +7428,14 @@ export const UpdateContractResponse = zod.object({
   "clause": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(updateContractResponseOneContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))
@@ -4812,6 +7502,14 @@ export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneQuoteMa
 
 export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOnePageMultipleOf = 1;
 
 export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneClauseMax = 100;
@@ -4819,6 +7517,14 @@ export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneCla
 export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOnePageMultipleOf = 1;
 
@@ -4828,6 +7534,14 @@ export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneQuot
 
 export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOnePageMultipleOf = 1;
 
 export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneClauseMax = 100;
@@ -4835,6 +7549,14 @@ export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneCla
 export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsContractTitleOnePageMultipleOf = 1;
 
@@ -4844,6 +7566,14 @@ export const dismissContractAlertResponseOneContractFieldsContractTitleOneQuoteM
 
 export const dismissContractAlertResponseOneContractFieldsContractTitleOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsContractNumberOnePageMultipleOf = 1;
 
 export const dismissContractAlertResponseOneContractFieldsContractNumberOneClauseMax = 100;
@@ -4851,6 +7581,14 @@ export const dismissContractAlertResponseOneContractFieldsContractNumberOneClaus
 export const dismissContractAlertResponseOneContractFieldsContractNumberOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsContractNumberOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsContractTypeOnePageMultipleOf = 1;
 
@@ -4860,6 +7598,14 @@ export const dismissContractAlertResponseOneContractFieldsContractTypeOneQuoteMa
 
 export const dismissContractAlertResponseOneContractFieldsContractTypeOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsSignatureDateOnePageMultipleOf = 1;
 
 export const dismissContractAlertResponseOneContractFieldsSignatureDateOneClauseMax = 100;
@@ -4867,6 +7613,14 @@ export const dismissContractAlertResponseOneContractFieldsSignatureDateOneClause
 export const dismissContractAlertResponseOneContractFieldsSignatureDateOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsSignatureDateOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsSignatureDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const dismissContractAlertResponseOneContractFieldsEffectiveDateOnePageMultipleOf = 1;
@@ -4877,6 +7631,14 @@ export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneQuoteM
 
 export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsEffectiveDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOnePageMultipleOf = 1;
 
@@ -4885,6 +7647,14 @@ export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneCl
 export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -4896,6 +7666,14 @@ export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneQ
 
 export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsInitialTermEndDateTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOnePageMultipleOf = 1;
 
@@ -4905,6 +7683,14 @@ export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneQuo
 
 export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOnePageMultipleOf = 1;
 
 export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneClauseMax = 100;
@@ -4912,6 +7698,14 @@ export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneCl
 export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf = 1;
 
@@ -4922,6 +7716,14 @@ export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneClauseM
 export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf = 1;
 
@@ -4935,6 +7737,14 @@ export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneQuote
 
 export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsNoticeDeadlineTwoValueRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOnePageMultipleOf = 1;
 
@@ -4944,6 +7754,14 @@ export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneQuote
 
 export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneNoteMax = 500;
 
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesMax = 5;
+
 export const dismissContractAlertResponseOneContractFieldsContractValueOnePageMultipleOf = 1;
 
 export const dismissContractAlertResponseOneContractFieldsContractValueOneClauseMax = 100;
@@ -4951,6 +7769,14 @@ export const dismissContractAlertResponseOneContractFieldsContractValueOneClause
 export const dismissContractAlertResponseOneContractFieldsContractValueOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsContractValueOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesMax = 5;
 
 export const dismissContractAlertResponseOneContractFieldsContractValueTwoValueOneAmountMin = 0;
 
@@ -4962,6 +7788,14 @@ export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneCla
 export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneQuoteMax = 300;
 
 export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneNoteMax = 500;
+
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf = 1;
+
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax = 100;
+
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax = 300;
+
+export const dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesMax = 5;
 
 
 export const dismissContractAlertResponseOneContractAssignmentOwnerEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
@@ -4998,7 +7832,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsDocumentTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -5009,7 +7850,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsDocumentLanguageOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('de'),zod.literal('en'),zod.literal('fr'),zod.literal('it'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
@@ -5020,7 +7868,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsVendorLegalNameOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5031,7 +7886,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsBuyerLegalEntityOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5042,7 +7904,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsContractTitleOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5053,7 +7922,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsContractNumberOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().nullable()
 })),
@@ -5064,10 +7940,16 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsContractTypeOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
-  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable(),
-  "originalValue": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullish()
+  "value": zod.union([zod.literal('maintenance'),zod.literal('software_license'),zod.literal('saas_subscription'),zod.literal('real_estate'),zod.literal('infrastructure'),zod.literal('professional_services'),zod.literal('data_services'),zod.literal('equipment_lease'),zod.literal('other'),zod.literal(null)]).nullable()
 })),
   "signatureDate": zod.object({
   "status": zod.enum(['found', 'not_found', 'ambiguous', 'conflicting']),
@@ -5076,7 +7958,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsSignatureDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsSignatureDateTwoValueRegExp).nullable()
 })),
@@ -5087,7 +7976,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsEffectiveDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsEffectiveDateTwoValueRegExp).nullable()
 })),
@@ -5098,7 +7994,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsInitialTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermLengthTwoValueOneAmountMultipleOf),
@@ -5112,7 +8015,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsInitialTermEndDateOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsInitialTermEndDateTwoValueRegExp).nullable()
 })),
@@ -5123,7 +8033,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsRenewalMechanismOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('auto_renew'),zod.literal('expires'),zod.literal('by_mutual_agreement'),zod.literal('indefinite'),zod.literal('unknown'),zod.literal(null)]).nullable()
 })),
@@ -5134,7 +8051,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsRenewalTermLengthOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsRenewalTermLengthTwoValueOneAmountMultipleOf),
@@ -5148,7 +8072,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsNoticePeriodOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
@@ -5169,7 +8100,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsNoticeDeadlineOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.string().regex(dismissContractAlertResponseOneContractFieldsNoticeDeadlineTwoValueRegExp).nullable()
 })),
@@ -5180,7 +8118,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsNoticeDeliveryOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "method": zod.enum(['email', 'registered_post', 'post', 'portal', 'any_written']),
@@ -5195,7 +8140,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsContractValueOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(dismissContractAlertResponseOneContractFieldsContractValueTwoValueOneAmountMin),
@@ -5210,7 +8162,14 @@ export const DismissContractAlertResponse = zod.object({
   "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneClauseMax).nullable(),
   "quote": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneQuoteMax).nullable(),
   "note": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneNoteMax).nullable(),
-  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.')
+  "reviewed": zod.boolean().optional().describe('True when a human reviewer explicitly resolved this field without changing the original extraction provenance.'),
+  "originalValue": zod.unknown().optional().describe('The first extracted value when a reviewer changes the field. Its shape matches the field value.'),
+  "alternatives": zod.array(zod.object({
+  "value": zod.unknown().describe('One competing reading. Its shape matches the containing field value.'),
+  "page": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesItemPageMultipleOf),
+  "clause": zod.string().max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesItemClauseMax).nullable(),
+  "quote": zod.string().min(1).max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesItemQuoteMax)
+})).max(dismissContractAlertResponseOneContractFieldsBillingFrequencyOneAlternativesMax).optional().describe('Evidence-backed competing readings when extraction status is ambiguous or conflicting.')
 }).and(zod.object({
   "value": zod.union([zod.literal('annual'),zod.literal('quarterly'),zod.literal('monthly'),zod.literal('one_time'),zod.literal('milestone'),zod.literal('usage'),zod.literal(null)]).nullable()
 }))

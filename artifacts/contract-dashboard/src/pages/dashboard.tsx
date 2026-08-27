@@ -804,6 +804,10 @@ export default function Dashboard() {
                        const status = contract.computed.status;
                        const isBlocked = status === "blocked";
                        const isContractTypeSaving = savingContractTypeId === saved.id;
+                        const originallyExtractedContractType =
+                          typeof contract.fields.contractType.originalValue === "string"
+                            ? contract.fields.contractType.originalValue
+                            : null;
                        const statusReason = contract.computed.reason
                          || (status === "green"
                            ? "Within action runway"
@@ -832,9 +836,9 @@ export default function Dashboard() {
                                {!contract.fields.contractType.value && <option value="" disabled>Select type</option>}
                                {contractTypeOptions.map((option) => <option key={option} value={option}>{formatContractType(option)}</option>)}
                              </select>
-                             {contract.fields.contractType.originalValue && (
-                               <div className="mt-1 max-w-[150px] truncate text-[10px] font-semibold text-amber-700 dark:text-amber-300" title={`Originally extracted as ${formatContractType(contract.fields.contractType.originalValue)}`}>
-                                 Edited · extracted {formatContractType(contract.fields.contractType.originalValue)}
+                              {originallyExtractedContractType && (
+                                <div className="mt-1 max-w-[150px] truncate text-[10px] font-semibold text-amber-700 dark:text-amber-300" title={`Originally extracted as ${formatContractType(originallyExtractedContractType)}`}>
+                                  Edited · extracted {formatContractType(originallyExtractedContractType)}
                                </div>
                              )}
                              {isContractTypeSaving && <div className="mt-1 text-[10px] font-bold text-primary">Saving…</div>}

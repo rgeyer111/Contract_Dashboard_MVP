@@ -15,7 +15,9 @@ import {
   getField,
   hasValue,
   isIssue,
+  issuePriority,
   issueDefinitions,
+  isValidOwnerEmail,
   readExtractionQueue,
   readStoredExtraction,
   reviewerEditNote,
@@ -68,6 +70,9 @@ export function useContractReview() {
         ...previous.fields,
         [key]: {
           ...previous.fields[key],
+          originalValue: Object.prototype.hasOwnProperty.call(previous.fields[key], "originalValue")
+            ? (previous.fields[key] as { originalValue?: unknown }).originalValue
+            : previous.fields[key].value ?? null,
           value: populated ? value : null,
           status: populated ? "ambiguous" : "not_found",
           confidence: "low",
@@ -75,6 +80,7 @@ export function useContractReview() {
           clause: null,
           quote: null,
           note: populated ? reviewerEditNote : null,
+          alternatives: [],
           reviewed: false,
         },
       },
@@ -115,13 +121,17 @@ export function useContractReview() {
   };
 
   const openIssues = useMemo(
-    () => issueDefinitions.filter((issue) => !resolvedKeys.has(issue.key) && isIssue(getField(draft, issue.key))),
+    () => issueDefinitions
+      .filter((issue) => !resolvedKeys.has(issue.key) && isIssue(getField(draft, issue.key)))
+      .sort((left, right) => issuePriority(getField(draft, left.key)) - issuePriority(getField(draft, right.key))),
     [draft, resolvedKeys],
   );
   const missingRequired = requiredKeys.filter((key) => !hasValue(getField(draft, key).value));
-  const ownerMissing = !draft.assignment.owner.trim() || !draft.assignment.ownerEmail.trim();
-  const totalOpenIssues = openIssues.length + (ownerMissing ? 1 : 0);
-  const isComplete = missingRequired.length === 0 && !ownerMissing;
+  const ownerMissing = !draft.assignment.owner.trim();
+  const ownerEmailInvalid = !isValidOwnerEmail(draft.assignment.ownerEmail);
+  const assignmentInvalid = ownerMissing || ownerEmailInvalid;
+  const totalOpenIssues = openIssues.length + (assignmentInvalid ? 1 : 0);
+  const isComplete = missingRequired.length === 0 && !assignmentInvalid;
   const progress = Math.round(((issueDefinitions.length + 1 - totalOpenIssues) / (issueDefinitions.length + 1)) * 100);
   const createContract = useCreateContract();
   const completeIngestItem = useCompleteIngestItem();
@@ -197,6 +207,8 @@ export function useContractReview() {
     openIssues,
     missingRequired,
     ownerMissing,
+    ownerEmailInvalid,
+    assignmentInvalid,
     totalOpenIssues,
     isComplete,
     progress,

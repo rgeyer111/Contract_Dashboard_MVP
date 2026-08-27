@@ -20,8 +20,8 @@ export const noticeAnchorOptions = [
 ] as const;
 
 export type FieldKey = keyof ContractReviewRecord["fields"];
-export type AnyField = ProvenanceMetadata & { value: any };
-export type FieldEditorKind = "text" | "select" | "period" | "notice" | "json" | "value";
+export type AnyField = ProvenanceMetadata & { value: any; originalValue?: any };
+export type FieldEditorKind = "text" | "select" | "period" | "notice" | "json" | "value" | "computed";
 
 export type IssueDefinition = {
   key: FieldKey;
@@ -106,16 +106,31 @@ export const detailGroups: Array<{
     fields: [
       { key: "documentType", label: "Document type", kind: "select" },
       { key: "documentLanguage", label: "Language", kind: "select" },
-      { key: "contractTitle", label: "Contract title", kind: "text" },
+      { key: "vendorLegalName", label: "Vendor legal name", kind: "text" },
       { key: "buyerLegalEntity", label: "Buyer legal entity", kind: "text" },
+      { key: "contractTitle", label: "Contract title", kind: "text" },
+      { key: "contractNumber", label: "Contract number", kind: "text" },
     ],
   },
   {
     title: "Dates & renewal",
     fields: [
       { key: "signatureDate", label: "Signature date", kind: "text" },
+      { key: "effectiveDate", label: "Effective date", kind: "text" },
+      { key: "initialTermLength", label: "Initial term length", kind: "period" },
+      { key: "initialTermEndDate", label: "Initial term end date", kind: "text" },
+      { key: "renewalMechanism", label: "Renewal mechanism", kind: "select" },
       { key: "renewalTermLength", label: "Renewal term length", kind: "period" },
+      { key: "noticePeriod", label: "Notice period", kind: "notice" },
+      { key: "noticeDeadline", label: "Notice deadline", kind: "computed" },
       { key: "noticeDelivery", label: "Notice delivery", kind: "json" },
+    ],
+  },
+  {
+    title: "Commercial",
+    fields: [
+      { key: "contractType", label: "Contract type", kind: "select" },
+      { key: "contractValue", label: "Contract value", kind: "value" },
       { key: "billingFrequency", label: "Billing frequency", kind: "select" },
     ],
   },
@@ -176,6 +191,14 @@ export function statusLabel(status: AnyField["status"]) {
 
 export function isIssue(field: AnyField) {
   return !field.reviewed && (field.status !== "found" || !hasValue(field.value));
+}
+
+export function issuePriority(field: AnyField) {
+  return field.status === "ambiguous" || field.status === "conflicting" ? 0 : 1;
+}
+
+export function isValidOwnerEmail(value: string) {
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value.trim());
 }
 
 export function formatDate(value: string | null | undefined) {

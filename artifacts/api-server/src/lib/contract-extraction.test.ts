@@ -152,6 +152,20 @@ describe("normalizeExtraction", () => {
           status: "conflicting",
           confidence: "medium",
           note: "The annex says two months; the body says three months.",
+          alternatives: [
+            {
+              value: { amount: 2, unit: "months", anchor: "period_end_quarter", purpose: "non_renewal" },
+              page: 9,
+              clause: "Annex 2",
+              quote: "mit einer Frist von zwei Monaten zum Quartalsende",
+            },
+            {
+              value: { amount: 3, unit: "months", anchor: "period_end_quarter", purpose: "non_renewal" },
+              page: 7,
+              clause: "8.2",
+              quote: "mit einer Frist von drei Monaten zum Quartalsende",
+            },
+          ],
         },
         contractValue: found({
           amount: 240000,
@@ -175,11 +189,38 @@ describe("normalizeExtraction", () => {
       },
       status: "conflicting",
       page: 7,
+      alternatives: [
+        expect.objectContaining({ page: 9, quote: expect.stringContaining("zwei Monaten") }),
+        expect.objectContaining({ page: 7, quote: expect.stringContaining("drei Monaten") }),
+      ],
     });
     expect(result.contract.fields.contractValue.value).toEqual({
       amount: 240000,
       currency: "USD",
       basis: "annual",
+    });
+  });
+
+  it("rejects a competing reading that does not match the field type", () => {
+    const result = normalizeExtraction({
+      fields: {
+        contractType: {
+          ...found("maintenance", 2, "Maintenance agreement."),
+          status: "ambiguous",
+          confidence: "low",
+          note: "Two possible categories.",
+          alternatives: [
+            { value: "maintenance", page: 2, clause: null, quote: "Maintenance agreement." },
+            { value: { invalid: true }, page: 3, clause: null, quote: "Software services." },
+          ],
+        },
+      },
+    });
+
+    expect(result.contract.fields.contractType).toMatchObject({
+      value: null,
+      status: "not_found",
+      note: "A competing reading did not match the required field type.",
     });
   });
 
@@ -205,6 +246,7 @@ describe("normalizeExtraction", () => {
       clause: null,
       quote: null,
       note: null,
+      alternatives: [],
     });
   });
 });
@@ -323,7 +365,7 @@ describe("OCR extraction metadata", () => {
     await extractContractFromText("--- Page 1 --- Contract text with sufficient evidence.", "prompt.pdf");
 
     const systemPrompt = mocks.create.mock.calls[0][0].messages[0].content as string;
-    expect(systemPrompt).toContain("provenance-v2");
+    expect(systemPrompt).toContain("provenance-v3");
     expect(systemPrompt).toContain('"zum Quartalsende"');
     expect(systemPrompt).toContain("Never convert months or weeks into days");
     expect(systemPrompt).toContain("Do not return noticeDeadline");

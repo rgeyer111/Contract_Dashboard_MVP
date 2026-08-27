@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ProvenanceAlternative } from './provenanceAlternative';
 import type { ProvenanceMetadataConfidence } from './provenanceMetadataConfidence';
 import type { ProvenanceMetadataStatus } from './provenanceMetadataStatus';
 
@@ -33,4 +34,11 @@ export interface ProvenanceMetadata {
   note: string | null;
   /** True when a human reviewer explicitly resolved this field without changing the original extraction provenance. */
   reviewed?: boolean;
+  /** The first extracted value when a reviewer changes the field. Its shape matches the field value. */
+  originalValue?: unknown;
+  /**
+     * Evidence-backed competing readings when extraction status is ambiguous or conflicting.
+     * @maxItems 5
+     */
+  alternatives?: ProvenanceAlternative[];
 }

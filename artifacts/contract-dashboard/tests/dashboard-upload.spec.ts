@@ -89,6 +89,7 @@ const reviewerEdited = (value: unknown) => ({
   clause: null,
   quote: null,
   note: "Reviewer-supplied value; original extraction evidence was cleared.",
+  alternatives: [],
 });
 
 const savedResponse = <T extends { id: string; filename: string; contract: ReturnType<typeof makeContract> }>(saved: T) => ({
@@ -177,6 +178,98 @@ test("shows upload success and API error states", async ({ page }) => {
   });
   await page.getByRole("button", { name: "Extract contract" }).click();
   await expect(page.getByText("This PDF has no readable contract text.")).toBeVisible();
+});
+
+test("shows evidence for all 18 fields and requires a deliverable owner email", async ({ page }) => {
+  const reviewContract = makeContract({ contractValue: { amount: 120000, currency: "CHF", basis: "annual" } });
+  reviewContract.assignment.owner = "";
+  reviewContract.assignment.ownerEmail = "";
+
+  await page.goto("/");
+  await page.evaluate((contract) => {
+    sessionStorage.setItem("contract-dashboard.extraction", JSON.stringify({
+      filename: "owner-gate.pdf",
+      extraction: {
+        contract,
+        source: "text",
+        ocrConfidence: null,
+        ocrPageCount: null,
+        ocrPagesProcessed: null,
+      },
+    }));
+  }, reviewContract);
+  await page.goto("/review");
+
+  const confirm = page.getByRole("button", { name: "Confirm review" });
+  const ownerEmail = page.getByPlaceholder("owner@example.com");
+  await expect(confirm).toBeDisabled();
+  await page.getByLabel("Owner", { exact: true }).fill("Nina Reviewer");
+  await ownerEmail.fill("invalid-address");
+  await expect(page.getByText("Enter a valid email address.", { exact: true })).toBeVisible();
+  await expect(confirm).toBeDisabled();
+  await ownerEmail.fill("nina.reviewer@example.com");
+  await expect(confirm).toBeEnabled();
+
+  const fullExtractionButton = page.getByRole("button", { name: /Full extraction/ });
+  await fullExtractionButton.click();
+  const fullExtraction = fullExtractionButton.locator("..");
+  await expect(fullExtraction.getByText("Secondary view · 18 extracted fields", { exact: true })).toBeVisible();
+  await expect(fullExtraction.getByText("Vendor legal name", { exact: true })).toBeVisible();
+  await expect(fullExtraction.getByText("Notice deadline", { exact: true })).toBeVisible();
+  await expect(fullExtraction.getByText("Contract value", { exact: true })).toBeVisible();
+  await expect(fullExtraction.getByText("Confidence", { exact: true })).toHaveCount(18);
+  await expect(fullExtraction.getByText("Verbatim quote", { exact: true })).toHaveCount(18);
+  await expect(fullExtraction.getByText("Source", { exact: true })).toHaveCount(18);
+});
+
+test("surfaces conflicting and ambiguous fields before missing fields", async ({ page }) => {
+  const reviewContract = makeContract();
+  reviewContract.fields.vendorLegalName = provenance(null);
+  reviewContract.fields.contractType = {
+    ...provenance("maintenance"),
+    status: "conflicting",
+    confidence: "low",
+    note: "The body says maintenance; the order form says software licence.",
+    alternatives: [
+      {
+        value: "maintenance",
+        page: 3,
+        clause: "7.1",
+        quote: "Maintenance services renew for twelve months.",
+      },
+      {
+        value: "software_license",
+        page: 9,
+        clause: "Order form",
+        quote: "Software licence subscription.",
+      },
+    ],
+  };
+
+  await page.goto("/");
+  await page.evaluate((contract) => {
+    sessionStorage.setItem("contract-dashboard.extraction", JSON.stringify({
+      filename: "issue-order.pdf",
+      extraction: {
+        contract,
+        source: "text",
+        ocrConfidence: null,
+        ocrPageCount: null,
+        ocrPagesProcessed: null,
+      },
+    }));
+  }, reviewContract);
+  await page.goto("/review");
+
+  const decisions = page.getByRole("heading", { name: "Needs your decision" }).locator("xpath=ancestor::section[1]");
+  const decisionHeadings = decisions.locator("article h3");
+  await expect(decisionHeadings.nth(1)).toHaveText("Contract type");
+  await expect(decisionHeadings.nth(2)).toHaveText("Vendor legal name");
+  await expect(page.getByText("The body says maintenance; the order form says software licence.", { exact: true })).toBeVisible();
+  await expect(decisions.getByText("Reading 1: maintenance", { exact: true })).toBeVisible();
+  await expect(decisions.getByText("Page 3 · clause 7.1 · “Maintenance services renew for twelve months.”", { exact: true })).toBeVisible();
+  await expect(decisions.getByText("Reading 2: software license", { exact: true })).toBeVisible();
+  await expect(decisions.getByText("Page 9 · clause Order form · “Software licence subscription.”", { exact: true })).toBeVisible();
 });
 
 test("retries only a failed PDF and preserves the review queue", async ({ page }) => {
@@ -527,6 +620,7 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
         vendorLegalName: {
           ...reviewerEdited("Northstar Sourcing GmbH"),
           reviewed: true,
+          originalValue: "Northstar Sourcing",
         },
       },
     },

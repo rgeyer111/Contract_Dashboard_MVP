@@ -33,6 +33,7 @@ const reviewerEdited = (value: unknown) => ({
   clause: null,
   quote: null,
   note: "Reviewer-supplied value; original extraction evidence was cleared.",
+  alternatives: [],
   reviewed: false,
 });
 const utcToday = new Date();
@@ -176,10 +177,16 @@ describe("saved contract persistence", () => {
     expect(updateResponse.body.id).toBe(id);
     expect(updateResponse.body.filename).toBe("updated-saved-contract.pdf");
     expect(updateResponse.body.contract.fields.vendorLegalName).toEqual(
-      reviewerEdited("Updated Regression Vendor GmbH"),
+      {
+        ...reviewerEdited("Updated Regression Vendor GmbH"),
+        originalValue: "Regression Vendor GmbH",
+      },
     );
     expect(updateResponse.body.contract.fields.contractTitle).toEqual(
-      reviewerEdited("Updated Coverage"),
+      {
+        ...reviewerEdited("Updated Coverage"),
+        originalValue: "Regression Coverage",
+      },
     );
     expect(updateResponse.body.contract.fields.contractValue.value).toEqual({
       amount: 240000,
@@ -202,6 +209,89 @@ describe("saved contract persistence", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.error).toMatch(/provenance is inconsistent/i);
+  });
+
+  it("rejects competing readings that do not match their field type", async () => {
+    const invalidAlternatives = structuredClone(contract) as any;
+    invalidAlternatives.fields.contractType = {
+      ...found("maintenance"),
+      status: "conflicting",
+      confidence: "low",
+      note: "Two incompatible readings.",
+      alternatives: [
+        { value: "maintenance", page: 1, clause: null, quote: "Maintenance agreement." },
+        { value: { invalid: true }, page: 2, clause: null, quote: "Software services." },
+      ],
+    };
+
+    const response = await request(app)
+      .post("/api/contracts")
+      .send({ filename: "invalid-alternative.pdf", contract: invalidAlternatives });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toMatch(/provenance is inconsistent/i);
+  });
+
+  it("rejects a contract whose owner email cannot receive alerts", async () => {
+    const invalidAssignment = structuredClone(contract);
+    invalidAssignment.assignment.ownerEmail = "not-an-email";
+
+    const response = await request(app)
+      .post("/api/contracts")
+      .send({ filename: "invalid-owner-email.pdf", contract: invalidAssignment });
+
+    expect(response.status).toBe(400);
+  });
+
+  it("rejects whitespace-only owners at the API boundary", async () => {
+    const invalidAssignment = structuredClone(contract);
+    invalidAssignment.assignment.owner = "   ";
+
+    const response = await request(app)
+      .post("/api/contracts")
+      .send({ filename: "blank-owner.pdf", contract: invalidAssignment });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toMatch(/owner/i);
+  });
+
+  it("keeps a null first extraction through repeated corrections and reload", async () => {
+    const initialContract = structuredClone(contract) as any;
+    initialContract.fields.vendorLegalName = { ...missing };
+
+    const created = await request(app)
+      .post("/api/contracts")
+      .send({ filename: "repeated-null-correction.pdf", contract: initialContract });
+    expect(created.status).toBe(201);
+
+    const firstContract = structuredClone(created.body.contract);
+    firstContract.fields.vendorLegalName = {
+      ...reviewerEdited("First reviewer value"),
+      originalValue: null,
+    };
+    const first = await request(app)
+      .put(`/api/contracts/${created.body.id}`)
+      .send({ filename: "repeated-null-correction.pdf", contract: firstContract });
+    expect(first.status).toBe(200);
+    expect(first.body.contract.fields.vendorLegalName.originalValue).toBeNull();
+
+    const secondContract = structuredClone(first.body.contract);
+    secondContract.fields.vendorLegalName = {
+      ...reviewerEdited("Second reviewer value"),
+      originalValue: "forged client history",
+    };
+    const second = await request(app)
+      .put(`/api/contracts/${created.body.id}`)
+      .send({ filename: "repeated-null-correction.pdf", contract: secondContract });
+    expect(second.status).toBe(200);
+    expect(second.body.contract.fields.vendorLegalName.originalValue).toBeNull();
+
+    const reopened = await request(app).get(`/api/contracts/${created.body.id}`);
+    expect(reopened.status).toBe(200);
+    expect(reopened.body.contract.fields.vendorLegalName).toMatchObject({
+      value: "Second reviewer value",
+      originalValue: null,
+    });
   });
 
   it("preserves source provenance when only reviewer resolution changes", async () => {
@@ -264,6 +354,7 @@ describe("saved contract persistence", () => {
       expect(edited.body.contract.fields.vendorLegalName).toEqual({
         ...reviewerEdited("Reviewer Supplied Vendor GmbH"),
         reviewed: true,
+        originalValue: "Regression Vendor GmbH",
       });
     } finally {
       if (id) await db.delete(contractsTable).where(eq(contractsTable.id, id));
@@ -443,7 +534,10 @@ describe("saved contract persistence", () => {
 
       expect(updated.status).toBe(200);
       expect(updated.body.contract.fields.vendorLegalName).toEqual(
-        reviewerEdited("Northstar Sourcing GmbH"),
+        {
+          ...reviewerEdited("Northstar Sourcing GmbH"),
+          originalValue: "Regression Vendor GmbH",
+        },
       );
       expect(updated.body.contract.assignment.status).toBe("In Negotiation");
       expect(updated.body).not.toHaveProperty("extraction");
@@ -451,7 +545,10 @@ describe("saved contract persistence", () => {
       const reopened = await request(app).get(`/api/contracts/${id}`);
       expect(reopened.status).toBe(200);
       expect(reopened.body.contract.fields.vendorLegalName).toEqual(
-        reviewerEdited("Northstar Sourcing GmbH"),
+        {
+          ...reviewerEdited("Northstar Sourcing GmbH"),
+          originalValue: "Regression Vendor GmbH",
+        },
       );
       expect(reopened.body.contract.assignment.status).toBe("In Negotiation");
     } finally {

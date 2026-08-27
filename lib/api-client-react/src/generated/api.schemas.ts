@@ -107,6 +107,23 @@ export const ProvenanceMetadataConfidence = {
   low: 'low',
 } as const;
 
+export interface ProvenanceAlternative {
+  /** One competing reading. Its shape matches the containing field value. */
+  value: unknown;
+  /** @minimum 1 */
+  page: number;
+  /**
+     * @maxLength 100
+     * @nullable
+     */
+  clause: string | null;
+  /**
+     * @minLength 1
+     * @maxLength 300
+     */
+  quote: string;
+}
+
 export interface ProvenanceMetadata {
   status: ProvenanceMetadataStatus;
   confidence: ProvenanceMetadataConfidence;
@@ -132,6 +149,13 @@ export interface ProvenanceMetadata {
   note: string | null;
   /** True when a human reviewer explicitly resolved this field without changing the original extraction provenance. */
   reviewed?: boolean;
+  /** The first extracted value when a reviewer changes the field. Its shape matches the field value. */
+  originalValue?: unknown;
+  /**
+     * Evidence-backed competing readings when extraction status is ambiguous or conflicting.
+     * @maxItems 5
+     */
+  alternatives?: ProvenanceAlternative[];
 }
 
 export type ProvenanceStringField = ProvenanceMetadata & ({
@@ -206,29 +230,9 @@ export const ProvenanceContractTypeFieldValue = {
   other: 'other',
 } as const;
 
-/**
- * @nullable
- */
-export type ProvenanceContractTypeFieldOriginalValue = typeof ProvenanceContractTypeFieldOriginalValue[keyof typeof ProvenanceContractTypeFieldOriginalValue] | null;
-
-
-export const ProvenanceContractTypeFieldOriginalValue = {
-  maintenance: 'maintenance',
-  software_license: 'software_license',
-  saas_subscription: 'saas_subscription',
-  real_estate: 'real_estate',
-  infrastructure: 'infrastructure',
-  professional_services: 'professional_services',
-  data_services: 'data_services',
-  equipment_lease: 'equipment_lease',
-  other: 'other',
-} as const;
-
 export type ProvenanceContractTypeField = ProvenanceMetadata & {
   /** @nullable */
   value: ProvenanceContractTypeFieldValue;
-  /** @nullable */
-  originalValue?: ProvenanceContractTypeFieldOriginalValue;
 };
 
 export type PeriodValueUnit = typeof PeriodValueUnit[keyof typeof PeriodValueUnit];

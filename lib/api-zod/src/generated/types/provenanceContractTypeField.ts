@@ -5,13 +5,10 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ProvenanceContractTypeFieldOriginalValue } from './provenanceContractTypeFieldOriginalValue';
 import type { ProvenanceContractTypeFieldValue } from './provenanceContractTypeFieldValue';
 import type { ProvenanceMetadata } from './provenanceMetadata';
 
 export type ProvenanceContractTypeField = ProvenanceMetadata & {
   /** @nullable */
   value: ProvenanceContractTypeFieldValue;
-  /** @nullable */
-  originalValue?: ProvenanceContractTypeFieldOriginalValue;
 };

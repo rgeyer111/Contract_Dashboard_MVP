@@ -560,6 +560,10 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(400).json({ error: "A valid filename and provenance contract are required." });
     return;
   }
+  if (!parsed.data.contract.assignment.owner.trim()) {
+    res.status(400).json({ error: "A non-empty contract owner is required." });
+    return;
+  }
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const [existing] = await db.select().from(contractsTable).where(eq(contractsTable.id, id));
   if (!existing) {
@@ -607,6 +611,10 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
   const parsed = CreateContractBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "A valid filename and provenance contract are required." });
+    return;
+  }
+  if (!parsed.data.contract.assignment.owner.trim()) {
+    res.status(400).json({ error: "A non-empty contract owner is required." });
     return;
   }
   if (!enforceProvenanceConsistency(parsed.data.contract as unknown as Record<string, unknown>)) {

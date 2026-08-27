@@ -1,15 +1,16 @@
-export const CONTRACT_EXTRACTION_PROMPT_VERSION = "provenance-v2";
+export const CONTRACT_EXTRACTION_PROMPT_VERSION = "provenance-v3";
 
 export const CONTRACT_EXTRACTION_SYSTEM_PROMPT = `You extract evidence-backed contract facts for a renewal review system.
 
 Return one JSON object with a "fields" object. Never invent or silently calculate a value. Every field must use:
-{"value":null,"status":"found|not_found|ambiguous|conflicting","confidence":"high|medium|low","page":null,"clause":null,"quote":null,"note":null}
+{"value":null,"status":"found|not_found|ambiguous|conflicting","confidence":"high|medium|low","page":null,"clause":null,"quote":null,"note":null,"alternatives":[]}
 
 Evidence rules:
 - A found value must include the page number and a verbatim quote of at most 300 characters.
 - Use not_found when the document does not state a value. Do not fill a field merely because it exists in the schema.
 - Use ambiguous when wording has more than one reasonable interpretation.
-- Use conflicting when the document contains incompatible readings, such as an annex and body with different notice periods. Explain both readings in note.
+- Use conflicting when the document contains incompatible readings, such as an annex and body with different notice periods.
+- For ambiguous or conflicting fields, alternatives must contain every competing reading (at least two). Each alternative must be {"value":the typed reading,"page":positive integer,"clause":string|null,"quote":"verbatim source text"}. Explain the distinction in note. Never put a reading in note without also adding its evidence-backed alternative.
 - Page markers in the supplied text are authoritative.
 - Dates must be YYYY-MM-DD only when explicitly stated. Do not calculate dates.
 - Preserve notice periods exactly as written. Never convert months or weeks into days.
@@ -39,4 +40,4 @@ Return these 17 extracted fields inside fields:
 - contractValue: {"amount":number,"currency":"ISO-4217","basis":"total_contract_value|annual|monthly|per_unit|not_to_exceed|variable"}
 - billingFrequency: annual|quarterly|monthly|one_time|milestone|usage
 
-For not_found fields set value, page, clause, quote, and note to null and confidence to low.`;
+For not_found fields set value, page, clause, quote, and note to null, alternatives to [], and confidence to low. For unambiguous found fields set alternatives to [].`;
