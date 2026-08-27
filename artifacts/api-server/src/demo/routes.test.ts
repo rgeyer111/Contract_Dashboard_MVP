@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { db, contractsTable } from "@workspace/db";
 import { createApp } from "../app";
 
-describe("development-only TEA-23 API", () => {
-  it("serves fixtures in development without changing contract rows", async () => {
+describe("published TEA-23 demo API", () => {
+  it("serves fixtures without changing contract rows", async () => {
     const before = await db.select({ id: contractsTable.id }).from(contractsTable);
-    const app = await createApp("development");
+    const app = await createApp();
     const response = await request(app).get("/api/demo/contracts");
     const after = await db.select({ id: contractsTable.id }).from(contractsTable);
 
@@ -15,9 +15,4 @@ describe("development-only TEA-23 API", () => {
     expect(after).toEqual(before);
   });
 
-  it("does not mount the fixture endpoint in production", async () => {
-    const app = await createApp("production");
-    const response = await request(app).get("/api/demo/contracts");
-    expect(response.status).toBe(404);
-  });
 });

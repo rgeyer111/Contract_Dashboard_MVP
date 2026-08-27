@@ -4,7 +4,7 @@ import type { SavedContract } from "@workspace/api-client-react";
 export const DEMO_QUERY_PARAM = "demo";
 
 export function isDemoLocation(search = window.location.search) {
-  return import.meta.env.DEV && new URLSearchParams(search).get(DEMO_QUERY_PARAM) === "1";
+  return new URLSearchParams(search).get(DEMO_QUERY_PARAM) === "1";
 }
 
 export function demoNavigationPath(path: string, demo: boolean) {

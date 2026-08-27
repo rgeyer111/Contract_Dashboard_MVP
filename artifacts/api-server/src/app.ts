@@ -4,7 +4,7 @@ import pinoHttp from "pino-http";
 import { createRouter } from "./routes";
 import { logger } from "./lib/logger";
 
-export async function createApp(runtime: string | undefined = process.env.NODE_ENV): Promise<Express> {
+export async function createApp(): Promise<Express> {
   const app: Express = express();
 
   app.use(
@@ -30,7 +30,7 @@ export async function createApp(runtime: string | undefined = process.env.NODE_E
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  app.use("/api", await createRouter(runtime));
+  app.use("/api", await createRouter());
 
   return app;
 }
