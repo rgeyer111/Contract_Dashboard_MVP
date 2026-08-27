@@ -38,6 +38,7 @@ import {
 import { readContractIngestPdf } from "../lib/contract-ingest-storage";
 import {
   processContractIngestObjectCleanup,
+  queueContractIngestObjectCleanup,
   reserveAndStoreContractIngestPdf,
 } from "../lib/contract-ingest-cleanup";
 
@@ -188,13 +189,21 @@ function ingestHeaders(req: Request) {
 async function persistIngestStart(
   identifiers: { runId: string; itemId: string },
   file: Express.Multer.File,
-) {
+): Promise<{ storagePath: string; processingAttemptId: string }> {
   const hash = uploadedHash(file.buffer);
   const storagePath = await reserveAndStoreContractIngestPdf(file.buffer);
+  const processingAttemptId = randomUUID();
   let replacedStoragePath: string | null = null;
   try {
     await db.transaction(async (tx) => {
       await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${identifiers.runId}))`);
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${storagePath}))`);
+      const [reservation] = await tx.select({ state: contractIngestObjectCleanupTable.state })
+        .from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      if (reservation?.state !== "uploading") {
+        throw new Error("Contract ingest upload reservation is no longer active.");
+      }
       const [existing] = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
         .from(contractIngestItemsTable)
         .where(eq(contractIngestItemsTable.id, identifiers.itemId));
@@ -211,6 +220,7 @@ async function persistIngestStart(
           hash,
           storagePath,
           state: "processing",
+          processingAttemptId,
           message: null,
           extraction: null,
           handedOffAt: null,
@@ -224,6 +234,7 @@ async function persistIngestStart(
             hash,
             storagePath,
             state: "processing",
+            processingAttemptId,
             message: null,
             extraction: null,
             handedOffAt: null,
@@ -248,24 +259,32 @@ async function persistIngestStart(
       }
     });
   } catch (error) {
+    await queueContractIngestObjectCleanup([storagePath]);
     await processContractIngestObjectCleanup([storagePath]);
     throw error;
   }
   if (replacedStoragePath && replacedStoragePath !== storagePath) {
     await processContractIngestObjectCleanup([replacedStoragePath]);
   }
+  return { storagePath, processingAttemptId };
 }
 
 async function persistIngestOutcome(
   identifiers: { runId: string; itemId: string },
   outcome: { state: string; message: string | null; extraction: any | null },
+  attempt: { storagePath: string; processingAttemptId: string },
 ) {
-  await db.update(contractIngestItemsTable)
-    .set({ ...outcome, updatedAt: new Date() })
+  const updated = await db.update(contractIngestItemsTable)
+    .set({ ...outcome, processingAttemptId: null, updatedAt: new Date() })
     .where(and(
       eq(contractIngestItemsTable.id, identifiers.itemId),
       eq(contractIngestItemsTable.runId, identifiers.runId),
-    ));
+      eq(contractIngestItemsTable.state, "processing"),
+      eq(contractIngestItemsTable.storagePath, attempt.storagePath),
+      eq(contractIngestItemsTable.processingAttemptId, attempt.processingAttemptId),
+    ))
+    .returning({ id: contractIngestItemsTable.id });
+  return updated.length > 0;
 }
 
 async function deleteRunIfNoActionableItems(runId: string) {
@@ -616,7 +635,7 @@ router.post(
     }
 
     const identifiers = ingestHeaders(req);
-    if (identifiers) await persistIngestStart(identifiers, file);
+    const ingestAttempt = identifiers ? await persistIngestStart(identifiers, file) : undefined;
     try {
       if (identifiers) {
         const [duplicateItem] = await db.select({ id: contractIngestItemsTable.id })
@@ -635,24 +654,32 @@ router.post(
         }
       }
       const result = await extractUploadedFile(file, req);
-      if (identifiers) {
+      if (identifiers && ingestAttempt) {
         result.ingestRunId = identifiers.runId;
         result.ingestItemId = identifiers.itemId;
-        await persistIngestOutcome(identifiers, {
+        const persisted = await persistIngestOutcome(identifiers, {
           state: "ready",
           message: "Ready for review",
           extraction: result,
-        });
+        }, ingestAttempt);
+        if (!persisted) {
+          res.status(409).json({ error: "This upload attempt was superseded. Use the latest result." });
+          return;
+        }
       }
       res.json(result);
     } catch (error) {
       const duplicate = extractionErrorStatus(error) === 409;
-      if (identifiers) {
-        await persistIngestOutcome(identifiers, {
+      if (identifiers && ingestAttempt) {
+        const persisted = await persistIngestOutcome(identifiers, {
           state: duplicate ? "duplicate" : "failed",
           message: duplicate ? "Duplicate skipped" : extractionErrorMessage(error),
           extraction: null,
-        });
+        }, ingestAttempt);
+        if (!persisted) {
+          res.status(409).json({ error: "This upload attempt was superseded. Use the latest result." });
+          return;
+        }
         if (duplicate) await deleteRunIfNoActionableItems(identifiers.runId);
       }
       res.status(duplicate ? 409 : extractionErrorStatus(error)).json({
@@ -698,6 +725,7 @@ router.post(
         storedFiles.push({ file, storagePath: await reserveAndStoreContractIngestPdf(file.buffer) });
       }
     } catch (error) {
+      await queueContractIngestObjectCleanup(storedFiles.map(({ storagePath }) => storagePath));
       await processContractIngestObjectCleanup(storedFiles.map(({ storagePath }) => storagePath));
       throw error;
     }
@@ -707,6 +735,13 @@ router.post(
         await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
         await tx.insert(contractIngestRunsTable).values({ id: runId }).onConflictDoNothing();
         for (const [index, { file, storagePath }] of storedFiles.entries()) {
+          await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${storagePath}))`);
+          const [reservation] = await tx.select({ state: contractIngestObjectCleanupTable.state })
+            .from(contractIngestObjectCleanupTable)
+            .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+          if (reservation?.state !== "uploading") {
+            throw new Error("Contract ingest upload reservation is no longer active.");
+          }
           const [existing] = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
             .from(contractIngestItemsTable)
             .where(eq(contractIngestItemsTable.id, itemIds[index]));
@@ -721,6 +756,7 @@ router.post(
             hash: uploadedHash(file.buffer),
             storagePath,
             state: "failed",
+            processingAttemptId: null,
             message: "Processing was interrupted. Retry this PDF.",
             extraction: null,
             handedOffAt: null,
@@ -733,6 +769,7 @@ router.post(
               hash: uploadedHash(file.buffer),
               storagePath,
               state: "failed",
+              processingAttemptId: null,
               message: "Processing was interrupted. Retry this PDF.",
               extraction: null,
               handedOffAt: null,
@@ -758,6 +795,7 @@ router.post(
         }
       });
     } catch (error) {
+      await queueContractIngestObjectCleanup(storedFiles.map(({ storagePath }) => storagePath));
       await processContractIngestObjectCleanup(storedFiles.map(({ storagePath }) => storagePath));
       throw error;
     }
@@ -844,11 +882,13 @@ router.delete("/contracts/ingest-runs/:runId", async (req: Request, res: Respons
 });
 
 async function retryIngestItem(runId: string, itemId: string, req: Request) {
+  const processingAttemptId = randomUUID();
   const item = await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
     const [updated] = await tx.update(contractIngestItemsTable)
       .set({
         state: "processing",
+        processingAttemptId,
         message: null,
         extraction: null,
         updatedAt: new Date(),
@@ -889,19 +929,25 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
     const result = await extractUploadedFile(file, req);
     result.ingestRunId = runId;
     result.ingestItemId = itemId;
-    await persistIngestOutcome({ runId, itemId }, {
+    const persisted = await persistIngestOutcome({ runId, itemId }, {
       state: "ready",
       message: "Ready for review",
       extraction: result,
-    });
+    }, { storagePath: item.storagePath, processingAttemptId });
+    if (!persisted) {
+      return { status: 409, error: "This retry attempt was superseded. Use the latest result." };
+    }
     return { result };
   } catch (error) {
     const duplicate = extractionErrorStatus(error) === 409;
-    await persistIngestOutcome({ runId, itemId }, {
+    const persisted = await persistIngestOutcome({ runId, itemId }, {
       state: duplicate ? "duplicate" : "failed",
       message: duplicate ? "Duplicate skipped" : extractionErrorMessage(error),
       extraction: null,
-    });
+    }, { storagePath: item.storagePath, processingAttemptId });
+    if (!persisted) {
+      return { status: 409, error: "This retry attempt was superseded. Use the latest result." };
+    }
     if (duplicate) await deleteRunIfNoActionableItems(runId);
     return {
       status: duplicate ? 409 : extractionErrorStatus(error),

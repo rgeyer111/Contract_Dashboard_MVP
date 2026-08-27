@@ -1,11 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { contractIngestItemsTable, db } from "@workspace/db";
-import { eq } from "drizzle-orm";
-import {
-  expireContractIngestUploadReservations,
-  processContractIngestObjectCleanup,
-} from "./lib/contract-ingest-cleanup";
+import { recoverContractIngestState } from "./lib/contract-ingest-cleanup";
 
 const rawPort = process.env["PORT"];
 
@@ -21,19 +16,10 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-await db.update(contractIngestItemsTable)
-  .set({
-    state: "failed",
-    message: "Processing was interrupted. Retry this PDF.",
-    updatedAt: new Date(),
-  })
-  .where(eq(contractIngestItemsTable.state, "processing"));
-
-await expireContractIngestUploadReservations();
-await processContractIngestObjectCleanup();
+await recoverContractIngestState();
 const cleanupTimer = setInterval(() => {
-  void processContractIngestObjectCleanup().catch((error) => {
-    logger.warn({ err: error }, "Unable to process contract ingest object cleanup queue");
+  void recoverContractIngestState().catch((error) => {
+    logger.warn({ err: error }, "Unable to recover contract ingest state");
   });
 }, 60_000);
 cleanupTimer.unref();

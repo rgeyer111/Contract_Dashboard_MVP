@@ -45,6 +45,7 @@ export const contractIngestItemsTable = pgTable("contract_ingest_items", {
   hash: text("hash").notNull(),
   storagePath: text("storage_path").notNull(),
   state: text("state").notNull().default("processing"),
+  processingAttemptId: text("processing_attempt_id"),
   message: text("message"),
   extraction: jsonb("extraction"),
   handedOffAt: timestamp("handed_off_at", { withTimezone: true }),

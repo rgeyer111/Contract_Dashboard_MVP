@@ -1,10 +1,11 @@
 import request from "supertest";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   contractIngestCompletionsTable,
   contractIngestItemsTable,
+  contractIngestObjectCleanupTable,
   contractIngestRunsTable,
   db,
 } from "@workspace/db";
@@ -31,6 +32,11 @@ vi.mock("../lib/contract-ingest-storage", () => ({
 }));
 
 import app from "../app";
+import {
+  processContractIngestObjectCleanup,
+  recoverContractIngestState,
+  reserveAndStoreContractIngestPdf,
+} from "../lib/contract-ingest-cleanup";
 
 const pdfLike = Buffer.from("%PDF-1.7\nmock contract");
 const readableContractText =
@@ -227,6 +233,368 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
 });
 
 describe("resumable contract ingest runs", () => {
+  it("does not clean an active reservation while ownership transfer is pending", async () => {
+    const storagePath = `/objects/uploads/contract-ingest/${randomUUID()}`;
+    let releaseStore!: () => void;
+    const storeReleased = new Promise<void>((resolve) => {
+      releaseStore = resolve;
+    });
+    let storeStarted!: () => void;
+    const storeHasStarted = new Promise<void>((resolve) => {
+      storeStarted = resolve;
+    });
+    mocks.createContractIngestStoragePath.mockReturnValue(storagePath);
+    mocks.storeContractIngestPdf.mockImplementation(async (pdf: Buffer, objectPath?: string) => {
+      const path = objectPath ?? storagePath;
+      mocks.storedPdfs.set(path, Buffer.from(pdf));
+      storeStarted();
+      await storeReleased;
+      return path;
+    });
+
+    const storing = reserveAndStoreContractIngestPdf(pdfLike);
+    try {
+      await storeHasStarted;
+      await processContractIngestObjectCleanup([storagePath]);
+
+      const [reservation] = await db.select()
+        .from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      expect(reservation).toMatchObject({ storagePath, state: "uploading" });
+      expect(mocks.storedPdfs.has(storagePath)).toBe(true);
+
+      releaseStore();
+      await expect(storing).resolves.toBe(storagePath);
+    } finally {
+      releaseStore();
+      await storing.catch(() => undefined);
+      await db.delete(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      mocks.storedPdfs.delete(storagePath);
+    }
+  });
+
+  it("queues ownership failures and retries cleanup after the first deletion failure", async () => {
+    const runId = randomUUID();
+    const itemId = `${runId}:0`;
+    const transactionSpy = vi.spyOn(db, "transaction")
+      .mockRejectedValueOnce(new Error("ownership transaction failed"));
+    mocks.deleteContractIngestPdf.mockRejectedValueOnce(new Error("storage temporarily unavailable"));
+
+    try {
+      const response = await request(app)
+        .post("/api/contracts/ingest-runs")
+        .field("runId", runId)
+        .field("itemIds", itemId)
+        .attach("files", pdfLike, { filename: "transaction-failure.pdf", contentType: "application/pdf" });
+
+      expect(response.status).toBe(500);
+      const [storagePath] = [...mocks.storedPdfs.keys()];
+      const [reservation] = await db.select()
+        .from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      expect(reservation).toMatchObject({
+        state: "cleanup_pending",
+        attempts: 1,
+        lastError: "storage temporarily unavailable",
+      });
+      expect(mocks.storedPdfs.size).toBe(1);
+
+      await processContractIngestObjectCleanup();
+      expect(mocks.storedPdfs.size).toBe(0);
+      const [remainingReservation] = await db.select()
+        .from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      expect(remainingReservation).toBeUndefined();
+    } finally {
+      transactionSpy.mockRestore();
+      await db.delete(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.state, "cleanup_pending"));
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
+      await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));
+      await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+    }
+  });
+
+  it("recovers interrupted processing and stale unowned reservations after restart", async () => {
+    const runId = randomUUID();
+    const itemId = `${runId}:0`;
+    const freshItemId = `${runId}:1`;
+    const interruptedPath = `/objects/uploads/contract-ingest/${randomUUID()}`;
+    const freshOwnedPath = `/objects/uploads/contract-ingest/${randomUUID()}`;
+    const unownedPath = `/objects/uploads/contract-ingest/${randomUUID()}`;
+    const activePath = `/objects/uploads/contract-ingest/${randomUUID()}`;
+    const staleDate = new Date(Date.now() - 60 * 60_000);
+    mocks.storedPdfs.set(interruptedPath, Buffer.from("interrupted"));
+    mocks.storedPdfs.set(freshOwnedPath, Buffer.from("fresh interrupted"));
+    mocks.storedPdfs.set(unownedPath, Buffer.from("unowned"));
+    mocks.storedPdfs.set(activePath, Buffer.from("active"));
+
+    try {
+      await db.insert(contractIngestRunsTable).values({ id: runId });
+      await db.insert(contractIngestItemsTable).values({
+        id: itemId,
+        runId,
+        filename: "interrupted.pdf",
+        size: 11,
+        hash: randomUUID(),
+        storagePath: interruptedPath,
+        state: "processing",
+        message: null,
+        extraction: null,
+        handedOffAt: null,
+        createdAt: staleDate,
+        updatedAt: staleDate,
+      });
+      await db.insert(contractIngestItemsTable).values({
+        id: freshItemId,
+        runId,
+        filename: "fresh-interrupted.pdf",
+        size: 17,
+        hash: randomUUID(),
+        storagePath: freshOwnedPath,
+        state: "processing",
+        message: null,
+        extraction: null,
+        handedOffAt: null,
+      });
+      await db.insert(contractIngestObjectCleanupTable).values([
+        { storagePath: interruptedPath, state: "uploading", createdAt: staleDate },
+        { storagePath: unownedPath, state: "uploading", createdAt: staleDate },
+        { storagePath: activePath, state: "uploading" },
+      ]);
+
+      await recoverContractIngestState({
+        itemIds: [itemId, freshItemId],
+        storagePaths: [interruptedPath, unownedPath, activePath],
+      });
+
+      const [interruptedItem] = await db.select()
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, itemId));
+      expect(interruptedItem).toMatchObject({
+        state: "failed",
+        message: "Processing was interrupted. Retry this PDF.",
+      });
+      const [freshItem] = await db.select()
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, freshItemId));
+      expect(freshItem).toMatchObject({ state: "processing", message: null });
+      expect(mocks.storedPdfs.has(interruptedPath)).toBe(true);
+      expect(mocks.storedPdfs.has(unownedPath)).toBe(false);
+      expect(mocks.storedPdfs.has(activePath)).toBe(true);
+      const [ownedReservation] = await db.select()
+        .from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, interruptedPath));
+      expect(ownedReservation).toMatchObject({ state: "uploading" });
+      const [activeReservation] = await db.select()
+        .from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, activePath));
+      expect(activeReservation).toMatchObject({ state: "uploading" });
+
+      await recoverContractIngestState({
+        itemIds: [freshItemId],
+        storagePaths: [activePath],
+        olderThan: new Date(Date.now() + 1_000),
+      });
+      const [recoveredFreshItem] = await db.select()
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, freshItemId));
+      expect(recoveredFreshItem).toMatchObject({
+        state: "failed",
+        message: "Processing was interrupted. Retry this PDF.",
+      });
+      expect(mocks.storedPdfs.has(activePath)).toBe(false);
+    } finally {
+      await db.delete(contractIngestObjectCleanupTable)
+        .where(inArray(
+          contractIngestObjectCleanupTable.storagePath,
+          [interruptedPath, freshOwnedPath, unownedPath, activePath],
+        ));
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
+      await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));
+      await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      mocks.storedPdfs.delete(interruptedPath);
+      mocks.storedPdfs.delete(freshOwnedPath);
+      mocks.storedPdfs.delete(unownedPath);
+      mocks.storedPdfs.delete(activePath);
+    }
+  });
+
+  it("prevents a recovered retry from overwriting a newer attempt on the same stored PDF", async () => {
+    const runId = randomUUID();
+    const itemId = `${runId}:0`;
+    let releaseFirstAttempt!: () => void;
+    const firstAttemptReleased = new Promise<void>((resolve) => {
+      releaseFirstAttempt = resolve;
+    });
+    let firstAttemptStarted!: () => void;
+    const firstAttemptHasStarted = new Promise<void>((resolve) => {
+      firstAttemptStarted = resolve;
+    });
+    let readableAttempt = 0;
+    mocks.extractReadablePdfText.mockImplementation(async () => {
+      readableAttempt += 1;
+      if (readableAttempt === 1) {
+        firstAttemptStarted();
+        await firstAttemptReleased;
+      }
+      return readableContractText;
+    });
+    mocks.extractContractFromText
+      .mockResolvedValueOnce({
+        ...mockExtractionResult("text", null),
+        attempt: "newer",
+      })
+      .mockResolvedValueOnce({
+        ...mockExtractionResult("text", null),
+        attempt: "stale",
+      });
+
+    try {
+      const registered = await request(app)
+        .post("/api/contracts/ingest-runs")
+        .field("runId", runId)
+        .field("itemIds", itemId)
+        .attach("files", pdfLike, { filename: "same-file.pdf", contentType: "application/pdf" });
+      expect(registered.status).toBe(201);
+
+      const firstRetry = request(app)
+        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/retry`)
+        .then((response) => response);
+      await firstAttemptHasStarted;
+      const [firstProcessingItem] = await db.select()
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, itemId));
+      expect(firstProcessingItem.processingAttemptId).toEqual(expect.any(String));
+
+      await recoverContractIngestState({
+        itemIds: [itemId],
+        olderThan: new Date(Date.now() + 1_000),
+      });
+      const [recoveredItem] = await db.select()
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, itemId));
+      expect(recoveredItem).toMatchObject({
+        state: "failed",
+        processingAttemptId: null,
+      });
+
+      const secondRetry = await request(app)
+        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/retry`);
+      expect(secondRetry.status).toBe(200);
+      expect(secondRetry.body.attempt).toBe("newer");
+
+      releaseFirstAttempt();
+      const staleRetry = await firstRetry;
+      expect(staleRetry.status).toBe(409);
+      expect(staleRetry.body).toEqual({
+        error: "This retry attempt was superseded. Use the latest result.",
+      });
+      expect(staleRetry.body).not.toHaveProperty("attempt");
+
+      const [finalItem] = await db.select()
+        .from(contractIngestItemsTable)
+        .where(eq(contractIngestItemsTable.id, itemId));
+      expect(finalItem).toMatchObject({
+        state: "ready",
+        processingAttemptId: null,
+        extraction: expect.objectContaining({ attempt: "newer" }),
+      });
+      const completion = await request(app)
+        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/complete`);
+      expect(completion.status).toBe(204);
+    } finally {
+      releaseFirstAttempt();
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
+      await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));
+      await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      mocks.storedPdfs.clear();
+    }
+  });
+
+  it("serializes concurrent retry, abandon, replacement, and completion attempts", async () => {
+    const runId = randomUUID();
+    const itemId = `${runId}:0`;
+    const replacementPdf = Buffer.from("%PDF-1.7\nreplacement contract");
+    let releaseExtraction!: () => void;
+    const extractionReleased = new Promise<void>((resolve) => {
+      releaseExtraction = resolve;
+    });
+    let extractionStarted!: () => void;
+    const extractionHasStarted = new Promise<void>((resolve) => {
+      extractionStarted = resolve;
+    });
+    mocks.extractReadablePdfText.mockImplementation(async () => {
+      extractionStarted();
+      await extractionReleased;
+      return readableContractText;
+    });
+    mocks.extractContractFromText.mockResolvedValue(mockExtractionResult("text", null));
+
+    try {
+      const registered = await request(app)
+        .post("/api/contracts/ingest-runs")
+        .field("runId", runId)
+        .field("itemIds", itemId)
+        .attach("files", pdfLike, { filename: "original.pdf", contentType: "application/pdf" });
+      expect(registered.status).toBe(201);
+
+      const retryRequest = request(app)
+        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/retry`)
+        .then((response) => response);
+      await extractionHasStarted;
+      const competingRequests = Promise.all([
+        request(app).delete(`/api/contracts/ingest-runs/${runId}`),
+        request(app)
+          .post("/api/contracts/ingest-runs")
+          .field("runId", runId)
+          .field("itemIds", itemId)
+          .attach("files", replacementPdf, { filename: "replacement.pdf", contentType: "application/pdf" }),
+        request(app)
+          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/complete`),
+      ]);
+      const [abandonResponse, replacementResponse, completionResponse] = await competingRequests;
+      releaseExtraction();
+      const retryResponse = await retryRequest;
+
+      expect(retryResponse.status).toBe(409);
+      expect(retryResponse.body).toEqual({
+        error: "This retry attempt was superseded. Use the latest result.",
+      });
+      expect(replacementResponse.status).toBe(201);
+      expect([204, 409]).toContain(abandonResponse.status);
+      expect([404, 409]).toContain(completionResponse.status);
+
+      const [remainingRun] = await db.select()
+        .from(contractIngestRunsTable)
+        .where(eq(contractIngestRunsTable.id, runId));
+      if (remainingRun) {
+        const items = await db.select()
+          .from(contractIngestItemsTable)
+          .where(eq(contractIngestItemsTable.runId, runId));
+        expect(items).toHaveLength(1);
+        expect(items[0]).toMatchObject({
+          id: itemId,
+          filename: "replacement.pdf",
+          state: "failed",
+        });
+        expect(mocks.storedPdfs.has(items[0].storagePath)).toBe(true);
+      }
+    } finally {
+      releaseExtraction();
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
+      await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));
+      await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      const storagePaths = [...mocks.storedPdfs.keys()];
+      if (storagePaths.length) {
+        await db.delete(contractIngestObjectCleanupTable)
+          .where(inArray(contractIngestObjectCleanupTable.storagePath, storagePaths));
+      }
+      mocks.storedPdfs.clear();
+    }
+  });
+
   it("restores outcomes, retries stored PDFs, and clears the run after handoff", async () => {
     const runId = randomUUID();
     const firstItemId = `${runId}:0`;
@@ -249,10 +617,10 @@ describe("resumable contract ingest runs", () => {
         .attach("files", secondPdf, { filename: "second.pdf", contentType: "application/pdf" });
 
       expect(registerResponse.status).toBe(201);
-      expect(registerResponse.body.items).toMatchObject([
-        { id: firstItemId, filename: "first.pdf", state: "failed" },
-        { id: secondItemId, filename: "second.pdf", state: "failed" },
-      ]);
+      expect(registerResponse.body.items).toEqual(expect.arrayContaining([
+        expect.objectContaining({ id: firstItemId, filename: "first.pdf", state: "failed" }),
+        expect.objectContaining({ id: secondItemId, filename: "second.pdf", state: "failed" }),
+      ]));
       const registeredItems = await db.select().from(contractIngestItemsTable)
         .where(eq(contractIngestItemsTable.runId, runId));
       expect(registeredItems).toHaveLength(2);
@@ -276,13 +644,15 @@ describe("resumable contract ingest runs", () => {
 
       const restoredResponse = await request(app).get("/api/contracts/ingest-runs/current");
       expect(restoredResponse.status).toBe(200);
-      expect(restoredResponse.body).toMatchObject({
-        id: runId,
-        items: [
-          { id: firstItemId, state: "ready", extraction: { ingestItemId: firstItemId } },
-          { id: secondItemId, state: "failed", extraction: null },
-        ],
-      });
+      expect(restoredResponse.body.id).toBe(runId);
+      expect(restoredResponse.body.items).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          id: firstItemId,
+          state: "ready",
+          extraction: expect.objectContaining({ ingestItemId: firstItemId }),
+        }),
+        expect.objectContaining({ id: secondItemId, state: "failed", extraction: null }),
+      ]));
 
       const readyRetryResponse = await request(app)
         .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(firstItemId)}/retry`);
