@@ -1271,12 +1271,21 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await page.goto("/action-items");
   await expect(page).toHaveURL(/\/action-items$/);
   await expect(page.locator("main h1")).toHaveText("Action Items");
+  await expect(page.getByText("Limmat Software Amendment — C&A + 100% · CH-AMD-001", { exact: true })).toBeVisible();
   await expect(page.getByText("Alert due 02.09.2027 to Avery Stone", { exact: true })).toBeVisible();
+  await expect(page.getByText(`Recipient: ${amendmentBase.assignment.ownerEmail}`, { exact: true })).toBeVisible();
   await expect(page.getByText("Legal notice deadline 02.10.2027", { exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Send now" })).toHaveAttribute(
-    "href",
-    /Start%20action%20by%3A%2002\.09\.2027.*Legal%20notice%20deadline%3A%2002\.10\.2027/,
-  );
+  const sendNowHref = await page.getByRole("link", { name: "Send now" }).getAttribute("href");
+  expect(sendNowHref).not.toBeNull();
+  const composedMessage = new URL(sendNowHref!).searchParams;
+  expect(decodeURIComponent(sendNowHref!.split("?")[0])).toBe(`mailto:${amendmentBase.assignment.ownerEmail}`);
+  expect(composedMessage.get("subject")).toContain("Limmat Software Amendment — C&A + 100%");
+  expect(composedMessage.get("body")).toContain("Contract: Limmat Software Amendment — C&A + 100% · CH-AMD-001");
+  expect(composedMessage.get("body")).toContain("Start action by: 02.09.2027");
+  expect(composedMessage.get("body")).toContain("Legal notice deadline: 02.10.2027");
+  expect(composedMessage.get("body")).toContain("Days remaining:");
+  expect(composedMessage.get("body")).toContain("If nothing is done: auto renew");
+  expect(composedMessage.get("body")).toContain(`/review?id=${amendmentId}`);
   await expect(page.getByRole("heading", { name: "Contract Registry", exact: true })).toHaveCount(0);
   await expect(page.locator("table")).toHaveCount(0);
 });

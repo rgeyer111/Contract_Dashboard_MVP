@@ -491,12 +491,25 @@ export default function Dashboard() {
               {alerts.map((saved) => {
                 const alert = saved.contract.alert!;
                 const vendor = saved.contract.fields.vendorLegalName.value || t("ui.unknown.vendor.2");
+                const contractTitle = saved.contract.fields.contractTitle.value || saved.filename;
+                const contractNumber = saved.contract.fields.contractNumber.value || t("ui.not.stated");
+                const contractReference = t("alert.contractReference", { title: contractTitle, number: contractNumber });
+                const daysRemaining = saved.contract.computed.daysRemaining == null
+                  ? t("ui.not.stated")
+                  : t("common.days", { count: saved.contract.computed.daysRemaining });
+                const renewalMechanism = saved.contract.fields.renewalMechanism.value;
+                const outcome = renewalMechanism
+                  ? translateDomainOption(language, renewalMechanism)
+                  : t("ui.not.stated");
                 const contractUrl = `${window.location.origin}/review?id=${saved.id}`;
-                const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(t("alert.emailSubject", { vendor }))}&body=${encodeURIComponent(t("alert.emailBody", {
+                const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(t("alert.emailSubject", { vendor, contract: contractTitle }))}&body=${encodeURIComponent(t("alert.emailBody", {
                   owner: alert.owner,
                   vendor,
+                  contract: contractReference,
                   actionDate: formatRegistryDate(alert.actionDate, language),
                   noticeDeadline: formatRegistryDate(alert.noticeDeadline, language),
+                  daysRemaining,
+                  outcome,
                   url: contractUrl,
                 }))}`;
                 return (
@@ -506,7 +519,9 @@ export default function Dashboard() {
                           <span className={`rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${alert.state === 'overdue' ? 'bg-destructive/10 text-destructive' : alert.state === 'due' ? 'bg-amber-500/10 text-amber-700' : alert.state === 'dismissed' ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>{translateDomainOption(language, alert.state)}</span>
                         <div className="min-w-0">
                           <h3 className="truncate font-extrabold">{vendor}</h3>
+                           <p className="mt-0.5 truncate text-xs font-semibold text-foreground">{contractReference}</p>
                            <p className="mt-0.5 text-xs font-medium text-muted-foreground">{t("alert.dueTo", { date: formatRegistryDate(alert.actionDate, language), owner: alert.owner })}</p>
+                            <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{t("alert.recipient", { email: alert.ownerEmail })}</p>
                            <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{t("alert.legalDeadline", { date: formatRegistryDate(alert.noticeDeadline, language) })}</p>
                         </div>
                       </div>

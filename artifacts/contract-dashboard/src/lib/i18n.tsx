@@ -379,6 +379,8 @@ const en = {
   "common.days": ({ count }: { count: number }) => `${count} day${count === 1 ? "" : "s"}`,
   "alert.dueTo": ({ date, owner }: { date: string; owner: string }) => `Alert due ${date} to ${owner}`,
   "alert.legalDeadline": ({ date }: { date: string }) => `Legal notice deadline ${date}`,
+  "alert.recipient": ({ email }: { email: string }) => `Recipient: ${email}`,
+  "alert.contractReference": ({ title, number }: { title: string; number: string }) => `${title} · ${number}`,
   "alert.dismissedReason": ({ reason }: { reason: string }) => `Dismissed: ${reason}`,
   "file.remove": ({ name }: { name: string }) => `Remove ${name}`,
   "file.retry": ({ name }: { name: string }) => `Retry ${name}`,
@@ -414,9 +416,9 @@ const en = {
   "registry.contractValue": ({ currency, amount, basis }: { currency: string; amount: string; basis: string }) => `${currency} ${amount} · ${basis}`,
   "registry.allDocumentTypesCount": ({ count }: { count: number }) => `All document types (${count})`,
   "view.saveSummary": ({ search, documentType }: { search: string; documentType: string }) => `Saves ${search} · ${documentType}.`,
-  "alert.emailSubject": ({ vendor }: { vendor: string }) => `Contract action: ${vendor}`,
-  "alert.emailBody": ({ owner, vendor, actionDate, noticeDeadline, url }: { owner: string; vendor: string; actionDate: string; noticeDeadline: string; url: string }) =>
-    `Hi ${owner},\n\n${vendor} needs attention.\nStart action by: ${actionDate}\nLegal notice deadline: ${noticeDeadline}\n\nOpen contract: ${url}`,
+  "alert.emailSubject": ({ vendor, contract }: { vendor: string; contract: string }) => `Contract action: ${vendor} — ${contract}`,
+  "alert.emailBody": ({ owner, vendor, contract, actionDate, noticeDeadline, daysRemaining, outcome, url }: { owner: string; vendor: string; contract: string; actionDate: string; noticeDeadline: string; daysRemaining: string; outcome: string; url: string }) =>
+    `Hi ${owner},\n\n${vendor} needs attention.\nContract: ${contract}\nStart action by: ${actionDate}\nLegal notice deadline: ${noticeDeadline}\nDays remaining: ${daysRemaining}\nIf nothing is done: ${outcome}\n\nOpen contract: ${url}`,
   "review.ocrSource": ({ confidence }: { confidence: string }) => `OCR · ${confidence} legibility`,
   "review.amountUnit": ({ amount, unit }: { amount: string; unit: string }) => `${amount} ${unit}`,
   "review.moneyAmount": ({ currency, amount }: { currency: string; amount: string }) => `${currency} ${amount}`,
@@ -797,6 +799,8 @@ const de = {
   "common.days": ({ count }: { count: number }) => `${count} Tag${count === 1 ? "" : "e"}`,
   "alert.dueTo": ({ date, owner }: { date: string; owner: string }) => `Hinweis fällig am ${date} für ${owner}`,
   "alert.legalDeadline": ({ date }: { date: string }) => `Rechtliche Kündigungsfrist ${date}`,
+  "alert.recipient": ({ email }: { email: string }) => `Empfänger: ${email}`,
+  "alert.contractReference": ({ title, number }: { title: string; number: string }) => `${title} · ${number}`,
   "alert.dismissedReason": ({ reason }: { reason: string }) => `Verworfen: ${reason}`,
   "file.remove": ({ name }: { name: string }) => `${name} entfernen`,
   "file.retry": ({ name }: { name: string }) => `${name} erneut versuchen`,
@@ -832,9 +836,9 @@ const de = {
   "registry.contractValue": ({ currency, amount, basis }: { currency: string; amount: string; basis: string }) => `${currency} ${amount} · ${basis}`,
   "registry.allDocumentTypesCount": ({ count }: { count: number }) => `Alle Dokumenttypen (${count})`,
   "view.saveSummary": ({ search, documentType }: { search: string; documentType: string }) => `Speichert ${search} · ${documentType}.`,
-  "alert.emailSubject": ({ vendor }: { vendor: string }) => `Vertragsaktion: ${vendor}`,
-  "alert.emailBody": ({ owner, vendor, actionDate, noticeDeadline, url }: { owner: string; vendor: string; actionDate: string; noticeDeadline: string; url: string }) =>
-    `Guten Tag ${owner},\n\n${vendor} erfordert Ihre Aufmerksamkeit.\nAktion beginnen bis: ${actionDate}\nRechtliche Kündigungsfrist: ${noticeDeadline}\n\nVertrag öffnen: ${url}`,
+  "alert.emailSubject": ({ vendor, contract }: { vendor: string; contract: string }) => `Vertragsaktion: ${vendor} — ${contract}`,
+  "alert.emailBody": ({ owner, vendor, contract, actionDate, noticeDeadline, daysRemaining, outcome, url }: { owner: string; vendor: string; contract: string; actionDate: string; noticeDeadline: string; daysRemaining: string; outcome: string; url: string }) =>
+    `Guten Tag ${owner},\n\n${vendor} erfordert Ihre Aufmerksamkeit.\nVertrag: ${contract}\nAktion beginnen bis: ${actionDate}\nRechtliche Kündigungsfrist: ${noticeDeadline}\nVerbleibende Tage: ${daysRemaining}\nWenn nichts unternommen wird: ${outcome}\n\nVertrag öffnen: ${url}`,
   "review.ocrSource": ({ confidence }: { confidence: string }) => `OCR · ${confidence} Lesbarkeit`,
   "review.amountUnit": ({ amount, unit }: { amount: string; unit: string }) => `${amount} ${unit}`,
   "review.moneyAmount": ({ currency, amount }: { currency: string; amount: string }) => `${currency} ${amount}`,
