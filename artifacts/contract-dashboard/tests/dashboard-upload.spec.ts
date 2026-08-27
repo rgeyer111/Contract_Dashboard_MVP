@@ -4,6 +4,9 @@ test.beforeEach(async ({ page }) => {
   await page.route("**/api/contracts/ingest-runs/current", async (route) => {
     await route.fulfill({ json: null });
   });
+  await page.route("**/api/contracts/ingest-runs", async (route) => {
+    await route.fulfill({ json: {} });
+  });
   await page.route("**/api/registry-views", async (route) => {
     if (route.request().method() === "GET") {
       await route.fulfill({ json: [] });
@@ -147,6 +150,7 @@ test("shows upload success and API error states", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Resolve the open decisions" })).toBeVisible();
   await expect(page.getByText(/acme\.pdf/)).toBeVisible();
   await expect(page.getByText("Embedded text extraction", { exact: true })).toBeVisible();
+  await expect(page.getByText("Alert due 02.10.2026 to John Doe", { exact: true })).toBeVisible();
   const negotiationBuffer = page.getByLabel("Negotiation buffer (days)");
   await expect(negotiationBuffer).toHaveValue("30");
   await expect(page.getByText("Inherited global default", { exact: true })).toBeVisible();
@@ -771,6 +775,14 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
       noticeDeadline: "2027-10-02",
       actionDate: "2027-09-02",
     },
+    alert: {
+      owner: "Avery Stone",
+      ownerEmail: amendmentBase.assignment.ownerEmail,
+      actionDate: "2027-09-02",
+      noticeDeadline: "2027-10-02",
+      state: "pending",
+      dismissedReason: null,
+    },
   };
   const savedContracts = [
     {
@@ -985,6 +997,8 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await page.goto("/action-items");
   await expect(page).toHaveURL(/\/action-items$/);
   await expect(page.locator("main h1")).toHaveText("Action Items");
+  await expect(page.getByText("Alert due 2027-09-02 to Avery Stone", { exact: true })).toBeVisible();
+  await expect(page.getByText("Legal notice deadline 2027-10-02", { exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Contract Registry", exact: true })).toHaveCount(0);
   await expect(page.locator("table")).toHaveCount(0);
 });

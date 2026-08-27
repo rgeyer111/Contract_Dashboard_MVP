@@ -67,7 +67,9 @@ describe("computeContractDates", () => {
     );
     expect(result.status).toBe("blocked");
     expect(result.reason).toMatch(/anchor unclear/i);
+    expect(result.exitDate).toBeNull();
     expect(result.noticeDeadline).toBeNull();
+    expect(result.actionDate).toBeNull();
     expect(result.daysRemaining).toBeNull();
   });
 

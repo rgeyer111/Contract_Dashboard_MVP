@@ -592,10 +592,17 @@ export default function ReviewCompact() {
                       <p className="mt-1 text-xs font-semibold leading-relaxed text-destructive/80">{draft.computed.reason || "Resolve the timing fields to calculate this contract's deadlines."}</p>
                     </div>
                   ) : (
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                      <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Start negotiation</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.actionDate)}</div></div>
-                      <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Legal notice</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.noticeDeadline)}</div></div>
-                      <div className="col-span-2 border-t pt-3"><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Exit date</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.exitDate)}</div></div>
+                    <div className="mt-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Start negotiation</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.actionDate)}</div></div>
+                        <div><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Legal notice</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.noticeDeadline)}</div></div>
+                        <div className="col-span-2 border-t pt-3"><div className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Exit date</div><div className="mt-1 text-sm font-extrabold">{formatDate(draft.computed.exitDate)}</div></div>
+                      </div>
+                      {draft.computed.status !== "expired" && draft.computed.actionDate && draft.assignment.owner && (
+                        <p className="mt-4 rounded-md bg-primary/5 px-3 py-2 text-xs font-bold text-primary">
+                          Alert due {formatDate(draft.computed.actionDate)} to {draft.assignment.owner}
+                        </p>
+                      )}
                     </div>
                   )}
                 </section>
