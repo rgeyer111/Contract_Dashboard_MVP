@@ -176,7 +176,7 @@ const PeriodInput = ({ value, onChange }: { value: any, onChange: (v: any) => vo
 
 const ContractValueInput = ({ value, onChange }: { value: any, onChange: (v: any) => void }) => {
   const amount = value?.amount ?? '';
-  const currency = value?.currency ?? 'USD';
+  const currency = value?.currency ?? 'CHF';
   const basis = value?.basis ?? 'total_contract_value';
   
   return (
@@ -187,7 +187,7 @@ const ContractValueInput = ({ value, onChange }: { value: any, onChange: (v: any
         </span>
         <input type="number" placeholder="Amount" value={amount} onChange={(e) => onChange({ ...value, amount: parseInt(e.target.value) || 0, currency, basis })} className={`w-36 h-10 px-3 ${currency ? 'pl-7' : ''} rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20`} />
       </div>
-      <input type="text" placeholder="Currency (USD)" maxLength={3} value={currency} onChange={(e) => onChange({ ...value, amount: amount || 0, currency: e.target.value.toUpperCase(), basis })} className="w-24 h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20" />
+      <input type="text" placeholder="Currency (CHF)" maxLength={3} value={currency} onChange={(e) => onChange({ ...value, amount: amount || 0, currency: e.target.value.toUpperCase(), basis })} className="w-24 h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20" />
       <select value={basis} onChange={(e) => onChange({ ...value, amount: amount || 0, currency, basis: e.target.value })} className="h-10 px-3 rounded-md border border-input bg-background text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/20">
         {contractValueBasisOptions.map(o => <option key={o} value={o}>{o.replace(/_/g, ' ')}</option>)}
       </select>

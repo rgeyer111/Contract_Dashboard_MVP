@@ -3,6 +3,13 @@ import { documentTypeOptions } from "./contracts";
 
 export const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
 export const SEARCH_QUERY_PARAM = "search";
+export const SWISS_LOCALE = "de-CH";
+
+export function formatSwissNumber(value: number) {
+  return new Intl.NumberFormat(SWISS_LOCALE, {
+    maximumFractionDigits: 2,
+  }).format(value);
+}
 
 export function formatContractType(value: string | null) {
   return value ? value.replace(/_/g, " ") : "Type not stated";
@@ -16,7 +23,7 @@ export function formatContractValue(value: { amount?: number; currency?: string;
   if (!value || value.amount === undefined || !value.currency || !value.basis) {
     return "Value not stated";
   }
-  return `${value.currency} ${value.amount.toLocaleString()} · ${value.basis.replace(/_/g, " ")}`;
+  return `${value.currency} ${formatSwissNumber(value.amount)} · ${value.basis.replace(/_/g, " ")}`;
 }
 
 export function formatPeriod(value: unknown) {

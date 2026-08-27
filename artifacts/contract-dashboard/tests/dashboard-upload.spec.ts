@@ -27,9 +27,9 @@ const provenance = (value: unknown = null, note: string | null = null) => ({
 });
 
 const makeContract = ({
-  vendor = "Acme",
-  contractNumber = "AC-100",
-  contractTitle = "Support",
+  vendor = "Alpine Cloud AG",
+  contractNumber = "CH-100",
+  contractTitle = "Managed Cloud Services",
   contractType = "maintenance",
   contractValue = null,
 }: {
@@ -43,7 +43,7 @@ const makeContract = ({
     documentType: provenance("master_agreement"),
     documentLanguage: provenance("en"),
     vendorLegalName: provenance(vendor),
-    buyerLegalEntity: provenance("Example Buyer AG"),
+    buyerLegalEntity: provenance("Helvetia Retail AG"),
     contractTitle: provenance(contractTitle),
     contractNumber: provenance(contractNumber),
     contractType: provenance(contractType),
@@ -94,6 +94,15 @@ const reviewerEdited = (value: unknown) => ({
 const savedResponse = <T extends { id: string; filename: string; contract: ReturnType<typeof makeContract> }>(saved: T) => ({
   ...saved,
   documentType: "master_agreement",
+});
+
+test("shows Swiss sample contract content on the landing page", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.getByText("Alpine Cloud AG", { exact: true })).toBeVisible();
+  await expect(page.getByText("CHF 12'000", { exact: true })).toBeVisible();
+  await expect(page.getByText("Acme Corp Services", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("-$12k", { exact: true })).toHaveCount(0);
 });
 
 test("shows upload success and API error states", async ({ page }) => {
@@ -747,27 +756,107 @@ test("sorts the register by urgency and persists auditable contract-type correct
   await expect(page.getByText("Edited · extracted maintenance", { exact: true })).toBeVisible();
 });
 
+test("formats Swiss contract values and dates across dashboard and review", async ({ page }) => {
+  const contract = makeContract({
+    vendor: "Zürich Digital Services AG",
+    contractNumber: "ZDS-2026-042",
+    contractTitle: "Managed Workplace Services",
+    contractValue: { amount: 1234567.5, currency: "CHF", basis: "annual" },
+  });
+  const saved = {
+    id: "swiss-format-contract",
+    filename: "managed-workplace-services.pdf",
+    contract,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  };
+
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [savedResponse(saved)] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/swiss-format-contract", async (route) => {
+    await route.fulfill({ json: savedResponse(saved) });
+  });
+
+  await page.goto("/dashboard");
+  const row = page.getByRole("row").filter({ hasText: "Zürich Digital Services AG" });
+  await expect(row).toContainText("CHF 1'234'567.5 · annual");
+  await expect(row).toContainText("31.12.2026");
+  await expect(row).toContainText("02.10.2026");
+  await expect(row).toContainText("01.11.2026");
+
+  await row.getByRole("button", { name: "Zürich Digital Services AG", exact: true }).click();
+  await expect(page).toHaveURL(/\/review\?id=swiss-format-contract$/);
+  await expect(page.getByText("CHF 1'234'567.5", { exact: true })).toBeVisible();
+  await expect(page.getByText("31.12.2026", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("01.11.2026 notice deadline", { exact: true })).toBeVisible();
+});
+
+test("defaults an unresolved contract value currency to CHF", async ({ page }) => {
+  const contract = makeContract({ vendor: "Basel Facility Services AG" });
+  contract.fields.contractValue = provenance(null);
+
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/extract", async (route) => {
+    await route.fulfill({
+      json: {
+        filename: "facility-services.pdf",
+        extraction: {
+          contract,
+          source: "text",
+          ocrConfidence: null,
+          ocrPageCount: null,
+          ocrPagesProcessed: null,
+        },
+      },
+    });
+  });
+
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "New Contract" }).click();
+  await page.locator("#contract-pdf-file").setInputFiles({
+    name: "facility-services.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF-1.7\nSwiss facility services agreement"),
+  });
+  await page.getByRole("button", { name: "Extract contract" }).click();
+
+  const valueIssue = page.getByRole("heading", { name: "Contract value", exact: true }).locator("xpath=ancestor::article");
+  await expect(valueIssue.getByLabel("Currency")).toHaveValue("CHF");
+  await expect(valueIssue.getByLabel("Currency")).toHaveAttribute("placeholder", "CHF");
+});
+
 test("keeps independent contract rows reachable on narrow screens", async ({ page }) => {
   const masterId = "saved-standalone-master";
   const amendmentId = "saved-standalone-amendment";
   const masterContract = makeContract({
-    vendor: "Legacy Master Vendor",
-    contractNumber: "MASTER-001",
-    contractTitle: "Original Support Agreement",
-    contractValue: { amount: 120000, currency: "USD", basis: "annual" },
+    vendor: "Bern Telecom AG",
+    contractNumber: "CH-MSA-001",
+    contractTitle: "Telecommunications Framework Agreement",
+    contractValue: { amount: 120000, currency: "CHF", basis: "annual" },
   });
   const amendmentBase = makeContract({
-    vendor: "Northstar Sourcing GmbH",
-    contractNumber: "PARENT-001",
-    contractTitle: "Northstar & Sourcing Agreement — C&A + 100%",
+    vendor: "Limmat Software GmbH",
+    contractNumber: "CH-AMD-001",
+    contractTitle: "Limmat Software Amendment — C&A + 100%",
     contractType: "software_license",
-    contractValue: { amount: 240000, currency: "USD", basis: "annual" },
+    contractValue: { amount: 240000, currency: "CHF", basis: "annual" },
   });
   const amendmentContract = {
     ...amendmentBase,
     fields: {
       ...amendmentBase.fields,
-      vendorLegalName: reviewerEdited("Northstar Sourcing GmbH"),
+      vendorLegalName: reviewerEdited("Limmat Software GmbH"),
       initialTermEndDate: provenance("2027-12-31"),
       renewalMechanism: provenance("manual_renewal"),
       noticePeriod: provenance({
@@ -846,13 +935,13 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
     await expect(headers.filter({ hasText: new RegExp(`^${removedHeader}$`) })).toHaveCount(0);
   }
 
-  const agreementRow = page.getByRole("row").filter({ hasText: "Legacy Master Vendor" });
-  const amendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
+  const agreementRow = page.getByRole("row").filter({ hasText: "Bern Telecom AG" });
+  const amendmentRow = page.getByRole("row").filter({ hasText: "Limmat Software GmbH" });
   await expect(agreementRow).toHaveCount(1);
   await expect(amendmentRow).toHaveCount(1);
-  await expect(agreementRow).toContainText("USD 120,000 · annual");
-  await expect(amendmentRow).toContainText("Sourcing Agreement");
-  await expect(amendmentRow).toContainText("USD 240,000 · annual");
+  await expect(agreementRow).toContainText("CHF 120'000 · annual");
+  await expect(amendmentRow).toContainText("Software Amendment");
+  await expect(amendmentRow).toContainText("CHF 240'000 · annual");
   await expect(amendmentRow).toContainText("31.12.2027");
   await expect(amendmentRow).toContainText("manual renewal");
   await expect(amendmentRow).toContainText("90 days");
@@ -885,32 +974,32 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(documentTypeFilter).toHaveValue("amendment");
   const copyViewLinkButton = page.getByRole("button", { name: "Copy filtered view link" });
 
-  const sharedSearchTerm = "Northstar & Sourcing";
+  const sharedSearchTerm = "Limmat Software";
   await expect(copyViewLinkButton).toBeVisible();
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
   await copyViewLinkButton.click();
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toContainText("Link copied");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
   await page.reload();
   await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toBeVisible();
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear document type filter" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
   await expect(page.getByTestId("active-contract-count")).toHaveText("2");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(1);
 
   await page.getByLabel("Search contracts").fill(specialSearch);
   expect(new URL(page.url()).searchParams.get("search")).toBe(specialSearch);
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toBeVisible();
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
   await page.goBack();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByLabel("Search contracts")).toHaveValue("");
@@ -919,7 +1008,7 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(page).toHaveURL(/\/dashboard\?search=C%26A\+%2B\+100%25$/);
   await expect(page.getByLabel("Search contracts")).toHaveValue(specialSearch);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByRole("button", { name: "Copy filtered view link" })).toHaveCount(0);
@@ -929,7 +1018,7 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(page.getByLabel("Search contracts")).toHaveValue(specialSearch);
   expect(new URL(page.url()).searchParams.get("search")).toBe(specialSearch);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
   await page.getByRole("button", { name: "Clear search" }).click();
 
   await page.goto("/dashboard?documentType=amendment&search=C%26A%20%2B%20100%25");
@@ -937,37 +1026,37 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(page.getByLabel("Search contracts")).toHaveValue(specialSearch);
   expect(new URL(page.url()).searchParams.get("search")).toBe(specialSearch);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByLabel("Search contracts")).toHaveValue("");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
 
   await page.getByLabel("Search contracts").fill(sharedSearchTerm);
-  await expect(page).toHaveURL(/\/dashboard\?documentType=amendment&search=Northstar\+%26\+Sourcing$/);
+  await expect(page).toHaveURL(/\/dashboard\?documentType=amendment&search=Limmat\+Software$/);
   expect(new URL(page.url()).searchParams.get("search")).toBe(sharedSearchTerm);
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByLabel("Search contracts")).toHaveValue(sharedSearchTerm);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
 
   await page.reload();
-  await expect(page).toHaveURL(/\/dashboard\?documentType=amendment&search=Northstar\+%26\+Sourcing$/);
+  await expect(page).toHaveURL(/\/dashboard\?documentType=amendment&search=Limmat\+Software$/);
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByLabel("Search contracts")).toHaveValue(sharedSearchTerm);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
 
   await page.goto(`/dashboard?documentType=amendment&search=${encodeURIComponent(sharedSearchTerm)}`);
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByLabel("Search contracts")).toHaveValue(sharedSearchTerm);
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(page).toHaveURL(/\/dashboard\?documentType=amendment$/);
   await expect(documentTypeFilter).toHaveValue("amendment");
@@ -989,21 +1078,21 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(documentTypeFilter).toBeVisible();
   await documentTypeFilter.selectOption("master_agreement");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(1);
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(0);
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear document type filter" }).click();
 
   await page.goto("/dashboard?documentType=amendment");
   await expect(documentTypeFilter).toHaveValue("amendment");
   await expect(page.getByTestId("active-contract-count")).toHaveText("1");
-  await expect(page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" })).toHaveCount(1);
+  await expect(page.getByRole("row").filter({ hasText: "Limmat Software GmbH" })).toHaveCount(1);
 
   await page.reload();
   await expect(documentTypeFilter).toHaveValue("amendment");
-  await expect(page.getByRole("row").filter({ hasText: "Legacy Master Vendor" })).toHaveCount(0);
-  const reloadedAmendmentRow = page.getByRole("row").filter({ hasText: "Northstar Sourcing GmbH" });
+  await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
+  const reloadedAmendmentRow = page.getByRole("row").filter({ hasText: "Limmat Software GmbH" });
   await expect(reloadedAmendmentRow).toHaveCount(1);
-  await expect(reloadedAmendmentRow).toContainText("USD 240,000 · annual");
+  await expect(reloadedAmendmentRow).toContainText("CHF 240'000 · annual");
   await expect(reloadedAmendmentRow).toContainText("02.10.2027");
   await expect(reloadedAmendmentRow).toContainText("Avery Stone");
   expect(listRequests).toBeGreaterThanOrEqual(2);
@@ -1011,8 +1100,12 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await page.goto("/action-items");
   await expect(page).toHaveURL(/\/action-items$/);
   await expect(page.locator("main h1")).toHaveText("Action Items");
-  await expect(page.getByText("Alert due 2027-09-02 to Avery Stone", { exact: true })).toBeVisible();
-  await expect(page.getByText("Legal notice deadline 2027-10-02", { exact: true })).toBeVisible();
+  await expect(page.getByText("Alert due 02.09.2027 to Avery Stone", { exact: true })).toBeVisible();
+  await expect(page.getByText("Legal notice deadline 02.10.2027", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Send now" })).toHaveAttribute(
+    "href",
+    /Start%20action%20by%3A%2002\.09\.2027.*Legal%20notice%20deadline%3A%2002\.10\.2027/,
+  );
   await expect(page.getByRole("heading", { name: "Contract Registry", exact: true })).toHaveCount(0);
   await expect(page.locator("table")).toHaveCount(0);
 });

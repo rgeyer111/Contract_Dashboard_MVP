@@ -471,7 +471,7 @@ export default function Dashboard() {
               {alerts.map((saved) => {
                 const alert = saved.contract.alert!;
                 const vendor = saved.contract.fields.vendorLegalName.value || 'Unknown Vendor';
-                const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(`Contract action: ${vendor}`)}&body=${encodeURIComponent(`Hi ${alert.owner},\n\n${vendor} needs attention.\nStart action by: ${alert.actionDate}\nLegal notice deadline: ${alert.noticeDeadline}\n\nOpen contract: ${window.location.origin}/review?id=${saved.id}`)}`;
+                const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(`Contract action: ${vendor}`)}&body=${encodeURIComponent(`Hi ${alert.owner},\n\n${vendor} needs attention.\nStart action by: ${formatRegistryDate(alert.actionDate)}\nLegal notice deadline: ${formatRegistryDate(alert.noticeDeadline)}\n\nOpen contract: ${window.location.origin}/review?id=${saved.id}`)}`;
                 return (
                   <article key={saved.id} className={`rounded-xl border bg-card px-4 py-3 shadow-sm ${alert.state === 'dismissed' ? 'opacity-60' : ''}`}>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -479,8 +479,8 @@ export default function Dashboard() {
                         <span className={`rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${alert.state === 'overdue' ? 'bg-destructive/10 text-destructive' : alert.state === 'due' ? 'bg-amber-500/10 text-amber-700' : alert.state === 'dismissed' ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>{alert.state}</span>
                         <div className="min-w-0">
                           <h3 className="truncate font-extrabold">{vendor}</h3>
-                          <p className="mt-0.5 text-xs font-medium text-muted-foreground">Alert due {alert.actionDate} to {alert.owner}</p>
-                          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">Legal notice deadline {alert.noticeDeadline}</p>
+                          <p className="mt-0.5 text-xs font-medium text-muted-foreground">Alert due {formatRegistryDate(alert.actionDate)} to {alert.owner}</p>
+                          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">Legal notice deadline {formatRegistryDate(alert.noticeDeadline)}</p>
                         </div>
                       </div>
                       {alert.state !== 'dismissed' && (

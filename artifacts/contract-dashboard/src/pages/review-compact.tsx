@@ -145,7 +145,7 @@ function NoticePeriodInput({ value, onChange }: { value: any; onChange: (value: 
 
 function ContractValueInput({ value, onChange }: { value: any; onChange: (value: any) => void }) {
   const amount = value?.amount ?? "";
-  const currency = value?.currency ?? "USD";
+  const currency = value?.currency ?? "CHF";
   const basis = value?.basis ?? "annual";
   return (
     <div className="space-y-2">
@@ -164,7 +164,7 @@ function ContractValueInput({ value, onChange }: { value: any; onChange: (value:
           value={currency}
           onChange={(event) => onChange({ amount: Number(amount) || 0, currency: event.target.value.toUpperCase(), basis })}
           className="h-10 w-20 rounded-md border border-input bg-background px-3 text-sm font-semibold uppercase outline-none focus:ring-2 focus:ring-primary/20"
-          placeholder="USD"
+          placeholder="CHF"
           aria-label="Currency"
         />
       </div>

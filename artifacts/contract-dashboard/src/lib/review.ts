@@ -3,6 +3,7 @@ import type {
   ContractReviewRecord,
   ProvenanceMetadata,
 } from "@workspace/api-client-react";
+import { formatSwissNumber } from "./registry";
 
 export const extractionStorageKey = "contract-dashboard.extraction";
 export const extractionQueueStorageKey = "contract-dashboard.extraction-queue";
@@ -157,8 +158,11 @@ export function hasValue(value: unknown) {
 export function displayValue(value: any): string {
   if (!hasValue(value)) return "Not stated";
   if (typeof value === "object") {
+    if ("currency" in value) {
+      const amount = typeof value.amount === "number" ? formatSwissNumber(value.amount) : "";
+      return `${value.currency ?? ""} ${amount}`.trim();
+    }
     if ("amount" in value) return `${value.amount ?? ""} ${value.unit ?? ""}`.trim();
-    if ("currency" in value) return `${value.currency ?? ""} ${value.amount?.toLocaleString?.() ?? ""}`.trim();
     return Object.entries(value)
       .map(([key, item]) => `${key}: ${Array.isArray(item) ? item.join(", ") : item}`)
       .join(" · ");

@@ -99,14 +99,14 @@ export default function Home() {
              <div className="h-3 w-3 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
              <div>
                <p className="text-sm font-bold text-foreground">Vendor Approved</p>
-               <p className="text-xs font-medium text-muted-foreground">Acme Corp Services</p>
+               <p className="text-xs font-medium text-muted-foreground">Alpine Cloud AG</p>
              </div>
           </div>
 
           {/* Floating element 2 */}
           <div className="absolute -right-8 bottom-32 bg-card border shadow-xl rounded-xl p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500 fill-mode-both z-20">
              <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
-               <span className="text-sm font-bold text-primary">-$12k</span>
+                <span className="text-sm font-bold text-primary">CHF 12'000</span>
              </div>
              <div>
                <p className="text-sm font-bold text-foreground">Savings Captured</p>
