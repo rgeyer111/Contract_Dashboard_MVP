@@ -531,6 +531,8 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
 test("confirmed contracts persist through reload and reopen with edits intact", async ({ page }) => {
   const contractId = "saved-contract-regression";
   let savedContract: Record<string, unknown> | null = null;
+  let saveRequestCount = 0;
+  let listRequestCount = 0;
   const contract = makeContract();
   contract.fields.vendorLegalName = reviewerEdited("Acme");
 
@@ -563,6 +565,7 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await page.route("**/api/contracts", async (route) => {
     const request = route.request();
     if (request.method() === "GET") {
+      listRequestCount += 1;
       const current = currentSavedResponse();
       await route.fulfill({
         status: 200,
@@ -573,6 +576,7 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
     }
 
     if (request.method() === "POST") {
+      saveRequestCount += 1;
       const body = request.postDataJSON() as Record<string, unknown>;
       savedContract = {
         id: contractId,
@@ -638,6 +642,8 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
   await vendorInput.fill("Edited Acme");
   await page.getByRole("button", { name: "Confirm review" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
+  expect(saveRequestCount).toBe(1);
+  expect(listRequestCount).toBeGreaterThan(1);
   await expect(page.getByText("Edited Acme")).toBeVisible();
 
   await page.reload();

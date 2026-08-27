@@ -141,9 +141,14 @@ export function useContractReview() {
         } catch {
           sessionStorage.removeItem(pendingHandoffStorageKey);
         }
-        const matchesCurrentExtraction =
-          pendingHandoff?.runId === storedExtraction?.ingestRunId &&
-          pendingHandoff?.itemId === storedExtraction?.ingestItemId;
+        const matchesCurrentExtraction = Boolean(
+          pendingHandoff?.runId &&
+          pendingHandoff.itemId &&
+          storedExtraction?.ingestRunId &&
+          storedExtraction.ingestItemId &&
+          pendingHandoff.runId === storedExtraction.ingestRunId &&
+          pendingHandoff.itemId === storedExtraction.ingestItemId,
+        );
         if (!matchesCurrentExtraction) {
           sessionStorage.removeItem(pendingHandoffStorageKey);
           await createContract.mutateAsync({ data: { filename, contract: draft } });
@@ -162,7 +167,10 @@ export function useContractReview() {
         });
         sessionStorage.removeItem(pendingHandoffStorageKey);
       }
-      await queryClient.invalidateQueries({ queryKey: ["/api/contracts"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["/api/contracts"],
+        refetchType: "all",
+      });
       const queue = readExtractionQueue();
       const next = queue.shift();
       if (next) {

@@ -59,12 +59,27 @@ function uploadedHash(buffer: Buffer) {
 }
 
 async function hasExistingSourceHash(hash: string) {
-  const records = await db.select({ contract: contractsTable.contract }).from(contractsTable);
+  const records = await db
+    .select({ fileHash: contractsTable.fileHash, contract: contractsTable.contract })
+    .from(contractsTable);
   return records.some((record) => {
+    if (record.fileHash === hash) return true;
     const contract = isRecord(record.contract) ? record.contract : {};
     const source = isRecord(contract.source) ? contract.source : {};
     return source.hash === hash;
   });
+}
+
+function sourceHashForContract(contract: Record<string, unknown>) {
+  return isRecord(contract.source) && typeof contract.source.hash === "string"
+    ? contract.source.hash
+    : null;
+}
+
+function isUniqueConstraintViolation(error: unknown): boolean {
+  if (!isRecord(error)) return false;
+  if (error.code === "23505") return true;
+  return isUniqueConstraintViolation(error.cause);
 }
 
 function contractDocumentType(contract: Record<string, any>) {
@@ -560,17 +575,27 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
-  const [record] = await db
-    .update(contractsTable)
-    .set({
-      filename: parsed.data.filename.slice(0, 250),
-      documentType: contractDocumentType(contract),
-      contract,
-      confidence: {},
-      updatedAt: new Date(),
-    })
-    .where(eq(contractsTable.id, id))
-    .returning();
+  let record;
+  try {
+    [record] = await db
+      .update(contractsTable)
+      .set({
+        filename: parsed.data.filename.slice(0, 250),
+        fileHash: sourceHashForContract(contract) ?? existing.fileHash,
+        documentType: contractDocumentType(contract),
+        contract,
+        confidence: {},
+        updatedAt: new Date(),
+      })
+      .where(eq(contractsTable.id, id))
+      .returning();
+  } catch (error) {
+    if (isUniqueConstraintViolation(error)) {
+      res.status(409).json({ error: "This contract has already been saved. Duplicate skipped." });
+      return;
+    }
+    throw error;
+  }
   if (!record) {
     res.status(404).json({ error: "Contract not found." });
     return;
@@ -588,22 +613,29 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
     res.status(400).json({ error: "Contract provenance is inconsistent with its field values." });
     return;
   }
-  const sourceHash =
-    isRecord(parsed.data.contract.source) && typeof parsed.data.contract.source.hash === "string"
-      ? parsed.data.contract.source.hash
-      : null;
+  const sourceHash = sourceHashForContract(parsed.data.contract as unknown as Record<string, unknown>);
   if (sourceHash && await hasExistingSourceHash(sourceHash)) {
     res.status(409).json({ error: "This contract has already been saved. Duplicate skipped." });
     return;
   }
   const contract = withComputedDates(parsed.data.contract as unknown as Record<string, unknown>);
-  const [record] = await db.insert(contractsTable).values({
-    id: randomUUID(),
-    filename: parsed.data.filename.slice(0, 250),
-    documentType: contractDocumentType(contract),
-    contract,
-    confidence: {},
-  }).returning();
+  let record;
+  try {
+    [record] = await db.insert(contractsTable).values({
+      id: randomUUID(),
+      filename: parsed.data.filename.slice(0, 250),
+      fileHash: sourceHash,
+      documentType: contractDocumentType(contract),
+      contract,
+      confidence: {},
+    }).returning();
+  } catch (error) {
+    if (isUniqueConstraintViolation(error)) {
+      res.status(409).json({ error: "This contract has already been saved. Duplicate skipped." });
+      return;
+    }
+    throw error;
+  }
   res.status(201).json(responseFor(record));
 });
 

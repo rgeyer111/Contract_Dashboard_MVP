@@ -95,6 +95,34 @@ const contract = {
 };
 
 describe("saved contract persistence", () => {
+  it("enforces one saved contract per PDF hash even for concurrent requests", async () => {
+    const hash = crypto.randomUUID().replaceAll("-", "").padEnd(64, "0").slice(0, 64);
+    const contractWithSource = {
+      ...contract,
+      source: {
+        id: hash,
+        name: "concurrent-duplicate.pdf",
+        modifiedAt: null,
+        size: 1024,
+        hash,
+      },
+    };
+
+    const responses = await Promise.all([
+      request(app).post("/api/contracts").send({ filename: "concurrent-a.pdf", contract: contractWithSource }),
+      request(app).post("/api/contracts").send({ filename: "concurrent-b.pdf", contract: contractWithSource }),
+    ]);
+
+    expect(responses.map((response) => response.status).sort()).toEqual([201, 409]);
+    const records = await db
+      .select({ id: contractsTable.id })
+      .from(contractsTable)
+      .where(eq(contractsTable.fileHash, hash));
+    expect(records).toHaveLength(1);
+
+    await db.delete(contractsTable).where(eq(contractsTable.fileHash, hash));
+  });
+
   it("lists, creates, reads, and updates a saved contract", async () => {
     const filename = `saved-contract-regression-${Date.now()}.pdf`;
     const createResponse = await request(app)

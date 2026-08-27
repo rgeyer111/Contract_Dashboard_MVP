@@ -1,16 +1,25 @@
 import { sql } from "drizzle-orm";
 import { integer, jsonb, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
-export const contractsTable = pgTable("contracts", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  filename: text("filename").notNull(),
-  parentContractId: uuid("parent_contract_id"),
-  documentType: text("document_type"),
-  contract: jsonb("contract").notNull(),
-  confidence: jsonb("confidence").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
-});
+export const contractsTable = pgTable(
+  "contracts",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    filename: text("filename").notNull(),
+    fileHash: text("file_hash"),
+    parentContractId: uuid("parent_contract_id"),
+    documentType: text("document_type"),
+    contract: jsonb("contract").notNull(),
+    confidence: jsonb("confidence").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("contracts_file_hash_unique")
+      .on(table.fileHash)
+      .where(sql`${table.fileHash} IS NOT NULL`),
+  ],
+);
 
 export const registryViewsTable = pgTable(
   "registry_views",
