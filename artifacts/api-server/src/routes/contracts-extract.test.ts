@@ -174,6 +174,7 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
     expect(response.body).toEqual({
       error:
         "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
+      code: "UNREADABLE",
     });
     expect(response.body).not.toHaveProperty("extraction");
     expect(mocks.extractContractFromText).not.toHaveBeenCalled();
@@ -490,6 +491,7 @@ describe("resumable contract ingest runs", () => {
       expect(staleRetry.status).toBe(409);
       expect(staleRetry.body).toEqual({
         error: "This retry attempt was superseded. Use the latest result.",
+        code: "SUPERSEDED",
       });
       expect(staleRetry.body).not.toHaveProperty("attempt");
 
@@ -561,6 +563,7 @@ describe("resumable contract ingest runs", () => {
       expect(retryResponse.status).toBe(409);
       expect(retryResponse.body).toEqual({
         error: "This retry attempt was superseded. Use the latest result.",
+        code: "SUPERSEDED",
       });
       expect(replacementResponse.status).toBe(201);
       expect([204, 409]).toContain(abandonResponse.status);
@@ -657,7 +660,10 @@ describe("resumable contract ingest runs", () => {
       const readyRetryResponse = await request(app)
         .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(firstItemId)}/retry`);
       expect(readyRetryResponse.status).toBe(409);
-      expect(readyRetryResponse.body).toEqual({ error: "Only failed ingest items can be retried." });
+      expect(readyRetryResponse.body).toEqual({
+        error: "Only failed ingest items can be retried.",
+        code: "INVALID_UPLOAD",
+      });
       const [readyItem] = await db.select().from(contractIngestItemsTable)
         .where(eq(contractIngestItemsTable.id, firstItemId));
       expect(readyItem).toMatchObject({

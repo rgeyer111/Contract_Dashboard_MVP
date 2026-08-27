@@ -521,6 +521,7 @@ describe("POST /api/contracts/extract upload guards", () => {
     expect(response.body).toEqual({
       error:
         "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
+      code: "UNREADABLE",
     });
     expect(response.body).not.toHaveProperty("extraction");
   });

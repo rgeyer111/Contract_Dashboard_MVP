@@ -9,8 +9,22 @@ export interface HealthStatus {
   status: string;
 }
 
+export type ErrorResponseCode = typeof ErrorResponseCode[keyof typeof ErrorResponseCode];
+
+
+export const ErrorResponseCode = {
+  DUPLICATE: 'DUPLICATE',
+  UNREADABLE: 'UNREADABLE',
+  OCR_INCOMPLETE: 'OCR_INCOMPLETE',
+  TOO_LARGE: 'TOO_LARGE',
+  UNAVAILABLE: 'UNAVAILABLE',
+  SUPERSEDED: 'SUPERSEDED',
+  INVALID_UPLOAD: 'INVALID_UPLOAD',
+} as const;
+
 export interface ErrorResponse {
   error: string;
+  code?: ErrorResponseCode;
 }
 
 /**

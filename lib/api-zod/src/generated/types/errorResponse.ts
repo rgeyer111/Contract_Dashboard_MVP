@@ -5,7 +5,9 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ErrorResponseCode } from './errorResponseCode';
 
 export interface ErrorResponse {
   error: string;
+  code?: ErrorResponseCode;
 }

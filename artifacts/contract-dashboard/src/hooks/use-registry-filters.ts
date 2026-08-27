@@ -4,6 +4,7 @@ import {
   filterContracts,
   getDocumentTypeFromUrl,
   getSearchTermFromLocation,
+  parseDocumentType,
   sortContractsByUrgency,
   updateRegistryUrl,
   DOCUMENT_TYPE_QUERY_PARAM,
@@ -39,7 +40,7 @@ export function useRegistryFilters(contracts: SavedContract[], location: string)
     const params = new URLSearchParams(window.location.search);
     if (value) params.set(DOCUMENT_TYPE_QUERY_PARAM, value);
     else params.delete(DOCUMENT_TYPE_QUERY_PARAM);
-    setDocumentTypeFilter(value);
+    setDocumentTypeFilter(parseDocumentType(value));
     setShareStatus("idle");
     updateRegistryUrl(params, "push");
   };

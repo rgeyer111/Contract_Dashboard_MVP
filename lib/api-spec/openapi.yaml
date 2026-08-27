@@ -483,6 +483,16 @@ components:
       properties:
         error:
           type: string
+        code:
+          type: string
+          enum:
+            - DUPLICATE
+            - UNREADABLE
+            - OCR_INCOMPLETE
+            - TOO_LARGE
+            - UNAVAILABLE
+            - SUPERSEDED
+            - INVALID_UPLOAD
       required:
         - error
     RegistryViewSaveRequest:

@@ -11,15 +11,17 @@ import {
   type RegistryViewSaveRequestDocumentType,
   type SavedRegistryView,
 } from "@workspace/api-client-react";
+import { useLanguage, type MessageId } from "@/lib/i18n";
 
 export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: string) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [savedViewName, setSavedViewName] = useState("");
   const [saveViewOpen, setSaveViewOpen] = useState(false);
   const [editingViewId, setEditingViewId] = useState<string | null>(null);
   const [editingViewName, setEditingViewName] = useState("");
   const [deletingViewId, setDeletingViewId] = useState<string | null>(null);
-  const [savedViewError, setSavedViewError] = useState<string | null>(null);
+  const [savedViewError, setSavedViewError] = useState<MessageId | null>(null);
   const [savedViewMoveStatus, setSavedViewMoveStatus] = useState<string | null>(null);
 
   const registryViewsQuery = useListRegistryViews();
@@ -32,7 +34,7 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
         setSavedViewError(null);
         await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
       },
-      onError: () => setSavedViewError("This view could not be saved. Check the name and try again."),
+      onError: () => setSavedViewError("ui.this.view.could.not.be.saved.check.the.name.and.try.again"),
     },
   });
   const updateRegistryView = useUpdateRegistryView({
@@ -43,7 +45,7 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
         setSavedViewError(null);
         await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
       },
-      onError: () => setSavedViewError("This view could not be renamed. Check the name and try again."),
+      onError: () => setSavedViewError("ui.this.view.could.not.be.renamed.check.the.name.and.try.again"),
     },
   });
   const pinRegistryView = usePinRegistryView({
@@ -52,7 +54,7 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
         setSavedViewError(null);
         await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
       },
-      onError: () => setSavedViewError("This view's pin state could not be updated. Please try again."),
+      onError: () => setSavedViewError("ui.this.view.s.pin.state.could.not.be.updated.please.try.again"),
     },
   });
   const reorderRegistryViews = useReorderRegistryViews({
@@ -61,7 +63,7 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
         setSavedViewError(null);
         await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
       },
-      onError: () => setSavedViewError("This view order could not be saved. Please try again."),
+      onError: () => setSavedViewError("ui.this.view.order.could.not.be.saved.please.try.again"),
     },
   });
   const deleteRegistryView = useDeleteRegistryView({
@@ -71,14 +73,14 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
         setSavedViewError(null);
         await queryClient.invalidateQueries({ queryKey: getListRegistryViewsQueryKey() });
       },
-      onError: () => setSavedViewError("This view could not be deleted. Please try again."),
+      onError: () => setSavedViewError("ui.this.view.could.not.be.deleted.please.try.again"),
     },
   });
 
   const saveCurrentView = () => {
     const name = savedViewName.trim();
     if (!name) {
-      setSavedViewError("Give this view a clear name before saving.");
+      setSavedViewError("ui.give.this.view.a.clear.name.before.saving");
       return;
     }
     setSavedViewError(null);
@@ -101,7 +103,7 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
   const renameView = (view: SavedRegistryView) => {
     const name = editingViewName.trim();
     if (!name) {
-      setSavedViewError("A saved view needs a name.");
+      setSavedViewError("ui.a.saved.view.needs.a.name");
       return;
     }
     setSavedViewError(null);
@@ -134,7 +136,12 @@ export function useSavedRegistryViews(searchTerm: string, documentTypeFilter: st
     const reordered = [...pinnedViews];
     const [movedView] = reordered.splice(currentIndex, 1);
     reordered.splice(nextIndex, 0, movedView);
-    const successMessage = `${movedView.name} moved ${direction}. Position ${nextIndex + 1} of ${pinnedViews.length}.`;
+    const successMessage = t("view.movedPosition", {
+      name: movedView.name,
+      direction,
+      position: nextIndex + 1,
+      total: pinnedViews.length,
+    });
     setSavedViewMoveStatus(null);
     reorderRegistryViews.mutate(
       { data: { orderedIds: reordered.map((item) => item.id) } },

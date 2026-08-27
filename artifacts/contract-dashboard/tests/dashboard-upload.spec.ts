@@ -125,7 +125,10 @@ test("shows upload success and API error states", async ({ page }) => {
       return route.fulfill({
         status: 422,
         contentType: "application/json",
-        body: JSON.stringify({ error: "This PDF has no readable contract text." }),
+        body: JSON.stringify({
+          error: "This PDF has no readable contract text.",
+          code: "UNREADABLE",
+        }),
       });
     }
     await route.fulfill({
@@ -268,7 +271,7 @@ test("surfaces conflicting and ambiguous fields before missing fields", async ({
   await expect(page.getByText("The body says maintenance; the order form says software licence.", { exact: true })).toBeVisible();
   await expect(decisions.getByText("Reading 1: maintenance", { exact: true })).toBeVisible();
   await expect(decisions.getByText("Page 3 · clause 7.1 · “Maintenance services renew for twelve months.”", { exact: true })).toBeVisible();
-  await expect(decisions.getByText("Reading 2: software license", { exact: true })).toBeVisible();
+  await expect(decisions.getByText("Reading 2: software_license", { exact: true })).toBeVisible();
   await expect(decisions.getByText("Page 9 · clause Order form · “Software licence subscription.”", { exact: true })).toBeVisible();
 });
 
@@ -292,7 +295,10 @@ test("retries only a failed PDF and preserves the review queue", async ({ page }
       await route.fulfill({
         status: 409,
         contentType: "application/json",
-        body: JSON.stringify({ error: "This contract has already been uploaded. Duplicate skipped." }),
+        body: JSON.stringify({
+          error: "This contract has already been uploaded. Duplicate skipped.",
+          code: "DUPLICATE",
+        }),
       });
       return;
     }
@@ -300,7 +306,10 @@ test("retries only a failed PDF and preserves the review queue", async ({ page }
       await route.fulfill({
         status: 422,
         contentType: "application/json",
-        body: JSON.stringify({ error: "The extraction service is temporarily unavailable." }),
+        body: JSON.stringify({
+          error: "The extraction service is temporarily unavailable.",
+          code: "UNAVAILABLE",
+        }),
       });
       return;
     }
@@ -396,7 +405,10 @@ test("processes ten PDFs independently when one extraction fails", async ({ page
       await route.fulfill({
         status: 422,
         contentType: "application/json",
-        body: JSON.stringify({ error: "contract-05 could not be extracted" }),
+        body: JSON.stringify({
+          error: "contract-05 could not be extracted",
+          code: "UNREADABLE",
+        }),
       });
       return;
     }
@@ -437,7 +449,7 @@ test("processes ten PDFs independently when one extraction fails", async ({ page
     await expect(page.getByText(filename, { exact: true }).nth(1)).toBeVisible();
   }
   await expect(page.getByText("Ready for review", { exact: true })).toHaveCount(9);
-  await expect(page.getByText(/HTTP 422 .*contract-05 could not be extracted/)).toBeVisible();
+  await expect(page.getByText("This PDF has no readable contract text.", { exact: true })).toBeVisible();
   expect(requestedFiles.sort()).toEqual([...filenames].sort());
 });
 
@@ -1015,7 +1027,7 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
       ...amendmentBase.fields,
       vendorLegalName: reviewerEdited("Limmat Software GmbH"),
       initialTermEndDate: provenance("2027-12-31"),
-      renewalMechanism: provenance("manual_renewal"),
+      renewalMechanism: provenance("auto_renew"),
       noticePeriod: provenance({
         amount: 90,
         unit: "days",
@@ -1100,7 +1112,7 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(amendmentRow).toContainText("Software Amendment");
   await expect(amendmentRow).toContainText("CHF 240'000 · annual");
   await expect(amendmentRow).toContainText("31.12.2027");
-  await expect(amendmentRow).toContainText("manual renewal");
+  await expect(amendmentRow).toContainText("auto renew");
   await expect(amendmentRow).toContainText("90 days");
   await expect(amendmentRow).not.toContainText("before term end");
   await expect(amendmentRow).toContainText("37 days until action");
@@ -1383,7 +1395,10 @@ test("localizes German upload validation and known extraction errors", async ({ 
     await route.fulfill({
       status: 422,
       contentType: "application/json",
-      body: JSON.stringify({ error: "This PDF has no readable contract text." }),
+      body: JSON.stringify({
+        error: "This PDF has no readable contract text.",
+        code: "UNREADABLE",
+      }),
     });
   });
 
@@ -1421,25 +1436,4 @@ test("localizes active public routes while preserving contract example data", as
   await page.goto("/missing-route");
   await expect(page.getByRole("heading", { name: "404 Seite nicht gefunden" })).toBeVisible();
   await expect(page.getByText("Wurde diese Seite noch nicht zum Router hinzugefügt?", { exact: true })).toBeVisible();
-});
-
-test("reports missing interface translations without translating source data", async ({ page }) => {
-  await page.goto("/");
-  const diagnostic = await page.evaluate(async () => {
-    const i18n = await import("/src/lib/i18n.tsx");
-    i18n.resetMissingUiMessages();
-    const uiText = i18n.translateUiMessage("de-CH", "Uncatalogued interface test message");
-    const sourceText = i18n.localize("de-CH", "Alpine Cloud AG");
-    return {
-      uiText,
-      sourceText,
-      missing: i18n.getMissingUiMessages(),
-    };
-  });
-
-  expect(diagnostic).toEqual({
-    uiText: "Uncatalogued interface test message",
-    sourceText: "Alpine Cloud AG",
-    missing: ["Uncatalogued interface test message"],
-  });
 });

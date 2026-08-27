@@ -30,6 +30,7 @@ export * from './contractValueValue';
 export * from './contractValueValueBasis';
 export * from './dismissAlertRequest';
 export * from './errorResponse';
+export * from './errorResponseCode';
 export * from './healthStatus';
 export * from './noticeDeliveryValue';
 export * from './noticeDeliveryValueMethod';

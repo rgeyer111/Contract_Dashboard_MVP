@@ -5,15 +5,32 @@ import {
   useGetCurrentIngestRun,
   useRegisterIngestRun,
   useRetryIngestItem,
+  ApiError,
   type ContractExtractionResult,
+  type ErrorResponse,
 } from "@workspace/api-client-react";
+import type { MessageId } from "@/lib/i18n";
 
 export type UploadRunEntry = {
   id: string;
   name: string;
   state: "processing" | "ready" | "duplicate" | "failed";
-  message?: string;
+  message?: MessageId;
 };
+
+function uploadFailure(error: unknown): { duplicate: boolean; message: MessageId } {
+  const code = error instanceof ApiError ? (error.data as ErrorResponse | null)?.code : undefined;
+  switch (code) {
+    case "DUPLICATE": return { duplicate: true, message: "ui.duplicate.skipped" };
+    case "UNREADABLE": return { duplicate: false, message: "ui.this.pdf.has.no.readable.contract.text" };
+    case "OCR_INCOMPLETE": return { duplicate: false, message: "upload.errorOcrIncomplete" };
+    case "TOO_LARGE": return { duplicate: false, message: "upload.errorTooLarge" };
+    case "UNAVAILABLE": return { duplicate: false, message: "ui.the.extraction.service.is.temporarily.unavailable" };
+    case "SUPERSEDED": return { duplicate: false, message: "upload.errorSuperseded" };
+    case "INVALID_UPLOAD": return { duplicate: false, message: "ui.only.pdf.files.up.to.10.mb.can.be.added" };
+    default: return { duplicate: false, message: "ui.could.not.process.this.pdf" };
+  }
+}
 
 function fileId(runId: string, index: number) {
   return `${runId}:${index}`;
@@ -23,7 +40,7 @@ export function useContractUpload(navigate: (path: string) => void) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [runLog, setRunLog] = useState<UploadRunEntry[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<MessageId | null>(null);
   const successfulExtractions = useRef(new Map<string, ContractExtractionResult>());
   const activeRunId = useRef<string | null>(null);
   const extractionMutation = useExtractContract();
@@ -38,11 +55,17 @@ export function useContractUpload(navigate: (path: string) => void) {
     const items = run?.items;
     if (!run || !items?.length || selectedFiles.length > 0) return;
     activeRunId.current = run.id;
-    const entries = items.map((item) => ({
+    const entries: UploadRunEntry[] = items.map((item) => ({
       id: item.id,
       name: item.filename,
       state: item.state,
-      message: item.message ?? undefined,
+      message: item.state === "ready"
+        ? "ui.ready.for.review"
+        : item.state === "duplicate"
+          ? "ui.duplicate.skipped"
+          : item.state === "failed"
+            ? "ui.could.not.process.this.pdf"
+            : undefined,
     }));
     successfulExtractions.current.clear();
     items.forEach((item) => {
@@ -76,7 +99,7 @@ export function useContractUpload(navigate: (path: string) => void) {
       return isPdf && file.size <= 10 * 1024 * 1024;
     });
     activeRunId.current = crypto.randomUUID();
-    setUploadError(validFiles.length !== files.length ? "Only PDF files up to 10 MB can be added." : null);
+    setUploadError(validFiles.length !== files.length ? "ui.only.pdf.files.up.to.10.mb.can.be.added" : null);
     setSelectedFiles(validFiles.slice(0, 20));
     setRunLog([]);
     successfulExtractions.current.clear();
@@ -98,14 +121,13 @@ export function useContractUpload(navigate: (path: string) => void) {
         const result = await retryMutation.mutateAsync({ runId, itemId: retryId });
         successfulExtractions.current.set(retryId, result);
         nextRunLog = nextRunLog.map((entry) => entry.id === retryId
-          ? { ...entry, state: "ready", message: "Ready for review" }
+          ? { ...entry, state: "ready", message: "ui.ready.for.review" }
           : entry);
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Could not process this PDF.";
-        const duplicate = /duplicate|already been uploaded/i.test(message);
+        const { duplicate, message } = uploadFailure(error);
         if (duplicate) successfulExtractions.current.delete(retryId);
         nextRunLog = nextRunLog.map((entry) => entry.id === retryId
-          ? { ...entry, state: duplicate ? "duplicate" : "failed", message: duplicate ? "Duplicate skipped" : message }
+          ? { ...entry, state: duplicate ? "duplicate" : "failed", message }
           : entry);
       }
       setRunLog(nextRunLog);
@@ -136,7 +158,7 @@ export function useContractUpload(navigate: (path: string) => void) {
           },
         });
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Could not save this ingest run.";
+        const message: MessageId = "ui.could.not.save.this.ingest.run";
         setUploadError(message);
         setRunLog(nextRunLog.map((entry) => ({ ...entry, state: "failed", message })));
         return;
@@ -154,20 +176,19 @@ export function useContractUpload(navigate: (path: string) => void) {
         if (hash && alreadyExtracted) {
           successfulExtractions.current.delete(id);
           nextRunLog = nextRunLog.map((entry) => entry.id === id
-            ? { ...entry, state: "duplicate", message: "Duplicate skipped" }
+            ? { ...entry, state: "duplicate", message: "ui.duplicate.skipped" }
             : entry);
         } else {
           successfulExtractions.current.set(id, result);
           nextRunLog = nextRunLog.map((entry) => entry.id === id
-            ? { ...entry, state: "ready", message: "Ready for review" }
+            ? { ...entry, state: "ready", message: "ui.ready.for.review" }
             : entry);
         }
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Could not process this PDF.";
-        const duplicate = /duplicate|already been uploaded/i.test(message);
+        const { duplicate, message } = uploadFailure(error);
         if (duplicate) successfulExtractions.current.delete(id);
         nextRunLog = nextRunLog.map((entry) => entry.id === id
-          ? { ...entry, state: duplicate ? "duplicate" : "failed", message: duplicate ? "Duplicate skipped" : message }
+          ? { ...entry, state: duplicate ? "duplicate" : "failed", message }
           : entry);
       }
       setRunLog(nextRunLog);

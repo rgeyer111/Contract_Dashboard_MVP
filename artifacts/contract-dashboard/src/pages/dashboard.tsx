@@ -41,16 +41,17 @@ import {
   formatDocumentType,
   formatContractValue,
   formatDaysRemaining,
-  formatLabel,
+  formatNegotiationBufferSource,
   formatPeriod,
   formatRegistryDate,
+  formatRenewalMechanism,
   statusClasses,
   statusRowClasses,
 } from "@/lib/registry";
 import { useContractUpload } from "@/hooks/use-contract-upload";
 import { useRegistryFilters } from "@/hooks/use-registry-filters";
 import { useSavedRegistryViews } from "@/hooks/use-saved-registry-views";
-import { LanguageSwitch, useLanguage } from "@/lib/i18n";
+import { LanguageSwitch, translateDomainOption, translateGeneratedReasonOrRaw, useLanguage } from "@/lib/i18n";
 
 export default function Dashboard() {
   const { language, t } = useLanguage();
@@ -147,7 +148,7 @@ export default function Dashboard() {
       },
       onError: () => {
         setSavingContractTypeId(null);
-        setContractTypeSaveError(t("Contract type could not be saved. Please try again."));
+        setContractTypeSaveError(t("ui.contract.type.could.not.be.saved.please.try.again"));
       },
     },
   });
@@ -189,26 +190,26 @@ export default function Dashboard() {
         <nav className="flex-1 p-4 space-y-1">
           <Link href="/dashboard" className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-semibold text-sm transition-colors ${!isActionItemsPage ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}>
             <FileText className="h-4 w-4" />
-            {t("Contracts")}
+            {t("ui.contracts")}
           </Link>
           <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors cursor-not-allowed">
             <Clock className="h-4 w-4" />
-            {t("Renewals")}
+            {t("ui.renewals")}
           </div>
           <Link href="/action-items" className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium text-sm transition-colors ${isActionItemsPage ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-muted/50"}`}>
             <AlertCircle className="h-4 w-4" />
-            {t("Action Items")}
+            {t("ui.action.items")}
           </Link>
         </nav>
         
         <div className="p-4 border-t space-y-1">
           <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors cursor-not-allowed">
             <Settings className="h-4 w-4" />
-            {t("Settings")}
+            {t("ui.settings")}
           </div>
           <Link href="/" className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors">
             <LogOut className="h-4 w-4" />
-            {t("Log out")}
+            {t("ui.log.out")}
           </Link>
         </div>
       </aside>
@@ -224,14 +225,14 @@ export default function Dashboard() {
                 type="text" 
                 value={searchTerm}
                 onChange={(event) => updateSearchTerm(event.target.value)}
-                placeholder={t("Search contracts...")}
+                placeholder={t("ui.search.contracts")}
                 className="w-full h-9 pl-9 pr-4 rounded-md border bg-muted/30 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground/70"
-                aria-label={t("Search contracts")}
+                aria-label={t("ui.search.contracts.2")}
               />
               {searchTerm && (
                 <button
                   type="button"
-                  aria-label={t("Clear search")}
+                  aria-label={t("ui.clear.search")}
                   onClick={() => updateSearchTerm("")}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
                 >
@@ -243,7 +244,7 @@ export default function Dashboard() {
           
           <div className="flex items-center gap-3">
             <LanguageSwitch />
-            <button type="button" aria-label={t("Notifications")} className="relative p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors">
+            <button type="button" aria-label={t("ui.notifications")} className="relative p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors">
               <Bell className="h-5 w-5" />
               <span className="absolute top-2 right-2 h-2 w-2 bg-destructive rounded-full border border-card"></span>
             </button>
@@ -259,13 +260,13 @@ export default function Dashboard() {
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">{t(isActionItemsPage ? "Action Items" : "Welcome back, John")}</h1>
-              <p className="text-muted-foreground mt-1 font-medium text-sm">{t(isActionItemsPage ? "Stay ahead of the contract decisions that need your attention." : "Here's the status of your contract renewals this week.")}</p>
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">{isActionItemsPage ? t("ui.action.items") : t("ui.welcome.back.john")}</h1>
+              <p className="text-muted-foreground mt-1 font-medium text-sm">{isActionItemsPage ? t("ui.stay.ahead.of.the.contract.decisions.that.need.your.attention") : t("ui.here.s.the.status.of.your.contract.renewals.this.week")}</p>
             </div>
             {!isActionItemsPage && (
               <Button onClick={() => setUploadOpen(true)} className="shrink-0 gap-2 shadow-sm font-semibold">
                 <Plus className="h-4 w-4" />
-                {t("New Contract")}
+                {t("ui.new.contract")}
               </Button>
             )}
           </div>
@@ -276,10 +277,10 @@ export default function Dashboard() {
                 <div>
                   <div className="flex items-center gap-2 text-primary font-bold text-sm">
                     <FileUp className="h-4 w-4" />
-                    {t("New contract")}
+                    {t("ui.new.contract.2")}
                   </div>
-                  <h2 id="upload-contract-heading" className="text-xl font-extrabold tracking-tight mt-1">{t("Upload a PDF to extract its details")}</h2>
-                  <p className="text-sm text-muted-foreground font-medium mt-1">{t("We'll prepare an editable draft with confidence ratings for every field.")}</p>
+                  <h2 id="upload-contract-heading" className="text-xl font-extrabold tracking-tight mt-1">{t("ui.upload.a.pdf.to.extract.its.details")}</h2>
+                  <p className="text-sm text-muted-foreground font-medium mt-1">{t("ui.we.ll.prepare.an.editable.draft.with.confidence.ratings.for.every.field")}</p>
                 </div>
                 <Button
                   type="button"
@@ -292,7 +293,7 @@ export default function Dashboard() {
                     }
                   }}
                   disabled={extraction.isPending}
-                  aria-label={t("Close contract upload")}
+                  aria-label={t("ui.close.contract.upload")}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -319,26 +320,26 @@ export default function Dashboard() {
                 {extraction.isPending ? (
                   <>
                     <LoaderCircle className="h-8 w-8 text-primary animate-spin mb-3" />
-                    <span className="font-extrabold text-sm">{t("Reading and extracting your contract...")}</span>
-                    <span className="text-xs text-muted-foreground font-medium mt-1">{t("This usually takes a few seconds.")}</span>
+                    <span className="font-extrabold text-sm">{t("ui.reading.and.extracting.your.contract")}</span>
+                    <span className="text-xs text-muted-foreground font-medium mt-1">{t("ui.this.usually.takes.a.few.seconds")}</span>
                   </>
                 ) : selectedFiles.length ? (
                   <>
                     <FileText className="h-8 w-8 text-emerald-600 mb-3" />
-                    <span className="font-extrabold text-sm text-foreground">{t(`${selectedFiles.length} PDF${selectedFiles.length === 1 ? "" : "s"} selected`)}</span>
+                     <span className="font-extrabold text-sm text-foreground">{t("dashboard.pdfSelected", { count: selectedFiles.length })}</span>
                     <span className="text-xs text-muted-foreground font-medium mt-1">{selectedFiles.map((file) => file.name).join(" · ")}</span>
                   </>
                 ) : (
                   <>
                     <Upload className="h-8 w-8 text-primary mb-3 transition-transform group-hover:-translate-y-0.5" />
-                    <span className="font-extrabold text-sm">{t("Drop a contract PDF here, or choose a file")}</span>
-                   <span className="text-xs text-muted-foreground font-medium mt-1">{t("Select up to 20 PDFs · 10 MB each")}</span>
+                    <span className="font-extrabold text-sm">{t("ui.drop.a.contract.pdf.here.or.choose.a.file")}</span>
+                   <span className="text-xs text-muted-foreground font-medium mt-1">{t("ui.select.up.to.20.pdfs.10.mb.each")}</span>
                   </>
                 )}
               </label>
 
               {selectedFiles.length > 0 && !extraction.isPending && (
-                <div className="mt-4 space-y-2" aria-label={t("Selected contract files")}>
+                <div className="mt-4 space-y-2" aria-label={t("ui.selected.contract.files")}>
                   {selectedFiles.map((file, index) => (
                     <div
                       key={`${file.name}-${file.lastModified}-${index}`}
@@ -355,8 +356,8 @@ export default function Dashboard() {
                         className="h-8 w-8 shrink-0"
                         onClick={() => removeFile(index)}
                         disabled={runLog.length > 0}
-                        aria-label={t(`Remove ${file.name}`)}
-                        title={t(`Remove ${file.name}`)}
+                         aria-label={t("file.remove", { name: file.name })}
+                         title={t("file.remove", { name: file.name })}
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -368,14 +369,14 @@ export default function Dashboard() {
               {uploadError && (
                 <div className="mt-4 flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm font-semibold text-destructive">
                   <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>{t(uploadError)}</span>
+                   <span>{t(uploadError)}</span>
                 </div>
               )}
               {runLog.length > 0 && (
                 <div className="mt-4 rounded-lg border bg-muted/20 p-4">
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-extrabold uppercase tracking-wide">{t("Ingest run")}</span>
-                    <span className="text-xs font-semibold text-muted-foreground">{t(`${runLog.filter((entry) => entry.state !== "processing").length}/${runLog.length} complete`)}</span>
+                    <span className="text-xs font-extrabold uppercase tracking-wide">{t("ui.ingest.run")}</span>
+                     <span className="text-xs font-semibold text-muted-foreground">{t("dashboard.ingestComplete", { done: runLog.filter((entry) => entry.state !== "processing").length, total: runLog.length })}</span>
                   </div>
                   <div className="space-y-2">
                     {runLog.map((entry) => (
@@ -383,7 +384,7 @@ export default function Dashboard() {
                         <span className="min-w-0 truncate font-semibold">{entry.name}</span>
                         <div className="flex shrink-0 items-center gap-2">
                           <span className={`font-bold ${entry.state === "ready" ? "text-emerald-600" : entry.state === "duplicate" || entry.state === "failed" ? "text-destructive" : "text-primary"}`}>
-                            {entry.state === "processing" ? t("Processing…") : entry.message ? t(entry.message) : ""}
+                             {entry.state === "processing" ? t("ui.processing") : entry.message ? t(entry.message) : ""}
                           </span>
                           {entry.state === "failed" && (
                             <Button
@@ -393,10 +394,10 @@ export default function Dashboard() {
                               className="h-7 gap-1 px-2 text-xs"
                               onClick={() => retryFile(entry.id)}
                               disabled={extraction.isPending}
-                              aria-label={t(`Retry ${entry.name}`)}
+                               aria-label={t("file.retry", { name: entry.name })}
                             >
                               <RotateCcw className="h-3 w-3" />
-                              {t("Retry")}
+                              {t("ui.retry")}
                             </Button>
                           )}
                         </div>
@@ -407,7 +408,7 @@ export default function Dashboard() {
               )}
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                <p className="text-xs font-medium text-muted-foreground">{t("Your PDF is used to create an editable review draft. Confirmed details are saved securely.")}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t("ui.your.pdf.is.used.to.create.an.editable.review.draft.confirmed.details.are.saved.securely")}</p>
                 <Button
                   type="button"
                    onClick={() => processFiles()}
@@ -415,7 +416,7 @@ export default function Dashboard() {
                   className="gap-2 font-bold"
                 >
                   {extraction.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <FileUp className="h-4 w-4" />}
-                  {t("Extract contract")}
+                  {t("ui.extract.contract")}
                 </Button>
               </div>
             </section>
@@ -429,10 +430,10 @@ export default function Dashboard() {
               </div>
               <div className="flex items-center gap-3 text-sm font-bold text-destructive mb-3 relative z-10">
                 <div className="h-2 w-2 rounded-full bg-destructive animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-                {t("Critical Renewals")}
+                {t("ui.critical.renewals")}
               </div>
               <div className="text-4xl font-extrabold mb-1 relative z-10">{contracts.filter((c) => c.contract.computed.status === 'red').length}</div>
-              <p className="text-sm font-medium text-muted-foreground relative z-10">{t("Past the legal notice deadline")}</p>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">{t("ui.past.the.legal.notice.deadline")}</p>
             </div>
             
             {/* Card 2 */}
@@ -442,10 +443,10 @@ export default function Dashboard() {
               </div>
               <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
                 <Clock className="h-4 w-4 text-primary" />
-                {t("Upcoming")}
+                {t("ui.upcoming")}
               </div>
                <div data-testid="active-contract-count" className="text-4xl font-extrabold mb-1 relative z-10">{filteredContracts.length}</div>
-              <p className="text-sm font-medium text-muted-foreground relative z-10">{t("Total Active Contracts")}</p>
+              <p className="text-sm font-medium text-muted-foreground relative z-10">{t("ui.total.active.contracts")}</p>
             </div>
             
               {/* Card 3 */}
@@ -455,56 +456,63 @@ export default function Dashboard() {
                 </div>
                 <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mb-3 relative z-10">
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  {t("Action Items")}
+                  {t("ui.action.items")}
                 </div>
                 <div className="text-4xl font-extrabold mb-1 relative z-10">{openAlerts.length}</div>
-                <p className="text-sm font-medium text-muted-foreground relative z-10">{t("Open action items")}</p>
+                <p className="text-sm font-medium text-muted-foreground relative z-10">{t("ui.open.action.items")}</p>
               </button>
           </div>}
 
           {isActionItemsPage && <section id="action-items" className="space-y-4 scroll-mt-24">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <h2 className="text-xl font-bold tracking-tight">{t("Action Items")}</h2>
-                <p className="mt-1 text-sm font-medium text-muted-foreground">{t("Who needs to act, on what, and by when.")}</p>
+                <h2 className="text-xl font-bold tracking-tight">{t("ui.action.items")}</h2>
+                <p className="mt-1 text-sm font-medium text-muted-foreground">{t("ui.who.needs.to.act.on.what.and.by.when")}</p>
               </div>
-              <span className="rounded-full border bg-card px-3 py-1 text-xs font-bold">{t(`${openAlerts.length} open`)}</span>
+              <span className="rounded-full border bg-card px-3 py-1 text-xs font-bold">{t("dashboard.openCount", { count: openAlerts.length })}</span>
             </div>
             <div className="grid gap-3">
               {alerts.map((saved) => {
                 const alert = saved.contract.alert!;
-                const vendor = saved.contract.fields.vendorLegalName.value || t("Unknown Vendor");
-                const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(`${t("Contract action")}: ${vendor}`)}&body=${encodeURIComponent(`${t("Hi")} ${alert.owner},\n\n${vendor} ${t("needs attention.")}\n${t("Start action by:")} ${formatRegistryDate(alert.actionDate, language)}\n${t("Legal notice deadline:")} ${formatRegistryDate(alert.noticeDeadline, language)}\n\n${t("Open contract:")} ${window.location.origin}/review?id=${saved.id}`)}`;
+                const vendor = saved.contract.fields.vendorLegalName.value || t("ui.unknown.vendor.2");
+                const contractUrl = `${window.location.origin}/review?id=${saved.id}`;
+                const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(t("alert.emailSubject", { vendor }))}&body=${encodeURIComponent(t("alert.emailBody", {
+                  owner: alert.owner,
+                  vendor,
+                  actionDate: formatRegistryDate(alert.actionDate, language),
+                  noticeDeadline: formatRegistryDate(alert.noticeDeadline, language),
+                  url: contractUrl,
+                }))}`;
                 return (
                   <article key={saved.id} className={`rounded-xl border bg-card px-4 py-3 shadow-sm ${alert.state === 'dismissed' ? 'opacity-60' : ''}`}>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex min-w-0 items-center gap-3">
-                          <span className={`rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${alert.state === 'overdue' ? 'bg-destructive/10 text-destructive' : alert.state === 'due' ? 'bg-amber-500/10 text-amber-700' : alert.state === 'dismissed' ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>{t(alert.state)}</span>
+                          <span className={`rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide ${alert.state === 'overdue' ? 'bg-destructive/10 text-destructive' : alert.state === 'due' ? 'bg-amber-500/10 text-amber-700' : alert.state === 'dismissed' ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>{translateDomainOption(language, alert.state)}</span>
                         <div className="min-w-0">
                           <h3 className="truncate font-extrabold">{vendor}</h3>
-                          <p className="mt-0.5 text-xs font-medium text-muted-foreground">{t(`Alert due ${formatRegistryDate(alert.actionDate, language)} to ${alert.owner}`)}</p>
-                          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{t(`Legal notice deadline ${formatRegistryDate(alert.noticeDeadline, language)}`)}</p>
+                           <p className="mt-0.5 text-xs font-medium text-muted-foreground">{t("alert.dueTo", { date: formatRegistryDate(alert.actionDate, language), owner: alert.owner })}</p>
+                           <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{t("alert.legalDeadline", { date: formatRegistryDate(alert.noticeDeadline, language) })}</p>
                         </div>
                       </div>
                       {alert.state !== 'dismissed' && (
                         <div className="flex flex-wrap items-center gap-2">
-                          <a href={mailto} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm"><Mail className="h-3.5 w-3.5" />{t("Send now")}</a>
-                          <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => setDismissingId(saved.id)}><Ban className="h-3.5 w-3.5" />{t("Dismiss")}</Button>
+                          <a href={mailto} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground shadow-sm"><Mail className="h-3.5 w-3.5" />{t("ui.send.now")}</a>
+                          <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => setDismissingId(saved.id)}><Ban className="h-3.5 w-3.5" />{t("ui.dismiss")}</Button>
                         </div>
                       )}
                     </div>
-                    {alert.dismissedReason && <p className="mt-2 text-xs font-semibold text-muted-foreground">{t(`Dismissed: ${alert.dismissedReason}`)}</p>}
+                    {alert.dismissedReason && <p className="mt-2 text-xs font-semibold text-muted-foreground">{t("alert.dismissedReason", { reason: alert.dismissedReason })}</p>}
                     {dismissingId === saved.id && (
                       <div className="mt-4 flex flex-col gap-2 border-t pt-4 sm:flex-row">
-                        <input value={dismissReason} onChange={(event) => setDismissReason(event.target.value)} placeholder={t("Why is this handled?")} className="h-9 flex-1 rounded-md border bg-background px-3 text-sm" />
-                        <Button size="sm" disabled={!dismissReason.trim() || dismissAlert.isPending} onClick={() => dismissAlert.mutate({ id: saved.id, data: { reason: dismissReason.trim() } })}>{t("Confirm dismissal")}</Button>
-                        <Button size="sm" variant="ghost" onClick={() => { setDismissingId(null); setDismissReason(""); }}>{t("Cancel")}</Button>
+                        <input value={dismissReason} onChange={(event) => setDismissReason(event.target.value)} placeholder={t("ui.why.is.this.handled")} className="h-9 flex-1 rounded-md border bg-background px-3 text-sm" />
+                        <Button size="sm" disabled={!dismissReason.trim() || dismissAlert.isPending} onClick={() => dismissAlert.mutate({ id: saved.id, data: { reason: dismissReason.trim() } })}>{t("ui.confirm.dismissal")}</Button>
+                        <Button size="sm" variant="ghost" onClick={() => { setDismissingId(null); setDismissReason(""); }}>{t("ui.cancel")}</Button>
                       </div>
                     )}
                   </article>
                 );
               })}
-              {!contractsQuery.isLoading && alerts.length === 0 && <div className="rounded-xl border border-dashed bg-card p-8 text-center text-sm font-medium text-muted-foreground">{t("No actionable alerts. Blocked and expired contracts are excluded.")}</div>}
+              {!contractsQuery.isLoading && alerts.length === 0 && <div className="rounded-xl border border-dashed bg-card p-8 text-center text-sm font-medium text-muted-foreground">{t("ui.no.actionable.alerts.blocked.and.expired.contracts.are.excluded")}</div>}
             </div>
           </section>}
           
@@ -513,9 +521,9 @@ export default function Dashboard() {
               <div>
                 <div className="flex items-center gap-2 text-primary">
                   <Bookmark className="h-4 w-4" />
-                  <h2 id="saved-views-heading" className="text-xl font-bold tracking-tight text-foreground">{t("Saved views")}</h2>
+                  <h2 id="saved-views-heading" className="text-xl font-bold tracking-tight text-foreground">{t("ui.saved.views")}</h2>
                 </div>
-                <p className="mt-1 text-sm font-medium text-muted-foreground">{t("Save common registry queues and reopen them with one click.")}</p>
+                <p className="mt-1 text-sm font-medium text-muted-foreground">{t("ui.save.common.registry.queues.and.reopen.them.with.one.click")}</p>
               </div>
               {!saveViewOpen && (
                 <Button
@@ -530,7 +538,7 @@ export default function Dashboard() {
                   className="gap-2 font-semibold"
                 >
                   <Save className="h-3.5 w-3.5" />
-                  {t("Save current view")}
+                  {t("ui.save.current.view")}
                 </Button>
               )}
             </div>
@@ -544,25 +552,28 @@ export default function Dashboard() {
                 }}
               >
                 <div className="flex-1">
-                  <label htmlFor="saved-view-name" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("View name")}</label>
+                  <label htmlFor="saved-view-name" className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("ui.view.name")}</label>
                   <input
                     id="saved-view-name"
                     data-testid="saved-view-name"
                     value={savedViewName}
                     onChange={(event) => setSavedViewName(event.target.value)}
-                    placeholder={t("e.g. Renewal review queue")}
+                    placeholder={t("ui.e.g.renewal.review.queue")}
                     maxLength={100}
                     autoFocus
                     className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
                   />
                   <p className="mt-1 text-xs font-medium text-muted-foreground">
-                    {t("Saves ")}{searchTerm.trim() ? `“${searchTerm.trim()}”` : t("all searches")}{documentTypeFilter ? ` · ${formatDocumentType(documentTypeFilter, language)}` : ` · ${t("all document types")}`}.
+                    {t("view.saveSummary", {
+                      search: searchTerm.trim() ? `“${searchTerm.trim()}”` : t("ui.all.searches"),
+                      documentType: documentTypeFilter ? formatDocumentType(documentTypeFilter, language) : t("ui.all.document.types"),
+                    })}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button type="submit" size="sm" disabled={createRegistryView.isPending} className="gap-2 font-semibold">
                     <Save className="h-3.5 w-3.5" />
-                    {createRegistryView.isPending ? t("Saving…") : t("Save view")}
+                    {createRegistryView.isPending ? t("ui.saving") : t("ui.save.view")}
                   </Button>
                   <Button
                     type="button"
@@ -574,26 +585,26 @@ export default function Dashboard() {
                       setSavedViewError(null);
                     }}
                   >
-                    {t("Cancel")}
+                    {t("ui.cancel")}
                   </Button>
                 </div>
               </form>
             )}
 
-            {savedViewError && <p role="alert" className="rounded-md border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm font-semibold text-destructive">{savedViewError}</p>}
+            {savedViewError && <p role="alert" className="rounded-md border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm font-semibold text-destructive">{t(savedViewError)}</p>}
             <p className="sr-only" role="status" aria-live="polite">{savedViewMoveStatus}</p>
 
             <div className="rounded-xl border bg-card shadow-sm">
               {registryViewsQuery.isLoading ? (
                 <div className="flex items-center gap-2 p-5 text-sm font-medium text-muted-foreground">
                   <LoaderCircle className="h-4 w-4 animate-spin" />
-                  {t("Loading saved views…")}
+                  {t("ui.loading.saved.views")}
                 </div>
               ) : registryViewsQuery.isError ? (
-                <div className="p-5 text-sm font-medium text-destructive">{t("Saved views could not be loaded. Refresh and try again.")}</div>
+                <div className="p-5 text-sm font-medium text-destructive">{t("ui.saved.views.could.not.be.loaded.refresh.and.try.again")}</div>
               ) : savedViews.length === 0 ? (
                 <div className="p-6 text-center text-sm font-medium text-muted-foreground">
-                  {t("No saved views yet. Save the current search and document type filters to create a reusable queue.")}
+                  {t("ui.no.saved.views.yet.save.the.current.search.and.document.type.filters.to.create.a.reusable.queue")}
                 </div>
               ) : (
                 <div className="divide-y">
@@ -611,7 +622,7 @@ export default function Dashboard() {
                               renameView(view);
                             }}
                           >
-                            <label htmlFor={`rename-view-${view.id}`} className="sr-only">{t("Rename")} {view.name}</label>
+                            <label htmlFor={`rename-view-${view.id}`} className="sr-only">{t("ui.rename")} {view.name}</label>
                             <input
                               id={`rename-view-${view.id}`}
                               value={editingViewName}
@@ -621,39 +632,39 @@ export default function Dashboard() {
                               className="h-9 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20"
                             />
                             <div className="flex items-center gap-2">
-                              <Button type="submit" size="sm" disabled={updateRegistryView.isPending}>{t("Save")}</Button>
-                              <Button type="button" size="sm" variant="ghost" onClick={() => { setEditingViewId(null); setEditingViewName(""); setSavedViewError(null); }}>{t("Cancel")}</Button>
+                              <Button type="submit" size="sm" disabled={updateRegistryView.isPending}>{t("ui.save")}</Button>
+                              <Button type="button" size="sm" variant="ghost" onClick={() => { setEditingViewId(null); setEditingViewName(""); setSavedViewError(null); }}>{t("ui.cancel")}</Button>
                             </div>
                           </form>
                         ) : deletingViewId === view.id ? (
                           <div className="flex min-w-0 flex-1 flex-col gap-1">
-                            <p className="text-sm font-bold">{t(`Delete “${view.name}”?`)}</p>
-                            <p className="text-xs font-medium text-muted-foreground">{t("This only removes the saved shortcut; your contracts are not affected.")}</p>
+                             <p className="text-sm font-bold">{t("view.confirmDelete", { name: view.name })}</p>
+                            <p className="text-xs font-medium text-muted-foreground">{t("ui.this.only.removes.the.saved.shortcut.your.contracts.are.not.affected")}</p>
                           </div>
                         ) : (
-                          <button type="button" onClick={() => openSavedView(view)} className="min-w-0 flex-1 text-left" aria-label={t(`Open saved view ${view.name}`)}>
+                           <button type="button" onClick={() => openSavedView(view)} className="min-w-0 flex-1 text-left" aria-label={t("view.open", { name: view.name })}>
                             <span className="flex flex-wrap items-center gap-2">
                               <span className="truncate text-sm font-extrabold text-foreground hover:text-primary">{view.name}</span>
                               {view.isPinned && (
                                 <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-amber-700 dark:text-amber-300">
                                   <Pin className="h-3 w-3" />
-                                  {t("Pinned")}
+                                  {t("ui.pinned")}
                                 </span>
                               )}
-                              {isActive && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary">{t("Active")}</span>}
+                              {isActive && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary">{t("ui.active")}</span>}
                             </span>
                             <span className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
-                              <span>{view.search ? `${t("Search: ")}“${view.search}”` : t("All searches")}</span>
-                              <span>{view.documentType ? formatDocumentType(view.documentType, language) : t("All document types")}</span>
+                              <span>{view.search ? `${t("ui.search")}“${view.search}”` : t("ui.all.searches.2")}</span>
+                              <span>{view.documentType ? formatDocumentType(view.documentType, language) : t("ui.all.document.types.2")}</span>
                             </span>
                           </button>
                         )}
                         {deletingViewId === view.id ? (
                           <div className="flex shrink-0 items-center gap-2">
                             <Button type="button" size="sm" variant="destructive" disabled={deleteRegistryView.isPending} onClick={() => deleteView(view)}>
-                              {deleteRegistryView.isPending ? t("Deleting…") : t("Delete")}
+                              {deleteRegistryView.isPending ? t("ui.deleting") : t("ui.delete")}
                             </Button>
-                            <Button type="button" size="sm" variant="ghost" onClick={() => { setDeletingViewId(null); setSavedViewError(null); }}>{t("Cancel")}</Button>
+                            <Button type="button" size="sm" variant="ghost" onClick={() => { setDeletingViewId(null); setSavedViewError(null); }}>{t("ui.cancel")}</Button>
                           </div>
                         ) : editingViewId !== view.id ? (
                           <div className="flex shrink-0 items-center gap-1">
@@ -661,8 +672,8 @@ export default function Dashboard() {
                               type="button"
                               variant="ghost"
                               size="icon"
-                               aria-label={t(`${view.isPinned ? "Unpin" : "Pin"} saved view ${view.name}`)}
-                               title={t(`${view.isPinned ? "Unpin" : "Pin"} saved view ${view.name}`)}
+                                aria-label={view.isPinned ? t("view.unpin", { name: view.name }) : t("view.pin", { name: view.name })}
+                                title={view.isPinned ? t("view.unpin", { name: view.name }) : t("view.pin", { name: view.name })}
                               disabled={pinRegistryView.isPending}
                               onClick={() => togglePin(view)}
                             >
@@ -674,8 +685,8 @@ export default function Dashboard() {
                                   type="button"
                                   variant="ghost"
                                   size="icon"
-                                   aria-label={t(`Move ${view.name} up${pinnedIndex <= 0 ? " (already first)" : ""}`)}
-                                   title={t("Move saved view up")}
+                                    aria-label={t("view.moveUp", { name: view.name, atBoundary: pinnedIndex <= 0 })}
+                                    title={t("view.moveUpTitle")}
                                   disabled={pinnedIndex <= 0 || reorderRegistryViews.isPending}
                                   onClick={() => movePinnedView(view.id, "up")}
                                 >
@@ -685,8 +696,8 @@ export default function Dashboard() {
                                   type="button"
                                   variant="ghost"
                                   size="icon"
-                                   aria-label={t(`Move ${view.name} down${pinnedIndex === pinnedViews.length - 1 ? " (already last)" : ""}`)}
-                                   title={t("Move saved view down")}
+                                    aria-label={t("view.moveDown", { name: view.name, atBoundary: pinnedIndex === pinnedViews.length - 1 })}
+                                    title={t("view.moveDownTitle")}
                                   disabled={pinnedIndex === pinnedViews.length - 1 || reorderRegistryViews.isPending}
                                   onClick={() => movePinnedView(view.id, "down")}
                                 >
@@ -694,10 +705,10 @@ export default function Dashboard() {
                                 </Button>
                               </>
                             )}
-                            <Button type="button" variant="ghost" size="icon" aria-label={t(`Rename saved view ${view.name}`)} title={t(`Rename saved view ${view.name}`)} onClick={() => startRename(view)}>
+                            <Button type="button" variant="ghost" size="icon" aria-label={t("view.rename", { name: view.name })} title={t("view.rename", { name: view.name })} onClick={() => startRename(view)}>
                               <Pencil className="h-3.5 w-3.5" />
                             </Button>
-                            <Button type="button" variant="ghost" size="icon" aria-label={t(`Delete saved view ${view.name}`)} title={t(`Delete saved view ${view.name}`)} onClick={() => confirmDelete(view)}>
+                            <Button type="button" variant="ghost" size="icon" aria-label={t("view.delete", { name: view.name })} title={t("view.delete", { name: view.name })} onClick={() => confirmDelete(view)}>
                               <Trash2 className="h-3.5 w-3.5 text-destructive" />
                             </Button>
                           </div>
@@ -713,20 +724,20 @@ export default function Dashboard() {
           {/* Recent Contracts Section */}
           {!isActionItemsPage && <div className="space-y-4 pt-4">
              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="text-xl font-bold tracking-tight">{t("Contract Registry")}</h2>
+              <h2 className="text-xl font-bold tracking-tight">{t("ui.contract.registry")}</h2>
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <label htmlFor="document-type-filter" className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                  {t("Document type")}
+                  {t("ui.document.type")}
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
                  <select
                   id="document-type-filter"
-                  aria-label={t("Filter by document type")}
+                  aria-label={t("ui.filter.by.document.type")}
                    value={documentTypeFilter}
                     onChange={(event) => updateDocumentTypeFilter(event.target.value)}
                    className="h-9 rounded-md border border-input bg-background px-3 text-xs font-semibold capitalize outline-none focus:ring-2 focus:ring-primary/20"
                  >
-                   <option value="">{t(`All document types (${contracts.length})`)}</option>
+                    <option value="">{t("registry.allDocumentTypesCount", { count: contracts.length })}</option>
                    {documentTypeOptions.map((option) => (
                       <option key={option} value={option}>{formatDocumentType(option, language)} ({documentTypeCounts[option] ?? 0})</option>
                    ))}
@@ -737,12 +748,12 @@ export default function Dashboard() {
                      variant="ghost"
                      size="sm"
                      onClick={() => updateDocumentTypeFilter("")}
-                     aria-label={t("Clear document type filter")}
-                     title={t("Clear document type filter")}
+                     aria-label={t("ui.clear.document.type.filter")}
+                     title={t("ui.clear.document.type.filter")}
                      className="gap-1.5 text-primary hover:text-primary/80 font-semibold"
                    >
                      <X className="h-3.5 w-3.5" />
-                     {t("Clear type")}
+                     {t("ui.clear.type")}
                    </Button>
                  )}
                   {(documentTypeFilter || searchTerm.trim()) && (
@@ -751,23 +762,23 @@ export default function Dashboard() {
                       variant="outline"
                       size="sm"
                       onClick={copyFilteredViewLink}
-                       aria-label={t("Copy filtered view link")}
-                       title={t("Copy filtered view link")}
+                       aria-label={t("ui.copy.filtered.view.link")}
+                       title={t("ui.copy.filtered.view.link")}
                       className="gap-1.5 font-semibold"
                     >
                       {shareStatus === "copied" ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Link2 className="h-3.5 w-3.5" />}
-                       {shareStatus === "copied" ? t("Link copied") : shareStatus === "error" ? t("Copy failed — try again") : t("Copy view link")}
+                       {shareStatus === "copied" ? t("ui.link.copied") : shareStatus === "error" ? t("ui.copy.failed.try.again") : t("ui.copy.view.link")}
                     </Button>
                   )}
                  {!documentTypeFilter && !searchTerm && (
-                   <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">{t("View All")}</Button>
+                   <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 font-semibold">{t("ui.view.all")}</Button>
                  )}
                 </div>
                </div>
              </div>
               {(documentTypeFilter || searchTerm) && (
                <p className="text-xs font-semibold text-muted-foreground">
-                  {t(`Showing ${filteredContracts.length} of ${contracts.length} contracts`)}
+                  {t("dashboard.showingContracts", { shown: filteredContracts.length, total: contracts.length })}
                </p>
              )}
             
@@ -776,31 +787,31 @@ export default function Dashboard() {
                  <table className="w-full min-w-[1780px] text-sm text-left">
                    <thead className="border-b text-xs uppercase tracking-wider">
                      <tr className="border-b bg-muted/20 text-[10px] font-extrabold tracking-[0.14em]">
-                        <th colSpan={5} className="border-r border-border px-4 py-2.5 text-left text-primary">{t("Extracted contract details")}</th>
-                        <th colSpan={5} className="border-r border-border bg-primary/[0.035] px-4 py-2.5 text-left text-primary">{t("Computed runway")}</th>
-                        <th className="border-r border-border bg-muted/30 px-4 py-2.5 text-left text-primary">{t("Extracted value")}</th>
-                        <th colSpan={2} className="bg-amber-500/[0.04] px-4 py-2.5 text-left text-amber-700 dark:text-amber-300">{t("Assigned ownership")}</th>
+                        <th colSpan={5} className="border-r border-border px-4 py-2.5 text-left text-primary">{t("ui.extracted.contract.details")}</th>
+                        <th colSpan={5} className="border-r border-border bg-primary/[0.035] px-4 py-2.5 text-left text-primary">{t("ui.computed.runway")}</th>
+                        <th className="border-r border-border bg-muted/30 px-4 py-2.5 text-left text-primary">{t("ui.extracted.value")}</th>
+                        <th colSpan={2} className="bg-amber-500/[0.04] px-4 py-2.5 text-left text-amber-700 dark:text-amber-300">{t("ui.assigned.ownership")}</th>
                      </tr>
                     <tr>
-                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("Vendor")}</th>
-                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("Contract type")}</th>
-                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("End date")}</th>
-                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("Renewal mechanism")}</th>
-                         <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("Notice period")}</th>
-                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("Action date")}</th>
-                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("Notice deadline")}</th>
-                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("Days remaining")}</th>
-                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("Status")}</th>
-                        <th className="border-r border-border bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("Status reason")}</th>
-                         <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("Value")}</th>
-                        <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">{t("Owner")}</th>
-                        <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">{t("Negotiation buffer")}</th>
+                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.vendor")}</th>
+                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.contract.type")}</th>
+                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.end.date")}</th>
+                        <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.renewal.mechanism")}</th>
+                         <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.notice.period")}</th>
+                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("ui.action.date")}</th>
+                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("ui.notice.deadline")}</th>
+                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("ui.days.remaining")}</th>
+                        <th className="bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("ui.status")}</th>
+                        <th className="border-r border-border bg-primary/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("ui.status.reason")}</th>
+                         <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.value")}</th>
+                        <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">{t("ui.owner")}</th>
+                        <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">{t("ui.negotiation.buffer")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                      {sortedFilteredContracts.map((saved) => {
                        const contract = saved.contract;
-                        const vendor = contract.fields.vendorLegalName.value || t("Unknown vendor");
+                        const vendor = contract.fields.vendorLegalName.value || t("ui.unknown.vendor");
                         const title = contract.fields.contractTitle.value || saved.filename;
                         const originallyExtractedContractType =
                           typeof contract.fields.contractType.originalValue === "string"
@@ -811,16 +822,17 @@ export default function Dashboard() {
                        const status = contract.computed.status;
                        const isBlocked = status === "blocked";
                        const isContractTypeSaving = savingContractTypeId === saved.id;
-                       const statusReason = contract.computed.reason
-                         || (status === "green"
-                           ? "Within action runway"
-                           : status === "amber"
-                             ? "Action window approaching"
-                             : status === "red"
-                               ? "Past legal notice deadline"
-                               : status === "expired"
-                                 ? "Contract end date has passed"
-                                 : "Dates blocked — review required");
+                        const statusReason = contract.computed.reason
+                          ? translateGeneratedReasonOrRaw(language, contract.computed.reason)
+                          : status === "green"
+                            ? t("ui.within.action.runway")
+                            : status === "amber"
+                              ? t("ui.action.window.approaching")
+                              : status === "red"
+                                ? t("ui.past.legal.notice.deadline")
+                                : status === "expired"
+                                  ? t("ui.contract.end.date.has.passed")
+                                  : t("ui.dates.blocked.review.required");
                        return (
                          <tr key={saved.id} data-testid={`contract-registry-row-${saved.id}`} className={`${statusRowClasses(status)} hover:bg-muted/30 transition-colors`}>
                            <td className="max-w-[190px] bg-muted/[0.12] px-4 py-3 align-top">
@@ -830,63 +842,63 @@ export default function Dashboard() {
                            <td className="bg-muted/[0.12] px-4 py-3 align-top">
                              <select
                                data-testid={`contract-type-select-${saved.id}`}
-                                aria-label={t(`Contract type for ${vendor}`)}
+                                 aria-label={t("contract.typeFor", { name: vendor })}
                                value={contract.fields.contractType.value || ""}
                                disabled={isContractTypeSaving || updateContract.isPending}
                                onChange={(event) => saveContractType(saved, event.target.value as typeof contractTypeOptions[number])}
                                className="h-8 w-[150px] rounded-md border border-input bg-background px-2 text-xs font-bold capitalize outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-wait disabled:opacity-60"
                              >
-                                {!contract.fields.contractType.value && <option value="" disabled>{t("Select type")}</option>}
+                                {!contract.fields.contractType.value && <option value="" disabled>{t("ui.select.type")}</option>}
                                 {contractTypeOptions.map((option) => <option key={option} value={option}>{formatContractType(option, language)}</option>)}
                              </select>
                               {originallyExtractedContractType && (
-                                 <div className="mt-1 max-w-[150px] truncate text-[10px] font-semibold text-amber-700 dark:text-amber-300" title={`${t("Originally extracted as ")}${formatContractType(originallyExtractedContractType, language)}`}>
-                                   {t("Edited · extracted")} {formatContractType(originallyExtractedContractType, language)}
+                                 <div className="mt-1 max-w-[150px] truncate text-[10px] font-semibold text-amber-700 dark:text-amber-300" title={`${t("ui.originally.extracted.as")}${originallyExtractedContractType}`}>
+                                    {t("contract.editedExtracted")} {originallyExtractedContractType}
                                </div>
                              )}
-                              {isContractTypeSaving && <div className="mt-1 text-[10px] font-bold text-primary">{t("Saving…")}</div>}
+                              {isContractTypeSaving && <div className="mt-1 text-[10px] font-bold text-primary">{t("ui.saving")}</div>}
                              {contractTypeErrorId === saved.id && contractTypeSaveError && !isContractTypeSaving && <div className="mt-1 max-w-[150px] text-[10px] font-bold text-destructive">{contractTypeSaveError}</div>}
                            </td>
                            <td className="bg-muted/[0.12] px-4 py-3 align-top">
-                               <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? t("Not computable") : formatRegistryDate(contract.computed.exitDate, language)}</div>
-                               <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("Computed exit")}</div>
+                               <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? t("ui.not.computable") : formatRegistryDate(contract.computed.exitDate, language)}</div>
+                               <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("ui.computed.exit")}</div>
                            </td>
                            <td className="bg-muted/[0.12] px-4 py-3 align-top">
-                              <div className="max-w-[150px] text-xs font-bold capitalize text-foreground">{formatLabel(contract.fields.renewalMechanism.value, "Not stated", language)}</div>
-                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("Extracted rule")}</div>
+                               <div className="max-w-[150px] text-xs font-bold capitalize text-foreground">{formatRenewalMechanism(contract.fields.renewalMechanism.value, "ui.not.stated", language)}</div>
+                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("ui.extracted.rule")}</div>
                            </td>
                             <td className="border-r border-border bg-muted/[0.12] px-4 py-3 align-top">
                               <div className="max-w-[170px] text-xs font-bold text-foreground">{formatPeriod(contract.fields.noticePeriod.value, language)}</div>
                            </td>
                            <td className="bg-primary/[0.02] px-4 py-3 align-top">
-                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? t("Not computable") : formatRegistryDate(contract.computed.actionDate, language)}</div>
-                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("Negotiation start")}</div>
+                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? t("ui.not.computable") : formatRegistryDate(contract.computed.actionDate, language)}</div>
+                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("ui.negotiation.start")}</div>
                            </td>
                            <td className="bg-primary/[0.02] px-4 py-3 align-top">
-                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? t("Not computable") : formatRegistryDate(contract.computed.noticeDeadline, language)}</div>
-                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("Legal deadline")}</div>
+                              <div className={`text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? t("ui.not.computable") : formatRegistryDate(contract.computed.noticeDeadline, language)}</div>
+                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("ui.legal.deadline")}</div>
                            </td>
                            <td className="bg-primary/[0.02] px-4 py-3 align-top">
                               <div className={`whitespace-nowrap text-xs font-extrabold ${isBlocked ? "text-destructive" : "text-foreground"}`}>{isBlocked ? "—" : formatDaysRemaining(contract.computed.daysRemaining, language)}</div>
-                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{isBlocked ? t("Not computable") : t("Until action")}</div>
+                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{isBlocked ? t("ui.not.computable") : t("ui.until.action")}</div>
                            </td>
                            <td className="bg-primary/[0.02] px-4 py-3 align-top">
-                               <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider ${statusClasses(status)}`}>{t(status === "red" ? "overdue" : status)}</span>
+                                <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider ${statusClasses(status)}`}>{translateDomainOption(language, status === "red" ? "overdue" : status)}</span>
                            </td>
                            <td className="max-w-[240px] border-r border-border bg-primary/[0.02] px-4 py-3 align-top">
-                              <div className={`max-w-[230px] truncate text-xs font-semibold ${status === "green" ? "text-muted-foreground" : "text-destructive"}`} title={t(statusReason)}>{t(statusReason)}</div>
+                              <div className={`max-w-[230px] truncate text-xs font-semibold ${status === "green" ? "text-muted-foreground" : "text-destructive"}`} title={statusReason}>{statusReason}</div>
                            </td>
                             <td className="border-r border-border bg-muted/[0.12] px-4 py-3 align-top">
                                <div className={`max-w-[150px] text-xs font-extrabold ${valueIsUnknown ? "text-destructive" : "text-foreground"}`}>{formatContractValue(value, language)}</div>
-                               {valueIsUnknown && <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-destructive">{t("Needs review")}</div>}
+                               {valueIsUnknown && <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-destructive">{t("ui.needs.review")}</div>}
                             </td>
                            <td className="bg-amber-500/[0.025] px-4 py-3 align-top">
-                              <div className={`text-xs font-bold ${contract.assignment.owner ? "text-foreground" : "text-destructive"}`}>{contract.assignment.owner || t("Unassigned")}</div>
-                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("Assigned owner")}</div>
+                              <div className={`text-xs font-bold ${contract.assignment.owner ? "text-foreground" : "text-destructive"}`}>{contract.assignment.owner || t("ui.unassigned")}</div>
+                              <div className="mt-1 text-[10px] font-semibold text-muted-foreground">{t("ui.assigned.owner")}</div>
                            </td>
                            <td className="bg-amber-500/[0.025] px-4 py-3 align-top">
-                              <div className="whitespace-nowrap text-xs font-extrabold text-foreground">{t(`${contract.assignment.negotiationBufferDays} days`)}</div>
-                              <div className="mt-1 text-[10px] font-semibold capitalize text-muted-foreground">{formatLabel(contract.assignment.negotiationBufferSource, "Default", language)}</div>
+                               <div className="whitespace-nowrap text-xs font-extrabold text-foreground">{t("common.days", { count: contract.assignment.negotiationBufferDays })}</div>
+                               <div className="mt-1 text-[10px] font-semibold capitalize text-muted-foreground">{formatNegotiationBufferSource(contract.assignment.negotiationBufferSource, language)}</div>
                            </td>
                          </tr>
                        );
@@ -896,8 +908,8 @@ export default function Dashboard() {
                  {!contractsQuery.isLoading && filteredContracts.length === 0 && (
                     <div data-testid="contract-registry-empty" className="p-10 text-center text-sm font-medium text-muted-foreground">
                      {contracts.length === 0
-                         ? t("No confirmed contracts yet. Upload a PDF to get started.")
-                        : t("No contracts match the current filters.")}
+                         ? t("ui.no.confirmed.contracts.yet.upload.a.pdf.to.get.started")
+                        : t("ui.no.contracts.match.the.current.filters")}
                    </div>
                 )}
               </div>

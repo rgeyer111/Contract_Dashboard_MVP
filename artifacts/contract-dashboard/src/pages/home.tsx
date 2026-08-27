@@ -21,16 +21,16 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
             </span>
-            {t("Operations Workspace")}
+            {t("home.operationsWorkspace")}
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
-            {t("Stay ahead of")} <br />
-            <span className="text-primary">{t("contract renewals.")}</span>
+            {t("home.stayAhead")} <br />
+            <span className="text-primary">{t("home.contractRenewals")}</span>
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
-            {t("Contract Dashboard is the dedicated workspace for operations teams to track, manage, and negotiate agreements before they expire. No surprises, just leverage.")}
+            {t("home.description")}
           </p>
           
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
@@ -41,7 +41,7 @@ export default function Home() {
                 "w-full sm:w-auto h-14 px-8 text-base shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
               )}
             >
-              {t("Continue to Contract Dashboard")}
+              {t("home.continue")}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
@@ -49,11 +49,11 @@ export default function Home() {
           <div className="flex items-center gap-8 pt-12 text-sm text-muted-foreground font-medium">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-primary/70" />
-              <span>{t("Enterprise Grade")}</span>
+              <span>{t("home.enterpriseGrade")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-primary/70" />
-              <span>{t("Real-time Alerts")}</span>
+              <span>{t("home.realtimeAlerts")}</span>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="h-8 px-3 bg-destructive/10 rounded-full flex items-center justify-center border border-destructive/20">
-                 <span className="text-xs font-bold text-destructive">{t("Expires in 3d")}</span>
+                 <span className="text-xs font-bold text-destructive">{t("home.expiresIn3d")}</span>
               </div>
             </div>
             
@@ -100,7 +100,7 @@ export default function Home() {
           <div className="absolute -left-16 top-24 bg-card border shadow-xl rounded-xl p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300 fill-mode-both z-20">
              <div className="h-3 w-3 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
              <div>
-               <p className="text-sm font-bold text-foreground">{t("Vendor Approved")}</p>
+               <p className="text-sm font-bold text-foreground">{t("home.vendorApproved")}</p>
                <p className="text-xs font-medium text-muted-foreground">Alpine Cloud AG</p>
              </div>
           </div>
@@ -111,8 +111,8 @@ export default function Home() {
                 <span className="text-sm font-bold text-primary">CHF 12'000</span>
              </div>
              <div>
-               <p className="text-sm font-bold text-foreground">{t("Savings Captured")}</p>
-               <p className="text-xs font-medium text-muted-foreground">{t("Negotiated rate")}</p>
+               <p className="text-sm font-bold text-foreground">{t("home.savingsCaptured")}</p>
+               <p className="text-xs font-medium text-muted-foreground">{t("home.negotiatedRate")}</p>
              </div>
           </div>
         </div>

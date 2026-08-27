@@ -1,6 +1,20 @@
-import type { SavedContract } from "@workspace/api-client-react";
+import type {
+  ContractAssignmentNegotiationBufferSource,
+  ContractValueValue,
+  NoticePeriodValue,
+  ProvenanceContractTypeFieldValue,
+  ProvenanceDocumentTypeFieldValue,
+  ProvenanceRenewalMechanismFieldValue,
+  SavedContract,
+} from "@workspace/api-client-react";
+import { ProvenanceDocumentTypeFieldValue as documentTypeValues } from "@workspace/api-client-react";
 import { documentTypeOptions } from "./contracts";
-import { localize, type UiLanguage } from "./i18n";
+import {
+  translate,
+  translateDomainOption,
+  type MessageId,
+  type UiLanguage,
+} from "./i18n";
 
 export const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
 export const SEARCH_QUERY_PARAM = "search";
@@ -12,57 +26,65 @@ export function formatSwissNumber(value: number) {
   }).format(value);
 }
 
-export function formatContractType(value: string | null, language: UiLanguage = "en") {
-  return value ? localize(language, value.replace(/_/g, " ")) : localize(language, "Type not stated");
+export function formatContractType(value: ProvenanceContractTypeFieldValue, language: UiLanguage = "en") {
+  return value
+    ? translateDomainOption(language, value)
+    : translate(language, "ui.type.not.stated");
 }
 
-export function formatDocumentType(value: string, language: UiLanguage = "en") {
-  return localize(language, value.replace(/_/g, " "));
+export function formatDocumentType(value: NonNullable<ProvenanceDocumentTypeFieldValue>, language: UiLanguage = "en") {
+  return translateDomainOption(language, value);
 }
 
-export function formatContractValue(value: { amount?: number; currency?: string; basis?: string } | null, language: UiLanguage = "en") {
-  if (!value || value.amount === undefined || !value.currency || !value.basis) {
-    return localize(language, "Value not stated");
+export function formatContractValue(value: ContractValueValue | null, language: UiLanguage = "en") {
+  if (!value) {
+    return translate(language, "ui.value.not.stated");
   }
-  return `${value.currency} ${formatSwissNumber(value.amount)} · ${localize(language, value.basis.replace(/_/g, " "))}`;
+  return translate(language, "registry.contractValue", {
+    currency: value.currency,
+    amount: formatSwissNumber(value.amount),
+    basis: translateDomainOption(language, value.basis),
+  });
 }
 
-export function formatPeriod(value: unknown, language: UiLanguage = "en") {
+export function formatPeriod(value: NoticePeriodValue | NoticePeriodValue[] | null, language: UiLanguage = "en") {
   const periods = Array.isArray(value) ? value : value ? [value] : [];
   return periods
     .map((period) => {
-      if (!period || typeof period !== "object") return null;
-      const item = period as { amount?: number; unit?: string; anchor?: string };
-      if (item.amount === undefined || !item.unit) return null;
-      const anchor = item.anchor && item.anchor !== "term_end"
-        ? ` ${localize(language, "before")} ${localize(language, item.anchor.replace(/_/g, " "))}`
-        : "";
-      return `${item.amount} ${localize(language, item.unit)}${anchor}`;
+      return translate(language, "registry.period", {
+        amount: period.amount,
+        unit: translateDomainOption(language, period.unit),
+        anchor: period.anchor && period.anchor !== "term_end"
+          ? translateDomainOption(language, period.anchor)
+          : undefined,
+      });
     })
     .filter(Boolean)
-    .join(" · ") || localize(language, "Notice terms not stated");
+    .join(" · ") || translate(language, "ui.notice.terms.not.stated");
 }
 
 export function formatDaysRemaining(value: number | null, language: UiLanguage = "en") {
-  if (value === null) return localize(language, "Action date unavailable");
-  if (value === 0) return localize(language, "Action starts today");
-  if (value > 0) return language === "de-CH"
-    ? `${value} Tag${value === 1 ? "" : "e"} bis zur Aktion`
-    : `${value} day${value === 1 ? "" : "s"} until action`;
+  if (value === null) return translate(language, "ui.action.date.unavailable");
+  if (value === 0) return translate(language, "ui.action.starts.today");
+  if (value > 0) return translate(language, "registry.daysUntilAction", { count: value });
   const overdueDays = Math.abs(value);
-  return language === "de-CH"
-    ? `${overdueDays} Tag${overdueDays === 1 ? "" : "e"} nach dem Aktionsdatum`
-    : `${overdueDays} day${overdueDays === 1 ? "" : "s"} past action date`;
+  return translate(language, "registry.daysPastAction", { count: overdueDays });
 }
 
 export function formatRegistryDate(value: string | null | undefined, language: UiLanguage = "en") {
-  if (!value) return localize(language, "Not stated");
+  if (!value) return translate(language, "ui.not.stated");
   const [year, month, day] = value.split("-");
   return year && month && day ? `${day}.${month}.${year}` : value;
 }
 
-export function formatLabel(value: string | null | undefined, fallback = "Not stated", language: UiLanguage = "en") {
-  return value ? localize(language, value.replace(/_/g, " ")) : localize(language, fallback);
+export function formatRenewalMechanism(value: ProvenanceRenewalMechanismFieldValue, fallback: MessageId = "ui.not.stated", language: UiLanguage = "en") {
+  return value
+    ? translateDomainOption(language, value)
+    : translate(language, fallback);
+}
+
+export function formatNegotiationBufferSource(value: ContractAssignmentNegotiationBufferSource, language: UiLanguage = "en") {
+  return translateDomainOption(language, value);
 }
 
 export function statusClasses(status: string) {
@@ -87,9 +109,17 @@ export function statusRowClasses(status: string) {
         : "";
 }
 
-export function getDocumentTypeFromUrl(search = window.location.search) {
+export function getDocumentTypeFromUrl(
+  search = window.location.search,
+): NonNullable<ProvenanceDocumentTypeFieldValue> | "" {
   const value = new URLSearchParams(search).get(DOCUMENT_TYPE_QUERY_PARAM);
-  return value && documentTypeOptions.some((option) => option === value) ? value : "";
+  return parseDocumentType(value);
+}
+
+export function parseDocumentType(value: string | null): NonNullable<ProvenanceDocumentTypeFieldValue> | "" {
+  return value && Object.values(documentTypeValues).some((option) => option === value)
+    ? value as NonNullable<ProvenanceDocumentTypeFieldValue>
+    : "";
 }
 
 export function getSearchTermFromLocation(location: string) {

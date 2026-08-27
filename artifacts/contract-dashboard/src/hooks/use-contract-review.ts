@@ -9,6 +9,7 @@ import {
   type ContractReviewRecord,
 } from "@workspace/api-client-react";
 import { createEmptyContractReviewRecord } from "@/lib/contracts";
+import type { MessageId } from "@/lib/i18n";
 import {
   extractionQueueStorageKey,
   extractionStorageKey,
@@ -52,7 +53,7 @@ export function useContractReview() {
   );
   const [filename, setFilename] = useState(storedExtraction?.filename ?? "confirmed-contract.pdf");
   const [resolvedKeys, setResolvedKeys] = useState<Set<FieldKey>>(new Set());
-  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<MessageId | null>(null);
 
   useEffect(() => {
     if (savedContractQuery.data) {
@@ -194,7 +195,7 @@ export function useContractReview() {
         navigate("/dashboard");
       }
     } catch (error) {
-      setSaveError(error instanceof Error ? error.message : "We could not save this contract. Please try again.");
+      setSaveError("ui.we.could.not.save.this.contract.please.try.again");
     }
   };
 

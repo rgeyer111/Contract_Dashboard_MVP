@@ -95,6 +95,7 @@ class ExtractionError extends Error {
   constructor(
     message: string,
     readonly status: 422 | 502,
+    readonly code: "UNREADABLE" | "OCR_INCOMPLETE" | "TOO_LARGE" | "UNAVAILABLE",
   ) {
     super(message);
   }
@@ -121,8 +122,12 @@ export async function extractSourceFile(
 ): Promise<any> {
   const sourceFile = await loadContractSourceFile(source, id);
   if (await hasExistingSourceHash(sourceFile.hash)) {
-    const error = new Error("This contract has already been uploaded. Duplicate skipped.");
-    (error as Error & { status?: number }).status = 409;
+    const error = new Error("This contract has already been uploaded. Duplicate skipped.") as Error & {
+      status?: number;
+      code?: string;
+    };
+    error.status = 409;
+    error.code = "DUPLICATE";
     throw error;
   }
 
@@ -163,11 +168,13 @@ export async function extractSourceFile(
             ? error.message
             : "We could not fully transcribe this scanned PDF. Split it into smaller files and try again.",
           422,
+          "OCR_INCOMPLETE",
         );
       }
       throw new ExtractionError(
         "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
         422,
+        "UNREADABLE",
       );
     }
   }
@@ -204,11 +211,13 @@ export async function extractSourceFile(
       throw new ExtractionError(
         `${error instanceof Error ? error.message : "This contract is too large to process."}${pageDetails}`,
         422,
+        "TOO_LARGE",
       );
     }
     throw new ExtractionError(
       "We could not extract this contract right now. Please try again.",
       502,
+      "UNAVAILABLE",
     );
   }
 }
@@ -369,6 +378,12 @@ function extractionErrorStatus(error: unknown) {
 
 function extractionErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "We could not extract this contract right now. Please try again.";
+}
+
+function extractionErrorCode(error: unknown) {
+  return error && typeof error === "object" && "code" in error && typeof error.code === "string"
+    ? error.code
+    : "UNAVAILABLE";
 }
 
 router.get("/registry-views", async (_req: Request, res: Response): Promise<void> => {
@@ -686,12 +701,12 @@ router.post(
       : Object.values(req.files ?? {}).flat();
     const file = uploadedFiles[0];
     if (!file) {
-      res.status(400).json({ error: "Choose one PDF contract or more to continue." });
+      res.status(400).json({ error: "Choose one PDF contract or more to continue.", code: "INVALID_UPLOAD" });
       return;
     }
 
     if (uploadedFiles.some((candidate) => !isPdf(candidate))) {
-      res.status(400).json({ error: "Only valid PDF files can be uploaded." });
+      res.status(400).json({ error: "Only valid PDF files can be uploaded.", code: "INVALID_UPLOAD" });
       return;
     }
 
@@ -709,8 +724,12 @@ router.post(
           ))
           .limit(1);
         if (duplicateItem) {
-          const duplicateError = new Error("This contract has already been uploaded. Duplicate skipped.");
-          (duplicateError as Error & { status?: number }).status = 409;
+          const duplicateError = new Error("This contract has already been uploaded. Duplicate skipped.") as Error & {
+            status?: number;
+            code?: string;
+          };
+          duplicateError.status = 409;
+          duplicateError.code = "DUPLICATE";
           throw duplicateError;
         }
       }
@@ -724,7 +743,7 @@ router.post(
           extraction: result,
         }, ingestAttempt);
         if (!persisted) {
-          res.status(409).json({ error: "This upload attempt was superseded. Use the latest result." });
+          res.status(409).json({ error: "This upload attempt was superseded. Use the latest result.", code: "SUPERSEDED" });
           return;
         }
       }
@@ -738,13 +757,14 @@ router.post(
           extraction: null,
         }, ingestAttempt);
         if (!persisted) {
-          res.status(409).json({ error: "This upload attempt was superseded. Use the latest result." });
+          res.status(409).json({ error: "This upload attempt was superseded. Use the latest result.", code: "SUPERSEDED" });
           return;
         }
         if (duplicate) await deleteRunIfNoActionableItems(identifiers.runId);
       }
       res.status(duplicate ? 409 : extractionErrorStatus(error)).json({
         error: duplicate ? "This contract has already been uploaded. Duplicate skipped." : extractionErrorMessage(error),
+        code: duplicate ? "DUPLICATE" : extractionErrorCode(error),
       });
     }
   },
@@ -971,7 +991,7 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
         eq(contractIngestItemsTable.runId, runId),
       ));
     return existing
-      ? { status: 409, error: "Only failed ingest items can be retried." }
+      ? { status: 409, error: "Only failed ingest items can be retried.", code: "INVALID_UPLOAD" }
       : null;
   }
   try {
@@ -992,7 +1012,7 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
       extraction: result,
     }, { storagePath: item.storagePath, processingAttemptId });
     if (!persisted) {
-      return { status: 409, error: "This retry attempt was superseded. Use the latest result." };
+      return { status: 409, error: "This retry attempt was superseded. Use the latest result.", code: "SUPERSEDED" };
     }
     return { result };
   } catch (error) {
@@ -1003,12 +1023,13 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
       extraction: null,
     }, { storagePath: item.storagePath, processingAttemptId });
     if (!persisted) {
-      return { status: 409, error: "This retry attempt was superseded. Use the latest result." };
+      return { status: 409, error: "This retry attempt was superseded. Use the latest result.", code: "SUPERSEDED" };
     }
     if (duplicate) await deleteRunIfNoActionableItems(runId);
     return {
       status: duplicate ? 409 : extractionErrorStatus(error),
       error: duplicate ? "This contract has already been uploaded. Duplicate skipped." : extractionErrorMessage(error),
+      code: duplicate ? "DUPLICATE" : extractionErrorCode(error),
     };
   }
 }
@@ -1018,11 +1039,11 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/retry", async (req: Req
   const itemId = Array.isArray(req.params.itemId) ? req.params.itemId[0] : req.params.itemId;
   const outcome = await retryIngestItem(runId, itemId, req);
   if (!outcome) {
-    res.status(404).json({ error: "Ingest item not found." });
+    res.status(404).json({ error: "Ingest item not found.", code: "INVALID_UPLOAD" });
     return;
   }
   if ("error" in outcome) {
-    res.status(outcome.status ?? 502).json({ error: outcome.error });
+    res.status(outcome.status ?? 502).json({ error: outcome.error, code: outcome.code ?? "UNAVAILABLE" });
     return;
   }
   res.json(outcome.result);
@@ -1110,10 +1131,10 @@ router.use(
     if (error instanceof multer.MulterError) {
       req.log.warn({ code: error.code }, "Invalid contract upload");
       if (error.code === "LIMIT_FILE_SIZE") {
-        res.status(400).json({ error: "PDF files must be 10 MB or smaller." });
+        res.status(400).json({ error: "PDF files must be 10 MB or smaller.", code: "TOO_LARGE" });
         return;
       }
-      res.status(400).json({ error: "Please upload one PDF contract at a time." });
+      res.status(400).json({ error: "Please upload one PDF contract at a time.", code: "INVALID_UPLOAD" });
       return;
     }
     next(error);
