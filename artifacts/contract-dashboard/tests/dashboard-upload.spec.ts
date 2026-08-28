@@ -115,6 +115,42 @@ test("shows Swiss sample contract content on the landing page", async ({ page })
   await expect(page.getByText("-$12k", { exact: true })).toHaveCount(0);
 });
 
+test("permanently deletes a registry contract after confirmation", async ({ page }) => {
+  const saved = savedResponse({
+    id: "contract-delete-1",
+    filename: "delete-contract.pdf",
+    contract: makeContract({ vendor: "Delete Vendor AG", contractNumber: "DEL-1" }),
+  });
+  let deleted = false;
+  await page.route("**/api/contracts", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: deleted ? [] : [saved] });
+      return;
+    }
+    await route.continue();
+  });
+  await page.route("**/api/contracts/contract-delete-1", async (route) => {
+    if (route.request().method() === "DELETE") {
+      deleted = true;
+      await route.fulfill({ status: 204 });
+      return;
+    }
+    await route.continue();
+  });
+
+  await page.goto("/dashboard");
+  const row = page.getByTestId("contract-registry-row-contract-delete-1");
+  await expect(row).toBeVisible();
+  await row.getByRole("button", { name: "Delete Delete Vendor AG" }).click();
+  await expect(page.getByRole("alertdialog")).toContainText("Delete Vendor AG");
+  await expect(page.getByRole("alertdialog")).toContainText("cannot be undone");
+  await page.getByRole("button", { name: "Delete permanently" }).click();
+
+  await expect(row).toHaveCount(0);
+  await expect(page.getByTestId("contract-registry-empty")).toContainText("Upload a PDF to get started");
+  expect(deleted).toBe(true);
+});
+
 test("shows upload success and API error states", async ({ page }) => {
   let responseMode: "success" | "error" = "success";
   await page.route("**/api/contracts", async (route) => {

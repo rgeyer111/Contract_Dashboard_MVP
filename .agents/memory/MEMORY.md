@@ -22,3 +22,4 @@
 - [Notice conflict auditing](notice-conflict-auditing.md) — never treat a broad extraction pass as proof that no competing or ambiguous notice language exists.
 - [Malformed PDF parser state](malformed-pdf-parser-state.md) — pdf-parse can handle the same bad-XRef bytes differently after warm-up; test recovery before any pre-parse.
 - [Extraction evaluation variability](extraction-evaluation-variability.md) — regenerate metrics from each full model run; aggregate exact-match totals are nondeterministic.
+- [Contract deletion retention](contract-deletion-retention.md) — deleting a contract removes its record permanently but retains its PDF in waste until an administrator empties it.

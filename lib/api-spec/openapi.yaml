@@ -440,6 +440,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteContract
+      tags: [contracts]
+      summary: Permanently delete a contract after preserving its PDF in waste storage
+      responses:
+        "204":
+          description: Contract deleted and source PDF moved to waste
+        "404":
+          description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Source PDF could not be preserved in waste storage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /contracts/{id}/decisions:
     parameters:
       - name: id

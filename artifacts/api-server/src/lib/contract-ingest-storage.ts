@@ -1,7 +1,9 @@
 import { randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 
 const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
 const privateObjectPrefix = "/objects/uploads/contract-ingest/";
+const wasteObjectPrefix = "/objects/uploads/contract-waste/";
 
 function privateObjectDir() {
   const dir = process.env.PRIVATE_OBJECT_DIR?.trim().replace(/\/+$/, "");
@@ -12,7 +14,7 @@ function privateObjectDir() {
 }
 
 function objectLocation(objectPath: string) {
-  if (!objectPath.startsWith(privateObjectPrefix)) {
+  if (!objectPath.startsWith(privateObjectPrefix) && !objectPath.startsWith(wasteObjectPrefix)) {
     throw new Error("Invalid contract ingest storage path.");
   }
 
@@ -25,6 +27,13 @@ function objectLocation(objectPath: string) {
   }
 
   return { bucketName, objectName: pathParts.join("/") };
+}
+
+export function createContractWasteStoragePath(contractId: string): string {
+  if (!/^[0-9a-f-]{36}$/i.test(contractId)) {
+    throw new Error("Invalid contract identifier for waste storage.");
+  }
+  return `${wasteObjectPrefix}${contractId}.pdf`;
 }
 
 async function signedObjectUrl(
@@ -91,6 +100,21 @@ export async function readContractIngestPdf(objectPath: string): Promise<Buffer>
     );
   }
   return Buffer.from(await response.arrayBuffer());
+}
+
+export async function copyContractPdfToWaste(
+  sourcePath: string,
+  contractId: string,
+): Promise<string> {
+  const pdf = await readContractIngestPdf(sourcePath);
+  const wastePath = createContractWasteStoragePath(contractId);
+  await storeContractIngestPdf(pdf, wastePath);
+  const stored = await readContractIngestPdf(wastePath);
+  const digest = (bytes: Buffer) => createHash("sha256").update(bytes).digest("hex");
+  if (digest(pdf) !== digest(stored)) {
+    throw new Error("The contract PDF could not be verified in waste storage.");
+  }
+  return wastePath;
 }
 
 export async function deleteContractIngestPdf(objectPath: string): Promise<void> {

@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   db,
   contractIngestCompletionsTable,
+  contractDecisionsTable,
   contractIngestItemsTable,
   contractIngestObjectCleanupTable,
   contractIngestRunsTable,
@@ -105,6 +106,117 @@ const contract = {
 };
 
 describe("saved contract persistence", () => {
+  it("moves a source PDF to waste before permanently deleting the contract and decisions", async () => {
+    const id = crypto.randomUUID();
+    const storagePath = `/objects/uploads/contract-ingest/${crypto.randomUUID()}`;
+    const sourceBytes = pdfLike("%PDF-1.7\ncontract deleted to waste");
+    let wasteBytes: Buffer | null = null;
+    let originalDeleted = false;
+    const childId = crypto.randomUUID();
+    const completionItemId = `delete-completion-${crypto.randomUUID()}`;
+    const originalFetch = globalThis.fetch;
+    try {
+      await db.insert(contractsTable).values({
+        id,
+        filename: "delete-me.pdf",
+        fileHash: createHash("sha256").update(sourceBytes).digest("hex"),
+        sourceStoragePath: storagePath,
+        documentType: "master_agreement",
+        contract,
+        confidence: {},
+      });
+      await db.insert(contractDecisionsTable).values({
+        contractId: id,
+        decision: "renew",
+        actor: "Deletion Test",
+      });
+      await db.insert(contractsTable).values({
+        id: childId,
+        filename: "legacy-child.pdf",
+        parentContractId: id,
+        contract,
+        confidence: {},
+      });
+      await db.insert(contractIngestCompletionsTable).values({
+        itemId: completionItemId,
+        runId: crypto.randomUUID(),
+        contractId: id,
+        storagePath,
+      });
+
+      globalThis.fetch = async (input, init) => {
+        if (String(input).includes("/object-storage/signed-object-url")) {
+          const body = JSON.parse(String(init?.body)) as { method: string; object_name: string };
+          return new Response(JSON.stringify({
+            signed_url: `https://storage.test/${body.method}/${body.object_name.includes("contract-waste") ? "waste" : "source"}`,
+          }), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        const url = String(input);
+        if (url === "https://storage.test/GET/source" && (!init?.method || init.method === "GET")) {
+          return new Response(sourceBytes, { status: 200 });
+        }
+        if (url === "https://storage.test/PUT/waste" && init?.method === "PUT") {
+          wasteBytes = Buffer.from(init.body as Buffer);
+          return new Response(null, { status: 200 });
+        }
+        if (url === "https://storage.test/GET/waste") {
+          return new Response(wasteBytes, { status: wasteBytes ? 200 : 404 });
+        }
+        if (url === "https://storage.test/DELETE/source" && init?.method === "DELETE") {
+          originalDeleted = true;
+          return new Response(null, { status: 204 });
+        }
+        throw new Error(`Unexpected fetch: ${url}`);
+      };
+
+      const deleted = await request(app).delete(`/api/contracts/${id}`);
+      expect(deleted.status).toBe(204);
+      expect(wasteBytes).toEqual(sourceBytes);
+      expect(originalDeleted).toBe(true);
+      expect(await db.select().from(contractsTable).where(eq(contractsTable.id, id))).toEqual([]);
+      expect(await db.select().from(contractDecisionsTable).where(eq(contractDecisionsTable.contractId, id))).toEqual([]);
+      expect(await db.select().from(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.contractId, id))).toEqual([]);
+      const [legacyChild] = await db.select({ parentContractId: contractsTable.parentContractId })
+        .from(contractsTable)
+        .where(eq(contractsTable.id, childId));
+      expect(legacyChild.parentContractId).toBeNull();
+      expect(await db.select().from(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath))).toEqual([]);
+
+      const repeated = await request(app).delete(`/api/contracts/${id}`);
+      expect(repeated.status).toBe(404);
+    } finally {
+      globalThis.fetch = originalFetch;
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.itemId, completionItemId));
+      await db.delete(contractsTable).where(eq(contractsTable.id, childId));
+      await db.delete(contractsTable).where(eq(contractsTable.id, id));
+      await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+    }
+  });
+
+  it("keeps a contract when its source PDF cannot be copied to waste", async () => {
+    const id = crypto.randomUUID();
+    const storagePath = `/objects/uploads/contract-ingest/${crypto.randomUUID()}`;
+    const originalFetch = globalThis.fetch;
+    try {
+      await db.insert(contractsTable).values({
+        id,
+        filename: "keep-on-storage-failure.pdf",
+        sourceStoragePath: storagePath,
+        contract,
+        confidence: {},
+      });
+      globalThis.fetch = async () => new Response(null, { status: 503 });
+
+      const response = await request(app).delete(`/api/contracts/${id}`);
+      expect(response.status).toBe(503);
+      expect(response.body.error).toMatch(/could not be moved to waste/i);
+      expect(await db.select().from(contractsTable).where(eq(contractsTable.id, id))).toHaveLength(1);
+    } finally {
+      globalThis.fetch = originalFetch;
+      await db.delete(contractsTable).where(eq(contractsTable.id, id));
+    }
+  });
+
   it("records recurring decisions separately with server-owned attribution time", async () => {
     let id: string | undefined;
     try {

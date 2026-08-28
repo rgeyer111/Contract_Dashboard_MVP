@@ -31,10 +31,21 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   getListContractsQueryKey,
+  useDeleteContract,
   useDismissContractAlert,
   useListContracts,
   useUpdateContract,
 } from "@workspace/api-client-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { contractTypeOptions, documentTypeOptions, getDocumentTypeCounts } from "@/lib/contracts";
 import {
   formatContractType,
@@ -66,6 +77,8 @@ export default function Dashboard() {
   const [savingContractTypeId, setSavingContractTypeId] = useState<string | null>(null);
   const [contractTypeErrorId, setContractTypeErrorId] = useState<string | null>(null);
   const [contractTypeSaveError, setContractTypeSaveError] = useState<string | null>(null);
+  const [contractToDelete, setContractToDelete] = useState<typeof contracts[number] | null>(null);
+  const [contractDeleteError, setContractDeleteError] = useState(false);
   const queryClient = useQueryClient();
   const realContractsQuery = useListContracts({
     query: {
@@ -164,6 +177,16 @@ export default function Dashboard() {
         setSavingContractTypeId(null);
         setContractTypeSaveError(t("ui.contract.type.could.not.be.saved.please.try.again"));
       },
+    },
+  });
+  const deleteContract = useDeleteContract({
+    mutation: {
+      onSuccess: async () => {
+        setContractToDelete(null);
+        setContractDeleteError(false);
+        await queryClient.invalidateQueries({ queryKey: getListContractsQueryKey(), refetchType: "all" });
+      },
+      onError: () => setContractDeleteError(true),
     },
   });
   const saveContractType = (saved: typeof contracts[number], value: typeof contractTypeOptions[number]) => {
@@ -828,7 +851,8 @@ export default function Dashboard() {
                         <th colSpan={5} className="border-r border-border px-4 py-2.5 text-left text-primary">{t("ui.extracted.contract.details")}</th>
                         <th colSpan={5} className="border-r border-border bg-primary/[0.035] px-4 py-2.5 text-left text-primary">{t("ui.computed.runway")}</th>
                         <th className="border-r border-border bg-muted/30 px-4 py-2.5 text-left text-primary">{t("ui.extracted.value")}</th>
-                        <th colSpan={2} className="bg-amber-500/[0.04] px-4 py-2.5 text-left text-amber-700 dark:text-amber-300">{t("ui.assigned.ownership")}</th>
+                         <th colSpan={2} className="border-r border-border bg-amber-500/[0.04] px-4 py-2.5 text-left text-amber-700 dark:text-amber-300">{t("ui.assigned.ownership")}</th>
+                         <th className="bg-destructive/[0.035] px-4 py-2.5 text-left text-destructive">{t("ui.actions")}</th>
                      </tr>
                     <tr>
                         <th className="bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.vendor")}</th>
@@ -844,6 +868,7 @@ export default function Dashboard() {
                          <th className="border-r border-border bg-muted/30 px-4 py-3 font-bold text-muted-foreground">{t("ui.value")}</th>
                         <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">{t("ui.owner")}</th>
                         <th className="bg-amber-500/[0.04] px-4 py-3 font-bold text-muted-foreground">{t("ui.negotiation.buffer")}</th>
+                         <th className="bg-destructive/[0.035] px-4 py-3 font-bold text-muted-foreground">{t("ui.actions")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -947,6 +972,24 @@ export default function Dashboard() {
                                <div className="whitespace-nowrap text-xs font-extrabold text-foreground">{t("common.days", { count: contract.assignment.negotiationBufferDays })}</div>
                                <div className="mt-1 text-[10px] font-semibold capitalize text-muted-foreground">{formatNegotiationBufferSource(contract.assignment.negotiationBufferSource, language)}</div>
                            </td>
+                            <td className="bg-destructive/[0.02] px-4 py-3 align-top">
+                              {!isDemo && (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                  aria-label={t("contract.deleteNamed", { name: vendor })}
+                                  title={t("contract.deleteNamed", { name: vendor })}
+                                  onClick={() => {
+                                    setContractDeleteError(false);
+                                    setContractToDelete(saved);
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              )}
+                            </td>
                          </tr>
                        );
                      })}
@@ -961,6 +1004,45 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
+            <AlertDialog
+              open={Boolean(contractToDelete)}
+              onOpenChange={(open) => {
+                if (!open && !deleteContract.isPending) {
+                  setContractToDelete(null);
+                  setContractDeleteError(false);
+                }
+              }}
+            >
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>{t("ui.delete.contract")}</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {t(
+                      contractToDelete?.sourceAvailable
+                        ? "contract.deleteWarning"
+                        : "contract.deleteWarningNoSource",
+                      { name: contractToDelete?.contract.fields.vendorLegalName.value || contractToDelete?.filename || "" },
+                    )}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                {contractDeleteError && (
+                  <p className="text-sm font-semibold text-destructive">{t("ui.contract.could.not.be.deleted.please.try.again")}</p>
+                )}
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={deleteContract.isPending}>{t("ui.cancel")}</AlertDialogCancel>
+                  <AlertDialogAction
+                    disabled={!contractToDelete || deleteContract.isPending}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      if (contractToDelete) deleteContract.mutate({ id: contractToDelete.id });
+                    }}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {deleteContract.isPending ? t("ui.deleting") : t("ui.delete.permanently")}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>}
           
         </div>

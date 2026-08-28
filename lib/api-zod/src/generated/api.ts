@@ -7501,6 +7501,16 @@ export const UpdateContractResponse = zod.object({
 
 
 /**
+ * @summary Permanently delete a contract after preserving its PDF in waste storage
+ */
+export const DeleteContractParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteContractResponse = zod.void()
+
+
+/**
  * @summary List recorded decisions for a contract
  */
 export const ListContractDecisionsParams = zod.object({
