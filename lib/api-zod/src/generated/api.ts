@@ -8301,3 +8301,59 @@ export const DismissContractAlertResponse = zod.object({
 }))
 
 
+/**
+ * @summary List retained deleted contract PDFs
+ */
+export const listContractWasteResponseIdRegExp = new RegExp('^[0-9a-fA-F-]{36}$');
+
+
+export const ListContractWasteResponseItem = zod.object({
+  "id": zod.string().regex(listContractWasteResponseIdRegExp),
+  "filename": zod.string(),
+  "vendorLegalName": zod.string().nullable(),
+  "contractTitle": zod.string().nullable(),
+  "contractNumber": zod.string().nullable(),
+  "deletedAt": zod.coerce.date()
+})
+export const ListContractWasteResponse = zod.array(ListContractWasteResponseItem)
+
+
+/**
+ * @summary Permanently remove every retained contract PDF
+ */
+export const emptyContractWasteResponsePurgedCountMin = 0;
+export const emptyContractWasteResponsePurgedCountMultipleOf = 1;
+
+
+
+export const EmptyContractWasteResponse = zod.object({
+  "purgedCount": zod.number().min(emptyContractWasteResponsePurgedCountMin).multipleOf(emptyContractWasteResponsePurgedCountMultipleOf)
+})
+
+
+/**
+ * @summary Download a retained deleted contract PDF
+ */
+export const getContractWasteFilePathIdRegExp = new RegExp('^[0-9a-fA-F-]{36}$');
+
+
+export const GetContractWasteFileParams = zod.object({
+  "id": zod.coerce.string().regex(getContractWasteFilePathIdRegExp)
+})
+
+export const GetContractWasteFileResponse = zod.unknown()
+
+
+/**
+ * @summary Permanently remove one retained contract PDF
+ */
+export const purgeContractWasteItemPathIdRegExp = new RegExp('^[0-9a-fA-F-]{36}$');
+
+
+export const PurgeContractWasteItemParams = zod.object({
+  "id": zod.coerce.string().regex(purgeContractWasteItemPathIdRegExp)
+})
+
+export const PurgeContractWasteItemResponse = zod.void()
+
+

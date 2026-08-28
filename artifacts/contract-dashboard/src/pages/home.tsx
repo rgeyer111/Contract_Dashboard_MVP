@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
 import { formatSwissNumber } from "@/lib/registry";
+import { Show } from "@clerk/react";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -35,17 +36,32 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
-            <Link 
-              href="/dashboard" 
-              data-testid="link-real-dashboard"
-              className={cn(
-                buttonVariants({ size: "lg" }), 
-                "w-full sm:w-auto h-14 px-8 text-base shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
-              )}
-            >
-              {t("home.continue")}
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
+            <Show when="signed-in">
+              <Link
+                href="/dashboard"
+                data-testid="link-real-dashboard"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "w-full sm:w-auto h-14 px-8 text-base shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
+                )}
+              >
+                {t("home.continue")}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Show>
+            <Show when="signed-out">
+              <Link
+                href="/sign-in"
+                data-testid="link-sign-in"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "w-full sm:w-auto h-14 px-8 text-base shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
+                )}
+              >
+                {t("home.continue")}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Show>
             <Link
               href="/dashboard?demo=1"
               data-testid="link-demo-dashboard"

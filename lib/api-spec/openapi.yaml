@@ -572,6 +572,84 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /admin/contract-waste:
+    get:
+      operationId: listContractWaste
+      tags: [contracts]
+      summary: List retained deleted contract PDFs
+      responses:
+        "200":
+          description: Unpurged waste files, newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContractWasteItem"
+        "403":
+          description: Administrator access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: emptyContractWaste
+      tags: [contracts]
+      summary: Permanently remove every retained contract PDF
+      responses:
+        "200":
+          description: Purge result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractWastePurgeResult"
+        "403":
+          description: Administrator access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /admin/contract-waste/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, pattern: '^[0-9a-fA-F-]{36}$' }
+    get:
+      operationId: getContractWasteFile
+      tags: [contracts]
+      summary: Download a retained deleted contract PDF
+      responses:
+        "200":
+          description: Retained source PDF
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        "403":
+          description: Administrator access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Waste file not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: purgeContractWasteItem
+      tags: [contracts]
+      summary: Permanently remove one retained contract PDF
+      responses:
+        "204":
+          description: Waste file purged or already absent
+        "403":
+          description: Administrator access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -602,6 +680,21 @@ components:
             - INVALID_UPLOAD
       required:
         - error
+    ContractWasteItem:
+      type: object
+      required: [id, filename, vendorLegalName, contractTitle, contractNumber, deletedAt]
+      properties:
+        id: { type: string, pattern: '^[0-9a-fA-F-]{36}$' }
+        filename: { type: string }
+        vendorLegalName: { type: ["string", "null"] }
+        contractTitle: { type: ["string", "null"] }
+        contractNumber: { type: ["string", "null"] }
+        deletedAt: { type: string, format: date-time }
+    ContractWastePurgeResult:
+      type: object
+      required: [purgedCount]
+      properties:
+        purgedCount: { type: number, minimum: 0, multipleOf: 1 }
     RegistryViewSaveRequest:
       type: object
       required: [name, search, documentType]

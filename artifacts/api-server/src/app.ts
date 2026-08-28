@@ -1,8 +1,14 @@
 import express, { type Express } from "express";
-import cors from "cors";
 import pinoHttp from "pino-http";
 import { createRouter } from "./routes";
 import { logger } from "./lib/logger";
+import { clerkMiddleware } from "@clerk/express";
+import { publishableKeyFromHost } from "@clerk/shared/keys";
+import {
+  CLERK_PROXY_PATH,
+  clerkProxyMiddleware,
+  getClerkProxyHost,
+} from "./middlewares/clerkProxyMiddleware";
 
 export async function createApp(): Promise<Express> {
   const app: Express = express();
@@ -26,9 +32,17 @@ export async function createApp(): Promise<Express> {
       },
     }),
   );
-  app.use(cors());
+  app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(
+    clerkMiddleware((req) => ({
+      publishableKey: publishableKeyFromHost(
+        getClerkProxyHost(req) ?? "",
+        process.env.CLERK_PUBLISHABLE_KEY,
+      ),
+    })),
+  );
 
   app.use("/api", await createRouter());
 

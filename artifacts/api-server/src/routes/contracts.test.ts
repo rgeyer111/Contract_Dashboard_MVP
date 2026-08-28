@@ -9,6 +9,8 @@ import {
   contractIngestItemsTable,
   contractIngestObjectCleanupTable,
   contractIngestRunsTable,
+  contractWasteAuditTable,
+  contractWasteTable,
   contractsTable,
 } from "@workspace/db";
 import app from "../app";
@@ -182,6 +184,13 @@ describe("saved contract persistence", () => {
         .where(eq(contractsTable.id, childId));
       expect(legacyChild.parentContractId).toBeNull();
       expect(await db.select().from(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath))).toEqual([]);
+      const [wasteRecord] = await db.select().from(contractWasteTable).where(eq(contractWasteTable.id, id));
+      expect(wasteRecord).toMatchObject({
+        filename: "delete-me.pdf",
+        vendorLegalName: "Regression Vendor GmbH",
+        contractTitle: "Regression Coverage",
+        contractNumber: "REG-2026-001",
+      });
 
       const repeated = await request(app).delete(`/api/contracts/${id}`);
       expect(repeated.status).toBe(404);
@@ -191,6 +200,8 @@ describe("saved contract persistence", () => {
       await db.delete(contractsTable).where(eq(contractsTable.id, childId));
       await db.delete(contractsTable).where(eq(contractsTable.id, id));
       await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      await db.delete(contractWasteAuditTable).where(eq(contractWasteAuditTable.wasteId, id));
+      await db.delete(contractWasteTable).where(eq(contractWasteTable.id, id));
     }
   });
 
@@ -275,6 +286,7 @@ describe("saved contract persistence", () => {
       globalThis.fetch = originalFetch;
       await db.delete(contractsTable).where(eq(contractsTable.id, id));
       await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      await db.delete(contractWasteTable).where(eq(contractWasteTable.id, id));
     }
   });
 
@@ -332,6 +344,7 @@ describe("saved contract persistence", () => {
       globalThis.fetch = originalFetch;
       await db.delete(contractsTable).where(eq(contractsTable.id, id));
       await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      await db.delete(contractWasteTable).where(eq(contractWasteTable.id, id));
     }
   });
 
@@ -377,6 +390,101 @@ describe("saved contract persistence", () => {
       globalThis.fetch = originalFetch;
       await db.delete(contractsTable).where(eq(contractsTable.id, id));
       await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+    }
+  });
+
+  it("allows only administrators to inspect and idempotently purge retained contract files with an audit", async () => {
+    const id = crypto.randomUUID();
+    const bulkId = crypto.randomUUID();
+    const storagePath = `/objects/uploads/contract-waste/${id}.pdf`;
+    const retainedPdf = pdfLike("%PDF-1.7\nadministrator waste review");
+    let deleted = false;
+    const originalFetch = globalThis.fetch;
+    try {
+      await db.insert(contractWasteTable).values({
+        id,
+        storagePath,
+        filename: "retained-contract.pdf",
+        vendorLegalName: "Retained Vendor AG",
+        contractTitle: "Retained Services Agreement",
+        contractNumber: "WASTE-42",
+      });
+      globalThis.fetch = async (input, init) => {
+        if (String(input).includes("/object-storage/signed-object-url")) {
+          const body = JSON.parse(String(init?.body)) as { method: string };
+          return new Response(JSON.stringify({
+            signed_url: `https://storage.test/${body.method}/waste-admin`,
+          }), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        if (String(input) === "https://storage.test/GET/waste-admin") {
+          return new Response(deleted ? null : retainedPdf, { status: deleted ? 404 : 200 });
+        }
+        if (String(input) === "https://storage.test/DELETE/waste-admin" && init?.method === "DELETE") {
+          deleted = true;
+          return new Response(null, { status: 204 });
+        }
+        throw new Error(`Unexpected fetch: ${String(input)}`);
+      };
+
+      expect((await request(app).get("/api/admin/contract-waste")).status).toBe(403);
+      expect((await request(app).get(`/api/admin/contract-waste/${id}`)).status).toBe(403);
+      expect((await request(app).delete(`/api/admin/contract-waste/${id}`)).status).toBe(403);
+
+      const adminHeaders = { "x-test-user-role": "admin", "x-test-user-id": "admin-42" };
+      const hostileOrigin = await request(app)
+        .delete(`/api/admin/contract-waste/${id}`)
+        .set(adminHeaders)
+        .set("Origin", "https://attacker.example");
+      expect(hostileOrigin.status).toBe(403);
+      expect(hostileOrigin.headers["access-control-allow-origin"]).toBeUndefined();
+      expect(deleted).toBe(false);
+
+      const listed = await request(app).get("/api/admin/contract-waste").set(adminHeaders);
+      expect(listed.status).toBe(200);
+      expect(listed.body).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          id,
+          filename: "retained-contract.pdf",
+          vendorLegalName: "Retained Vendor AG",
+          contractTitle: "Retained Services Agreement",
+          contractNumber: "WASTE-42",
+        }),
+      ]));
+
+      const inspected = await request(app).get(`/api/admin/contract-waste/${id}`).set(adminHeaders);
+      expect(inspected.status).toBe(200);
+      expect(inspected.headers["content-type"]).toMatch(/application\/pdf/);
+      expect(Buffer.from(inspected.body)).toEqual(retainedPdf);
+
+      expect((await request(app).delete(`/api/admin/contract-waste/${id}`).set(adminHeaders)).status).toBe(204);
+      expect((await request(app).delete(`/api/admin/contract-waste/${id}`).set(adminHeaders)).status).toBe(204);
+      expect(deleted).toBe(true);
+      expect((await request(app).get("/api/admin/contract-waste").set(adminHeaders)).body)
+        .not.toEqual(expect.arrayContaining([expect.objectContaining({ id })]));
+
+      const audits = await db.select().from(contractWasteAuditTable).where(eq(contractWasteAuditTable.wasteId, id));
+      expect(audits).toHaveLength(1);
+      expect(audits[0]).toMatchObject({ action: "purged", actorId: "admin-42" });
+
+      // Simulate a prior attempt deleting the object but crashing before the
+      // database/audit transaction committed. A retry must still finish safely.
+      deleted = true;
+      await db.insert(contractWasteTable).values({
+        id: bulkId,
+        storagePath: `/objects/uploads/contract-waste/${bulkId}.pdf`,
+        filename: "bulk-retained-contract.pdf",
+      });
+      const emptied = await request(app).delete("/api/admin/contract-waste").set(adminHeaders);
+      expect(emptied.status).toBe(200);
+      expect(emptied.body).toEqual({ purgedCount: 1 });
+      expect(await db.select().from(contractWasteAuditTable).where(eq(contractWasteAuditTable.wasteId, bulkId)))
+        .toEqual([expect.objectContaining({ action: "purged", actorId: "admin-42" })]);
+    } finally {
+      globalThis.fetch = originalFetch;
+      await db.delete(contractWasteAuditTable).where(eq(contractWasteAuditTable.wasteId, id));
+      await db.delete(contractWasteAuditTable).where(eq(contractWasteAuditTable.wasteId, bulkId));
+      await db.delete(contractWasteTable).where(eq(contractWasteTable.id, id));
+      await db.delete(contractWasteTable).where(eq(contractWasteTable.id, bulkId));
     }
   });
 

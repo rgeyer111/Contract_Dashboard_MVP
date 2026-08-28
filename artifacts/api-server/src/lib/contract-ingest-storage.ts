@@ -128,6 +128,20 @@ export async function deleteContractIngestPdf(objectPath: string): Promise<void>
   }
 }
 
+export async function readContractWastePdf(objectPath: string): Promise<Buffer> {
+  if (!objectPath.startsWith(wasteObjectPrefix)) {
+    throw new Error("Invalid contract waste storage path.");
+  }
+  return readContractIngestPdf(objectPath);
+}
+
+export async function deleteContractWastePdf(objectPath: string): Promise<void> {
+  if (!objectPath.startsWith(wasteObjectPrefix)) {
+    throw new Error("Invalid contract waste storage path.");
+  }
+  return deleteContractIngestPdf(objectPath);
+}
+
 export async function deleteContractIngestPdfs(objectPaths: string[]): Promise<void> {
   await Promise.all(objectPaths.map((objectPath) => deleteContractIngestPdf(objectPath)));
 }

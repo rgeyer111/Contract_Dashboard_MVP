@@ -28,6 +28,8 @@ import type {
   ContractIngestRegistration,
   ContractIngestRun,
   ContractSaveRequest,
+  ContractWasteItem,
+  ContractWastePurgeResult,
   DismissAlertRequest,
   ErrorResponse,
   HealthStatus,
@@ -1690,5 +1692,301 @@ export const useDismissContractAlert = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getDismissContractAlertMutationOptions(options));
+    }
+
+export const getListContractWasteUrl = () => {
+
+
+
+
+  return `/api/admin/contract-waste`
+}
+
+/**
+ * @summary List retained deleted contract PDFs
+ */
+export const listContractWaste = async ( options?: Parameters<typeof customFetch>[1]): Promise<ContractWasteItem[]> => {
+
+  return customFetch<ContractWasteItem[]>(getListContractWasteUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListContractWasteQueryKey = () => {
+    return [
+    `/api/admin/contract-waste`
+    ] as const;
+    }
+
+
+export const getListContractWasteQueryOptions = <TData = Awaited<ReturnType<typeof listContractWaste>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listContractWaste>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListContractWasteQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listContractWaste>>> = ({ signal }) => listContractWaste({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listContractWaste>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListContractWasteQueryResult = NonNullable<Awaited<ReturnType<typeof listContractWaste>>>
+export type ListContractWasteQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary List retained deleted contract PDFs
+ */
+
+export function useListContractWaste<TData = Awaited<ReturnType<typeof listContractWaste>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listContractWaste>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListContractWasteQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getEmptyContractWasteUrl = () => {
+
+
+
+
+  return `/api/admin/contract-waste`
+}
+
+/**
+ * @summary Permanently remove every retained contract PDF
+ */
+export const emptyContractWaste = async ( options?: Parameters<typeof customFetch>[1]): Promise<ContractWastePurgeResult> => {
+
+  return customFetch<ContractWastePurgeResult>(getEmptyContractWasteUrl(),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getEmptyContractWasteMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof emptyContractWaste>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof emptyContractWaste>>, TError,void, TContext> => {
+
+const mutationKey = ['emptyContractWaste'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof emptyContractWaste>>, void> = () => {
+
+
+          return  emptyContractWaste(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EmptyContractWasteMutationResult = NonNullable<Awaited<ReturnType<typeof emptyContractWaste>>>
+
+    export type EmptyContractWasteMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Permanently remove every retained contract PDF
+ */
+export const useEmptyContractWaste = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof emptyContractWaste>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof emptyContractWaste>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getEmptyContractWasteMutationOptions(options));
+    }
+
+export const getGetContractWasteFileUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/contract-waste/${id}`
+}
+
+/**
+ * @summary Download a retained deleted contract PDF
+ */
+export const getContractWasteFile = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getGetContractWasteFileUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetContractWasteFileQueryKey = (id: string,) => {
+    return [
+    `/api/admin/contract-waste/${id}`
+    ] as const;
+    }
+
+
+export const getGetContractWasteFileQueryOptions = <TData = Awaited<ReturnType<typeof getContractWasteFile>>, TError = ErrorType<ErrorResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractWasteFile>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetContractWasteFileQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getContractWasteFile>>> = ({ signal }) => getContractWasteFile(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getContractWasteFile>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetContractWasteFileQueryResult = NonNullable<Awaited<ReturnType<typeof getContractWasteFile>>>
+export type GetContractWasteFileQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Download a retained deleted contract PDF
+ */
+
+export function useGetContractWasteFile<TData = Awaited<ReturnType<typeof getContractWasteFile>>, TError = ErrorType<ErrorResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getContractWasteFile>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetContractWasteFileQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getPurgeContractWasteItemUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/contract-waste/${id}`
+}
+
+/**
+ * @summary Permanently remove one retained contract PDF
+ */
+export const purgeContractWasteItem = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getPurgeContractWasteItemUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getPurgeContractWasteItemMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purgeContractWasteItem>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof purgeContractWasteItem>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['purgeContractWasteItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purgeContractWasteItem>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  purgeContractWasteItem(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurgeContractWasteItemMutationResult = NonNullable<Awaited<ReturnType<typeof purgeContractWasteItem>>>
+
+    export type PurgeContractWasteItemMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Permanently remove one retained contract PDF
+ */
+export const usePurgeContractWasteItem = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purgeContractWasteItem>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof purgeContractWasteItem>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getPurgeContractWasteItemMutationOptions(options));
     }
 

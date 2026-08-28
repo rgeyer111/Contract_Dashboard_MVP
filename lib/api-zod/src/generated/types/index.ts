@@ -33,6 +33,8 @@ export * from './contractSaveRequest';
 export * from './contractSourceFile';
 export * from './contractValueValue';
 export * from './contractValueValueBasis';
+export * from './contractWasteItem';
+export * from './contractWastePurgeResult';
 export * from './dismissAlertRequest';
 export * from './errorResponse';
 export * from './errorResponseCode';

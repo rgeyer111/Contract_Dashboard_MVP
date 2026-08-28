@@ -9,10 +9,13 @@ import {
   contractIngestObjectCleanupTable,
   contractIngestRunsTable,
   contractsTable,
+  contractWasteAuditTable,
+  contractWasteTable,
   registryViewsTable,
 } from "@workspace/db";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
+import { clerkClient, getAuth } from "@clerk/express";
 import {
   CreateContractBody,
   CompleteIngestItemBody,
@@ -43,7 +46,12 @@ import {
   upgradeContract,
   withComputedDates,
 } from "../lib/contract-normalization";
-import { copyContractPdfToWaste, readContractIngestPdf } from "../lib/contract-ingest-storage";
+import {
+  copyContractPdfToWaste,
+  deleteContractWastePdf,
+  readContractIngestPdf,
+  readContractWastePdf,
+} from "../lib/contract-ingest-storage";
 import {
   processContractIngestObjectCleanup,
   queueContractIngestObjectCleanup,
@@ -61,6 +69,85 @@ const batchUpload = multer({
 });
 
 const router: IRouter = Router();
+
+async function requireAdministrator(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const origin = req.header("origin");
+  const forwardedHost = req.header("x-forwarded-host")?.split(",")[0]?.trim();
+  const expectedHost = forwardedHost || req.header("host");
+  if (origin) {
+    let originHost: string | null = null;
+    try {
+      originHost = new URL(origin).host;
+    } catch {
+      originHost = null;
+    }
+    if (!originHost || !expectedHost || originHost !== expectedHost) {
+      res.status(403).json({ error: "Cross-origin administrator requests are not allowed." });
+      return;
+    }
+  }
+  if (process.env.NODE_ENV === "test" && req.header("x-test-user-role") === "admin") {
+    res.locals.adminActorId = req.header("x-test-user-id") || "test-admin";
+    next();
+    return;
+  }
+  const { userId, sessionClaims } = getAuth(req);
+  if (!userId) {
+    res.status(403).json({ error: "Administrator access is required." });
+    return;
+  }
+  const claims = sessionClaims as {
+    metadata?: { role?: unknown };
+    publicMetadata?: { role?: unknown };
+  } | null;
+  if (claims?.publicMetadata?.role === "admin" || claims?.metadata?.role === "admin") {
+    res.locals.adminActorId = userId;
+    next();
+    return;
+  }
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    if (user.publicMetadata.role !== "admin") {
+      res.status(403).json({ error: "Administrator access is required." });
+      return;
+    }
+    res.locals.adminActorId = userId;
+    next();
+  } catch (error) {
+    req.log.warn({ err: error, userId }, "Unable to verify contract waste administrator");
+    res.status(503).json({ error: "Administrator access could not be verified. Please try again." });
+  }
+}
+
+function wasteResponse(record: typeof contractWasteTable.$inferSelect) {
+  return {
+    id: record.id,
+    filename: record.filename,
+    vendorLegalName: record.vendorLegalName,
+    contractTitle: record.contractTitle,
+    contractNumber: record.contractNumber,
+    deletedAt: record.deletedAt.toISOString(),
+  };
+}
+
+async function purgeWasteRecord(
+  record: typeof contractWasteTable.$inferSelect,
+  actorId: string,
+): Promise<boolean> {
+  if (record.purgedAt) return false;
+  await deleteContractWastePdf(record.storagePath);
+  return db.transaction(async (tx) => {
+    const [purged] = await tx.update(contractWasteTable)
+      .set({ purgedAt: new Date() })
+      .where(and(eq(contractWasteTable.id, record.id), sql`${contractWasteTable.purgedAt} IS NULL`))
+      .returning({ id: contractWasteTable.id });
+    if (!purged) return false;
+    await tx.insert(contractWasteAuditTable)
+      .values({ wasteId: record.id, action: "purged", actorId })
+      .onConflictDoNothing();
+    return true;
+  });
+}
 
 function uploadedHash(buffer: Buffer) {
   return createHash("sha256").update(buffer).digest("hex");
@@ -611,6 +698,8 @@ router.delete("/contracts/:id", async (req: Request, res: Response): Promise<voi
       const [existing] = await tx.select({
         id: contractsTable.id,
         sourceStoragePath: contractsTable.sourceStoragePath,
+        filename: contractsTable.filename,
+        contract: contractsTable.contract,
       }).from(contractsTable).where(eq(contractsTable.id, id));
       if (!existing) return undefined;
 
@@ -629,6 +718,20 @@ router.delete("/contracts/:id", async (req: Request, res: Response): Promise<voi
           .where(eq(contractIngestCompletionsTable.contractId, id));
       }
       if (record?.sourceStoragePath) {
+        const contract = isRecord(existing.contract) ? existing.contract : {};
+        const fields = isRecord(contract.fields) ? contract.fields : {};
+        const fieldValue = (key: string) => {
+          const field = isRecord(fields[key]) ? fields[key] : {};
+          return typeof field.value === "string" && field.value.trim() ? field.value.trim() : null;
+        };
+        await tx.insert(contractWasteTable).values({
+          id,
+          storagePath: `/objects/uploads/contract-waste/${id}.pdf`,
+          filename: existing.filename,
+          vendorLegalName: fieldValue("vendorLegalName"),
+          contractTitle: fieldValue("contractTitle"),
+          contractNumber: fieldValue("contractNumber"),
+        }).onConflictDoNothing();
         await tx.insert(contractIngestObjectCleanupTable)
           .values({ storagePath: record.sourceStoragePath, state: "cleanup_pending" })
           .onConflictDoUpdate({
@@ -653,6 +756,51 @@ router.delete("/contracts/:id", async (req: Request, res: Response): Promise<voi
     });
   }
   res.status(204).send();
+});
+
+router.get("/admin/contract-waste", requireAdministrator, async (_req: Request, res: Response): Promise<void> => {
+  const records = await db.select().from(contractWasteTable)
+    .where(sql`${contractWasteTable.purgedAt} IS NULL`)
+    .orderBy(desc(contractWasteTable.deletedAt), asc(contractWasteTable.id));
+  res.json(records.map(wasteResponse));
+});
+
+router.get("/admin/contract-waste/:id", requireAdministrator, async (req: Request, res: Response): Promise<void> => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [record] = await db.select().from(contractWasteTable)
+    .where(and(eq(contractWasteTable.id, id), sql`${contractWasteTable.purgedAt} IS NULL`));
+  if (!record) {
+    res.status(404).json({ error: "Waste file not found." });
+    return;
+  }
+  try {
+    const pdf = await readContractWastePdf(record.storagePath);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `inline; filename="${record.filename.replace(/[\"\\r\\n]/g, "_")}"`);
+    res.setHeader("Cache-Control", "private, no-store");
+    res.send(pdf);
+  } catch (error) {
+    req.log.warn({ err: error, wasteId: id }, "Unable to read contract waste PDF");
+    res.status(404).json({ error: "Waste file not found." });
+  }
+});
+
+router.delete("/admin/contract-waste/:id", requireAdministrator, async (req: Request, res: Response): Promise<void> => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [record] = await db.select().from(contractWasteTable).where(eq(contractWasteTable.id, id));
+  if (record) await purgeWasteRecord(record, String(res.locals.adminActorId));
+  res.status(204).send();
+});
+
+router.delete("/admin/contract-waste", requireAdministrator, async (_req: Request, res: Response): Promise<void> => {
+  const records = await db.select().from(contractWasteTable)
+    .where(sql`${contractWasteTable.purgedAt} IS NULL`)
+    .orderBy(asc(contractWasteTable.id));
+  let purgedCount = 0;
+  for (const record of records) {
+    if (await purgeWasteRecord(record, String(res.locals.adminActorId))) purgedCount += 1;
+  }
+  res.json({ purgedCount });
 });
 
 router.get("/contracts/:id/decisions", async (req: Request, res: Response): Promise<void> => {

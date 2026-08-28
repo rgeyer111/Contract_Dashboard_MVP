@@ -101,6 +101,32 @@ export const contractIngestCompletionsTable = pgTable("contract_ingest_completio
   completedAt: timestamp("completed_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
+export const contractWasteTable = pgTable("contract_waste", {
+  id: uuid("id").primaryKey(),
+  storagePath: text("storage_path").notNull().unique(),
+  filename: text("filename").notNull(),
+  vendorLegalName: text("vendor_legal_name"),
+  contractTitle: text("contract_title"),
+  contractNumber: text("contract_number"),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }).defaultNow().notNull(),
+  purgedAt: timestamp("purged_at", { withTimezone: true }),
+});
+
+export const contractWasteAuditTable = pgTable(
+  "contract_waste_audit",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    wasteId: uuid("waste_id").notNull(),
+    action: text("action").notNull(),
+    actorId: text("actor_id").notNull(),
+    purgedAt: timestamp("purged_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("contract_waste_audit_waste_action_unique").on(table.wasteId, table.action),
+    check("contract_waste_audit_action_check", sql`${table.action} = 'purged'`),
+  ],
+);
+
 export type ContractRecord = typeof contractsTable.$inferSelect;
 export type ContractDecisionRecord = typeof contractDecisionsTable.$inferSelect;
 export type RegistryViewRecord = typeof registryViewsTable.$inferSelect;
@@ -108,3 +134,5 @@ export type ContractIngestRunRecord = typeof contractIngestRunsTable.$inferSelec
 export type ContractIngestItemRecord = typeof contractIngestItemsTable.$inferSelect;
 export type ContractIngestObjectCleanupRecord = typeof contractIngestObjectCleanupTable.$inferSelect;
 export type ContractIngestCompletionRecord = typeof contractIngestCompletionsTable.$inferSelect;
+export type ContractWasteRecord = typeof contractWasteTable.$inferSelect;
+export type ContractWasteAuditRecord = typeof contractWasteAuditTable.$inferSelect;

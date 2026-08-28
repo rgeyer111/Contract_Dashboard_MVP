@@ -31,6 +31,24 @@ export interface ErrorResponse {
   code?: ErrorResponseCode;
 }
 
+export interface ContractWasteItem {
+  /** @pattern ^[0-9a-fA-F-]{36}$ */
+  id: string;
+  filename: string;
+  /** @nullable */
+  vendorLegalName: string | null;
+  /** @nullable */
+  contractTitle: string | null;
+  /** @nullable */
+  contractNumber: string | null;
+  deletedAt: string;
+}
+
+export interface ContractWastePurgeResult {
+  /** @minimum 0 */
+  purgedCount: number;
+}
+
 /**
  * @nullable
  */

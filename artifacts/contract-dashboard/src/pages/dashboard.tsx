@@ -65,6 +65,7 @@ import { useRegistryFilters } from "@/hooks/use-registry-filters";
 import { useSavedRegistryViews } from "@/hooks/use-saved-registry-views";
 import { LanguageSwitch, translateComputedReasonOrDetail, translateDomainOption, useLanguage } from "@/lib/i18n";
 import { demoNavigationPath, isDemoLocation, useDemoContracts } from "@/lib/demo-mode";
+import { useClerk } from "@clerk/react";
 
 export default function Dashboard() {
   const { language, t } = useLanguage();
@@ -80,6 +81,7 @@ export default function Dashboard() {
   const [contractToDelete, setContractToDelete] = useState<typeof contracts[number] | null>(null);
   const [contractDeleteError, setContractDeleteError] = useState(false);
   const queryClient = useQueryClient();
+  const { signOut } = useClerk();
   const realContractsQuery = useListContracts({
     query: {
       enabled: !isDemo,
@@ -240,14 +242,24 @@ export default function Dashboard() {
         </nav>
         
         <div className="p-4 border-t space-y-1">
+            {!isDemo && (
+              <Link data-testid="link-contract-waste" href="/admin/contract-waste" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50">
+                <Trash2 className="h-4 w-4" />
+                {t("ui.contract.waste")}
+              </Link>
+            )}
           <div className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors cursor-not-allowed">
             <Settings className="h-4 w-4" />
             {t("ui.settings")}
           </div>
-          <Link href="/" className="flex items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors">
+          <button
+            type="button"
+            onClick={() => void signOut({ redirectUrl: import.meta.env.BASE_URL })}
+            className="flex w-full items-center gap-3 px-3 py-2.5 text-muted-foreground hover:bg-muted/50 rounded-md font-medium text-sm transition-colors"
+          >
             <LogOut className="h-4 w-4" />
             {t("ui.log.out")}
-          </Link>
+          </button>
         </div>
       </aside>
       
