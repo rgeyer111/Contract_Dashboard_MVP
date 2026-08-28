@@ -305,19 +305,21 @@ describe("saved contract persistence", () => {
       },
     };
 
-    const responses = await Promise.all([
-      request(app).post("/api/contracts").send({ filename: "concurrent-a.pdf", contract: contractWithSource }),
-      request(app).post("/api/contracts").send({ filename: "concurrent-b.pdf", contract: contractWithSource }),
-    ]);
+    try {
+      const responses = await Promise.all([
+        request(app).post("/api/contracts").send({ filename: "concurrent-a.pdf", contract: contractWithSource }),
+        request(app).post("/api/contracts").send({ filename: "concurrent-b.pdf", contract: contractWithSource }),
+      ]);
 
-    expect(responses.map((response) => response.status).sort()).toEqual([201, 409]);
-    const records = await db
-      .select({ id: contractsTable.id })
-      .from(contractsTable)
-      .where(eq(contractsTable.fileHash, hash));
-    expect(records).toHaveLength(1);
-
-    await db.delete(contractsTable).where(eq(contractsTable.fileHash, hash));
+      expect(responses.map((response) => response.status).sort()).toEqual([201, 409]);
+      const records = await db
+        .select({ id: contractsTable.id })
+        .from(contractsTable)
+        .where(eq(contractsTable.fileHash, hash));
+      expect(records).toHaveLength(1);
+    } finally {
+      await db.delete(contractsTable).where(eq(contractsTable.fileHash, hash));
+    }
   });
 
   it("lists, creates, reads, and updates a saved contract", async () => {
