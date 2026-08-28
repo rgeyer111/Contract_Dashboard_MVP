@@ -1,4 +1,5 @@
 import type {
+  ContractComputedReasonCode,
   ContractExtractionResult,
   ContractReviewRecord,
   ProvenanceMetadata,
@@ -136,6 +137,56 @@ export const detailGroups: Array<{
     ],
   },
 ];
+
+const timingFieldKeys: FieldKey[] = [
+  "effectiveDate",
+  "initialTermLength",
+  "initialTermEndDate",
+  "renewalMechanism",
+  "renewalTermLength",
+  "noticePeriod",
+];
+
+const blockedReasonTargetKeys: Partial<Record<ContractComputedReasonCode, FieldKey[]>> = {
+  CONTRACT_END_UNESTABLISHED: ["initialTermEndDate", "effectiveDate", "initialTermLength"],
+  INDEFINITE_WITHOUT_FIXED_ANCHOR: ["renewalMechanism", "initialTermEndDate"],
+  PAST_AUTO_RENEWAL_TERM_MISSING: ["renewalTermLength"],
+  NOTICE_CLAUSE_NOT_FOUND: ["noticePeriod"],
+  NOTICE_TIMING_AMBIGUOUS: ["noticePeriod"],
+  MULTIPLE_NOTICE_PERIODS: ["noticePeriod"],
+  NOTICE_PERIOD_INCOMPLETE: ["noticePeriod"],
+  NOTICE_ANCHOR_UNKNOWN: ["noticePeriod"],
+  NOTICE_ALLOWED_ANY_TIME: ["noticePeriod"],
+  NOTICE_ANCHOR_UNRESOLVED: ["noticePeriod"],
+};
+
+export function getBlockedReasonTargets(record: ContractReviewRecord) {
+  const reasonCode = record.computed.reasonCode;
+  if (!reasonCode || record.computed.status !== "blocked") return [];
+
+  let keys = blockedReasonTargetKeys[reasonCode] ?? [];
+  if (reasonCode === "TIMING_VALUES_CONFLICT") {
+    keys = timingFieldKeys.filter((key) => getField(record, key).status === "conflicting");
+  }
+  if (reasonCode === "TIMING_EVIDENCE_UNRELIABLE") {
+    keys = timingFieldKeys.filter((key) => {
+      const field = getField(record, key);
+      return field.status === "found" && field.confidence === "low";
+    });
+  }
+  if (!keys.length && (reasonCode === "TIMING_VALUES_CONFLICT" || reasonCode === "TIMING_EVIDENCE_UNRELIABLE")) {
+    keys = ["noticePeriod"];
+  }
+
+  return [...new Set(keys)].map((key) => {
+    const definition = issueDefinitions.find((issue) => issue.key === key);
+    const detail = detailGroups.flatMap((group) => group.fields).find((field) => field.key === key);
+    return {
+      key,
+      label: definition?.label ?? detail?.label ?? "ui.timing",
+    };
+  });
+}
 
 export function readStoredExtraction(): ContractExtractionResult | null {
   try {

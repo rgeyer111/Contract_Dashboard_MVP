@@ -13,6 +13,7 @@ import type { MessageId } from "@/lib/i18n";
 import {
   extractionQueueStorageKey,
   extractionStorageKey,
+  getBlockedReasonTargets,
   getField,
   hasValue,
   isIssue,
@@ -121,11 +122,17 @@ export function useContractReview() {
     }));
   };
 
+  const blockedTargetKeys = useMemo(
+    () => new Set(getBlockedReasonTargets(draft).map((target) => target.key)),
+    [draft],
+  );
   const openIssues = useMemo(
     () => issueDefinitions
-      .filter((issue) => !resolvedKeys.has(issue.key) && isIssue(getField(draft, issue.key)))
+      .filter((issue) =>
+        !resolvedKeys.has(issue.key) &&
+        (isIssue(getField(draft, issue.key)) || blockedTargetKeys.has(issue.key)))
       .sort((left, right) => issuePriority(getField(draft, left.key)) - issuePriority(getField(draft, right.key))),
-    [draft, resolvedKeys],
+    [blockedTargetKeys, draft, resolvedKeys],
   );
   const missingRequired = requiredKeys.filter((key) => !hasValue(getField(draft, key).value));
   const ownerMissing = !draft.assignment.owner.trim();

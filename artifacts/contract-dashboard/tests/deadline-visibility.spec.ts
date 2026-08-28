@@ -40,7 +40,7 @@ const makeContract = (
       | "NOTICE_ANCHOR_UNKNOWN"
       | "FIXED_CONTRACT_END_PASSED"
       | null;
-    reason: string;
+    reason: string | null;
   },
 ) => ({
   fields: {
@@ -83,8 +83,8 @@ test("hides blocked dates in registry and review while preserving expired histor
     ...blockedDates,
     daysRemaining: null,
     status: "blocked",
-    reasonCode: null,
-    reason: "blocked — missing a trusted contract timing anchor",
+    reasonCode: "NOTICE_ANCHOR_UNKNOWN",
+    reason: null,
   });
   const expiredContract = makeContract("Expired Vendor", {
     ...expiredDates,
@@ -127,6 +127,9 @@ test("hides blocked dates in registry and review while preserving expired histor
   await expect(blockedRow).not.toContainText(blockedDates.exitDate);
   await expect(blockedRow).not.toContainText(blockedDates.noticeDeadline);
   await expect(blockedRow).not.toContainText(blockedDates.actionDate);
+  await expect(blockedRow).toContainText(
+    "The notice anchor is unclear. Confirm the documented date from which the notice period runs.",
+  );
 
   const expiredRow = page.getByRole("row").filter({ hasText: "Expired Vendor" });
   await expect(expiredRow).toHaveCount(1);
@@ -141,13 +144,19 @@ test("hides blocked dates in registry and review while preserving expired histor
     .getByText("Renewal timeline", { exact: true })
     .locator("xpath=ancestor::section");
   await expect(blockedPanel).toContainText("Deadline unavailable");
-  await expect(blockedPanel).toContainText(blockedContract.computed.reason);
+  await expect(blockedPanel).toContainText(
+    "The notice anchor is unclear. Confirm the documented date from which the notice period runs.",
+  );
+  await expect(blockedPanel).toContainText("Review to unblock");
+  await expect(blockedPanel).toContainText("Notice period");
   await expect(blockedPanel.getByText("Exit date", { exact: true })).toHaveCount(0);
   await expect(blockedPanel.getByText("Legal notice", { exact: true })).toHaveCount(0);
   await expect(blockedPanel.getByText("Start negotiation", { exact: true })).toHaveCount(0);
   await expect(blockedPanel).not.toContainText(blockedDates.exitDate);
   await expect(blockedPanel).not.toContainText(blockedDates.noticeDeadline);
   await expect(blockedPanel).not.toContainText(blockedDates.actionDate);
+  await blockedPanel.getByRole("button", { name: "Review highlighted fields" }).click();
+  await expect(page.getByTestId("full-extraction-field-noticePeriod")).toBeVisible();
 
   await page.goto("/review?id=expired-deadline");
   const expiredPanel = page
@@ -159,4 +168,16 @@ test("hides blocked dates in registry and review while preserving expired histor
   await expect(expiredPanel.getByText("Exit date", { exact: true })).toBeVisible();
   await expect(expiredPanel.getByText("Legal notice", { exact: true })).toBeVisible();
   await expect(expiredPanel.getByText("Start negotiation", { exact: true })).toBeVisible();
+
+  await page.evaluate(() => localStorage.setItem("contract-dashboard.language", "de-CH"));
+  await page.goto("/review?id=blocked-deadline");
+  const germanBlockedPanel = page
+    .getByText("Verlängerungszeitplan", { exact: true })
+    .locator("xpath=ancestor::section");
+  await expect(germanBlockedPanel).toContainText("Frist nicht verfügbar");
+  await expect(germanBlockedPanel).toContainText(
+    "Der Bezugstermin der Kündigungsfrist ist unklar. Bestätigen Sie das dokumentierte Datum, ab dem die Frist läuft.",
+  );
+  await expect(germanBlockedPanel).toContainText("Zum Freigeben prüfen");
+  await expect(germanBlockedPanel).toContainText("Kündigungsfrist");
 });

@@ -925,8 +925,8 @@ export default function Dashboard() {
                            <td className="bg-primary/[0.02] px-4 py-3 align-top">
                                 <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider ${statusClasses(status)}`}>{translateDomainOption(language, status === "red" ? "overdue" : status)}</span>
                            </td>
-                           <td className="max-w-[240px] border-r border-border bg-primary/[0.02] px-4 py-3 align-top">
-                              <div className={`max-w-[230px] truncate text-xs font-semibold ${status === "green" ? "text-muted-foreground" : "text-destructive"}`} title={statusReason}>{statusReason}</div>
+                            <td className="max-w-[320px] border-r border-border bg-primary/[0.02] px-4 py-3 align-top">
+                               <div className={`max-w-[310px] whitespace-normal text-xs font-semibold leading-relaxed ${status === "green" ? "text-muted-foreground" : "text-destructive"}`} title={statusReason}>{statusReason}</div>
                            </td>
                             <td className="border-r border-border bg-muted/[0.12] px-4 py-3 align-top">
                                <div className={`max-w-[150px] text-xs font-extrabold ${valueIsUnknown ? "text-destructive" : "text-foreground"}`}>{formatContractValue(value, language)}</div>

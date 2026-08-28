@@ -7,6 +7,22 @@ import {
 import { displayEvidenceValue } from "../src/lib/review";
 import { createEmptyContractReviewRecord } from "../src/lib/contracts";
 
+const computedReasonCodes = [
+  "CONTRACT_END_UNESTABLISHED",
+  "INDEFINITE_WITHOUT_FIXED_ANCHOR",
+  "PAST_AUTO_RENEWAL_TERM_MISSING",
+  "NOTICE_CLAUSE_NOT_FOUND",
+  "TIMING_VALUES_CONFLICT",
+  "NOTICE_TIMING_AMBIGUOUS",
+  "MULTIPLE_NOTICE_PERIODS",
+  "NOTICE_PERIOD_INCOMPLETE",
+  "NOTICE_ANCHOR_UNKNOWN",
+  "TIMING_EVIDENCE_UNRELIABLE",
+  "NOTICE_ALLOWED_ANY_TIME",
+  "NOTICE_ANCHOR_UNRESOLVED",
+  "FIXED_CONTRACT_END_PASSED",
+] as const;
+
 test("German catalog translates every registered message", () => {
   expect(translate("de-CH", "ui.contracts")).toBe("Verträge");
   expect(translate("de-CH", "review.requiredFieldCount", { count: 2 }))
@@ -57,4 +73,15 @@ test("fresh German reviews contain no English deadline fallback", () => {
     "Das Vertragsende kann nicht bestimmt werden. Ergänzen Sie das Ende der Erstlaufzeit oder bestätigen Sie Wirksamkeitsdatum und Laufzeit.",
   );
   expect(explanation).not.toContain("blocked");
+});
+
+test("every computation outcome has canonical English and German guidance", () => {
+  for (const reasonCode of computedReasonCodes) {
+    const english = translateComputedReasonOrDetail("en", reasonCode, null);
+    const german = translateComputedReasonOrDetail("de-CH", reasonCode, null);
+
+    expect(english, `${reasonCode} English guidance`).toBeTruthy();
+    expect(german, `${reasonCode} German guidance`).toBeTruthy();
+    expect(german, `${reasonCode} is localized`).not.toBe(english);
+  }
 });

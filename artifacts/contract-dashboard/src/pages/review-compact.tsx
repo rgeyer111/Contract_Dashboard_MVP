@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import {
   AlertCircle,
@@ -37,6 +37,7 @@ import {
   displayEvidenceValue,
   displayValue,
   formatDate,
+  getBlockedReasonTargets,
   getField,
   hasValue,
   noticeAnchorOptions,
@@ -389,6 +390,7 @@ export default function ReviewCompact() {
   const { language, t } = useLanguage();
   const [, setLocation] = useLocation();
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const detailsRef = useRef<HTMLElement>(null);
   const {
     savedContractQuery,
     storedExtraction,
@@ -416,6 +418,8 @@ export default function ReviewCompact() {
   const value = getField(draft, "contractValue").value;
   const source = storedExtraction?.extraction.source;
   const ocrConfidence = storedExtraction?.extraction.ocrConfidence;
+  const blockedTargets = getBlockedReasonTargets(draft);
+  const blockedTargetKeys = new Set(blockedTargets.map((target) => target.key));
   const actionIssue = assignmentInvalid
     ? ownerMissing
       ? t("ui.set.an.application.owner.so.notices.have.a.clear.recipient")
@@ -606,7 +610,7 @@ export default function ReviewCompact() {
                   </div>
                 )}
 
-                <section className="overflow-hidden rounded-xl border bg-card shadow-sm">
+                <section ref={detailsRef} className="overflow-hidden rounded-xl border bg-card shadow-sm">
                   <button type="button" onClick={() => setDetailsOpen((open) => !open)} className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left transition hover:bg-muted/30 sm:px-5">
                     <div className="flex items-center gap-3">
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground"><Layers3 className="h-4 w-4" /></div>
@@ -626,7 +630,11 @@ export default function ReviewCompact() {
                             {group.fields.map(({ key, label, kind }) => {
                               const field = getField(draft, key);
                               return (
-                                <div key={key} className="rounded-lg border bg-card p-3">
+                                <div
+                                  key={key}
+                                  data-testid={`full-extraction-field-${key}`}
+                                  className={`rounded-lg border bg-card p-3 ${blockedTargetKeys.has(key) ? "border-destructive/40 ring-1 ring-destructive/15" : ""}`}
+                                >
                                   <div className="mb-2 flex items-center justify-between gap-2">
                                     <label className="text-xs font-extrabold">{t(label)}</label>
                                     <StatusPill field={field} />
@@ -660,6 +668,26 @@ export default function ReviewCompact() {
                     <div className="mt-3">
                       <p className="text-sm font-extrabold text-destructive">{t("ui.deadline.unavailable")}</p>
                       <p className="mt-1 text-xs font-semibold leading-relaxed text-destructive/80">{translateComputedReasonOrDetail(language, draft.computed.reasonCode, draft.computed.reason) ?? t("ui.resolve.the.timing.fields.to.calculate.this.contract.s.deadlines")}</p>
+                      {blockedTargets.length > 0 && (
+                        <div className="mt-3 border-t border-destructive/15 pt-3">
+                          <div className="text-[10px] font-extrabold uppercase tracking-wide text-destructive">{t("ui.review.to.unblock")}</div>
+                          <div className="mt-1 text-xs font-bold text-destructive">
+                            {blockedTargets.map((target) => t(target.label)).join(" · ")}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="mt-3 h-8 border-destructive/25 bg-background text-xs font-bold text-destructive hover:bg-destructive/5 hover:text-destructive"
+                            onClick={() => {
+                              setDetailsOpen(true);
+                              window.setTimeout(() => detailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+                            }}
+                          >
+                            {t("ui.review.blocking.fields")}
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="mt-4">
