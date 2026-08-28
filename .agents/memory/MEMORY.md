@@ -18,3 +18,4 @@
 - [Temporary object ownership](temporary-object-ownership.md) — reserve App Storage paths durably and transfer or queue ownership transactionally.
 - [Contract UI localization](contract-ui-localization.md) — localize UI declaratively; never traverse rendered contract content or mutate source evidence.
 - [Published demo register](published-demo-register.md) — keep the isolated read-only sample register available in published builds until real customer launch.
+- [Notice conflict auditing](notice-conflict-auditing.md) — never treat a broad extraction pass as proof that no competing or ambiguous notice language exists.

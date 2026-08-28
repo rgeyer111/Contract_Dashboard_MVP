@@ -135,6 +135,27 @@ describe("computeContractDates", () => {
     expect(result.noticeDeadline).toBe("2026-09-30");
   });
 
+  it("never calculates a deadline from business days even if extraction marks it found", () => {
+    const result = computeContractDates(
+      contract({
+        noticePeriod: field({
+          amount: 30,
+          unit: "business_days",
+          anchor: "term_end",
+          purpose: "non_renewal",
+        }),
+      }),
+      new Date("2026-05-01T12:00:00Z"),
+    );
+
+    expect(result).toMatchObject({
+      status: "blocked",
+      reasonCode: "NOTICE_TIMING_AMBIGUOUS",
+      noticeDeadline: null,
+      actionDate: null,
+    });
+  });
+
   it("advances an auto-renewing contract to its next exit date", () => {
     const result = computeContractDates(contract(), new Date("2027-01-15T12:00:00Z"));
     expect(result.exitDate).toBe("2027-12-31");

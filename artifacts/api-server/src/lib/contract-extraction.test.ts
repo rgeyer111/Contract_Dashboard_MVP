@@ -60,10 +60,35 @@ const extractedContract = {
 const ocrText =
   "This is a complete OCR transcription of a contract with enough text to pass the readable contract threshold.";
 
-function mockOpenAiResponse(content: unknown) {
+const missingNoticeAudit = {
+  noticePeriod: {
+    value: null,
+    status: "not_found",
+    confidence: "low",
+    page: null,
+    clause: null,
+    quote: null,
+    note: null,
+    alternatives: [],
+  },
+};
+
+function mockOpenAiResponse(content: unknown, options: { queueNoticeAudit?: boolean } = {}) {
   mocks.create.mockResolvedValueOnce({
     choices: [{ finish_reason: "stop", message: { content: JSON.stringify(content) } }],
   });
+  if (
+    options.queueNoticeAudit !== false &&
+    content &&
+    typeof content === "object" &&
+    "fields" in content
+  ) {
+    mocks.create.mockResolvedValueOnce({
+      choices: [
+        { finish_reason: "stop", message: { content: JSON.stringify(missingNoticeAudit) } },
+      ],
+    });
+  }
 }
 
 function configureOcrRenderer() {
@@ -535,6 +560,142 @@ describe("OCR extraction metadata", () => {
     expect(systemPrompt).toContain("Never convert months or weeks into days");
     expect(systemPrompt).toContain("Do not return noticeDeadline");
     expect(systemPrompt).toContain("Do not extract owner");
+  });
+
+  it("audits an explicit missing notice period and recovers competing clauses", async () => {
+    mockOpenAiResponse({
+      fields: {
+        ...extractedContract.fields,
+        noticePeriod: {
+          value: null,
+          status: "not_found",
+          confidence: "low",
+          page: null,
+          clause: null,
+          quote: null,
+          note: null,
+          alternatives: [],
+        },
+      },
+    }, { queueNoticeAudit: false });
+    const threeMonths = {
+      amount: 3,
+      unit: "months",
+      anchor: "term_end",
+      purpose: "non_renewal",
+    };
+    const sixMonths = { ...threeMonths, amount: 6 };
+    mockOpenAiResponse({
+      noticePeriod: {
+        value: [threeMonths, sixMonths],
+        status: "conflicting",
+        confidence: "high",
+        page: null,
+        clause: null,
+        quote: null,
+        note: "The schedule requires six months for the same non-renewal right.",
+        alternatives: [
+          {
+            value: threeMonths,
+            page: 2,
+            clause: "8.1",
+            quote: "Notice must be given three months before the current term expires.",
+          },
+          {
+            value: sixMonths,
+            page: 5,
+            clause: "Schedule A.4",
+            quote: "Notice of non-renewal must be received six months before expiry.",
+          },
+        ],
+      },
+    });
+
+    const result = await extractContractFromText(
+      "--- Page 2 --- three month clause\n--- Page 5 --- six month schedule clause",
+      "synthetic-conflict.pdf",
+    );
+
+    expect(mocks.create).toHaveBeenCalledTimes(2);
+    expect(mocks.create.mock.calls[1][0].messages[0].content).toContain(
+      "safety auditor checking one extracted contract field",
+    );
+    expect(result.extraction.contract.fields.noticePeriod).toMatchObject({
+      status: "conflicting",
+      value: [threeMonths, sixMonths],
+      page: 2,
+      clause: "8.1",
+      quote: "Notice must be given three months before the current term expires.",
+      alternatives: [
+        expect.objectContaining({ value: threeMonths, page: 2 }),
+        expect.objectContaining({ value: sixMonths, page: 5 }),
+      ],
+    });
+  });
+
+  it("audits a first-pass found notice and catches a competing schedule clause", async () => {
+    const threeMonths = {
+      amount: 3,
+      unit: "months",
+      anchor: "term_end",
+      purpose: "non_renewal",
+    };
+    const sixMonths = { ...threeMonths, amount: 6 };
+    mockOpenAiResponse({
+      fields: {
+        ...extractedContract.fields,
+        noticePeriod: found(
+          threeMonths,
+          2,
+          "Notice must be given three months before the current term expires.",
+        ),
+      },
+    }, { queueNoticeAudit: false });
+    mockOpenAiResponse({
+      noticePeriod: {
+        value: [threeMonths, sixMonths],
+        status: "conflicting",
+        confidence: "high",
+        page: null,
+        clause: null,
+        quote: null,
+        note: "The schedule requires six months for the same non-renewal right.",
+        alternatives: [
+          {
+            value: threeMonths,
+            page: 2,
+            clause: "8.1",
+            quote: "Notice must be given three months before the current term expires.",
+          },
+          {
+            value: sixMonths,
+            page: 5,
+            clause: "Schedule A.4",
+            quote: "Notice of non-renewal must be received six months before expiry.",
+          },
+        ],
+      },
+    });
+
+    const result = await extractContractFromText(
+      [
+        "--- Page 2 ---",
+        "8.1 Notice must be given three months before the current term expires.",
+        "--- Page 5 ---",
+        "Schedule A.4 Notice of non-renewal must be received six months before expiry.",
+      ].join("\n"),
+      "synthetic-found-then-conflict.pdf",
+    );
+
+    expect(mocks.create).toHaveBeenCalledTimes(2);
+    expect(result.extraction.contract.fields.noticePeriod).toMatchObject({
+      status: "conflicting",
+      value: [threeMonths, sixMonths],
+      alternatives: [
+        expect.objectContaining({ value: threeMonths, page: 2 }),
+        expect.objectContaining({ value: sixMonths, page: 5 }),
+      ],
+    });
   });
 
   it("passes text beyond the previous 60,000-character cutoff to field extraction", async () => {

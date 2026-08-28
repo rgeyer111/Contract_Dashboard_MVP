@@ -455,6 +455,46 @@ export async function extractContractFromText(
     throw new Error("The extraction service returned an invalid result.");
   }
 
+  const rawFields = asRecord(asRecord(raw).fields);
+  const noticeAudit = await openai.chat.completions.create({
+    model: "gpt-5.6-terra",
+    max_completion_tokens: 4096,
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: `You are a safety auditor checking one extracted contract field: noticePeriod.
+
+Return one JSON object as {"noticePeriod": FIELD}, where FIELD follows this exact structure:
+{"value":null,"status":"found|not_found|ambiguous|conflicting","confidence":"high|medium|low","page":null,"clause":null,"quote":null,"note":null,"alternatives":[]}
+
+Review the complete document for every clause governing non-renewal or termination notice timing.
+- Do not accept not_found merely because one clause is unclear. Use ambiguous when relevant timing wording exists but cannot be safely calculated.
+- If body text, annexes, schedules, order forms, or amendments give different periods for the same notice right, use conflicting.
+- A conflicting result must include every candidate in alternatives (at least two), each with typed value, page, clause, and verbatim quote.
+- An ambiguous result must include every evidence-backed reading in alternatives (at least one), each with typed value, page, clause, and verbatim quote.
+- Preserve business days or Werktage as unit business_days and mark the result ambiguous. Never convert them to calendar days.
+- Typed values are {"amount":positive integer,"unit":"days|business_days|weeks|months|years","anchor":"term_end|renewal_date|anniversary|period_end_month|period_end_quarter|period_end_year|any_time|unknown","purpose":"non_renewal|termination_for_convenience|other"}.
+- For a conflict, value may be the array of all candidate typed values. For ambiguity with one stated business-day period, value may be that typed value or a one-item array.
+- Page markers in the supplied text are authoritative. Evidence quotes must be verbatim and no more than 300 characters.`,
+      },
+      {
+        role: "user",
+        content: `Filename: ${filename}\n\nContract text:\n${text}`,
+      },
+    ],
+  });
+  const auditContent = noticeAudit.choices[0]?.message.content;
+  if (!auditContent) {
+    throw new Error("The notice-period safety audit returned no usable result.");
+  }
+  try {
+    const auditedNotice = asRecord(JSON.parse(auditContent)).noticePeriod;
+    raw = { ...asRecord(raw), fields: { ...rawFields, noticePeriod: auditedNotice } };
+  } catch {
+    throw new Error("The notice-period safety audit returned an invalid result.");
+  }
+
   return ExtractContractResponse.parse({
     filename,
     extraction: {

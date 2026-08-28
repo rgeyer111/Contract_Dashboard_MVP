@@ -29,6 +29,7 @@ import {
   documentTypeOptions,
   languageOptions,
   periodUnitOptions,
+  noticePeriodUnitOptions,
   renewalMechanismOptions,
 } from "@/lib/contracts";
 import {
@@ -139,7 +140,7 @@ function NoticePeriodInput({ value, onChange }: { value: any; onChange: (value: 
         aria-label={t("ui.notice.period.amount")}
       />
       <select value={unit} onChange={(event) => update({ unit: event.target.value })} className="h-10 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20" aria-label={t("ui.notice.period.unit")}>
-        {periodUnitOptions.map((option) => <option key={option} value={option}>{translateDomainOption(language, option)}</option>)}
+        {noticePeriodUnitOptions.map((option) => <option key={option} value={option}>{translateDomainOption(language, option)}</option>)}
       </select>
       <select value={anchor} onChange={(event) => update({ anchor: event.target.value })} className="h-10 rounded-md border border-input bg-background px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20" aria-label={t("ui.notice.period.anchor")}>
         {noticeAnchorOptions.map((option) => <option key={option} value={option}>{translateDomainOption(language, option)}</option>)}

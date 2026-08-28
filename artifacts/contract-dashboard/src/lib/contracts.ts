@@ -78,5 +78,7 @@ export const contractTypeOptions = ['maintenance', 'software_license', 'saas_sub
 export const renewalMechanismOptions = ['auto_renew', 'expires', 'by_mutual_agreement', 'indefinite', 'unknown'] as const;
 export const billingFrequencyOptions = ['annual', 'quarterly', 'monthly', 'one_time', 'milestone', 'usage'] as const;
 export const periodUnitOptions = ['days', 'business_days', 'weeks', 'months', 'years'] as const;
+
+export const noticePeriodUnitOptions = [...periodUnitOptions, 'business_days'] as const;
 export const contractValueBasisOptions = ['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'] as const;
 export const assignmentStatusOptions = ['At Risk', 'Review Open', 'In Negotiation'] as const;

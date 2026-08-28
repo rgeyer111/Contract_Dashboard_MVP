@@ -74,8 +74,11 @@ function validPeriod(value: unknown) {
 
 function validNoticePeriod(value: unknown): boolean {
   if (Array.isArray(value)) return value.length > 0 && value.every(validNoticePeriod);
-  return validPeriod(value) &&
-    isRecord(value) &&
+  return isRecord(value) &&
+    typeof value.amount === "number" &&
+    Number.isInteger(value.amount) &&
+    value.amount > 0 &&
+    ["days", "business_days", "weeks", "months", "years"].includes(String(value.unit)) &&
     ["term_end", "renewal_date", "anniversary", "period_end_month", "period_end_quarter", "period_end_year", "any_time", "unknown"].includes(String(value.anchor)) &&
     (value.purpose === null || ["non_renewal", "termination_for_convenience", "other"].includes(String(value.purpose)));
 }
@@ -117,10 +120,9 @@ export function enforceProvenanceConsistency(contract: Record<string, unknown>) 
     if (field.status === "found" && (field.page === null || !field.quote)) return false;
     if (field.status === "not_found" && field.value !== null) return false;
     const alternatives = Array.isArray(field.alternatives) ? field.alternatives : [];
-    const isModelUncertainty =
-      (field.status === "ambiguous" || field.status === "conflicting") &&
-      field.note !== reviewerEditNote;
-    if (isModelUncertainty && alternatives.length < 2) return false;
+    const isModelUncertainty = field.note !== reviewerEditNote;
+    if (isModelUncertainty && field.status === "ambiguous" && alternatives.length < 1) return false;
+    if (isModelUncertainty && field.status === "conflicting" && alternatives.length < 2) return false;
     for (const rawAlternative of alternatives) {
       if (!isRecord(rawAlternative) || !validAlternativeValue(fieldKey, rawAlternative.value)) {
         return false;
