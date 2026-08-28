@@ -14,3 +14,17 @@ mtime_ms = 1787906195733
 storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:a10bbe31-9387-4e3f-980c-16187bbd5926/3b6751fe-bee8-4603-82af-527fab7ad512/9559a56d-73cc-45ee-936c-7b281a346acc"
 storage_version_token = "1787906435722323"
 content_type = "text/csv"
+
+[[outputs]]
+id = "k13cREMCHZoB2vPjHZ7Ze"
+uri = "file://PROJECT_HANDOFF.md"
+type = "text"
+title = "Contract Dashboard MVP — Project Handoff"
+description = "Comprehensive project summary covering scope, architecture, workflows, decisions, testing, Linear history, GitHub backup status, limitations, and recommended user-testing steps."
+logical_id = "466fc739-ac69-42bb-a533-19a346d0747b"
+content_hash = "sha256:d271c6ba652a0b61dda19b1e19e4c92115f9eb88258e3fd3dbc38bcd1b0e13af"
+size = 19504
+mtime_ms = 1787933213265
+storage_uri = "gcs://replit-rams-assets-archer/rams/assets/repl:a10bbe31-9387-4e3f-980c-16187bbd5926/466fc739-ac69-42bb-a533-19a346d0747b/b43ecd78-6515-4cce-80d8-f348e1e865c3"
+storage_version_token = "1787933221688402"
+content_type = "text/markdown"
