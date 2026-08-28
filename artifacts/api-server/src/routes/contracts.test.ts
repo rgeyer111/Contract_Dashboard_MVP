@@ -1,4 +1,5 @@
-import request from "supertest";
+import request from "../test-request";
+import { requestAs } from "../test-request";
 import { eq } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
@@ -705,6 +706,45 @@ describe("saved contract persistence", () => {
     }
   });
 
+  it("allows different accounts to save the same PDF hash", async () => {
+    const hash = crypto.randomUUID().replaceAll("-", "").padEnd(64, "0").slice(0, 64);
+    const firstAccount = `first-${crypto.randomUUID()}`;
+    const secondAccount = `second-${crypto.randomUUID()}`;
+    const contractWithSource = {
+      ...contract,
+      source: {
+        id: hash,
+        name: "shared-source.pdf",
+        modifiedAt: null,
+        size: 1024,
+        hash,
+      },
+    };
+
+    try {
+      const [first, second] = await Promise.all([
+        requestAs(app, firstAccount)
+          .post("/api/contracts")
+          .send({ filename: "first-account.pdf", contract: contractWithSource }),
+        requestAs(app, secondAccount)
+          .post("/api/contracts")
+          .send({ filename: "second-account.pdf", contract: contractWithSource }),
+      ]);
+
+      expect(first.status).toBe(201);
+      expect(second.status).toBe(201);
+      const records = await db
+        .select({ accountId: contractsTable.accountId })
+        .from(contractsTable)
+        .where(eq(contractsTable.fileHash, hash));
+      expect(records.map(({ accountId }) => accountId).sort()).toEqual(
+        [firstAccount, secondAccount].sort(),
+      );
+    } finally {
+      await db.delete(contractsTable).where(eq(contractsTable.fileHash, hash));
+    }
+  });
+
   it("lists, creates, reads, and updates a saved contract", async () => {
     const filename = `saved-contract-regression-${Date.now()}.pdf`;
     const createResponse = await request(app)
@@ -1003,6 +1043,46 @@ describe("saved contract persistence", () => {
       const reopened = await request(app).get(`/api/contracts/${id}`);
       expect(reopened.body.contract.alert.state).toBe("dismissed");
       expect(reopened.body.contract.alert.dismissedReason).toBe("Renewal already approved");
+    } finally {
+      await db.delete(contractsTable).where(eq(contractsTable.id, id));
+    }
+  });
+
+  it("returns 404 for every cross-account contract operation and keeps the owner record intact", async () => {
+    const owner = `owner-${crypto.randomUUID()}`;
+    const outsider = `outsider-${crypto.randomUUID()}`;
+    const created = await requestAs(app, owner)
+      .post("/api/contracts")
+      .send({ filename: "private-contract.pdf", contract });
+    expect(created.status).toBe(201);
+    const id = created.body.id as string;
+    try {
+      const updatedContract = structuredClone(contract);
+      updatedContract.fields.contractTitle = found("Unauthorized update");
+      const responses = await Promise.all([
+        requestAs(app, outsider).get("/api/contracts"),
+        requestAs(app, outsider).get(`/api/contracts/${id}`),
+        requestAs(app, outsider).put(`/api/contracts/${id}`).send({
+          filename: "stolen.pdf",
+          contract: updatedContract,
+        }),
+        requestAs(app, outsider).get(`/api/contracts/${id}/source`),
+        requestAs(app, outsider).get(`/api/contracts/${id}/decisions`),
+        requestAs(app, outsider).post(`/api/contracts/${id}/decisions`).send({
+          decision: "renew",
+          actor: "Outsider",
+        }),
+        requestAs(app, outsider).post(`/api/contracts/${id}/alert/dismiss`).send({
+          reason: "Unauthorized dismissal",
+        }),
+        requestAs(app, outsider).delete(`/api/contracts/${id}`),
+      ]);
+      expect(responses[0].status).toBe(200);
+      expect(responses[0].body).toEqual([]);
+      expect(responses.slice(1).map((response) => response.status)).toEqual(
+        Array(7).fill(404),
+      );
+      expect((await requestAs(app, owner).get(`/api/contracts/${id}`)).status).toBe(200);
     } finally {
       await db.delete(contractsTable).where(eq(contractsTable.id, id));
     }

@@ -748,3 +748,5 @@ export type SavedContract = ContractSaveRequest & {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ListDemoContracts200 = { [key: string]: unknown };

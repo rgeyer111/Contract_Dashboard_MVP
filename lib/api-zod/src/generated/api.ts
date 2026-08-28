@@ -16,14 +16,16 @@ export const HealthCheckResponse = zod.object({
   "status": zod.string()
 })
 
-
+/**
+ * @summary List the public read-only demonstration contracts
+ */
+export const ListDemoContractsResponse = zod.record(zod.string(), zod.unknown())
 /**
  * @summary List saved registry views
  */
 export const listRegistryViewsResponseOneNameMax = 100;
 
 export const listRegistryViewsResponseOneSearchMax = 200;
-
 
 
 export const ListRegistryViewsResponseItem = zod.object({
@@ -47,7 +49,6 @@ export const createRegistryViewBodyNameMax = 100;
 export const createRegistryViewBodySearchMax = 200;
 
 
-
 export const CreateRegistryViewBody = zod.object({
   "name": zod.string().min(1).max(createRegistryViewBodyNameMax),
   "search": zod.string().max(createRegistryViewBodySearchMax),
@@ -57,7 +58,6 @@ export const CreateRegistryViewBody = zod.object({
 export const createRegistryViewResponseOneNameMax = 100;
 
 export const createRegistryViewResponseOneSearchMax = 200;
-
 
 
 export const CreateRegistryViewResponse = zod.object({
@@ -84,7 +84,6 @@ export const updateRegistryViewBodyNameMax = 100;
 export const updateRegistryViewBodySearchMax = 200;
 
 
-
 export const UpdateRegistryViewBody = zod.object({
   "name": zod.string().min(1).max(updateRegistryViewBodyNameMax),
   "search": zod.string().max(updateRegistryViewBodySearchMax),
@@ -94,7 +93,6 @@ export const UpdateRegistryViewBody = zod.object({
 export const updateRegistryViewResponseOneNameMax = 100;
 
 export const updateRegistryViewResponseOneSearchMax = 200;
-
 
 
 export const UpdateRegistryViewResponse = zod.object({
@@ -135,7 +133,6 @@ export const pinRegistryViewResponseOneNameMax = 100;
 export const pinRegistryViewResponseOneSearchMax = 200;
 
 
-
 export const PinRegistryViewResponse = zod.object({
   "name": zod.string().min(1).max(pinRegistryViewResponseOneNameMax),
   "search": zod.string().max(pinRegistryViewResponseOneSearchMax),
@@ -154,7 +151,6 @@ export const PinRegistryViewResponse = zod.object({
 export const reorderRegistryViewsBodyOrderedIdsMax = 1000;
 
 
-
 export const ReorderRegistryViewsBody = zod.object({
   "orderedIds": zod.array(zod.string()).min(1).max(reorderRegistryViewsBodyOrderedIdsMax)
 })
@@ -162,7 +158,6 @@ export const ReorderRegistryViewsBody = zod.object({
 export const reorderRegistryViewsResponseOneNameMax = 100;
 
 export const reorderRegistryViewsResponseOneSearchMax = 200;
-
 
 
 export const ReorderRegistryViewsResponseItem = zod.object({
@@ -182,7 +177,6 @@ export const ReorderRegistryViewsResponse = zod.array(ReorderRegistryViewsRespon
  * @summary Extract a contract review draft from a PDF
  */
 export const extractContractBodyFilesMax = 20;
-
 
 
 export const ExtractContractBody = zod.object({
@@ -518,7 +512,6 @@ export const extractContractResponseExtractionContractSourceSizeMultipleOf = 1;
 export const extractContractResponseExtractionContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 export const extractContractResponseExtractionOcrPagesProcessedMin = 0;
-
 
 
 export const ExtractContractResponse = zod.object({
@@ -1249,7 +1242,6 @@ export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContr
 export const getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionOcrPagesProcessedMin = 0;
 
 
-
 export const GetCurrentIngestRunResponse = zod.union([zod.object({
   "id": zod.string(),
   "items": zod.array(zod.object({
@@ -1663,7 +1655,6 @@ export const registerIngestRunBodyFilesMax = 20;
 export const registerIngestRunBodyItemIdsMax = 20;
 
 
-
 export const RegisterIngestRunBody = zod.object({
   "files": zod.array(zod.instanceof(File)).min(1).max(registerIngestRunBodyFilesMax),
   "runId": zod.string(),
@@ -1997,7 +1988,6 @@ export const registerIngestRunResponseItemsItemExtractionOneExtractionContractSo
 export const registerIngestRunResponseItemsItemExtractionOneExtractionContractSourceHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 export const registerIngestRunResponseItemsItemExtractionOneExtractionOcrPagesProcessedMin = 0;
-
 
 
 export const RegisterIngestRunResponse = zod.object({
@@ -2742,7 +2732,6 @@ export const retryIngestItemResponseExtractionContractSourceHashRegExp = new Reg
 export const retryIngestItemResponseExtractionOcrPagesProcessedMin = 0;
 
 
-
 export const RetryIngestItemResponse = zod.object({
   "filename": zod.string(),
   "extraction": zod.object({
@@ -3156,8 +3145,6 @@ export const CompleteIngestItemParams = zod.object({
   "runId": zod.coerce.string(),
   "itemId": zod.coerce.string()
 })
-
-
 
 
 export const CompleteIngestItemBody = zod.object({
@@ -7538,7 +7525,6 @@ export const RecordContractDecisionParams = zod.object({
 export const recordContractDecisionBodyActorMax = 120;
 
 
-
 export const RecordContractDecisionBody = zod.object({
   "decision": zod.enum(['renew', 'renegotiate', 'cancel', 'snooze']),
   "actor": zod.string().min(1).max(recordContractDecisionBodyActorMax),
@@ -7573,7 +7559,6 @@ export const DismissContractAlertParams = zod.object({
 })
 
 export const dismissContractAlertBodyReasonMax = 300;
-
 
 
 export const DismissContractAlertBody = zod.object({
@@ -8325,7 +8310,6 @@ export const emptyContractWasteResponsePurgedCountMin = 0;
 export const emptyContractWasteResponsePurgedCountMultipleOf = 1;
 
 
-
 export const EmptyContractWasteResponse = zod.object({
   "purgedCount": zod.number().min(emptyContractWasteResponsePurgedCountMin).multipleOf(emptyContractWasteResponsePurgedCountMultipleOf)
 })
@@ -8355,5 +8339,4 @@ export const PurgeContractWasteItemParams = zod.object({
 })
 
 export const PurgeContractWasteItemResponse = zod.void()
-
 

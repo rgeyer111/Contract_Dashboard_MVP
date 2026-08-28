@@ -14,6 +14,15 @@ if (rawPort && (Number.isNaN(port) || port <= 0)) {
 
 const basePath = process.env.BASE_PATH || '/';
 
+if (
+  process.env.REPLIT_DEPLOYMENT === '1' &&
+  !process.env.VITE_CLERK_PROXY_URL
+) {
+  throw new Error(
+    'VITE_CLERK_PROXY_URL is required for published Clerk authentication',
+  );
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [

@@ -110,11 +110,35 @@ function SignUpPage() {
   );
 }
 
-function ContractWasteRoute() {
+function HomeRedirect() {
   return (
     <>
       <Show when="signed-in">
-        <ContractWaste />
+        <Redirect to="/dashboard" />
+      </Show>
+      <Show when="signed-out">
+        <Home />
+      </Show>
+    </>
+  );
+}
+
+function ProtectedRoute({
+  children,
+  allowDemo = false,
+}: {
+  children: ReactNode;
+  allowDemo?: boolean;
+}) {
+  const demo =
+    allowDemo &&
+    new URLSearchParams(window.location.search).get("demo") === "1";
+  if (demo) return children;
+
+  return (
+    <>
+      <Show when="signed-in">
+        {children}
       </Show>
       <Show when="signed-out">
         <Redirect to="/sign-in" />
@@ -127,15 +151,39 @@ function Router() {
   return (
     <RoutedErrorBoundary>
       <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/action-items" component={Dashboard} />
-        <Route path="/review" component={Review} />
-        <Route path="/contracts/:id/edit" component={Review} />
-        <Route path="/contracts/:id" component={ContractDecisionPage} />
-        <Route path="/admin/contract-waste" component={ContractWasteRoute} />
+        <Route path="/" component={HomeRedirect} />
         <Route path="/sign-in/*?" component={SignInPage} />
         <Route path="/sign-up/*?" component={SignUpPage} />
+        <Route path="/dashboard">
+          <ProtectedRoute allowDemo>
+            <Dashboard />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/action-items">
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/review">
+          <ProtectedRoute>
+            <Review />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/contracts/:id/edit">
+          <ProtectedRoute>
+            <Review />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/contracts/:id">
+          <ProtectedRoute>
+            <ContractDecisionPage />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin/contract-waste">
+          <ProtectedRoute>
+            <ContractWaste />
+          </ProtectedRoute>
+        </Route>
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>

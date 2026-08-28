@@ -57,6 +57,7 @@ import {
   queueContractIngestObjectCleanup,
   reserveAndStoreContractIngestPdf,
 } from "../lib/contract-ingest-cleanup";
+import { accountIdFor } from "../middlewares/require-auth";
 
 const maximumUploadBytes = 10 * 1024 * 1024;
 const upload = multer({
@@ -153,10 +154,11 @@ function uploadedHash(buffer: Buffer) {
   return createHash("sha256").update(buffer).digest("hex");
 }
 
-async function hasExistingSourceHash(hash: string) {
+async function hasExistingSourceHash(hash: string, accountId: string) {
   const records = await db
     .select({ fileHash: contractsTable.fileHash, contract: contractsTable.contract })
-    .from(contractsTable);
+    .from(contractsTable)
+    .where(eq(contractsTable.accountId, accountId));
   return records.some((record) => {
     if (record.fileHash === hash) return true;
     const contract = isRecord(record.contract) ? record.contract : {};
@@ -229,9 +231,10 @@ export async function extractSourceFile(
   source: ContractSource,
   id: string,
   req: Pick<Request, "log">,
+  accountId: string,
 ): Promise<any> {
   const sourceFile = await loadContractSourceFile(source, id);
-  if (await hasExistingSourceHash(sourceFile.hash)) {
+  if (await hasExistingSourceHash(sourceFile.hash, accountId)) {
     const error = new Error("This contract has already been uploaded. Duplicate skipped.") as Error & {
       status?: number;
       code?: string;
@@ -353,7 +356,7 @@ export async function extractSourceFile(
 
 async function extractUploadedFile(file: Express.Multer.File, req: Request): Promise<any> {
   const { source, id } = uploadSourceFor(file);
-  return extractSourceFile(source, id, req);
+  return extractSourceFile(source, id, req, accountIdFor(req));
 }
 
 function ingestHeaders(req: Request) {
@@ -365,6 +368,7 @@ function ingestHeaders(req: Request) {
 async function persistIngestStart(
   identifiers: { runId: string; itemId: string },
   file: Express.Multer.File,
+  accountId: string,
 ): Promise<{ storagePath: string; processingAttemptId: string }> {
   const hash = uploadedHash(file.buffer);
   const storagePath = await reserveAndStoreContractIngestPdf(file.buffer);
@@ -373,6 +377,7 @@ async function persistIngestStart(
   try {
     await db.transaction(async (tx) => {
       await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${identifiers.runId}))`);
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${identifiers.itemId}))`);
       await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${storagePath}))`);
       const [reservation] = await tx.select({ state: contractIngestObjectCleanupTable.state })
         .from(contractIngestObjectCleanupTable)
@@ -380,13 +385,27 @@ async function persistIngestStart(
       if (reservation?.state !== "uploading") {
         throw new Error("Contract ingest upload reservation is no longer active.");
       }
-      const [existing] = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
+      const [existing] = await tx.select({
+        storagePath: contractIngestItemsTable.storagePath,
+        accountId: contractIngestRunsTable.accountId,
+      })
         .from(contractIngestItemsTable)
+        .innerJoin(contractIngestRunsTable, eq(contractIngestRunsTable.id, contractIngestItemsTable.runId))
         .where(eq(contractIngestItemsTable.id, identifiers.itemId));
+      if (existing && existing.accountId !== accountId) {
+        throw new Error("Ingest item is owned by another account.");
+      }
       replacedStoragePath = existing?.storagePath ?? null;
       await tx.insert(contractIngestRunsTable)
-        .values({ id: identifiers.runId })
+        .values({ id: identifiers.runId, accountId })
         .onConflictDoNothing();
+      const [ownedRun] = await tx.select({ id: contractIngestRunsTable.id })
+        .from(contractIngestRunsTable)
+        .where(and(
+          eq(contractIngestRunsTable.id, identifiers.runId),
+          eq(contractIngestRunsTable.accountId, accountId),
+        ));
+      if (!ownedRun) throw new Error("Ingest run is owned by another account.");
       await tx.insert(contractIngestItemsTable)
         .values({
           id: identifiers.itemId,
@@ -449,6 +468,7 @@ async function persistIngestOutcome(
   identifiers: { runId: string; itemId: string },
   outcome: { state: string; message: string | null; extraction: any | null },
   attempt: { storagePath: string; processingAttemptId: string },
+  accountId: string,
 ) {
   const updated = await db.update(contractIngestItemsTable)
     .set({ ...outcome, processingAttemptId: null, updatedAt: new Date() })
@@ -458,14 +478,19 @@ async function persistIngestOutcome(
       eq(contractIngestItemsTable.state, "processing"),
       eq(contractIngestItemsTable.storagePath, attempt.storagePath),
       eq(contractIngestItemsTable.processingAttemptId, attempt.processingAttemptId),
+      sql`EXISTS (SELECT 1 FROM ${contractIngestRunsTable} WHERE ${contractIngestRunsTable.id} = ${contractIngestItemsTable.runId} AND ${contractIngestRunsTable.accountId} = ${accountId})`,
     ))
     .returning({ id: contractIngestItemsTable.id });
   return updated.length > 0;
 }
 
-async function deleteRunIfNoActionableItems(runId: string) {
+async function deleteRunIfNoActionableItems(runId: string, accountId: string) {
   const storagePaths = await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
+    const [ownedRun] = await tx.select({ id: contractIngestRunsTable.id })
+      .from(contractIngestRunsTable)
+      .where(and(eq(contractIngestRunsTable.id, runId), eq(contractIngestRunsTable.accountId, accountId)));
+    if (!ownedRun) return [];
     const remaining = await tx.select({ id: contractIngestItemsTable.id })
       .from(contractIngestItemsTable)
       .where(and(
@@ -515,8 +540,10 @@ function extractionErrorCode(error: unknown) {
     : "UNAVAILABLE";
 }
 
-router.get("/registry-views", async (_req: Request, res: Response): Promise<void> => {
-  const records = await db.select().from(registryViewsTable).orderBy(
+router.get("/registry-views", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
+  const records = await db.select().from(registryViewsTable)
+    .where(eq(registryViewsTable.accountId, accountId)).orderBy(
     asc(sql`CASE WHEN ${registryViewsTable.pinnedAt} IS NULL THEN 1 ELSE 0 END`),
     asc(registryViewsTable.pinnedOrder),
     asc(registryViewsTable.pinnedAt),
@@ -527,6 +554,7 @@ router.get("/registry-views", async (_req: Request, res: Response): Promise<void
 });
 
 router.post("/registry-views", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const parsed = CreateRegistryViewBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "A view name and valid registry filters are required." });
@@ -538,6 +566,7 @@ router.post("/registry-views", async (req: Request, res: Response): Promise<void
     return;
   }
   const [record] = await db.insert(registryViewsTable).values({
+    accountId,
     name,
     search: parsed.data.search,
     documentType: parsed.data.documentType ?? null,
@@ -546,6 +575,7 @@ router.post("/registry-views", async (req: Request, res: Response): Promise<void
 });
 
 router.put("/registry-views/:id", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const parsed = UpdateRegistryViewBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "A view name and valid registry filters are required." });
@@ -564,7 +594,7 @@ router.put("/registry-views/:id", async (req: Request, res: Response): Promise<v
       documentType: parsed.data.documentType ?? null,
       updatedAt: new Date(),
     })
-    .where(eq(registryViewsTable.id, id))
+    .where(and(eq(registryViewsTable.id, id), eq(registryViewsTable.accountId, accountId)))
     .returning();
   if (!record) {
     res.status(404).json({ error: "Registry view not found." });
@@ -574,6 +604,7 @@ router.put("/registry-views/:id", async (req: Request, res: Response): Promise<v
 });
 
 router.patch("/registry-views/:id/pin", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const parsed = PinRegistryViewBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "A valid pin state is required." });
@@ -581,12 +612,15 @@ router.patch("/registry-views/:id/pin", async (req: Request, res: Response): Pro
   }
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const record = await db.transaction(async (tx) => {
-    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('registry_views_pinned_order'))`);
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${"registry_views_pinned_order:" + accountId}))`);
     const [existing] = await tx.select({
       id: registryViewsTable.id,
       pinnedAt: registryViewsTable.pinnedAt,
       pinnedOrder: registryViewsTable.pinnedOrder,
-    }).from(registryViewsTable).where(eq(registryViewsTable.id, id));
+    }).from(registryViewsTable).where(and(
+      eq(registryViewsTable.id, id),
+      eq(registryViewsTable.accountId, accountId),
+    ));
     if (!existing) return null;
 
     let pinnedOrder = existing.pinnedOrder;
@@ -594,7 +628,10 @@ router.patch("/registry-views/:id/pin", async (req: Request, res: Response): Pro
       const [result] = await tx
         .select({ maxOrder: sql<number>`COALESCE(MAX(${registryViewsTable.pinnedOrder}), -1)` })
         .from(registryViewsTable)
-        .where(isNotNull(registryViewsTable.pinnedAt));
+        .where(and(
+          eq(registryViewsTable.accountId, accountId),
+          isNotNull(registryViewsTable.pinnedAt),
+        ));
       pinnedOrder = Number(result?.maxOrder ?? -1) + 1;
     }
     const [updated] = await tx.update(registryViewsTable)
@@ -602,7 +639,7 @@ router.patch("/registry-views/:id/pin", async (req: Request, res: Response): Pro
         pinnedAt: parsed.data.pinned ? (existing.pinnedAt ?? new Date()) : null,
         pinnedOrder: parsed.data.pinned ? pinnedOrder : null,
       })
-      .where(eq(registryViewsTable.id, id))
+      .where(and(eq(registryViewsTable.id, id), eq(registryViewsTable.accountId, accountId)))
       .returning();
     return updated;
   });
@@ -614,6 +651,7 @@ router.patch("/registry-views/:id/pin", async (req: Request, res: Response): Pro
 });
 
 router.patch("/registry-views/order", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const parsed = ReorderRegistryViewsBody.safeParse(req.body);
   if (!parsed.success || new Set(parsed.data.orderedIds).size !== parsed.data.orderedIds.length) {
     res.status(400).json({ error: "A complete, unique order for pinned views is required." });
@@ -621,11 +659,14 @@ router.patch("/registry-views/order", async (req: Request, res: Response): Promi
   }
 
   const records = await db.transaction(async (tx) => {
-    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('registry_views_pinned_order'))`);
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${"registry_views_pinned_order:" + accountId}))`);
     const pinnedViews = await tx
       .select({ id: registryViewsTable.id })
       .from(registryViewsTable)
-      .where(isNotNull(registryViewsTable.pinnedAt));
+      .where(and(
+        eq(registryViewsTable.accountId, accountId),
+        isNotNull(registryViewsTable.pinnedAt),
+      ));
     const pinnedIds = new Set(pinnedViews.map((view) => view.id));
     if (
       parsed.data.orderedIds.length !== pinnedIds.size ||
@@ -638,16 +679,17 @@ router.patch("/registry-views/order", async (req: Request, res: Response): Promi
       await tx
         .update(registryViewsTable)
         .set({ pinnedOrder: -(index + 1) })
-        .where(eq(registryViewsTable.id, id));
+        .where(and(eq(registryViewsTable.id, id), eq(registryViewsTable.accountId, accountId)));
     }
     for (const [index, id] of parsed.data.orderedIds.entries()) {
       await tx
         .update(registryViewsTable)
         .set({ pinnedOrder: index })
-        .where(eq(registryViewsTable.id, id));
+        .where(and(eq(registryViewsTable.id, id), eq(registryViewsTable.accountId, accountId)));
     }
 
-    return tx.select().from(registryViewsTable).orderBy(
+    return tx.select().from(registryViewsTable)
+      .where(eq(registryViewsTable.accountId, accountId)).orderBy(
       asc(sql`CASE WHEN ${registryViewsTable.pinnedAt} IS NULL THEN 1 ELSE 0 END`),
       asc(registryViewsTable.pinnedOrder),
       asc(registryViewsTable.pinnedAt),
@@ -663,9 +705,10 @@ router.patch("/registry-views/order", async (req: Request, res: Response): Promi
 });
 
 router.delete("/registry-views/:id", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const [record] = await db.delete(registryViewsTable)
-    .where(eq(registryViewsTable.id, id))
+    .where(and(eq(registryViewsTable.id, id), eq(registryViewsTable.accountId, accountId)))
     .returning({ id: registryViewsTable.id });
   if (!record) {
     res.status(404).json({ error: "Registry view not found." });
@@ -674,14 +717,20 @@ router.delete("/registry-views/:id", async (req: Request, res: Response): Promis
   res.status(204).send();
 });
 
-router.get("/contracts", async (_req: Request, res: Response): Promise<void> => {
-  const records = await db.select().from(contractsTable).orderBy(desc(contractsTable.updatedAt));
+router.get("/contracts", async (req: Request, res: Response): Promise<void> => {
+  const records = await db.select().from(contractsTable)
+    .where(eq(contractsTable.accountId, accountIdFor(req)))
+    .orderBy(desc(contractsTable.updatedAt));
   res.json(records.map(responseFor));
 });
 
 router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const [record] = await db.select().from(contractsTable).where(eq(contractsTable.id, id));
+  const [record] = await db.select().from(contractsTable).where(and(
+    eq(contractsTable.id, id),
+    eq(contractsTable.accountId, accountId),
+  ));
   if (!record) {
     res.status(404).json({ error: "Contract not found." });
     return;
@@ -690,6 +739,7 @@ router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> 
 });
 
 router.delete("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   let deleted;
   try {
@@ -700,7 +750,10 @@ router.delete("/contracts/:id", async (req: Request, res: Response): Promise<voi
         sourceStoragePath: contractsTable.sourceStoragePath,
         filename: contractsTable.filename,
         contract: contractsTable.contract,
-      }).from(contractsTable).where(eq(contractsTable.id, id));
+      }).from(contractsTable).where(and(
+        eq(contractsTable.id, id),
+        eq(contractsTable.accountId, accountId),
+      ));
       if (!existing) return undefined;
 
       if (existing.sourceStoragePath) {
@@ -709,9 +762,15 @@ router.delete("/contracts/:id", async (req: Request, res: Response): Promise<voi
 
       await tx.update(contractsTable)
         .set({ parentContractId: null, updatedAt: new Date() })
-        .where(eq(contractsTable.parentContractId, id));
+        .where(and(
+          eq(contractsTable.parentContractId, id),
+          eq(contractsTable.accountId, accountId),
+        ));
       const [record] = await tx.delete(contractsTable)
-        .where(eq(contractsTable.id, id))
+        .where(and(
+          eq(contractsTable.id, id),
+          eq(contractsTable.accountId, accountId),
+        ))
         .returning({ id: contractsTable.id, sourceStoragePath: contractsTable.sourceStoragePath });
       if (record) {
         await tx.delete(contractIngestCompletionsTable)
@@ -804,8 +863,12 @@ router.delete("/admin/contract-waste", requireAdministrator, async (_req: Reques
 });
 
 router.get("/contracts/:id/decisions", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const [contract] = await db.select({ id: contractsTable.id }).from(contractsTable).where(eq(contractsTable.id, id));
+  const [contract] = await db.select({ id: contractsTable.id }).from(contractsTable).where(and(
+    eq(contractsTable.id, id),
+    eq(contractsTable.accountId, accountId),
+  ));
   if (!contract) {
     res.status(404).json({ error: "Contract not found." });
     return;
@@ -818,13 +881,17 @@ router.get("/contracts/:id/decisions", async (req: Request, res: Response): Prom
 });
 
 router.post("/contracts/:id/decisions", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const parsed = RecordContractDecisionBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Choose a valid decision and identify who made it." });
     return;
   }
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const [contract] = await db.select({ id: contractsTable.id }).from(contractsTable).where(eq(contractsTable.id, id));
+  const [contract] = await db.select({ id: contractsTable.id }).from(contractsTable).where(and(
+    eq(contractsTable.id, id),
+    eq(contractsTable.accountId, accountId),
+  ));
   if (!contract) {
     res.status(404).json({ error: "Contract not found." });
     return;
@@ -852,11 +919,15 @@ router.post("/contracts/:id/decisions", async (req: Request, res: Response): Pro
 });
 
 router.get("/contracts/:id/source", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const [contract] = await db.select({
     filename: contractsTable.filename,
     sourceStoragePath: contractsTable.sourceStoragePath,
-  }).from(contractsTable).where(eq(contractsTable.id, id));
+  }).from(contractsTable).where(and(
+    eq(contractsTable.id, id),
+    eq(contractsTable.accountId, accountId),
+  ));
   if (!contract?.sourceStoragePath) {
     res.status(404).json({ error: "The source PDF is not available for this contract." });
     return;
@@ -874,13 +945,17 @@ router.get("/contracts/:id/source", async (req: Request, res: Response): Promise
 });
 
 router.post("/contracts/:id/alert/dismiss", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const reason = typeof req.body?.reason === "string" ? req.body.reason.trim().slice(0, 300) : "";
   if (!reason) {
     res.status(400).json({ error: "A reason is required to dismiss an alert." });
     return;
   }
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const [existing] = await db.select().from(contractsTable).where(eq(contractsTable.id, id));
+  const [existing] = await db.select().from(contractsTable).where(and(
+    eq(contractsTable.id, id),
+    eq(contractsTable.accountId, accountId),
+  ));
   if (!existing) {
     res.status(404).json({ error: "Contract not found." });
     return;
@@ -900,12 +975,13 @@ router.post("/contracts/:id/alert/dismiss", async (req: Request, res: Response):
       },
       updatedAt: new Date(),
     })
-    .where(eq(contractsTable.id, existing.id))
+    .where(and(eq(contractsTable.id, existing.id), eq(contractsTable.accountId, accountId)))
     .returning();
   res.json(responseFor(record));
 });
 
 router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const parsed = UpdateContractBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "A valid filename and provenance contract are required." });
@@ -916,7 +992,10 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     return;
   }
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const [existing] = await db.select().from(contractsTable).where(eq(contractsTable.id, id));
+  const [existing] = await db.select().from(contractsTable).where(and(
+    eq(contractsTable.id, id),
+    eq(contractsTable.accountId, accountId),
+  ));
   if (!existing) {
     res.status(404).json({ error: "Contract not found." });
     return;
@@ -942,7 +1021,7 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
         confidence: {},
         updatedAt: new Date(),
       })
-      .where(eq(contractsTable.id, id))
+      .where(and(eq(contractsTable.id, id), eq(contractsTable.accountId, accountId)))
       .returning();
   } catch (error) {
     if (isUniqueConstraintViolation(error)) {
@@ -959,6 +1038,7 @@ router.put("/contracts/:id", async (req: Request, res: Response): Promise<void> 
 });
 
 router.post("/contracts", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const parsed = CreateContractBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "A valid filename and provenance contract are required." });
@@ -973,7 +1053,7 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
     return;
   }
   const sourceHash = sourceHashForContract(parsed.data.contract as unknown as Record<string, unknown>);
-  if (sourceHash && await hasExistingSourceHash(sourceHash)) {
+  if (sourceHash && await hasExistingSourceHash(sourceHash, accountId)) {
     res.status(409).json({ error: "This contract has already been saved. Duplicate skipped." });
     return;
   }
@@ -982,6 +1062,7 @@ router.post("/contracts", async (req: Request, res: Response): Promise<void> => 
   try {
     [record] = await db.insert(contractsTable).values({
       id: randomUUID(),
+      accountId,
       filename: parsed.data.filename.slice(0, 250),
       fileHash: sourceHash,
       documentType: contractDocumentType(contract),
@@ -1009,6 +1090,7 @@ router.post(
     { name: "file", maxCount: 1 },
   ]),
   async (req: Request, res: Response): Promise<void> => {
+    const accountId = accountIdFor(req);
     const uploadedFiles = Array.isArray(req.files)
       ? req.files
       : Object.values(req.files ?? {}).flat();
@@ -1024,7 +1106,23 @@ router.post(
     }
 
     const identifiers = ingestHeaders(req);
-    const ingestAttempt = identifiers ? await persistIngestStart(identifiers, file) : undefined;
+    if (identifiers) {
+      const [existingRun] = await db.select({ accountId: contractIngestRunsTable.accountId })
+        .from(contractIngestRunsTable)
+        .where(eq(contractIngestRunsTable.id, identifiers.runId));
+      const [existingItem] = await db.select({ accountId: contractIngestRunsTable.accountId })
+        .from(contractIngestItemsTable)
+        .innerJoin(contractIngestRunsTable, eq(contractIngestRunsTable.id, contractIngestItemsTable.runId))
+        .where(eq(contractIngestItemsTable.id, identifiers.itemId));
+      if (
+        (existingRun && existingRun.accountId !== accountId) ||
+        (existingItem && existingItem.accountId !== accountId)
+      ) {
+        res.status(404).json({ error: "Ingest run or item not found." });
+        return;
+      }
+    }
+    const ingestAttempt = identifiers ? await persistIngestStart(identifiers, file, accountId) : undefined;
     try {
       if (identifiers) {
         const [duplicateItem] = await db.select({ id: contractIngestItemsTable.id })
@@ -1054,7 +1152,7 @@ router.post(
           state: "ready",
           message: "Ready for review",
           extraction: result,
-        }, ingestAttempt);
+        }, ingestAttempt, accountId);
         if (!persisted) {
           res.status(409).json({ error: "This upload attempt was superseded. Use the latest result.", code: "SUPERSEDED" });
           return;
@@ -1068,12 +1166,12 @@ router.post(
           state: duplicate ? "duplicate" : "failed",
           message: duplicate ? "Duplicate skipped" : extractionErrorMessage(error),
           extraction: null,
-        }, ingestAttempt);
+        }, ingestAttempt, accountId);
         if (!persisted) {
           res.status(409).json({ error: "This upload attempt was superseded. Use the latest result.", code: "SUPERSEDED" });
           return;
         }
-        if (duplicate) await deleteRunIfNoActionableItems(identifiers.runId);
+        if (duplicate) await deleteRunIfNoActionableItems(identifiers.runId, accountId);
       }
       res.status(duplicate ? 409 : extractionErrorStatus(error)).json({
         error: duplicate ? "This contract has already been uploaded. Duplicate skipped." : extractionErrorMessage(error),
@@ -1097,6 +1195,7 @@ router.post(
   "/contracts/ingest-runs",
   batchUpload.array("files", 20),
   async (req: Request, res: Response): Promise<void> => {
+    const accountId = accountIdFor(req);
     const files = Array.isArray(req.files) ? req.files : [];
     const runId = typeof req.body?.runId === "string" ? req.body.runId : "";
     const rawItemIds = req.body?.itemIds;
@@ -1113,6 +1212,22 @@ router.post(
       res.status(400).json({ error: "Only valid PDF files can be uploaded." });
       return;
     }
+    const [existingRun] = await db.select({ accountId: contractIngestRunsTable.accountId })
+      .from(contractIngestRunsTable)
+      .where(eq(contractIngestRunsTable.id, runId));
+    const existingItems = itemIds.length
+      ? await db.select({ accountId: contractIngestRunsTable.accountId })
+        .from(contractIngestItemsTable)
+        .innerJoin(contractIngestRunsTable, eq(contractIngestRunsTable.id, contractIngestItemsTable.runId))
+        .where(inArray(contractIngestItemsTable.id, itemIds))
+      : [];
+    if (
+      (existingRun && existingRun.accountId !== accountId) ||
+      existingItems.some((item) => item.accountId !== accountId)
+    ) {
+      res.status(404).json({ error: "Ingest run or item not found." });
+      return;
+    }
     const storedFiles: Array<{ file: Express.Multer.File; storagePath: string }> = [];
     try {
       for (const file of files) {
@@ -1127,8 +1242,16 @@ router.post(
     try {
       await db.transaction(async (tx) => {
         await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
-        await tx.insert(contractIngestRunsTable).values({ id: runId }).onConflictDoNothing();
+        await tx.insert(contractIngestRunsTable).values({ id: runId, accountId }).onConflictDoNothing();
+        const [ownedRun] = await tx.select({ id: contractIngestRunsTable.id })
+          .from(contractIngestRunsTable)
+          .where(and(
+            eq(contractIngestRunsTable.id, runId),
+            eq(contractIngestRunsTable.accountId, accountId),
+          ));
+        if (!ownedRun) throw new Error("Ingest run is owned by another account.");
         for (const [index, { file, storagePath }] of storedFiles.entries()) {
+          await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${itemIds[index]}))`);
           await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${storagePath}))`);
           const [reservation] = await tx.select({ state: contractIngestObjectCleanupTable.state })
             .from(contractIngestObjectCleanupTable)
@@ -1136,9 +1259,16 @@ router.post(
           if (reservation?.state !== "uploading") {
             throw new Error("Contract ingest upload reservation is no longer active.");
           }
-          const [existing] = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
+          const [existing] = await tx.select({
+            storagePath: contractIngestItemsTable.storagePath,
+            accountId: contractIngestRunsTable.accountId,
+          })
             .from(contractIngestItemsTable)
+            .innerJoin(contractIngestRunsTable, eq(contractIngestRunsTable.id, contractIngestItemsTable.runId))
             .where(eq(contractIngestItemsTable.id, itemIds[index]));
+          if (existing && existing.accountId !== accountId) {
+            throw new Error("Ingest item is owned by another account.");
+          }
           if (existing && existing.storagePath !== storagePath) {
             replacedStoragePaths.push(existing.storagePath);
           }
@@ -1203,9 +1333,11 @@ router.post(
   },
 );
 
-router.get("/contracts/ingest-runs/current", async (_req: Request, res: Response): Promise<void> => {
+router.get("/contracts/ingest-runs/current", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   await processContractIngestObjectCleanup();
   const [run] = await db.select().from(contractIngestRunsTable)
+    .where(eq(contractIngestRunsTable.accountId, accountId))
     .orderBy(desc(contractIngestRunsTable.updatedAt))
     .limit(1);
   if (!run) {
@@ -1223,12 +1355,16 @@ router.get("/contracts/ingest-runs/current", async (_req: Request, res: Response
 });
 
 router.delete("/contracts/ingest-runs/:runId", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const runId = Array.isArray(req.params.runId) ? req.params.runId[0] : req.params.runId;
   const outcome = await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
     const [run] = await tx.select({ id: contractIngestRunsTable.id })
       .from(contractIngestRunsTable)
-      .where(eq(contractIngestRunsTable.id, runId));
+      .where(and(
+        eq(contractIngestRunsTable.id, runId),
+        eq(contractIngestRunsTable.accountId, accountId),
+      ));
     if (!run) return null;
     const [processingItem] = await tx.select({ id: contractIngestItemsTable.id })
       .from(contractIngestItemsTable)
@@ -1255,7 +1391,10 @@ router.delete("/contracts/ingest-runs/:runId", async (req: Request, res: Respons
           },
         });
     }
-    await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+    await tx.delete(contractIngestRunsTable).where(and(
+      eq(contractIngestRunsTable.id, runId),
+      eq(contractIngestRunsTable.accountId, accountId),
+    ));
     return {
       state: "abandoned" as const,
       storagePaths: items.map((item) => item.storagePath),
@@ -1275,7 +1414,7 @@ router.delete("/contracts/ingest-runs/:runId", async (req: Request, res: Respons
   res.status(204).send();
 });
 
-async function retryIngestItem(runId: string, itemId: string, req: Request) {
+async function retryIngestItem(runId: string, itemId: string, req: Request, accountId: string) {
   const processingAttemptId = randomUUID();
   const item = await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
@@ -1292,6 +1431,7 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
         eq(contractIngestItemsTable.runId, runId),
         eq(contractIngestItemsTable.state, "failed"),
         sql`${contractIngestItemsTable.handedOffAt} IS NULL`,
+        sql`EXISTS (SELECT 1 FROM ${contractIngestRunsTable} WHERE ${contractIngestRunsTable.id} = ${contractIngestItemsTable.runId} AND ${contractIngestRunsTable.accountId} = ${accountId})`,
       ))
       .returning();
     return updated;
@@ -1302,6 +1442,7 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
       .where(and(
         eq(contractIngestItemsTable.id, itemId),
         eq(contractIngestItemsTable.runId, runId),
+        sql`EXISTS (SELECT 1 FROM ${contractIngestRunsTable} WHERE ${contractIngestRunsTable.id} = ${contractIngestItemsTable.runId} AND ${contractIngestRunsTable.accountId} = ${accountId})`,
       ));
     return existing
       ? { status: 409, error: "Only failed ingest items can be retried.", code: "INVALID_UPLOAD" }
@@ -1316,14 +1457,14 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
       id: item.hash,
       hash: item.hash,
     }]);
-    const result = await extractSourceFile(source, item.hash, req);
+    const result = await extractSourceFile(source, item.hash, req, accountId);
     result.ingestRunId = runId;
     result.ingestItemId = itemId;
     const persisted = await persistIngestOutcome({ runId, itemId }, {
       state: "ready",
       message: "Ready for review",
       extraction: result,
-    }, { storagePath: item.storagePath, processingAttemptId });
+    }, { storagePath: item.storagePath, processingAttemptId }, accountId);
     if (!persisted) {
       return { status: 409, error: "This retry attempt was superseded. Use the latest result.", code: "SUPERSEDED" };
     }
@@ -1334,11 +1475,11 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
       state: duplicate ? "duplicate" : "failed",
       message: duplicate ? "Duplicate skipped" : extractionErrorMessage(error),
       extraction: null,
-    }, { storagePath: item.storagePath, processingAttemptId });
+    }, { storagePath: item.storagePath, processingAttemptId }, accountId);
     if (!persisted) {
       return { status: 409, error: "This retry attempt was superseded. Use the latest result.", code: "SUPERSEDED" };
     }
-    if (duplicate) await deleteRunIfNoActionableItems(runId);
+    if (duplicate) await deleteRunIfNoActionableItems(runId, accountId);
     return {
       status: duplicate ? 409 : extractionErrorStatus(error),
       error: duplicate ? "This contract has already been uploaded. Duplicate skipped." : extractionErrorMessage(error),
@@ -1348,9 +1489,10 @@ async function retryIngestItem(runId: string, itemId: string, req: Request) {
 }
 
 router.post("/contracts/ingest-runs/:runId/items/:itemId/retry", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const runId = Array.isArray(req.params.runId) ? req.params.runId[0] : req.params.runId;
   const itemId = Array.isArray(req.params.itemId) ? req.params.itemId[0] : req.params.itemId;
-  const outcome = await retryIngestItem(runId, itemId, req);
+  const outcome = await retryIngestItem(runId, itemId, req, accountId);
   if (!outcome) {
     res.status(404).json({ error: "Ingest item not found.", code: "INVALID_UPLOAD" });
     return;
@@ -1363,6 +1505,7 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/retry", async (req: Req
 });
 
 router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: Request, res: Response): Promise<void> => {
+  const accountId = accountIdFor(req);
   const runId = Array.isArray(req.params.runId) ? req.params.runId[0] : req.params.runId;
   const itemId = Array.isArray(req.params.itemId) ? req.params.itemId[0] : req.params.itemId;
   const parsedCompletion = CompleteIngestItemBody.safeParse(req.body);
@@ -1373,16 +1516,27 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
   const contractId = parsedCompletion.data.contractId;
   const completion = await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
+    const [ownedRun] = await tx.select({ id: contractIngestRunsTable.id })
+      .from(contractIngestRunsTable)
+      .where(and(
+        eq(contractIngestRunsTable.id, runId),
+        eq(contractIngestRunsTable.accountId, accountId),
+      ));
     const [completed] = await tx.select({
       itemId: contractIngestCompletionsTable.itemId,
       contractId: contractIngestCompletionsTable.contractId,
       storagePath: contractIngestCompletionsTable.storagePath,
     })
       .from(contractIngestCompletionsTable)
+      .innerJoin(contractsTable, eq(contractsTable.id, contractIngestCompletionsTable.contractId))
       .where(and(
         eq(contractIngestCompletionsTable.itemId, itemId),
         eq(contractIngestCompletionsTable.runId, runId),
+        eq(contractsTable.accountId, accountId),
       ));
+    if (!ownedRun && !completed) {
+      return { status: "missing" as const, storagePaths: [] };
+    }
     if (completed) {
       if (completed.contractId !== contractId || !completed.storagePath) {
         return { status: "invalid_contract" as const, storagePaths: [] };
@@ -1390,14 +1544,17 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
       const [savedContract] = await tx.select({
         id: contractsTable.id,
         sourceStoragePath: contractsTable.sourceStoragePath,
-      }).from(contractsTable).where(eq(contractsTable.id, contractId));
+      }).from(contractsTable).where(and(
+        eq(contractsTable.id, contractId),
+        eq(contractsTable.accountId, accountId),
+      ));
       if (!savedContract || (savedContract.sourceStoragePath && savedContract.sourceStoragePath !== completed.storagePath)) {
         return { status: "invalid_contract" as const, storagePaths: [] };
       }
       if (!savedContract.sourceStoragePath) {
         await tx.update(contractsTable)
           .set({ sourceStoragePath: completed.storagePath, updatedAt: new Date() })
-          .where(eq(contractsTable.id, contractId));
+          .where(and(eq(contractsTable.id, contractId), eq(contractsTable.accountId, accountId)));
       }
       await tx.delete(contractIngestObjectCleanupTable)
         .where(eq(contractIngestObjectCleanupTable.storagePath, completed.storagePath));
@@ -1419,8 +1576,14 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
     const [savedContract] = await tx.select({
       id: contractsTable.id,
       fileHash: contractsTable.fileHash,
-    }).from(contractsTable).where(eq(contractsTable.id, contractId));
-    if (!savedContract || savedContract.fileHash !== item.hash) {
+    }).from(contractsTable).where(and(
+      eq(contractsTable.id, contractId),
+      eq(contractsTable.accountId, accountId),
+    ));
+      if (!savedContract) {
+        return { status: "missing" as const, storagePaths: [] };
+      }
+      if (savedContract.fileHash !== item.hash) {
       return { status: "invalid_contract" as const, storagePaths: [] };
     }
     const [updated] = await tx.update(contractIngestItemsTable)
@@ -1437,7 +1600,7 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
     }
     await tx.update(contractsTable)
       .set({ sourceStoragePath: item.storagePath, updatedAt: new Date() })
-      .where(eq(contractsTable.id, contractId));
+      .where(and(eq(contractsTable.id, contractId), eq(contractsTable.accountId, accountId)));
     await tx.delete(contractIngestObjectCleanupTable)
       .where(eq(contractIngestObjectCleanupTable.storagePath, item.storagePath));
     await tx.insert(contractIngestCompletionsTable)
@@ -1457,7 +1620,10 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
       const linkedPaths = items.length
         ? await tx.select({ storagePath: contractsTable.sourceStoragePath })
           .from(contractsTable)
-          .where(inArray(contractsTable.sourceStoragePath, items.map((item) => item.storagePath)))
+          .where(and(
+            eq(contractsTable.accountId, accountId),
+            inArray(contractsTable.sourceStoragePath, items.map((item) => item.storagePath)),
+          ))
         : [];
       const retained = new Set(linkedPaths.flatMap((row) => row.storagePath ? [row.storagePath] : []));
       const cleanupItems = items.filter((item) => !retained.has(item.storagePath));
@@ -1475,7 +1641,10 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
             },
           });
       }
-      await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      await tx.delete(contractIngestRunsTable).where(and(
+        eq(contractIngestRunsTable.id, runId),
+        eq(contractIngestRunsTable.accountId, accountId),
+      ));
       return { status: "completed" as const, storagePaths: cleanupItems.map((item) => item.storagePath) };
     }
     return { status: "completed" as const, storagePaths: [] };

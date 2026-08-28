@@ -7,6 +7,9 @@ info:
 servers:
   - url: /api
     description: Base API path
+
+security:
+  - clerkSession: []
 tags:
   - name: health
     description: Health operations
@@ -15,6 +18,7 @@ tags:
 paths:
   /healthz:
     get:
+      security: []
       operationId: healthCheck
       tags: [health]
       summary: Health check
@@ -26,6 +30,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /demo/contracts:
+    get:
+      security: []
+      operationId: listDemoContracts
+      tags: [contracts]
+      summary: List the public read-only demonstration contracts
+      responses:
+        "200":
+          description: Public demonstration dataset
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
   /registry-views:
     get:
       operationId: listRegistryViews
@@ -651,6 +669,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 components:
+  securitySchemes:
+    clerkSession:
+      type: http
+      scheme: bearer
+      bearerFormat: Clerk session token
+      description: Clerk session authentication. Browser clients authenticate with the Clerk session cookie.
   schemas:
     HealthStatus:
       type: object
@@ -1221,4 +1245,3 @@ components:
             sourceAvailable: { type: boolean }
             createdAt: { type: string, format: date-time }
             updatedAt: { type: string, format: date-time }
-

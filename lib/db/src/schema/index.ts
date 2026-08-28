@@ -1,10 +1,13 @@
 import { sql } from "drizzle-orm";
 import { check, date, index, integer, jsonb, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
+export const LEGACY_ACCOUNT_ID = "legacy-development-owner";
+
 export const contractsTable = pgTable(
   "contracts",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    accountId: text("account_id").notNull().default(LEGACY_ACCOUNT_ID),
     filename: text("filename").notNull(),
     fileHash: text("file_hash"),
     sourceStoragePath: text("source_storage_path"),
@@ -16,8 +19,8 @@ export const contractsTable = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
-    uniqueIndex("contracts_file_hash_unique")
-      .on(table.fileHash)
+    uniqueIndex("contracts_account_file_hash_unique")
+      .on(table.accountId, table.fileHash)
       .where(sql`${table.fileHash} IS NOT NULL`),
   ],
 );
@@ -47,6 +50,7 @@ export const registryViewsTable = pgTable(
   "registry_views",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    accountId: text("account_id").notNull().default(LEGACY_ACCOUNT_ID),
     name: text("name").notNull(),
     search: text("search").notNull().default(""),
     documentType: text("document_type"),
@@ -56,14 +60,15 @@ export const registryViewsTable = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
-    uniqueIndex("registry_views_pinned_order_unique")
-      .on(table.pinnedOrder)
+    uniqueIndex("registry_views_account_pinned_order_unique")
+      .on(table.accountId, table.pinnedOrder)
       .where(sql`${table.pinnedOrder} IS NOT NULL`),
   ],
 );
 
 export const contractIngestRunsTable = pgTable("contract_ingest_runs", {
   id: uuid("id").primaryKey(),
+  accountId: text("account_id").notNull().default(LEGACY_ACCOUNT_ID),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

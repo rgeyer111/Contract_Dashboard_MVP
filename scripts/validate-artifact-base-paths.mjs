@@ -27,11 +27,11 @@ const artifacts = [
     expectedText: "Stay ahead of contract renewals.",
     deepPaths: [
       {
-        path: "dashboard",
-        expectedText: "Contract Registry",
+        path: "dashboard?demo=1",
+        expectedText: "Demo only",
       },
     ],
-    extraAssets: ["favicon.svg"],
+    extraAssets: ["favicon.svg", "logo.svg"],
   },
   {
     label: "contract walkthrough",

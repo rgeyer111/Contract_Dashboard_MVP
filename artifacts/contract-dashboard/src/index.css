@@ -306,3 +306,8 @@
     inset: -1px;
   }
 }
+
+.cl-formFieldInput::placeholder {
+  color: hsl(220 9% 46%);
+  opacity: 1;
+}

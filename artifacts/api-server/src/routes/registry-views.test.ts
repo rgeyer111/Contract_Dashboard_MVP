@@ -1,4 +1,5 @@
-import request from "supertest";
+import request from "../test-request";
+import { requestAs } from "../test-request";
 import { eq } from "drizzle-orm";
 import { afterEach, describe, expect, it } from "vitest";
 import { db, registryViewsTable } from "@workspace/db";
@@ -259,5 +260,25 @@ describe("saved registry views", () => {
     expect(createdRecords).toHaveLength(ids.length);
     expect(createdRecords.every((record) => record.pinnedOrder !== null)).toBe(true);
     expect(new Set(createdRecords.map((record) => record.pinnedOrder)).size).toBe(ids.length);
+  });
+
+  it("isolates saved views, pinning, ordering, updates, and deletion by account", async () => {
+    const owner = `owner-${crypto.randomUUID()}`;
+    const outsider = `outsider-${crypto.randomUUID()}`;
+    const created = await requestAs(app, owner)
+      .post("/api/registry-views")
+      .send({ name: "Private view", search: "", documentType: null });
+    expect(created.status).toBe(201);
+    const id = created.body.id as string;
+    createdIds.push(id);
+    expect((await requestAs(app, outsider).get("/api/registry-views")).body).toEqual([]);
+    expect((await requestAs(app, outsider)
+      .put(`/api/registry-views/${id}`)
+      .send({ name: "Stolen", search: "", documentType: null })).status).toBe(404);
+    expect((await requestAs(app, outsider)
+      .patch(`/api/registry-views/${id}/pin`)
+      .send({ pinned: true })).status).toBe(404);
+    expect((await requestAs(app, outsider).delete(`/api/registry-views/${id}`)).status).toBe(404);
+    expect((await requestAs(app, owner).get("/api/registry-views")).body).toHaveLength(1);
   });
 });

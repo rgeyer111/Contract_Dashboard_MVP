@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
+import { useClerk } from "@clerk/react";
 import {
   AlertCircle,
   Bell,
@@ -387,6 +388,7 @@ function IssueCard({
 }
 
 export default function ReviewCompact() {
+  const { signOut } = useClerk();
   const { language, t } = useLanguage();
   const [, setLocation] = useLocation();
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -453,9 +455,9 @@ export default function ReviewCompact() {
           <div className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground">
             <Settings className="h-4 w-4" /> {t("ui.settings")}
           </div>
-          <Link href="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-muted/50">
+          <button type="button" onClick={() => signOut({ redirectUrl: import.meta.env.BASE_URL })} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-muted/50">
             <LogOut className="h-4 w-4" /> {t("ui.log.out")}
-          </Link>
+          </button>
         </div>
       </aside>
 

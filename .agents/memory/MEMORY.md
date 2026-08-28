@@ -24,3 +24,4 @@
 - [Extraction evaluation variability](extraction-evaluation-variability.md) — regenerate metrics from each full model run; aggregate exact-match totals are nondeterministic.
 - [Contract deletion retention](contract-deletion-retention.md) — deleting a contract removes its record permanently but retains its PDF in waste until an administrator empties it.
 - [Contract deletion serialization](contract-deletion-serialization.md) — serialize waste verification with record deletion so concurrent requests cannot duplicate preservation work.
+- [Managed Clerk proxy](managed-clerk-proxy.md) — the browser proxy URL is intentionally empty in development and injected by Replit only for published deployments.

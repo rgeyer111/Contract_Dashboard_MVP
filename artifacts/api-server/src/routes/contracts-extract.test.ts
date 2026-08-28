@@ -1,4 +1,5 @@
-import request from "supertest";
+import request from "../test-request";
+import { requestAs } from "../test-request";
 import { eq, inArray } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -837,6 +838,50 @@ describe("resumable contract ingest runs", () => {
       await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
       await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));
       await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+    }
+  });
+
+  it("returns 404 when another account supplies owned ingest run or item IDs", async () => {
+    const owner = `owner-${randomUUID()}`;
+    const outsider = `outsider-${randomUUID()}`;
+    const runId = randomUUID();
+    const itemId = `${runId}:0`;
+    try {
+      const registered = await requestAs(app, owner)
+        .post("/api/contracts/ingest-runs")
+        .field("runId", runId)
+        .field("itemIds", itemId)
+        .attach("files", pdfLike, { filename: "private.pdf", contentType: "application/pdf" });
+      expect(registered.status).toBe(201);
+
+      const [current, abandon, retry, complete, replace, register] = await Promise.all([
+        requestAs(app, outsider).get("/api/contracts/ingest-runs/current"),
+        requestAs(app, outsider).delete(`/api/contracts/ingest-runs/${runId}`),
+        requestAs(app, outsider).post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/retry`),
+        requestAs(app, outsider)
+          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/complete`)
+          .send({ contractId: randomUUID() }),
+        requestAs(app, outsider)
+          .post("/api/contracts/extract")
+          .field("ingestRunId", runId)
+          .field("ingestItemId", itemId)
+          .attach("files", pdfLike, { filename: "replace.pdf", contentType: "application/pdf" }),
+        requestAs(app, outsider)
+          .post("/api/contracts/ingest-runs")
+          .field("runId", runId)
+          .field("itemIds", itemId)
+          .attach("files", pdfLike, { filename: "replace.pdf", contentType: "application/pdf" }),
+      ]);
+      expect(current.status).toBe(200);
+      expect(current.body).toBeNull();
+      expect([abandon, retry, complete, replace, register].map((response) => response.status))
+        .toEqual([404, 404, 404, 404, 404]);
+      expect((await requestAs(app, owner).get("/api/contracts/ingest-runs/current")).body.id).toBe(runId);
+    } finally {
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
+      await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));
+      await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      mocks.storedPdfs.clear();
     }
   });
 });
