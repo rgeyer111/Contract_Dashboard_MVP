@@ -604,47 +604,45 @@ router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> 
 
 router.delete("/contracts/:id", async (req: Request, res: Response): Promise<void> => {
   const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const [existing] = await db.select({
-    id: contractsTable.id,
-    sourceStoragePath: contractsTable.sourceStoragePath,
-  }).from(contractsTable).where(eq(contractsTable.id, id));
-  if (!existing) {
-    res.status(404).json({ error: "Contract not found." });
+  let deleted;
+  try {
+    deleted = await db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${id}))`);
+      const [existing] = await tx.select({
+        id: contractsTable.id,
+        sourceStoragePath: contractsTable.sourceStoragePath,
+      }).from(contractsTable).where(eq(contractsTable.id, id));
+      if (!existing) return undefined;
+
+      if (existing.sourceStoragePath) {
+        await copyContractPdfToWaste(existing.sourceStoragePath, existing.id);
+      }
+
+      await tx.update(contractsTable)
+        .set({ parentContractId: null, updatedAt: new Date() })
+        .where(eq(contractsTable.parentContractId, id));
+      const [record] = await tx.delete(contractsTable)
+        .where(eq(contractsTable.id, id))
+        .returning({ id: contractsTable.id, sourceStoragePath: contractsTable.sourceStoragePath });
+      if (record) {
+        await tx.delete(contractIngestCompletionsTable)
+          .where(eq(contractIngestCompletionsTable.contractId, id));
+      }
+      if (record?.sourceStoragePath) {
+        await tx.insert(contractIngestObjectCleanupTable)
+          .values({ storagePath: record.sourceStoragePath, state: "cleanup_pending" })
+          .onConflictDoUpdate({
+            target: contractIngestObjectCleanupTable.storagePath,
+            set: { state: "cleanup_pending", updatedAt: new Date() },
+          });
+      }
+      return record;
+    });
+  } catch (error) {
+    req.log.warn({ err: error, contractId: id }, "Unable to preserve contract PDF in waste storage");
+    res.status(503).json({ error: "The contract could not be deleted because its PDF could not be moved to waste. Please try again." });
     return;
   }
-
-  if (existing.sourceStoragePath) {
-    try {
-      await copyContractPdfToWaste(existing.sourceStoragePath, existing.id);
-    } catch (error) {
-      req.log.warn({ err: error, contractId: id }, "Unable to preserve contract PDF in waste storage");
-      res.status(503).json({ error: "The contract could not be deleted because its PDF could not be moved to waste. Please try again." });
-      return;
-    }
-  }
-
-  const deleted = await db.transaction(async (tx) => {
-    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${id}))`);
-    await tx.update(contractsTable)
-      .set({ parentContractId: null, updatedAt: new Date() })
-      .where(eq(contractsTable.parentContractId, id));
-    const [record] = await tx.delete(contractsTable)
-      .where(eq(contractsTable.id, id))
-      .returning({ id: contractsTable.id, sourceStoragePath: contractsTable.sourceStoragePath });
-    if (record) {
-      await tx.delete(contractIngestCompletionsTable)
-        .where(eq(contractIngestCompletionsTable.contractId, id));
-    }
-    if (record?.sourceStoragePath) {
-      await tx.insert(contractIngestObjectCleanupTable)
-        .values({ storagePath: record.sourceStoragePath, state: "cleanup_pending" })
-        .onConflictDoUpdate({
-          target: contractIngestObjectCleanupTable.storagePath,
-          set: { state: "cleanup_pending", updatedAt: new Date() },
-        });
-    }
-    return record;
-  });
   if (!deleted) {
     res.status(404).json({ error: "Contract not found." });
     return;

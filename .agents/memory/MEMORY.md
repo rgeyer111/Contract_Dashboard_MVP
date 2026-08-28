@@ -23,3 +23,4 @@
 - [Malformed PDF parser state](malformed-pdf-parser-state.md) — pdf-parse can handle the same bad-XRef bytes differently after warm-up; test recovery before any pre-parse.
 - [Extraction evaluation variability](extraction-evaluation-variability.md) — regenerate metrics from each full model run; aggregate exact-match totals are nondeterministic.
 - [Contract deletion retention](contract-deletion-retention.md) — deleting a contract removes its record permanently but retains its PDF in waste until an administrator empties it.
+- [Contract deletion serialization](contract-deletion-serialization.md) — serialize waste verification with record deletion so concurrent requests cannot duplicate preservation work.

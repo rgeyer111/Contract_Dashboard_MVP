@@ -12,6 +12,7 @@ import {
   contractsTable,
 } from "@workspace/db";
 import app from "../app";
+import { processContractIngestObjectCleanup } from "../lib/contract-ingest-cleanup";
 
 const pdfLike = (body: string | Buffer = "%PDF-1.7\nnot a readable PDF") =>
   Buffer.isBuffer(body) ? body : Buffer.from(body);
@@ -214,6 +215,168 @@ describe("saved contract persistence", () => {
     } finally {
       globalThis.fetch = originalFetch;
       await db.delete(contractsTable).where(eq(contractsTable.id, id));
+    }
+  });
+
+  it("serializes concurrent deletions and writes one verified waste object", async () => {
+    const id = crypto.randomUUID();
+    const storagePath = `/objects/uploads/contract-ingest/${crypto.randomUUID()}`;
+    const sourceBytes = pdfLike("%PDF-1.7\nconcurrent deletion");
+    let wasteBytes: Buffer | null = null;
+    let wasteWrites = 0;
+    let sourceDeletes = 0;
+    const originalFetch = globalThis.fetch;
+    try {
+      await db.insert(contractsTable).values({
+        id,
+        filename: "concurrent-delete.pdf",
+        fileHash: createHash("sha256").update(sourceBytes).digest("hex"),
+        sourceStoragePath: storagePath,
+        contract,
+        confidence: {},
+      });
+
+      globalThis.fetch = async (input, init) => {
+        if (String(input).includes("/object-storage/signed-object-url")) {
+          const body = JSON.parse(String(init?.body)) as { method: string; object_name: string };
+          return new Response(JSON.stringify({
+            signed_url: `https://storage.test/${body.method}/${body.object_name.includes("contract-waste") ? "waste" : "source"}`,
+          }), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        const url = String(input);
+        if (url === "https://storage.test/GET/source") return new Response(sourceBytes);
+        if (url === "https://storage.test/PUT/waste") {
+          wasteWrites += 1;
+          wasteBytes = Buffer.from(init?.body as Buffer);
+          return new Response(null, { status: 200 });
+        }
+        if (url === "https://storage.test/GET/waste") {
+          return new Response(wasteBytes, { status: wasteBytes ? 200 : 404 });
+        }
+        if (url === "https://storage.test/DELETE/source") {
+          sourceDeletes += 1;
+          return new Response(null, { status: 204 });
+        }
+        throw new Error(`Unexpected fetch: ${url}`);
+      };
+
+      const responses = await Promise.all([
+        request(app).delete(`/api/contracts/${id}`),
+        request(app).delete(`/api/contracts/${id}`),
+      ]);
+
+      expect(responses.map((response) => response.status).sort()).toEqual([204, 404]);
+      expect(wasteWrites).toBe(1);
+      expect(sourceDeletes).toBe(1);
+      expect(wasteBytes).toEqual(sourceBytes);
+      expect(await db.select().from(contractsTable).where(eq(contractsTable.id, id))).toEqual([]);
+      expect(await db.select().from(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath))).toEqual([]);
+    } finally {
+      globalThis.fetch = originalFetch;
+      await db.delete(contractsTable).where(eq(contractsTable.id, id));
+      await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+    }
+  });
+
+  it("keeps failed original cleanup queued until a later worker pass succeeds", async () => {
+    const id = crypto.randomUUID();
+    const storagePath = `/objects/uploads/contract-ingest/${crypto.randomUUID()}`;
+    const sourceBytes = pdfLike("%PDF-1.7\ndelayed source cleanup");
+    let wasteBytes: Buffer | null = null;
+    let wasteWrites = 0;
+    let sourceDeleteAttempts = 0;
+    const originalFetch = globalThis.fetch;
+    try {
+      await db.insert(contractsTable).values({
+        id,
+        filename: "delayed-cleanup.pdf",
+        sourceStoragePath: storagePath,
+        contract,
+        confidence: {},
+      });
+      globalThis.fetch = async (input, init) => {
+        if (String(input).includes("/object-storage/signed-object-url")) {
+          const body = JSON.parse(String(init?.body)) as { method: string; object_name: string };
+          return new Response(JSON.stringify({
+            signed_url: `https://storage.test/${body.method}/${body.object_name.includes("contract-waste") ? "waste" : "source"}`,
+          }), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        const url = String(input);
+        if (url === "https://storage.test/GET/source") return new Response(sourceBytes);
+        if (url === "https://storage.test/PUT/waste") {
+          wasteWrites += 1;
+          wasteBytes = Buffer.from(init?.body as Buffer);
+          return new Response(null, { status: 200 });
+        }
+        if (url === "https://storage.test/GET/waste") return new Response(wasteBytes, { status: 200 });
+        if (url === "https://storage.test/DELETE/source") {
+          sourceDeleteAttempts += 1;
+          return new Response(null, { status: sourceDeleteAttempts === 1 ? 503 : 204 });
+        }
+        throw new Error(`Unexpected fetch: ${url}`);
+      };
+
+      const deleted = await request(app).delete(`/api/contracts/${id}`);
+      expect(deleted.status).toBe(204);
+      const [queued] = await db.select().from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      expect(queued).toMatchObject({ state: "cleanup_pending", attempts: 1 });
+
+      await processContractIngestObjectCleanup([storagePath]);
+
+      expect(sourceDeleteAttempts).toBe(2);
+      expect(wasteWrites).toBe(1);
+      expect(wasteBytes).toEqual(sourceBytes);
+      expect(await db.select().from(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath))).toEqual([]);
+    } finally {
+      globalThis.fetch = originalFetch;
+      await db.delete(contractsTable).where(eq(contractsTable.id, id));
+      await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+    }
+  });
+
+  it("leaves the contract and original PDF untouched when waste verification fails", async () => {
+    const id = crypto.randomUUID();
+    const storagePath = `/objects/uploads/contract-ingest/${crypto.randomUUID()}`;
+    const sourceBytes = pdfLike("%PDF-1.7\noriginal source");
+    let sourceDeletes = 0;
+    const originalFetch = globalThis.fetch;
+    try {
+      await db.insert(contractsTable).values({
+        id,
+        filename: "verification-mismatch.pdf",
+        sourceStoragePath: storagePath,
+        contract,
+        confidence: {},
+      });
+      globalThis.fetch = async (input, init) => {
+        if (String(input).includes("/object-storage/signed-object-url")) {
+          const body = JSON.parse(String(init?.body)) as { method: string; object_name: string };
+          return new Response(JSON.stringify({
+            signed_url: `https://storage.test/${body.method}/${body.object_name.includes("contract-waste") ? "waste" : "source"}`,
+          }), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        const url = String(input);
+        if (url === "https://storage.test/GET/source") return new Response(sourceBytes);
+        if (url === "https://storage.test/PUT/waste") return new Response(null, { status: 200 });
+        if (url === "https://storage.test/GET/waste") return new Response(pdfLike("%PDF-1.7\ncorrupt waste"));
+        if (url === "https://storage.test/DELETE/source") {
+          sourceDeletes += 1;
+          return new Response(null, { status: 204 });
+        }
+        throw new Error(`Unexpected fetch: ${url}`);
+      };
+
+      const response = await request(app).delete(`/api/contracts/${id}`);
+
+      expect(response.status).toBe(503);
+      expect(await db.select().from(contractsTable).where(eq(contractsTable.id, id))).toHaveLength(1);
+      expect(sourceDeletes).toBe(0);
+      expect(await db.select().from(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath))).toEqual([]);
+    } finally {
+      globalThis.fetch = originalFetch;
+      await db.delete(contractsTable).where(eq(contractsTable.id, id));
+      await db.delete(contractIngestObjectCleanupTable).where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
     }
   });
 
