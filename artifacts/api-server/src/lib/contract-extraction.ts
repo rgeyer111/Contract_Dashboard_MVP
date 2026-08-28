@@ -2,7 +2,7 @@ import { openai } from "@workspace/integrations-openai-ai-server";
 import { ExtractContractResponse } from "@workspace/api-zod";
 import pdf from "pdf-parse";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
@@ -34,6 +34,31 @@ export type ExtractionSource = "text" | "ocr";
 const execFileAsync = promisify(execFile);
 const ocrBatchSize = 1;
 const maximumExtractionTextCharacters = 250_000;
+const maximumConcurrentPdfRepairs = 2;
+const maximumRepairedPdfBytes = 50 * 1024 * 1024;
+const maximumPdfAddressSpaceBytes = 512 * 1024 * 1024;
+const pdfToolOptions = {
+  timeout: 15_000,
+  maxBuffer: 1024 * 1024,
+} as const;
+let activePdfRepairs = 0;
+
+export type PdfRecoveryErrorCode =
+  | "PDF_ENCRYPTED"
+  | "PDF_UNREADABLE"
+  | "PDF_REPAIR_FAILED"
+  | "PDF_TOOL_UNAVAILABLE";
+
+export class PdfRecoveryError extends Error {
+  constructor(
+    readonly code: PdfRecoveryErrorCode,
+    message: string,
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
+    this.name = "PdfRecoveryError";
+  }
+}
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -411,6 +436,158 @@ export async function extractReadablePdfText(buffer: Buffer): Promise<string> {
     },
   });
   return result.text.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+function commandErrorText(error: unknown) {
+  if (!error || typeof error !== "object") return "";
+  const details = error as { message?: unknown; stderr?: unknown; stdout?: unknown };
+  return [details.message, details.stderr, details.stdout]
+    .filter((value): value is string => typeof value === "string")
+    .join("\n");
+}
+
+function isMissingPdfTool(error: unknown) {
+  return Boolean(
+    (error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "ENOENT") ||
+      /failed to execute|no such file or directory/i.test(commandErrorText(error)),
+  );
+}
+
+function boundedPdfToolArguments(tool: "pdfinfo" | "pdftocairo", args: string[]) {
+  return [
+    `--fsize=${maximumRepairedPdfBytes}`,
+    `--as=${maximumPdfAddressSpaceBytes}`,
+    "--cpu=15",
+    "--",
+    tool,
+    ...args,
+  ];
+}
+
+function isEncryptedPdfMessage(message: string) {
+  return /encrypted|password|incorrect password|password required/i.test(message);
+}
+
+function recoveryError(
+  code: PdfRecoveryErrorCode,
+  cause?: unknown,
+) {
+  const messages: Record<PdfRecoveryErrorCode, string> = {
+    PDF_ENCRYPTED:
+      "This PDF is password-protected or encrypted. Upload an unlocked PDF and try again.",
+    PDF_UNREADABLE:
+      "This PDF is damaged and could not be read safely. Export or print it to a new PDF and try again.",
+    PDF_REPAIR_FAILED:
+      "This PDF opens in a viewer, but its text structure could not be repaired. Export or print it to a new PDF and try again.",
+    PDF_TOOL_UNAVAILABLE:
+      "PDF repair is temporarily unavailable. Please try again later.",
+  };
+  return new PdfRecoveryError(code, messages[code], { cause });
+}
+
+export async function extractPdfTextWithRecovery(
+  originalBytes: Buffer,
+): Promise<{ text: string; repaired: boolean }> {
+  let directory: string;
+  try {
+    directory = await mkdtemp(join(tmpdir(), "contract-pdf-repair-"));
+  } catch (error) {
+    throw recoveryError("PDF_TOOL_UNAVAILABLE", error);
+  }
+
+  const inputPath = join(directory, "original.pdf");
+  const repairedPath = join(directory, "repaired.pdf");
+  let primaryFailure: unknown;
+  try {
+    await writeFile(inputPath, originalBytes);
+
+    let pdfInfo: string;
+    try {
+      ({ stdout: pdfInfo } = await execFileAsync(
+        "prlimit",
+        boundedPdfToolArguments("pdfinfo", [inputPath]),
+        pdfToolOptions,
+      ));
+    } catch (error) {
+      if (isMissingPdfTool(error)) {
+        throw recoveryError("PDF_TOOL_UNAVAILABLE", error);
+      }
+      const details = commandErrorText(error);
+      if (isEncryptedPdfMessage(details)) {
+        throw recoveryError("PDF_ENCRYPTED", error);
+      }
+      throw recoveryError("PDF_UNREADABLE", error);
+    }
+
+    if (/^\s*Encrypted:\s*yes\b/im.test(pdfInfo)) {
+      throw recoveryError("PDF_ENCRYPTED");
+    }
+
+    try {
+      return {
+        text: await extractReadablePdfText(originalBytes),
+        repaired: false,
+      };
+    } catch {
+      if (activePdfRepairs >= maximumConcurrentPdfRepairs) {
+        throw recoveryError("PDF_TOOL_UNAVAILABLE");
+      }
+      activePdfRepairs += 1;
+      try {
+        try {
+          await execFileAsync(
+            "prlimit",
+            boundedPdfToolArguments("pdftocairo", [
+              "-pdf",
+              inputPath,
+              repairedPath,
+            ]),
+            pdfToolOptions,
+          );
+        } catch (error) {
+          if (isMissingPdfTool(error)) {
+            throw recoveryError("PDF_TOOL_UNAVAILABLE", error);
+          }
+          if (isEncryptedPdfMessage(commandErrorText(error))) {
+            throw recoveryError("PDF_ENCRYPTED", error);
+          }
+          throw recoveryError("PDF_REPAIR_FAILED", error);
+        }
+
+        const repairedFile = await stat(repairedPath);
+        if (repairedFile.size > maximumRepairedPdfBytes) {
+          throw recoveryError("PDF_REPAIR_FAILED");
+        }
+        const repairedBytes = await readFile(repairedPath);
+        try {
+          return {
+            text: await extractReadablePdfText(repairedBytes),
+            repaired: true,
+          };
+        } catch (error) {
+          if (error instanceof PdfRecoveryError) throw error;
+          throw recoveryError("PDF_REPAIR_FAILED", error);
+        }
+      } finally {
+        activePdfRepairs -= 1;
+      }
+    }
+  } catch (error) {
+    primaryFailure = error;
+    if (error instanceof PdfRecoveryError) throw error;
+    throw recoveryError("PDF_TOOL_UNAVAILABLE", error);
+  } finally {
+    try {
+      await rm(directory, { recursive: true, force: true });
+    } catch (cleanupError) {
+      if (!primaryFailure) {
+        throw recoveryError("PDF_TOOL_UNAVAILABLE", cleanupError);
+      }
+    }
+  }
 }
 
 export async function extractContractFromText(

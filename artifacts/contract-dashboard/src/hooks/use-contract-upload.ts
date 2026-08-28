@@ -23,6 +23,10 @@ function uploadFailure(error: unknown): { duplicate: boolean; message: MessageId
   switch (code) {
     case "DUPLICATE": return { duplicate: true, message: "ui.duplicate.skipped" };
     case "UNREADABLE": return { duplicate: false, message: "ui.this.pdf.has.no.readable.contract.text" };
+    case "PDF_ENCRYPTED": return { duplicate: false, message: "upload.errorPdfEncrypted" };
+    case "PDF_UNREADABLE": return { duplicate: false, message: "upload.errorPdfUnreadable" };
+    case "PDF_REPAIR_FAILED": return { duplicate: false, message: "upload.errorPdfRepairFailed" };
+    case "PDF_TOOL_UNAVAILABLE": return { duplicate: false, message: "upload.errorPdfToolUnavailable" };
     case "OCR_INCOMPLETE": return { duplicate: false, message: "upload.errorOcrIncomplete" };
     case "TOO_LARGE": return { duplicate: false, message: "upload.errorTooLarge" };
     case "UNAVAILABLE": return { duplicate: false, message: "ui.the.extraction.service.is.temporarily.unavailable" };

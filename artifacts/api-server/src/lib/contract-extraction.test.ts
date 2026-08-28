@@ -6,7 +6,9 @@ const mocks = vi.hoisted(() => ({
   mkdtemp: vi.fn(),
   readFile: vi.fn(),
   rm: vi.fn(),
+  stat: vi.fn(),
   writeFile: vi.fn(),
+  parsePdf: vi.fn(),
 }));
 
 vi.mock("@workspace/integrations-openai-ai-server", () => ({
@@ -27,15 +29,22 @@ vi.mock("node:fs/promises", () => ({
   mkdtemp: mocks.mkdtemp,
   readFile: mocks.readFile,
   rm: mocks.rm,
+  stat: mocks.stat,
   writeFile: mocks.writeFile,
+}));
+
+vi.mock("pdf-parse", () => ({
+  default: mocks.parsePdf,
 }));
 
 import {
   ContractTextTooLongError,
   extractContractFromText,
+  extractPdfTextWithRecovery,
   extractScannedPdfText,
   normalizeExtraction,
   OcrIncompleteError,
+  PdfRecoveryError,
 } from "./contract-extraction";
 
 const found = (value: unknown, page = 1, quote = "Verbatim contract evidence.") => ({
@@ -121,7 +130,10 @@ beforeEach(() => {
   mocks.mkdtemp.mockReset();
   mocks.readFile.mockReset();
   mocks.rm.mockReset();
+  mocks.stat.mockReset();
+  mocks.stat.mockResolvedValue({ size: 1024 });
   mocks.writeFile.mockReset();
+  mocks.parsePdf.mockReset();
 });
 
 describe("normalizeExtraction", () => {
@@ -437,6 +449,239 @@ describe("normalizeExtraction", () => {
       note: null,
       alternatives: [],
     });
+  });
+});
+
+describe("embedded PDF text recovery", () => {
+  it("normalizes a temporary copy, retries embedded text, and cleans up", async () => {
+    const original = Buffer.from("%PDF-1.4 malformed xref");
+    const repaired = Buffer.from("%PDF-1.7 repaired");
+    mocks.parsePdf
+      .mockRejectedValueOnce(new Error("bad XRef entry"))
+      .mockResolvedValueOnce({
+        text: "--- Page 1 ---\nRecovered contract wording with enough readable text.",
+      });
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.readFile.mockResolvedValue(repaired);
+    mocks.rm.mockResolvedValue(undefined);
+    mocks.execFile.mockImplementation(
+      (...call: unknown[]) => {
+        const args = call[1] as string[];
+        const callback = call.at(-1) as (
+          error: null,
+          result: { stdout: string; stderr: string },
+        ) => void;
+        callback(null, {
+          stdout: args.includes("pdfinfo") ? "Pages: 1\nEncrypted: no\n" : "",
+          stderr: "",
+        });
+      },
+    );
+
+    const result = await extractPdfTextWithRecovery(original);
+
+    expect(result).toEqual({
+      text: "--- Page 1 ---\nRecovered contract wording with enough readable text.",
+      repaired: true,
+    });
+    expect(mocks.writeFile).toHaveBeenCalledWith(
+      "/tmp/contract-pdf-repair-test/original.pdf",
+      original,
+    );
+    expect(mocks.execFile).toHaveBeenCalledWith(
+      "prlimit",
+      [
+        "--fsize=52428800",
+        "--as=536870912",
+        "--cpu=15",
+        "--",
+        "pdftocairo",
+        "-pdf",
+        "/tmp/contract-pdf-repair-test/original.pdf",
+        "/tmp/contract-pdf-repair-test/repaired.pdf",
+      ],
+      { timeout: 15_000, maxBuffer: 1024 * 1024 },
+      expect.any(Function),
+    );
+    expect(mocks.rm).toHaveBeenCalledWith("/tmp/contract-pdf-repair-test", {
+      recursive: true,
+      force: true,
+    });
+  });
+
+  it("rejects encrypted PDFs before repair and cleans the working directory", async () => {
+    mocks.parsePdf.mockRejectedValueOnce(new Error("bad XRef entry"));
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.rm.mockResolvedValue(undefined);
+    mocks.execFile.mockImplementation(
+      (...call: unknown[]) => {
+        const callback = call.at(-1) as (
+          error: null,
+          result: { stdout: string; stderr: string },
+        ) => void;
+        callback(null, { stdout: "Pages: 1\nEncrypted: yes\n", stderr: "" });
+      },
+    );
+
+    const failure = await extractPdfTextWithRecovery(Buffer.from("%PDF"))
+      .then(() => null, (error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(PdfRecoveryError);
+    expect(failure).toMatchObject({ code: "PDF_ENCRYPTED" });
+    expect(mocks.execFile).toHaveBeenCalledTimes(1);
+    expect(mocks.rm).toHaveBeenCalledWith("/tmp/contract-pdf-repair-test", {
+      recursive: true,
+      force: true,
+    });
+  });
+
+  it("distinguishes unavailable repair tooling from a damaged PDF", async () => {
+    mocks.parsePdf.mockRejectedValueOnce(new Error("bad XRef entry"));
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.rm.mockResolvedValue(undefined);
+    mocks.execFile.mockImplementation(
+      (...call: unknown[]) => {
+        const callback = call.at(-1) as (error: NodeJS.ErrnoException) => void;
+        callback(Object.assign(new Error("spawn pdfinfo ENOENT"), { code: "ENOENT" }));
+      },
+    );
+
+    const failure = await extractPdfTextWithRecovery(Buffer.from("%PDF"))
+      .then(() => null, (error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(PdfRecoveryError);
+    expect(failure).toMatchObject({ code: "PDF_TOOL_UNAVAILABLE" });
+    expect(mocks.rm).toHaveBeenCalled();
+  });
+
+  it("classifies a PDF that system inspection cannot read as unreadable", async () => {
+    mocks.parsePdf.mockRejectedValueOnce(new Error("Invalid PDF structure"));
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.rm.mockResolvedValue(undefined);
+    mocks.execFile.mockImplementation(
+      (...call: unknown[]) => {
+        const callback = call.at(-1) as (
+          error: Error & { stderr: string },
+        ) => void;
+        callback(
+          Object.assign(new Error("pdfinfo failed"), {
+            stderr: "Syntax Error: Couldn't find trailer dictionary",
+          }),
+        );
+      },
+    );
+
+    const failure = await extractPdfTextWithRecovery(Buffer.from("not a PDF"))
+      .then(() => null, (error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(PdfRecoveryError);
+    expect(failure).toMatchObject({ code: "PDF_UNREADABLE" });
+    expect(mocks.rm).toHaveBeenCalled();
+  });
+
+  it("reports a failed repair explicitly and cleans up after the retry", async () => {
+    mocks.parsePdf
+      .mockRejectedValueOnce(new Error("bad XRef entry"))
+      .mockRejectedValueOnce(new Error("still invalid"));
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.readFile.mockResolvedValue(Buffer.from("%PDF repaired"));
+    mocks.rm.mockResolvedValue(undefined);
+    mocks.execFile.mockImplementation(
+      (...call: unknown[]) => {
+        const args = call[1] as string[];
+        const callback = call.at(-1) as (
+          error: null,
+          result: { stdout: string; stderr: string },
+        ) => void;
+        callback(null, {
+          stdout: args.includes("pdfinfo") ? "Pages: 1\nEncrypted: no\n" : "",
+          stderr: "",
+        });
+      },
+    );
+
+    const failure = await extractPdfTextWithRecovery(Buffer.from("%PDF"))
+      .then(() => null, (error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(PdfRecoveryError);
+    expect(failure).toMatchObject({ code: "PDF_REPAIR_FAILED" });
+    expect(mocks.rm).toHaveBeenCalled();
+  });
+
+  it("rejects oversized normalized output before reading it into memory", async () => {
+    mocks.parsePdf.mockRejectedValueOnce(new Error("bad XRef entry"));
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.stat.mockResolvedValue({ size: 50 * 1024 * 1024 + 1 });
+    mocks.rm.mockResolvedValue(undefined);
+    mocks.execFile.mockImplementation((...call: unknown[]) => {
+      const args = call[1] as string[];
+      const callback = call.at(-1) as (
+        error: null,
+        result: { stdout: string; stderr: string },
+      ) => void;
+      callback(null, {
+        stdout: args.includes("pdfinfo") ? "Pages: 1\nEncrypted: no\n" : "",
+        stderr: "",
+      });
+    });
+
+    const failure = await extractPdfTextWithRecovery(Buffer.from("%PDF"))
+      .then(() => null, (error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(PdfRecoveryError);
+    expect(failure).toMatchObject({ code: "PDF_REPAIR_FAILED" });
+    expect(mocks.readFile).not.toHaveBeenCalled();
+  });
+
+  it("uses PDF-aware preflight to reject encryption before a permissive parser", async () => {
+    mocks.parsePdf.mockResolvedValue({
+      text: "--- Page 1 ---\nText readable with an empty password.",
+    });
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.rm.mockResolvedValue(undefined);
+    mocks.execFile.mockImplementation((...call: unknown[]) => {
+      const callback = call.at(-1) as (
+        error: null,
+        result: { stdout: string; stderr: string },
+      ) => void;
+      callback(null, { stdout: "Pages: 1\nEncrypted: yes\n", stderr: "" });
+    });
+
+    const failure = await extractPdfTextWithRecovery(
+      Buffer.from("%PDF-1.7\ntrailer\n<< /Encr#79pt 7 0 R >>"),
+    ).then(() => null, (error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(PdfRecoveryError);
+    expect(failure).toMatchObject({ code: "PDF_ENCRYPTED" });
+    expect(mocks.parsePdf).not.toHaveBeenCalled();
+  });
+
+  it("preserves the primary classification when cleanup also fails", async () => {
+    mocks.parsePdf.mockRejectedValueOnce(new Error("bad XRef entry"));
+    mocks.mkdtemp.mockResolvedValue("/tmp/contract-pdf-repair-test");
+    mocks.writeFile.mockResolvedValue(undefined);
+    mocks.rm.mockRejectedValue(new Error("temporary cleanup failed"));
+    mocks.execFile.mockImplementation((...call: unknown[]) => {
+      const callback = call.at(-1) as (
+        error: null,
+        result: { stdout: string; stderr: string },
+      ) => void;
+      callback(null, { stdout: "Pages: 1\nEncrypted: yes\n", stderr: "" });
+    });
+
+    const failure = await extractPdfTextWithRecovery(Buffer.from("%PDF"))
+      .then(() => null, (error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(PdfRecoveryError);
+    expect(failure).toMatchObject({ code: "PDF_ENCRYPTED" });
+    expect(mocks.rm).toHaveBeenCalled();
   });
 });
 

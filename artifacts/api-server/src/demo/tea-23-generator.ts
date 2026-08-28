@@ -213,6 +213,7 @@ function buildRecord(scenario: Scenario) {
     id: scenario.id,
     filename: `${scenario.id}.pdf`,
     documentType: scenario.documentType ?? "unknown",
+    sourceAvailable: false,
     contract,
     createdAt: `${TODAY}T09:00:00.000Z`,
     updatedAt: `${TODAY}T09:00:00.000Z`,

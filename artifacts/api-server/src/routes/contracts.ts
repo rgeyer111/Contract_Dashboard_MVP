@@ -25,8 +25,9 @@ import {
 } from "@workspace/api-zod";
 import {
   extractContractFromText,
-  extractReadablePdfText,
+  extractPdfTextWithRecovery,
   extractScannedPdfText,
+  PdfRecoveryError,
 } from "../lib/contract-extraction";
 import {
   type ContractSource,
@@ -109,7 +110,15 @@ class ExtractionError extends Error {
   constructor(
     message: string,
     readonly status: 422 | 502,
-    readonly code: "UNREADABLE" | "OCR_INCOMPLETE" | "TOO_LARGE" | "UNAVAILABLE",
+    readonly code:
+      | "UNREADABLE"
+      | "OCR_INCOMPLETE"
+      | "TOO_LARGE"
+      | "UNAVAILABLE"
+      | "PDF_ENCRYPTED"
+      | "PDF_UNREADABLE"
+      | "PDF_REPAIR_FAILED"
+      | "PDF_TOOL_UNAVAILABLE",
   ) {
     super(message);
   }
@@ -151,10 +160,29 @@ export async function extractSourceFile(
   let ocrPageCount: number | undefined;
   let ocrPagesProcessed: number | undefined;
   try {
-    text = await extractReadablePdfText(sourceFile.bytes);
+    const embedded = await extractPdfTextWithRecovery(sourceFile.bytes);
+    text = embedded.text;
+    if (embedded.repaired) {
+      req.log.info(
+        { bytes: sourceFile.size, hash: sourceFile.hash },
+        "Recovered embedded PDF text from a temporary normalized copy",
+      );
+    }
   } catch (error) {
-    req.log.warn({ err: error }, "Unable to read embedded PDF text; trying OCR");
-    text = "";
+    if (error instanceof PdfRecoveryError) {
+      req.log.warn({ err: error, code: error.code }, "Embedded PDF text recovery failed");
+      throw new ExtractionError(
+        error.message,
+        error.code === "PDF_TOOL_UNAVAILABLE" ? 502 : 422,
+        error.code,
+      );
+    }
+    req.log.error({ err: error }, "Embedded PDF text recovery failed unexpectedly");
+    throw new ExtractionError(
+      "PDF repair is temporarily unavailable. Please try again later.",
+      502,
+      "PDF_TOOL_UNAVAILABLE",
+    );
   }
 
   if (text.length < 50) {

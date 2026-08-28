@@ -1,11 +1,8 @@
-import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { promisify } from "node:util";
 import {
   extractContractFromText,
-  extractReadablePdfText,
+  extractPdfTextWithRecovery,
   extractScannedPdfText,
 } from "../src/lib/contract-extraction";
 
@@ -38,8 +35,6 @@ type GroundTruth = {
     fields: Record<string, { status: string; value: unknown }>;
   }>;
 };
-
-const execFileAsync = promisify(execFile);
 
 function comparableValue(field: string, value: unknown): unknown {
   if (field !== "notice_period") return value;
@@ -115,22 +110,6 @@ function hasRequiredUncertaintyEvidence(
     );
 }
 
-async function extractStableEmbeddedText(sourcePath: string, originalPdf: Buffer) {
-  try {
-    return await extractReadablePdfText(originalPdf);
-  } catch {
-    // Some public validation PDFs have malformed cross-reference tables.
-  }
-  const directory = await mkdtemp(join(tmpdir(), "tea31-pdf-"));
-  const rewrittenPath = join(directory, "rewritten.pdf");
-  try {
-    await execFileAsync("pdftocairo", ["-pdf", sourcePath, rewrittenPath]);
-    return await extractReadablePdfText(await readFile(rewrittenPath));
-  } finally {
-    await rm(directory, { recursive: true, force: true });
-  }
-}
-
 function csvCell(value: unknown) {
   const text = typeof value === "string" ? value : JSON.stringify(value);
   return `"${text.replaceAll('"', '""')}"`;
@@ -160,7 +139,7 @@ for (const document of groundTruth.documents) {
   const sourcePath = join(sourceDirectory, document.source_filename);
   const pdf = await readFile(sourcePath);
   const textResult = document.has_text_layer
-    ? { text: await extractStableEmbeddedText(sourcePath, pdf), source: "text" as const }
+    ? { text: (await extractPdfTextWithRecovery(pdf)).text, source: "text" as const }
     : { ...(await extractScannedPdfText(pdf)), source: "ocr" as const };
   const extraction = await extractContractFromText(textResult.text, document.source_filename, {
     source: textResult.source,
@@ -262,7 +241,7 @@ Run date: ${date}
 
 ## Method
 
-Each public validation PDF was processed through the current extraction implementation. Text-layer PDFs used embedded-text extraction directly; when a malformed cross-reference table prevented parsing, the evaluator retried a losslessly rewritten temporary copy made with \`pdftocairo -pdf\`. OCR documents used the production OCR path.
+Each public validation PDF was processed through the production extraction implementation. Text-layer PDFs used the shared embedded-text recovery policy, which normalizes only a temporary working copy when the original parser fails. OCR documents used the production OCR path.
 
 Notice-period comparison treats a singleton object and one-item array equally and excludes the ground-truth-only \`source\` hint. Ambiguous and conflicting notice results count as exact only when every expected typed candidate has a positive page number and a verbatim quote present in the extracted source text.
 

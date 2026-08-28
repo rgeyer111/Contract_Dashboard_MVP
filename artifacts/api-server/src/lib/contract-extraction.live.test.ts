@@ -1,7 +1,9 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import {
   extractContractFromText,
+  extractPdfTextWithRecovery,
   extractReadablePdfText,
 } from "./contract-extraction";
 
@@ -33,6 +35,14 @@ function readGermanQuarterEndContractPdf() {
   return Buffer.from(base64, "base64");
 }
 
+function readMalformedXrefVendorPdf() {
+  const base64 = readFileSync(
+    new URL("../test-fixtures/malformed-xref-vendor-contract.pdf.b64", import.meta.url),
+    "utf8",
+  );
+  return Buffer.from(base64, "base64");
+}
+
 describe("German quarter-end PDF fixture", () => {
   it("parses the real PDF with page evidence and the notice wording intact", async () => {
     const text = await extractReadablePdfText(readGermanQuarterEndContractPdf());
@@ -41,6 +51,24 @@ describe("German quarter-end PDF fixture", () => {
     expect(text).toContain("Vertragsnummer: CH-2026-009");
     expect(text).toContain("drei Monaten zum Quartalsende gekündigt");
     expect(text).toContain("CHF 120000 pro Jahr");
+  });
+});
+
+describe("malformed cross-reference vendor PDF fixture", () => {
+  it("recovers embedded text without changing the original bytes or identity", async () => {
+    const original = readMalformedXrefVendorPdf();
+    const originalBytes = Buffer.from(original);
+    const originalHash = createHash("sha256").update(original).digest("hex");
+
+    const recovered = await extractPdfTextWithRecovery(original);
+
+    expect(recovered.repaired).toBe(true);
+    expect(recovered.text).toContain("--- Page 1 ---");
+    expect(recovered.text).toContain("Bogner Maschinenservice AG");
+    expect(recovered.text).toContain("Nachtrag Nr. 1");
+    expect(recovered.text).toContain("21'700.00");
+    expect(original.equals(originalBytes)).toBe(true);
+    expect(createHash("sha256").update(original).digest("hex")).toBe(originalHash);
   });
 });
 

@@ -1,6 +1,7 @@
 import request from "supertest";
 import { eq, inArray } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   contractIngestCompletionsTable,
@@ -11,17 +12,25 @@ import {
   db,
 } from "@workspace/db";
 
-const mocks = vi.hoisted(() => ({
-  extractContractFromText: vi.fn(),
-  extractReadablePdfText: vi.fn(),
-  extractScannedPdfText: vi.fn(),
-  storeContractIngestPdf: vi.fn(),
-  createContractIngestStoragePath: vi.fn(),
-  readContractIngestPdf: vi.fn(),
-  deleteContractIngestPdfs: vi.fn(),
-  deleteContractIngestPdf: vi.fn(),
-  storedPdfs: new Map<string, Buffer>(),
-}));
+const mocks = vi.hoisted(() => {
+  class PdfRecoveryError extends Error {
+    constructor(readonly code: string, message: string) {
+      super(message);
+    }
+  }
+  return {
+    extractContractFromText: vi.fn(),
+    extractPdfTextWithRecovery: vi.fn(),
+    extractScannedPdfText: vi.fn(),
+    PdfRecoveryError,
+    storeContractIngestPdf: vi.fn(),
+    createContractIngestStoragePath: vi.fn(),
+    readContractIngestPdf: vi.fn(),
+    deleteContractIngestPdfs: vi.fn(),
+    deleteContractIngestPdf: vi.fn(),
+    storedPdfs: new Map<string, Buffer>(),
+  };
+});
 
 vi.mock("../lib/contract-extraction", () => mocks);
 vi.mock("../lib/contract-ingest-storage", () => ({
@@ -80,7 +89,7 @@ function mockExtractionResult(
 
 beforeEach(() => {
   mocks.extractContractFromText.mockReset();
-  mocks.extractReadablePdfText.mockReset();
+  mocks.extractPdfTextWithRecovery.mockReset();
   mocks.extractScannedPdfText.mockReset();
   mocks.storeContractIngestPdf.mockReset();
   mocks.createContractIngestStoragePath.mockReset();
@@ -120,7 +129,7 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
   it.each(["High", "Medium", "Low"] as const)(
     "reports OCR source with %s legibility",
     async (ocrConfidence) => {
-      mocks.extractReadablePdfText.mockResolvedValue("");
+      mocks.extractPdfTextWithRecovery.mockResolvedValue({ text: "", repaired: false });
       mocks.extractScannedPdfText.mockResolvedValue({
         text: ocrContractText,
         confidence: ocrConfidence,
@@ -157,7 +166,10 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
   );
 
   it("reports embedded text with null OCR confidence", async () => {
-    mocks.extractReadablePdfText.mockResolvedValue(readableContractText);
+    mocks.extractPdfTextWithRecovery.mockResolvedValue({
+      text: readableContractText,
+      repaired: false,
+    });
     mocks.extractContractFromText.mockResolvedValue(
       mockExtractionResult("text", null),
     );
@@ -184,8 +196,65 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
     );
   });
 
+  it("uses recovered embedded text without attempting OCR", async () => {
+    const actualExtraction = await vi.importActual<
+      typeof import("../lib/contract-extraction")
+    >("../lib/contract-extraction");
+    const original = Buffer.from(
+      readFileSync(
+        new URL(
+          "../test-fixtures/malformed-xref-vendor-contract.pdf.b64",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+      "base64",
+    );
+    mocks.extractPdfTextWithRecovery.mockImplementation(async (bytes: Buffer) => {
+      return actualExtraction.extractPdfTextWithRecovery(bytes);
+    });
+    mocks.extractContractFromText.mockResolvedValue(
+      mockExtractionResult("text", null),
+    );
+
+    const response = await request(app)
+      .post("/api/contracts/extract")
+      .attach("file", original, {
+        filename: "malformed-xref.pdf",
+        contentType: "application/pdf",
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.extraction.source).toBe("text");
+    expect(mocks.extractScannedPdfText).not.toHaveBeenCalled();
+  });
+
+  it("returns an actionable encrypted-PDF error without attempting OCR", async () => {
+    mocks.extractPdfTextWithRecovery.mockRejectedValue(
+      new mocks.PdfRecoveryError(
+        "PDF_ENCRYPTED",
+        "This PDF is password-protected or encrypted. Upload an unlocked PDF and try again.",
+      ),
+    );
+
+    const response = await request(app)
+      .post("/api/contracts/extract")
+      .attach("file", pdfLike, {
+        filename: "encrypted.pdf",
+        contentType: "application/pdf",
+      });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({
+      error:
+        "This PDF is password-protected or encrypted. Upload an unlocked PDF and try again.",
+      code: "PDF_ENCRYPTED",
+    });
+    expect(mocks.extractScannedPdfText).not.toHaveBeenCalled();
+  });
+
   it("returns a clear 422 and stops before contract extraction when OCR fails", async () => {
-    mocks.extractReadablePdfText.mockResolvedValue("");
+    mocks.extractPdfTextWithRecovery.mockResolvedValue({ text: "", repaired: false });
     mocks.extractScannedPdfText.mockRejectedValue(new Error("OCR unavailable"));
 
     const response = await request(app)
@@ -206,7 +275,7 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
   });
 
   it("returns a page-specific 422 when OCR cannot complete a scanned page", async () => {
-    mocks.extractReadablePdfText.mockResolvedValue("");
+    mocks.extractPdfTextWithRecovery.mockResolvedValue({ text: "", repaired: false });
     mocks.extractScannedPdfText.mockRejectedValue(
       Object.assign(
         new Error(
@@ -230,7 +299,7 @@ describe("POST /api/contracts/extract extraction source metadata", () => {
   });
 
   it("returns a clear 422 when complete OCR text exceeds the safe review limit", async () => {
-    mocks.extractReadablePdfText.mockResolvedValue("");
+    mocks.extractPdfTextWithRecovery.mockResolvedValue({ text: "", repaired: false });
     mocks.extractScannedPdfText.mockResolvedValue({
       text: ocrContractText,
       confidence: "High",
@@ -459,13 +528,13 @@ describe("resumable contract ingest runs", () => {
       firstAttemptStarted = resolve;
     });
     let readableAttempt = 0;
-    mocks.extractReadablePdfText.mockImplementation(async () => {
+    mocks.extractPdfTextWithRecovery.mockImplementation(async () => {
       readableAttempt += 1;
       if (readableAttempt === 1) {
         firstAttemptStarted();
         await firstAttemptReleased;
       }
-      return readableContractText;
+      return { text: readableContractText, repaired: false };
     });
     mocks.extractContractFromText
       .mockResolvedValueOnce({
@@ -554,10 +623,10 @@ describe("resumable contract ingest runs", () => {
     const extractionHasStarted = new Promise<void>((resolve) => {
       extractionStarted = resolve;
     });
-    mocks.extractReadablePdfText.mockImplementation(async () => {
+    mocks.extractPdfTextWithRecovery.mockImplementation(async () => {
       extractionStarted();
       await extractionReleased;
-      return readableContractText;
+      return { text: readableContractText, repaired: false };
     });
     mocks.extractContractFromText.mockResolvedValue(mockExtractionResult("text", null));
 
@@ -633,7 +702,10 @@ describe("resumable contract ingest runs", () => {
     const secondItemId = `${runId}:1`;
     const firstPdf = Buffer.from("%PDF-1.7\nfirst resumable contract");
     const secondPdf = Buffer.from("%PDF-1.7\nsecond resumable contract");
-    mocks.extractReadablePdfText.mockResolvedValue(readableContractText);
+    mocks.extractPdfTextWithRecovery.mockResolvedValue({
+      text: readableContractText,
+      repaired: false,
+    });
     mocks.extractContractFromText
       .mockResolvedValueOnce(mockExtractionResult("text", null))
       .mockRejectedValueOnce(new Error("Temporary extraction failure"))

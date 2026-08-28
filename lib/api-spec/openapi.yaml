@@ -575,6 +575,10 @@ components:
             - OCR_INCOMPLETE
             - TOO_LARGE
             - UNAVAILABLE
+            - PDF_ENCRYPTED
+            - PDF_UNREADABLE
+            - PDF_REPAIR_FAILED
+            - PDF_TOOL_UNAVAILABLE
             - SUPERSEDED
             - INVALID_UPLOAD
       required:

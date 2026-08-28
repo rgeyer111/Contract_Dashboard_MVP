@@ -672,8 +672,8 @@ describe("POST /api/contracts/extract upload guards", () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({
       error:
-        "We could not read text from this PDF, including with OCR. Make sure the scan is clear and try again.",
-      code: "UNREADABLE",
+        "This PDF is damaged and could not be read safely. Export or print it to a new PDF and try again.",
+      code: "PDF_UNREADABLE",
     });
     expect(response.body).not.toHaveProperty("extraction");
   });

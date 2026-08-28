@@ -413,6 +413,10 @@ const en = {
   "view.movedPosition": ({ name, direction, position, total }: { name: string; direction: "up" | "down"; position: number; total: number }) =>
     `${name} moved ${direction}. Position ${position} of ${total}.`,
   "upload.errorOcrIncomplete": () => "We could not fully transcribe this scanned PDF. Split it into smaller files and try again.",
+  "upload.errorPdfEncrypted": () => "This PDF is password-protected or encrypted. Upload an unlocked PDF and try again.",
+  "upload.errorPdfUnreadable": () => "This PDF is damaged and could not be read safely. Export or print it to a new PDF and try again.",
+  "upload.errorPdfRepairFailed": () => "This PDF opens in a viewer, but its text structure could not be repaired. Export or print it to a new PDF and try again.",
+  "upload.errorPdfToolUnavailable": () => "PDF repair is temporarily unavailable. Please try again later.",
   "upload.errorTooLarge": () => "This contract is too large to process.",
   "upload.errorSuperseded": () => "This upload was superseded. Use the latest result.",
   "registry.daysUntilAction": ({ count }: { count: number }) => `${count} day${count === 1 ? "" : "s"} until action`,
@@ -863,6 +867,10 @@ const de = {
   "view.movedPosition": ({ name, direction, position, total }: { name: string; direction: "up" | "down"; position: number; total: number }) =>
     `${name} wurde ${direction === "up" ? "nach oben" : "nach unten"} verschoben. Position ${position} von ${total}.`,
   "upload.errorOcrIncomplete": () => "Dieses gescannte PDF konnte nicht vollständig transkribiert werden. Teilen Sie es auf und versuchen Sie es erneut.",
+  "upload.errorPdfEncrypted": () => "Dieses PDF ist passwortgeschützt oder verschlüsselt. Laden Sie ein entsperrtes PDF hoch.",
+  "upload.errorPdfUnreadable": () => "Dieses PDF ist beschädigt und konnte nicht sicher gelesen werden. Exportieren oder drucken Sie es als neues PDF.",
+  "upload.errorPdfRepairFailed": () => "Dieses PDF lässt sich öffnen, aber seine Textstruktur konnte nicht repariert werden. Exportieren oder drucken Sie es als neues PDF.",
+  "upload.errorPdfToolUnavailable": () => "Die PDF-Reparatur ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
   "upload.errorTooLarge": () => "Dieser Vertrag ist zu gross für die Verarbeitung.",
   "upload.errorSuperseded": () => "Dieser Upload wurde durch einen neueren ersetzt. Verwenden Sie das aktuelle Ergebnis.",
   "registry.daysUntilAction": ({ count }: { count: number }) => `${count} Tag${count === 1 ? "" : "e"} bis zur Aktion`,
