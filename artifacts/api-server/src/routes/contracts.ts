@@ -1,9 +1,10 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import multer from "multer";
-import { and, asc, desc, eq, isNotNull, ne, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNotNull, ne, sql } from "drizzle-orm";
 import {
   db,
   contractIngestCompletionsTable,
+  contractDecisionsTable,
   contractIngestItemsTable,
   contractIngestObjectCleanupTable,
   contractIngestRunsTable,
@@ -14,6 +15,8 @@ import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
 import {
   CreateContractBody,
+  CompleteIngestItemBody,
+  RecordContractDecisionBody,
   UpdateContractBody,
   CreateRegistryViewBody,
   PinRegistryViewBody,
@@ -89,6 +92,17 @@ function isUniqueConstraintViolation(error: unknown): boolean {
 function contractDocumentType(contract: Record<string, any>) {
   const value = contract.fields?.documentType?.value;
   return typeof value === "string" ? value : null;
+}
+
+function decisionResponse(record: typeof contractDecisionsTable.$inferSelect) {
+  return {
+    id: record.id,
+    contractId: record.contractId,
+    decision: record.decision,
+    actor: record.actor,
+    snoozeUntil: record.snoozeUntil,
+    decidedAt: record.decidedAt.toISOString(),
+  };
 }
 
 class ExtractionError extends Error {
@@ -558,6 +572,76 @@ router.get("/contracts/:id", async (req: Request, res: Response): Promise<void> 
     return;
   }
   res.json(responseFor(record));
+});
+
+router.get("/contracts/:id/decisions", async (req: Request, res: Response): Promise<void> => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [contract] = await db.select({ id: contractsTable.id }).from(contractsTable).where(eq(contractsTable.id, id));
+  if (!contract) {
+    res.status(404).json({ error: "Contract not found." });
+    return;
+  }
+  const decisions = await db.select()
+    .from(contractDecisionsTable)
+    .where(eq(contractDecisionsTable.contractId, id))
+    .orderBy(desc(contractDecisionsTable.decidedAt));
+  res.json(decisions.map(decisionResponse));
+});
+
+router.post("/contracts/:id/decisions", async (req: Request, res: Response): Promise<void> => {
+  const parsed = RecordContractDecisionBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Choose a valid decision and identify who made it." });
+    return;
+  }
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [contract] = await db.select({ id: contractsTable.id }).from(contractsTable).where(eq(contractsTable.id, id));
+  if (!contract) {
+    res.status(404).json({ error: "Contract not found." });
+    return;
+  }
+  const actor = parsed.data.actor.trim();
+  const snoozeUntil = parsed.data.snoozeUntil
+    ? parsed.data.snoozeUntil.toISOString().slice(0, 10)
+    : null;
+  const today = new Date().toISOString().slice(0, 10);
+  if (!actor) {
+    res.status(400).json({ error: "Identify who made this decision." });
+    return;
+  }
+  if (parsed.data.decision === "snooze" && (!snoozeUntil || snoozeUntil < today)) {
+    res.status(400).json({ error: "Choose today or a future date to snooze this decision." });
+    return;
+  }
+  const [decision] = await db.insert(contractDecisionsTable).values({
+    contractId: id,
+    decision: parsed.data.decision,
+    actor,
+    snoozeUntil: parsed.data.decision === "snooze" ? snoozeUntil : null,
+  }).returning();
+  res.status(201).json(decisionResponse(decision));
+});
+
+router.get("/contracts/:id/source", async (req: Request, res: Response): Promise<void> => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const [contract] = await db.select({
+    filename: contractsTable.filename,
+    sourceStoragePath: contractsTable.sourceStoragePath,
+  }).from(contractsTable).where(eq(contractsTable.id, id));
+  if (!contract?.sourceStoragePath) {
+    res.status(404).json({ error: "The source PDF is not available for this contract." });
+    return;
+  }
+  try {
+    const pdf = await readContractIngestPdf(contract.sourceStoragePath);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `inline; filename="${contract.filename.replace(/[\"\\r\\n]/g, "_")}"`);
+    res.setHeader("Cache-Control", "private, no-store");
+    res.send(pdf);
+  } catch (error) {
+    req.log.warn({ err: error, contractId: id }, "Unable to read saved contract source PDF");
+    res.status(404).json({ error: "The source PDF is no longer available." });
+  }
 });
 
 router.post("/contracts/:id/alert/dismiss", async (req: Request, res: Response): Promise<void> => {
@@ -1052,15 +1136,64 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/retry", async (req: Req
 router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: Request, res: Response): Promise<void> => {
   const runId = Array.isArray(req.params.runId) ? req.params.runId[0] : req.params.runId;
   const itemId = Array.isArray(req.params.itemId) ? req.params.itemId[0] : req.params.itemId;
+  const parsedCompletion = CompleteIngestItemBody.safeParse(req.body);
+  if (!parsedCompletion.success) {
+    res.status(400).json({ error: "A valid saved contract is required to preserve the source PDF." });
+    return;
+  }
+  const contractId = parsedCompletion.data.contractId;
   const completion = await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${runId}))`);
-    const [completed] = await tx.select({ itemId: contractIngestCompletionsTable.itemId })
+    const [completed] = await tx.select({
+      itemId: contractIngestCompletionsTable.itemId,
+      contractId: contractIngestCompletionsTable.contractId,
+      storagePath: contractIngestCompletionsTable.storagePath,
+    })
       .from(contractIngestCompletionsTable)
       .where(and(
         eq(contractIngestCompletionsTable.itemId, itemId),
         eq(contractIngestCompletionsTable.runId, runId),
       ));
-    if (completed) return { status: "completed" as const, storagePaths: [] };
+    if (completed) {
+      if (completed.contractId !== contractId || !completed.storagePath) {
+        return { status: "invalid_contract" as const, storagePaths: [] };
+      }
+      const [savedContract] = await tx.select({
+        id: contractsTable.id,
+        sourceStoragePath: contractsTable.sourceStoragePath,
+      }).from(contractsTable).where(eq(contractsTable.id, contractId));
+      if (!savedContract || (savedContract.sourceStoragePath && savedContract.sourceStoragePath !== completed.storagePath)) {
+        return { status: "invalid_contract" as const, storagePaths: [] };
+      }
+      if (!savedContract.sourceStoragePath) {
+        await tx.update(contractsTable)
+          .set({ sourceStoragePath: completed.storagePath, updatedAt: new Date() })
+          .where(eq(contractsTable.id, contractId));
+      }
+      await tx.delete(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, completed.storagePath));
+      return { status: "completed" as const, storagePaths: [] };
+    }
+    const [item] = await tx.select({
+      id: contractIngestItemsTable.id,
+      hash: contractIngestItemsTable.hash,
+      storagePath: contractIngestItemsTable.storagePath,
+      state: contractIngestItemsTable.state,
+    }).from(contractIngestItemsTable).where(and(
+      eq(contractIngestItemsTable.id, itemId),
+      eq(contractIngestItemsTable.runId, runId),
+    ));
+    if (!item) return { status: "missing" as const, storagePaths: [] };
+    if (item.state !== "ready") {
+      return { status: "invalid" as const, storagePaths: [] };
+    }
+    const [savedContract] = await tx.select({
+      id: contractsTable.id,
+      fileHash: contractsTable.fileHash,
+    }).from(contractsTable).where(eq(contractsTable.id, contractId));
+    if (!savedContract || savedContract.fileHash !== item.hash) {
+      return { status: "invalid_contract" as const, storagePaths: [] };
+    }
     const [updated] = await tx.update(contractIngestItemsTable)
       .set({ handedOffAt: new Date(), updatedAt: new Date() })
       .where(and(
@@ -1071,18 +1204,15 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
       ))
       .returning();
     if (!updated) {
-      const [existing] = await tx.select({ id: contractIngestItemsTable.id })
-        .from(contractIngestItemsTable)
-        .where(and(
-          eq(contractIngestItemsTable.id, itemId),
-          eq(contractIngestItemsTable.runId, runId),
-        ));
-      return existing
-        ? { status: "invalid" as const, storagePaths: [] }
-        : { status: "missing" as const, storagePaths: [] };
+      return { status: "invalid" as const, storagePaths: [] };
     }
+    await tx.update(contractsTable)
+      .set({ sourceStoragePath: item.storagePath, updatedAt: new Date() })
+      .where(eq(contractsTable.id, contractId));
+    await tx.delete(contractIngestObjectCleanupTable)
+      .where(eq(contractIngestObjectCleanupTable.storagePath, item.storagePath));
     await tx.insert(contractIngestCompletionsTable)
-      .values({ itemId, runId })
+      .values({ itemId, runId, contractId, storagePath: item.storagePath })
       .onConflictDoNothing();
     const remaining = await tx.select({ id: contractIngestItemsTable.id })
       .from(contractIngestItemsTable)
@@ -1095,9 +1225,16 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
       const items = await tx.select({ storagePath: contractIngestItemsTable.storagePath })
         .from(contractIngestItemsTable)
         .where(eq(contractIngestItemsTable.runId, runId));
-      if (items.length) {
+      const linkedPaths = items.length
+        ? await tx.select({ storagePath: contractsTable.sourceStoragePath })
+          .from(contractsTable)
+          .where(inArray(contractsTable.sourceStoragePath, items.map((item) => item.storagePath)))
+        : [];
+      const retained = new Set(linkedPaths.flatMap((row) => row.storagePath ? [row.storagePath] : []));
+      const cleanupItems = items.filter((item) => !retained.has(item.storagePath));
+      if (cleanupItems.length) {
         await tx.insert(contractIngestObjectCleanupTable)
-          .values(items.map((item) => ({
+          .values(cleanupItems.map((item) => ({
             storagePath: item.storagePath,
             state: "cleanup_pending",
           })))
@@ -1110,13 +1247,17 @@ router.post("/contracts/ingest-runs/:runId/items/:itemId/complete", async (req: 
           });
       }
       await tx.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
-      return { status: "completed" as const, storagePaths: items.map((item) => item.storagePath) };
+      return { status: "completed" as const, storagePaths: cleanupItems.map((item) => item.storagePath) };
     }
     return { status: "completed" as const, storagePaths: [] };
   });
   if (completion.status !== "completed") {
-    res.status(completion.status === "invalid" ? 409 : 404).json({
-      error: completion.status === "invalid" ? "Only ready ingest items can be completed." : "Ingest item not found.",
+    res.status(completion.status === "missing" ? 404 : 409).json({
+      error: completion.status === "invalid_contract"
+        ? "The saved contract does not match this ingest item."
+        : completion.status === "invalid"
+          ? "Only ready ingest items can be completed."
+          : "Ingest item not found.",
     });
     return;
   }

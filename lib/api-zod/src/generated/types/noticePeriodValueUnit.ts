@@ -11,8 +11,8 @@ export type NoticePeriodValueUnit = typeof NoticePeriodValueUnit[keyof typeof No
 
 export const NoticePeriodValueUnit = {
   days: 'days',
-  business_days: 'business_days',
   weeks: 'weeks',
   months: 'months',
   years: 'years',
+  business_days: 'business_days',
 } as const;

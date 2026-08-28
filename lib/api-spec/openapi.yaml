@@ -330,6 +330,12 @@ paths:
       operationId: completeIngestItem
       tags: [contracts]
       summary: Mark a reviewed ingest item as handed off
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractIngestCompletionRequest"
       responses:
         "204":
           description: Ingest item handed off
@@ -430,6 +436,84 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}/decisions:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      operationId: listContractDecisions
+      tags: [contracts]
+      summary: List recorded decisions for a contract
+      responses:
+        "200":
+          description: Decisions, newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContractDecision"
+        "404":
+          description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: recordContractDecision
+      tags: [contracts]
+      summary: Record a human contract decision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractDecisionRequest"
+      responses:
+        "201":
+          description: Recorded decision
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractDecision"
+        "400":
+          description: Invalid decision
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}/source:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      operationId: getContractSource
+      tags: [contracts]
+      summary: Download the saved source PDF
+      responses:
+        "200":
+          description: Source PDF
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Contract or source PDF not found
           content:
             application/json:
               schema:
@@ -970,6 +1054,37 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ContractIngestItem"
+    ContractIngestCompletionRequest:
+      type: object
+      required: [contractId]
+      properties:
+        contractId: { type: string, minLength: 1 }
+    ContractDecisionType:
+      type: string
+      enum: [renew, renegotiate, cancel, snooze]
+    ContractDecisionRequest:
+      type: object
+      required: [decision, actor]
+      properties:
+        decision:
+          $ref: "#/components/schemas/ContractDecisionType"
+        actor: { type: string, minLength: 1, maxLength: 120 }
+        snoozeUntil:
+          type: ["string", "null"]
+          format: date
+    ContractDecision:
+      type: object
+      required: [id, contractId, decision, actor, snoozeUntil, decidedAt]
+      properties:
+        id: { type: string }
+        contractId: { type: string }
+        decision:
+          $ref: "#/components/schemas/ContractDecisionType"
+        actor: { type: string }
+        snoozeUntil:
+          type: ["string", "null"]
+          format: date
+        decidedAt: { type: string, format: date-time }
     ContractSaveRequest:
       type: object
       required: [filename, contract]
@@ -981,12 +1096,13 @@ components:
       allOf:
         - $ref: "#/components/schemas/ContractSaveRequest"
         - type: object
-          required: [id, documentType, createdAt, updatedAt]
+          required: [id, documentType, sourceAvailable, createdAt, updatedAt]
           properties:
             id: { type: string }
             documentType:
               type: ["string", "null"]
               enum: [master_agreement, order_form, sow, amendment, renewal_letter, termination_notice, quote_or_proposal, unknown, null]
+            sourceAvailable: { type: boolean }
             createdAt: { type: string, format: date-time }
             updatedAt: { type: string, format: date-time }
 

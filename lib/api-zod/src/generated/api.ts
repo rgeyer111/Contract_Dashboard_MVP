@@ -3157,6 +3157,13 @@ export const CompleteIngestItemParams = zod.object({
   "itemId": zod.coerce.string()
 })
 
+
+
+
+export const CompleteIngestItemBody = zod.object({
+  "contractId": zod.string().min(1)
+})
+
 export const CompleteIngestItemResponse = zod.void()
 
 
@@ -3878,6 +3885,7 @@ export const ListContractsResponseItem = zod.object({
 }).and(zod.object({
   "id": zod.string(),
   "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable(),
+  "sourceAvailable": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
@@ -5316,6 +5324,7 @@ export const CreateContractResponse = zod.object({
 }).and(zod.object({
   "id": zod.string(),
   "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable(),
+  "sourceAvailable": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
@@ -6043,6 +6052,7 @@ export const GetContractResponse = zod.object({
 }).and(zod.object({
   "id": zod.string(),
   "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable(),
+  "sourceAvailable": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
@@ -7484,9 +7494,65 @@ export const UpdateContractResponse = zod.object({
 }).and(zod.object({
   "id": zod.string(),
   "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable(),
+  "sourceAvailable": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))
+
+
+/**
+ * @summary List recorded decisions for a contract
+ */
+export const ListContractDecisionsParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ListContractDecisionsResponseItem = zod.object({
+  "id": zod.string(),
+  "contractId": zod.string(),
+  "decision": zod.enum(['renew', 'renegotiate', 'cancel', 'snooze']),
+  "actor": zod.string(),
+  "snoozeUntil": zod.coerce.date().nullable(),
+  "decidedAt": zod.coerce.date()
+})
+export const ListContractDecisionsResponse = zod.array(ListContractDecisionsResponseItem)
+
+
+/**
+ * @summary Record a human contract decision
+ */
+export const RecordContractDecisionParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const recordContractDecisionBodyActorMax = 120;
+
+
+
+export const RecordContractDecisionBody = zod.object({
+  "decision": zod.enum(['renew', 'renegotiate', 'cancel', 'snooze']),
+  "actor": zod.string().min(1).max(recordContractDecisionBodyActorMax),
+  "snoozeUntil": zod.coerce.date().nullish()
+})
+
+export const RecordContractDecisionResponse = zod.object({
+  "id": zod.string(),
+  "contractId": zod.string(),
+  "decision": zod.enum(['renew', 'renegotiate', 'cancel', 'snooze']),
+  "actor": zod.string(),
+  "snoozeUntil": zod.coerce.date().nullable(),
+  "decidedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Download the saved source PDF
+ */
+export const GetContractSourceParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetContractSourceResponse = zod.unknown()
 
 
 /**
@@ -8219,6 +8285,7 @@ export const DismissContractAlertResponse = zod.object({
 }).and(zod.object({
   "id": zod.string(),
   "documentType": zod.union([zod.literal('master_agreement'),zod.literal('order_form'),zod.literal('sow'),zod.literal('amendment'),zod.literal('renewal_letter'),zod.literal('termination_notice'),zod.literal('quote_or_proposal'),zod.literal('unknown'),zod.literal(null)]).nullable(),
+  "sourceAvailable": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 }))

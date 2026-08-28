@@ -293,10 +293,10 @@ export type NoticePeriodValueUnit = typeof NoticePeriodValueUnit[keyof typeof No
 
 export const NoticePeriodValueUnit = {
   days: 'days',
-  business_days: 'business_days',
   weeks: 'weeks',
   months: 'months',
   years: 'years',
+  business_days: 'business_days',
 } as const;
 
 export type NoticePeriodValueAnchor = typeof NoticePeriodValueAnchor[keyof typeof NoticePeriodValueAnchor];
@@ -660,6 +660,42 @@ export interface ContractIngestRun {
   items: ContractIngestItem[];
 }
 
+export interface ContractIngestCompletionRequest {
+  /** @minLength 1 */
+  contractId: string;
+}
+
+export type ContractDecisionType = typeof ContractDecisionType[keyof typeof ContractDecisionType];
+
+
+export const ContractDecisionType = {
+  renew: 'renew',
+  renegotiate: 'renegotiate',
+  cancel: 'cancel',
+  snooze: 'snooze',
+} as const;
+
+export interface ContractDecisionRequest {
+  decision: ContractDecisionType;
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  actor: string;
+  /** @nullable */
+  snoozeUntil?: string | null;
+}
+
+export interface ContractDecision {
+  id: string;
+  contractId: string;
+  decision: ContractDecisionType;
+  actor: string;
+  /** @nullable */
+  snoozeUntil: string | null;
+  decidedAt: string;
+}
+
 export interface ContractSaveRequest {
   filename: string;
   contract: ContractReviewRecord;
@@ -686,6 +722,7 @@ export type SavedContract = ContractSaveRequest & {
   id: string;
   /** @nullable */
   documentType: SavedContractDocumentType;
+  sourceAvailable: boolean;
   createdAt: string;
   updatedAt: string;
 };

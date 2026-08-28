@@ -288,6 +288,7 @@ export function responseFor(record: typeof contractsTable.$inferSelect) {
     id: record.id,
     filename: record.filename,
     documentType: record.documentType ?? contract.fields?.documentType?.value ?? null,
+    sourceAvailable: Boolean(record.sourceStoragePath),
     contract,
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString(),

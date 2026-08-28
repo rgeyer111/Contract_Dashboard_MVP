@@ -1,12 +1,13 @@
 import request from "supertest";
 import { eq, inArray } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   contractIngestCompletionsTable,
   contractIngestItemsTable,
   contractIngestObjectCleanupTable,
   contractIngestRunsTable,
+  contractsTable,
   db,
 } from "@workspace/db";
 
@@ -43,6 +44,23 @@ const readableContractText =
   "This embedded contract text is long enough to remain on the direct text extraction path.";
 const ocrContractText =
   "This OCR transcription is long enough to continue through contract field extraction.";
+const savedContractIds = new Set<string>();
+
+async function createSavedContractForItem(itemId: string) {
+  const [item] = await db.select({
+    filename: contractIngestItemsTable.filename,
+    hash: contractIngestItemsTable.hash,
+  }).from(contractIngestItemsTable).where(eq(contractIngestItemsTable.id, itemId));
+  if (!item) throw new Error(`Missing ingest item ${itemId}`);
+  const [saved] = await db.insert(contractsTable).values({
+    filename: item.filename,
+    fileHash: item.hash,
+    contract: {},
+    confidence: {},
+  }).returning({ id: contractsTable.id });
+  savedContractIds.add(saved.id);
+  return saved.id;
+}
 
 function mockExtractionResult(
   source: "text" | "ocr",
@@ -89,6 +107,13 @@ beforeEach(() => {
   mocks.deleteContractIngestPdf.mockImplementation(async (path: string) => {
     mocks.storedPdfs.delete(path);
   });
+});
+
+afterEach(async () => {
+  for (const id of savedContractIds) {
+    await db.delete(contractsTable).where(eq(contractsTable.id, id));
+  }
+  savedContractIds.clear();
 });
 
 describe("POST /api/contracts/extract extraction source metadata", () => {
@@ -503,8 +528,10 @@ describe("resumable contract ingest runs", () => {
         processingAttemptId: null,
         extraction: expect.objectContaining({ attempt: "newer" }),
       });
+      const contractId = await createSavedContractForItem(itemId);
       const completion = await request(app)
-        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/complete`);
+        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/complete`)
+        .send({ contractId });
       expect(completion.status).toBe(204);
     } finally {
       releaseFirstAttempt();
@@ -546,6 +573,7 @@ describe("resumable contract ingest runs", () => {
         .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/retry`)
         .then((response) => response);
       await extractionHasStarted;
+      const contractId = await createSavedContractForItem(itemId);
       const competingRequests = Promise.all([
         request(app).delete(`/api/contracts/ingest-runs/${runId}`),
         request(app)
@@ -554,7 +582,8 @@ describe("resumable contract ingest runs", () => {
           .field("itemIds", itemId)
           .attach("files", replacementPdf, { filename: "replacement.pdf", contentType: "application/pdf" }),
         request(app)
-          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/complete`),
+          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(itemId)}/complete`)
+          .send({ contractId }),
       ]);
       const [abandonResponse, replacementResponse, completionResponse] = await competingRequests;
       releaseExtraction();
@@ -673,7 +702,8 @@ describe("resumable contract ingest runs", () => {
       });
 
       const failedCompleteResponse = await request(app)
-        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/complete`);
+        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/complete`)
+        .send({ contractId: randomUUID() });
       expect(failedCompleteResponse.status).toBe(409);
       expect(failedCompleteResponse.body).toEqual({ error: "Only ready ingest items can be completed." });
 
@@ -685,21 +715,26 @@ describe("resumable contract ingest runs", () => {
         .where(eq(contractIngestItemsTable.id, secondItemId));
       expect(mocks.readContractIngestPdf).toHaveBeenCalledWith(retriedItem.storagePath);
 
+      const firstContractId = await createSavedContractForItem(firstItemId);
+      const secondContractId = await createSavedContractForItem(secondItemId);
       const completionResponses = await Promise.all([
         request(app)
-          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(firstItemId)}/complete`),
+          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(firstItemId)}/complete`)
+          .send({ contractId: firstContractId }),
         request(app)
-          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/complete`),
+          .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/complete`)
+          .send({ contractId: secondContractId }),
       ]);
       expect(completionResponses.map((response) => response.status)).toEqual([204, 204]);
       expect((await request(app)
-        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/complete`)).status).toBe(204);
+        .post(`/api/contracts/ingest-runs/${runId}/items/${encodeURIComponent(secondItemId)}/complete`)
+        .send({ contractId: secondContractId })).status).toBe(204);
 
       const [remainingRun] = await db.select({ id: contractIngestRunsTable.id })
         .from(contractIngestRunsTable)
         .where(eq(contractIngestRunsTable.id, runId));
       expect(remainingRun).toBeUndefined();
-      expect(mocks.storedPdfs.size).toBe(0);
+      expect(mocks.storedPdfs.size).toBe(2);
     } finally {
       await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.runId, runId));
       await db.delete(contractIngestItemsTable).where(eq(contractIngestItemsTable.runId, runId));

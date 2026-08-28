@@ -2,6 +2,7 @@ import { and, asc, eq, inArray, lt, sql } from "drizzle-orm";
 import {
   contractIngestItemsTable,
   contractIngestObjectCleanupTable,
+  contractsTable,
   db,
 } from "@workspace/db";
 import {
@@ -12,11 +13,15 @@ import {
 
 const interruptedUploadRecoveryAgeMs = 15 * 60_000;
 
-function hasNoIngestOwner() {
+function hasNoObjectOwner() {
   return sql`NOT EXISTS (
     SELECT 1
     FROM ${contractIngestItemsTable}
     WHERE ${contractIngestItemsTable.storagePath} = ${contractIngestObjectCleanupTable.storagePath}
+  ) AND NOT EXISTS (
+    SELECT 1
+    FROM ${contractsTable}
+    WHERE ${contractsTable.sourceStoragePath} = ${contractIngestObjectCleanupTable.storagePath}
   )`;
 }
 
@@ -39,11 +44,11 @@ export async function processContractIngestObjectCleanup(storagePaths?: string[]
       ? and(
         eq(contractIngestObjectCleanupTable.state, "cleanup_pending"),
         inArray(contractIngestObjectCleanupTable.storagePath, storagePaths),
-        hasNoIngestOwner(),
+        hasNoObjectOwner(),
       )
       : and(
         eq(contractIngestObjectCleanupTable.state, "cleanup_pending"),
-        hasNoIngestOwner(),
+        hasNoObjectOwner(),
       ))
     .orderBy(asc(contractIngestObjectCleanupTable.createdAt))
     .limit(20))
@@ -60,7 +65,7 @@ export async function processContractIngestObjectCleanup(storagePaths?: string[]
           .where(and(
             eq(contractIngestObjectCleanupTable.storagePath, storagePath),
             eq(contractIngestObjectCleanupTable.state, "cleanup_pending"),
-            hasNoIngestOwner(),
+            hasNoObjectOwner(),
           ));
         if (!eligible) return;
 
@@ -96,7 +101,7 @@ export async function expireContractIngestUploadReservations(options: {
     .where(and(
       eq(contractIngestObjectCleanupTable.state, "uploading"),
       lt(contractIngestObjectCleanupTable.createdAt, olderThan),
-      hasNoIngestOwner(),
+      hasNoObjectOwner(),
       ...(options.storagePaths?.length
         ? [inArray(contractIngestObjectCleanupTable.storagePath, options.storagePaths)]
         : []),

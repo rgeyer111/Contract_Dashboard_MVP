@@ -501,7 +501,7 @@ export default function Dashboard() {
                 const outcome = renewalMechanism
                   ? translateDomainOption(language, renewalMechanism)
                   : t("ui.not.stated");
-                const contractUrl = `${window.location.origin}/review?id=${saved.id}`;
+                const contractUrl = `${window.location.origin}/contracts/${saved.id}`;
                 const mailto = `mailto:${alert.ownerEmail}?subject=${encodeURIComponent(t("alert.emailSubject", { vendor, contract: contractTitle }))}&body=${encodeURIComponent(t("alert.emailBody", {
                   owner: alert.owner,
                   vendor,
@@ -875,7 +875,7 @@ export default function Dashboard() {
                               {isDemo ? (
                                 <span className="block max-w-full truncate text-left text-xs font-extrabold text-foreground" title={vendor}>{vendor}</span>
                               ) : (
-                                <button type="button" onClick={() => setLocation(`/review?id=${saved.id}`)} className="block max-w-full truncate text-left text-xs font-extrabold text-foreground hover:text-primary" title={vendor}>{vendor}</button>
+                                <button type="button" onClick={() => setLocation(`/contracts/${saved.id}`)} className="block max-w-full truncate text-left text-xs font-extrabold text-foreground hover:text-primary" title={vendor}>{vendor}</button>
                               )}
                              <div className="mt-1 max-w-full truncate text-[10px] font-medium text-muted-foreground" title={title}>{title}</div>
                            </td>

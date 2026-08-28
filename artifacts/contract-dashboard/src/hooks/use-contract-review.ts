@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useLocation } from "wouter";
+import { useLocation, useRoute } from "wouter";
 import {
   useCreateContract,
   useCompleteIngestItem,
@@ -41,7 +41,8 @@ const requiredKeys: FieldKey[] = [
 export function useContractReview() {
   const [, navigate] = useLocation();
   const queryClient = useQueryClient();
-  const savedId = new URLSearchParams(window.location.search).get("id") ?? "";
+  const [, editParams] = useRoute("/contracts/:id/edit");
+  const savedId = editParams?.id ?? "";
   const savedContractQuery = useGetContract(savedId, {
     query: {
       enabled: Boolean(savedId),
@@ -153,7 +154,7 @@ export function useContractReview() {
       if (savedId) {
         await updateContract.mutateAsync({ id: savedId, data: { filename, contract: draft } });
       } else {
-        let pendingHandoff: { runId?: string; itemId?: string } | null = null;
+        let pendingHandoff: { runId?: string; itemId?: string; contractId?: string } | null = null;
         try {
           pendingHandoff = JSON.parse(sessionStorage.getItem(pendingHandoffStorageKey) ?? "null");
         } catch {
@@ -167,23 +168,27 @@ export function useContractReview() {
           pendingHandoff.runId === storedExtraction.ingestRunId &&
           pendingHandoff.itemId === storedExtraction.ingestItemId,
         );
-        if (!matchesCurrentExtraction) {
+        let createdContractId = matchesCurrentExtraction ? pendingHandoff?.contractId : undefined;
+        if (!matchesCurrentExtraction || !createdContractId) {
           sessionStorage.removeItem(pendingHandoffStorageKey);
-          await createContract.mutateAsync({ data: { filename, contract: draft } });
+          const created = await createContract.mutateAsync({ data: { filename, contract: draft } });
+          createdContractId = created.id;
           if (storedExtraction?.ingestRunId && storedExtraction.ingestItemId) {
             sessionStorage.setItem(pendingHandoffStorageKey, JSON.stringify({
               runId: storedExtraction.ingestRunId,
               itemId: storedExtraction.ingestItemId,
+              contractId: createdContractId,
             }));
           }
         }
-      }
-      if (storedExtraction?.ingestRunId && storedExtraction.ingestItemId) {
-        await completeIngestItem.mutateAsync({
-          runId: storedExtraction.ingestRunId,
-          itemId: storedExtraction.ingestItemId,
-        });
-        sessionStorage.removeItem(pendingHandoffStorageKey);
+        if (storedExtraction?.ingestRunId && storedExtraction.ingestItemId && createdContractId) {
+          await completeIngestItem.mutateAsync({
+            runId: storedExtraction.ingestRunId,
+            itemId: storedExtraction.ingestItemId,
+            data: { contractId: createdContractId },
+          });
+          sessionStorage.removeItem(pendingHandoffStorageKey);
+        }
       }
       await queryClient.invalidateQueries({
         queryKey: ["/api/contracts"],
@@ -207,6 +212,7 @@ export function useContractReview() {
   };
 
   return {
+    savedId,
     savedContractQuery,
     storedExtraction,
     draft,

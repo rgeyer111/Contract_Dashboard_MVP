@@ -2,7 +2,14 @@ import request from "supertest";
 import { eq } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { db, contractsTable } from "@workspace/db";
+import {
+  db,
+  contractIngestCompletionsTable,
+  contractIngestItemsTable,
+  contractIngestObjectCleanupTable,
+  contractIngestRunsTable,
+  contractsTable,
+} from "@workspace/db";
 import app from "../app";
 
 const pdfLike = (body: string | Buffer = "%PDF-1.7\nnot a readable PDF") =>
@@ -98,6 +105,150 @@ const contract = {
 };
 
 describe("saved contract persistence", () => {
+  it("records recurring decisions separately with server-owned attribution time", async () => {
+    let id: string | undefined;
+    try {
+      const created = await request(app)
+        .post("/api/contracts")
+        .send({ filename: `decision-${crypto.randomUUID()}.pdf`, contract });
+      expect(created.status).toBe(201);
+      expect(created.body.sourceAvailable).toBe(false);
+      id = created.body.id;
+
+      const initiallyEmpty = await request(app).get(`/api/contracts/${id}/decisions`);
+      expect(initiallyEmpty.status).toBe(200);
+      expect(initiallyEmpty.body).toEqual([]);
+
+      const decidedAtBefore = Date.now();
+      const renewed = await request(app)
+        .post(`/api/contracts/${id}/decisions`)
+        .send({
+          decision: "renew",
+          actor: "  Nina Reviewer  ",
+          decidedAt: "2000-01-01T00:00:00.000Z",
+          snoozeUntil: "2099-01-01",
+        });
+      expect(renewed.status).toBe(201);
+      expect(renewed.body).toMatchObject({
+        contractId: id,
+        decision: "renew",
+        actor: "Nina Reviewer",
+        snoozeUntil: null,
+      });
+      expect(new Date(renewed.body.decidedAt).getTime()).toBeGreaterThanOrEqual(decidedAtBefore);
+
+      const missingSnoozeDate = await request(app)
+        .post(`/api/contracts/${id}/decisions`)
+        .send({ decision: "snooze", actor: "Nina Reviewer" });
+      expect(missingSnoozeDate.status).toBe(400);
+
+      const snoozed = await request(app)
+        .post(`/api/contracts/${id}/decisions`)
+        .send({ decision: "snooze", actor: "Nina Reviewer", snoozeUntil: "2099-02-02" });
+      expect(snoozed.status).toBe(201);
+      expect(snoozed.body).toMatchObject({
+        contractId: id,
+        decision: "snooze",
+        actor: "Nina Reviewer",
+        snoozeUntil: "2099-02-02",
+      });
+
+      const listed = await request(app).get(`/api/contracts/${id}/decisions`);
+      expect(listed.status).toBe(200);
+      expect(listed.body).toHaveLength(2);
+      expect(listed.body.map((entry: { decision: string }) => entry.decision)).toEqual(["snooze", "renew"]);
+    } finally {
+      if (id) await db.delete(contractsTable).where(eq(contractsTable.id, id));
+    }
+  });
+
+  it("retains an ingest PDF when it is handed off to its saved contract", async () => {
+    const runId = crypto.randomUUID();
+    const itemId = `source-${crypto.randomUUID()}`;
+    const storagePath = `/objects/uploads/contract-ingest/${crypto.randomUUID()}`;
+    const sourceBytes = pdfLike("%PDF-1.7\nretained source");
+    const hash = createHash("sha256").update(sourceBytes).digest("hex");
+    let contractId: string | undefined;
+    const originalFetch = globalThis.fetch;
+    try {
+      const created = await request(app)
+        .post("/api/contracts")
+        .send({
+          filename: "retained-source.pdf",
+          contract: {
+            ...contract,
+            source: {
+              id: itemId,
+              name: "retained-source.pdf",
+              modifiedAt: null,
+              size: sourceBytes.length,
+              hash,
+            },
+          },
+        });
+      expect(created.status).toBe(201);
+      contractId = created.body.id;
+      await db.insert(contractIngestRunsTable).values({ id: runId });
+      await db.insert(contractIngestItemsTable).values({
+        id: itemId,
+        runId,
+        filename: "retained-source.pdf",
+        size: sourceBytes.length,
+        hash,
+        storagePath,
+        state: "ready",
+        extraction: {},
+      });
+      await db.insert(contractIngestObjectCleanupTable).values({
+        storagePath,
+        state: "uploading",
+      });
+
+      const missingContractLink = await request(app)
+        .post(`/api/contracts/ingest-runs/${runId}/items/${itemId}/complete`);
+      expect(missingContractLink.status).toBe(400);
+
+      const completed = await request(app)
+        .post(`/api/contracts/ingest-runs/${runId}/items/${itemId}/complete`)
+        .send({ contractId });
+      expect(completed.status).toBe(204);
+      const completedRetry = await request(app)
+        .post(`/api/contracts/ingest-runs/${runId}/items/${itemId}/complete`)
+        .send({ contractId });
+      expect(completedRetry.status).toBe(204);
+
+      const saved = await request(app).get(`/api/contracts/${contractId}`);
+      expect(saved.status).toBe(200);
+      expect(saved.body.sourceAvailable).toBe(true);
+      const cleanupReservation = await db.select({ storagePath: contractIngestObjectCleanupTable.storagePath })
+        .from(contractIngestObjectCleanupTable)
+        .where(eq(contractIngestObjectCleanupTable.storagePath, storagePath));
+      expect(cleanupReservation).toEqual([]);
+
+      globalThis.fetch = async (input, init) => {
+        if (String(input).includes("/object-storage/signed-object-url")) {
+          return new Response(JSON.stringify({ signed_url: "https://storage.test/source.pdf" }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        if (String(input) === "https://storage.test/source.pdf" && (!init?.method || init.method === "GET")) {
+          return new Response(sourceBytes, { status: 200, headers: { "Content-Type": "application/pdf" } });
+        }
+        throw new Error(`Unexpected fetch: ${String(input)}`);
+      };
+      const source = await request(app).get(`/api/contracts/${contractId}/source`);
+      expect(source.status).toBe(200);
+      expect(source.headers["content-type"]).toMatch(/application\/pdf/);
+      expect(source.body).toEqual(sourceBytes);
+    } finally {
+      globalThis.fetch = originalFetch;
+      await db.delete(contractIngestCompletionsTable).where(eq(contractIngestCompletionsTable.itemId, itemId));
+      await db.delete(contractIngestRunsTable).where(eq(contractIngestRunsTable.id, runId));
+      if (contractId) await db.delete(contractsTable).where(eq(contractsTable.id, contractId));
+    }
+  });
+
   it("rejects fetched saved PDF bytes before extraction using their persisted SHA-256", async () => {
     const bytes = pdfLike("%PDF-1.7\npersisted SHA-256 duplicate regression");
     const hash = createHash("sha256").update(bytes).digest("hex");

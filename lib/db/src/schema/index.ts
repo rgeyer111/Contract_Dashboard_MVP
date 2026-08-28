@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, jsonb, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { check, date, index, integer, jsonb, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 export const contractsTable = pgTable(
   "contracts",
@@ -7,6 +7,7 @@ export const contractsTable = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     filename: text("filename").notNull(),
     fileHash: text("file_hash"),
+    sourceStoragePath: text("source_storage_path"),
     parentContractId: uuid("parent_contract_id"),
     documentType: text("document_type"),
     contract: jsonb("contract").notNull(),
@@ -18,6 +19,27 @@ export const contractsTable = pgTable(
     uniqueIndex("contracts_file_hash_unique")
       .on(table.fileHash)
       .where(sql`${table.fileHash} IS NOT NULL`),
+  ],
+);
+
+export const contractDecisionsTable = pgTable(
+  "contract_decisions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    contractId: uuid("contract_id").notNull().references(() => contractsTable.id, { onDelete: "cascade" }),
+    decision: text("decision").notNull(),
+    actor: text("actor").notNull(),
+    snoozeUntil: date("snooze_until"),
+    decidedAt: timestamp("decided_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("contract_decisions_contract_decided_idx").on(table.contractId, table.decidedAt),
+    check("contract_decisions_decision_check", sql`${table.decision} IN ('renew', 'renegotiate', 'cancel', 'snooze')`),
+    check("contract_decisions_actor_check", sql`length(btrim(${table.actor})) > 0`),
+    check(
+      "contract_decisions_snooze_date_check",
+      sql`(${table.decision} = 'snooze' AND ${table.snoozeUntil} IS NOT NULL) OR (${table.decision} <> 'snooze' AND ${table.snoozeUntil} IS NULL)`,
+    ),
   ],
 );
 
@@ -74,10 +96,13 @@ export const contractIngestObjectCleanupTable = pgTable("contract_ingest_object_
 export const contractIngestCompletionsTable = pgTable("contract_ingest_completions", {
   itemId: text("item_id").primaryKey(),
   runId: uuid("run_id").notNull(),
+  contractId: uuid("contract_id"),
+  storagePath: text("storage_path"),
   completedAt: timestamp("completed_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
 export type ContractRecord = typeof contractsTable.$inferSelect;
+export type ContractDecisionRecord = typeof contractDecisionsTable.$inferSelect;
 export type RegistryViewRecord = typeof registryViewsTable.$inferSelect;
 export type ContractIngestRunRecord = typeof contractIngestRunsTable.$inferSelect;
 export type ContractIngestItemRecord = typeof contractIngestItemsTable.$inferSelect;

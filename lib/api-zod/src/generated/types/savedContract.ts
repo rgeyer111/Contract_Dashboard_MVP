@@ -12,6 +12,7 @@ export type SavedContract = ContractSaveRequest & {
   id: string;
   /** @nullable */
   documentType: SavedContractDocumentType;
+  sourceAvailable: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

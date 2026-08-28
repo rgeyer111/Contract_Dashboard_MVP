@@ -8,6 +8,7 @@ import NotFound from '@/pages/not-found';
 import Home from '@/pages/home';
 import Dashboard from '@/pages/dashboard';
 import Review from '@/pages/review-compact';
+import ContractDecisionPage from '@/pages/contract-decision';
 import {
   Route,
   Switch,
@@ -25,6 +26,8 @@ function Router() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/action-items" component={Dashboard} />
         <Route path="/review" component={Review} />
+        <Route path="/contracts/:id/edit" component={Review} />
+        <Route path="/contracts/:id" component={ContractDecisionPage} />
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>

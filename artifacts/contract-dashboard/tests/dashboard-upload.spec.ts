@@ -14,6 +14,13 @@ test.beforeEach(async ({ page }) => {
     }
     await route.continue();
   });
+  await page.route("**/api/contracts/*/decisions", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({ json: [] });
+      return;
+    }
+    await route.continue();
+  });
 });
 
 const provenance = (value: unknown = null, note: string | null = null) => ({
@@ -96,6 +103,7 @@ const reviewerEdited = (value: unknown) => ({
 const savedResponse = <T extends { id: string; filename: string; contract: ReturnType<typeof makeContract> }>(saved: T) => ({
   ...saved,
   documentType: "master_agreement",
+  sourceAvailable: false,
 });
 
 test("shows Swiss sample contract content on the landing page", async ({ page }) => {
@@ -674,7 +682,8 @@ test("keeps a confirmed contract available after reload and update", async ({ pa
 
   await page.goto("/dashboard");
   await page.getByRole("button", { name: "Northstar Sourcing", exact: true }).click();
-  await expect(page).toHaveURL(/\/review\?id=saved-northstar-contract$/);
+  await expect(page).toHaveURL(/\/contracts\/saved-northstar-contract$/);
+  await page.goto("/contracts/saved-northstar-contract/edit");
 
   const vendorIssue = page
     .getByRole("heading", { name: "Vendor legal name", exact: true })
@@ -842,7 +851,8 @@ test("confirmed contracts persist through reload and reopen with edits intact", 
     .filter({ hasText: "Edited Acme" })
     .getByRole("button", { name: "Edited Acme", exact: true })
     .click();
-  await expect(page).toHaveURL(new RegExp(`/review\\?id=${contractId}$`));
+  await expect(page).toHaveURL(new RegExp(`/contracts/${contractId}$`));
+  await page.goto(`/contracts/${contractId}/edit`);
   await expect(vendorInput).toHaveValue("Edited Acme");
   const contractValueField = page
     .getByRole("heading", { name: "Contract value", exact: true })
@@ -961,10 +971,10 @@ test("formats Swiss contract values and dates across dashboard and review", asyn
   await expect(row).toContainText("01.11.2026");
 
   await row.getByRole("button", { name: "Zürich Digital Services AG", exact: true }).click();
-  await expect(page).toHaveURL(/\/review\?id=swiss-format-contract$/);
-  await expect(page.getByText("CHF 1'234'567.5", { exact: true })).toBeVisible();
-  await expect(page.getByText("31.12.2026", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("01.11.2026 notice deadline", { exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/contracts\/swiss-format-contract$/);
+  await expect(page.getByTestId("decision-primary-tier")).toContainText("CHF 1'234'567.5 · annual");
+  await expect(page.getByTestId("decision-primary-tier")).toContainText("01.11.2026");
+  await expect(page.getByTestId("decision-primary-tier")).toContainText("02.10.2026");
 });
 
 test("defaults an unresolved contract value currency to CHF", async ({ page }) => {
@@ -1285,7 +1295,7 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   expect(composedMessage.get("body")).toContain("Legal notice deadline: 02.10.2027");
   expect(composedMessage.get("body")).toContain("Days remaining:");
   expect(composedMessage.get("body")).toContain("If nothing is done: auto renew");
-  expect(composedMessage.get("body")).toContain(`/review?id=${amendmentId}`);
+  expect(composedMessage.get("body")).toContain(`/contracts/${amendmentId}`);
   await expect(page.getByRole("heading", { name: "Contract Registry", exact: true })).toHaveCount(0);
   await expect(page.locator("table")).toHaveCount(0);
 });
@@ -1381,7 +1391,9 @@ test("keeps Swiss German through the review flow and translates issue definition
   await page.goto("/dashboard");
   await page.getByRole("button", { name: "Alpine Cloud AG", exact: true }).click();
 
-  await expect(page).toHaveURL(/\/review\?id=german-review-contract$/);
+  await expect(page).toHaveURL(/\/contracts\/german-review-contract$/);
+  await page.getByRole("button", { name: "Extraktion bearbeiten, um zu entsperren" }).click();
+  await expect(page).toHaveURL(/\/contracts\/german-review-contract\/edit$/);
   await expect(page.getByRole("heading", { name: "Offene Entscheidungen klären" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Rechtlicher Anbietername" })).toBeVisible();
   await expect(page.getByText("Welche Rechtseinheit ist der Anbieter?", { exact: true })).toBeVisible();

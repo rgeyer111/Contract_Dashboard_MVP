@@ -15,7 +15,8 @@
 - [Reviewer resolutions](reviewer-resolutions.md) — persist human resolution separately from extraction provenance so reviewed unknowns stay honest and durable.
 - [Wouter query-backed state](wouter-query-backed-state.md) — do not assume useLocation exposes query changes; synchronize controlled state with window.location.search.
 - [Shared test data](shared-test-data.md) — browser regression tests can leave fixture contracts in the development registry; isolate or clean them explicitly.
-- [Temporary object ownership](temporary-object-ownership.md) — reserve App Storage paths durably and transfer or queue ownership transactionally.
+- [Temporary object ownership](temporary-object-ownership.md) — reserve paths durably and make final ownership transfer replay-safe.
+- [Contract decision history](contract-decision-history.md) — recurring business decisions are append-only audit events, separate from extraction corrections.
 - [Contract UI localization](contract-ui-localization.md) — localize UI declaratively; never traverse rendered contract content or mutate source evidence.
 - [Published demo register](published-demo-register.md) — keep the isolated read-only sample register available in published builds until real customer launch.
 - [Notice conflict auditing](notice-conflict-auditing.md) — never treat a broad extraction pass as proof that no competing or ambiguous notice language exists.

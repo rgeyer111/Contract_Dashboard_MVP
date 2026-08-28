@@ -392,6 +392,7 @@ export default function ReviewCompact() {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const detailsRef = useRef<HTMLElement>(null);
   const {
+    savedId,
     savedContractQuery,
     storedExtraction,
     draft,
@@ -478,8 +479,8 @@ export default function ReviewCompact() {
           <div className="mx-auto max-w-7xl space-y-5 pb-16">
             <div className="flex flex-col gap-4 border-b pb-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <button type="button" onClick={() => setLocation("/dashboard")} className="mb-3 inline-flex items-center text-xs font-bold text-muted-foreground transition hover:text-foreground">
-                  <ChevronLeft className="mr-1 h-4 w-4" /> {t("ui.back.to.registry")}
+                <button type="button" onClick={() => savedId ? setLocation(`/contracts/${savedId}`) : setLocation("/dashboard")} className="mb-3 inline-flex items-center text-xs font-bold text-muted-foreground transition hover:text-foreground">
+                  <ChevronLeft className="mr-1 h-4 w-4" /> {savedId ? t("decision.title") : t("ui.back.to.registry")}
                 </button>
                 <div className="flex flex-wrap items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.16em] text-primary">
                   <span>{t("ui.contract.review")}</span>
