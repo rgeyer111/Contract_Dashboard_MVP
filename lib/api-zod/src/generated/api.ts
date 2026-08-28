@@ -784,12 +784,12 @@ export const ExtractContractResponse = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(extractContractResponseExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -1520,12 +1520,12 @@ export const GetCurrentIngestRunResponse = zod.union([zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(getCurrentIngestRunResponseOneItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -2270,12 +2270,12 @@ export const RegisterIngestRunResponse = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(registerIngestRunResponseItemsItemExtractionOneExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -3006,12 +3006,12 @@ export const RetryIngestItemResponse = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(retryIngestItemResponseExtractionContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -3752,12 +3752,12 @@ export const ListContractsResponseItem = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(listContractsResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -4476,12 +4476,12 @@ export const CreateContractBody = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(createContractBodyContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -5190,12 +5190,12 @@ export const CreateContractResponse = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(createContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -5917,12 +5917,12 @@ export const GetContractResponse = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(getContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -6644,12 +6644,12 @@ export const UpdateContractBody = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractBodyContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -7358,12 +7358,12 @@ export const UpdateContractResponse = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(updateContractResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])
@@ -8093,12 +8093,12 @@ export const DismissContractAlertResponse = zod.object({
 }).and(zod.object({
   "value": zod.union([zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueOneAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 }),zod.array(zod.object({
   "amount": zod.number().min(1).multipleOf(dismissContractAlertResponseOneContractFieldsNoticePeriodTwoValueTwoItemAmountMultipleOf),
-  "unit": zod.enum(['days', 'weeks', 'months', 'years']),
+  "unit": zod.enum(['days', 'weeks', 'months', 'years', 'business_days']),
   "anchor": zod.enum(['term_end', 'renewal_date', 'anniversary', 'period_end_month', 'period_end_quarter', 'period_end_year', 'any_time', 'unknown']),
   "purpose": zod.union([zod.literal('non_renewal'),zod.literal('termination_for_convenience'),zod.literal('other'),zod.literal(null)]).nullish()
 })),zod.null()])

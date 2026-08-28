@@ -1,7 +1,9 @@
 import type { ContractComputedReasonCode } from "@workspace/api-zod";
 
 type Period = { amount: number; unit: "days" | "weeks" | "months" | "years" };
-type Notice = Period & {
+type Notice = {
+  amount: number;
+  unit: Period["unit"] | "business_days";
   anchor:
     | "term_end"
     | "renewal_date"
@@ -188,6 +190,9 @@ export function computeContractDates(
   if (!notice || !notice.amount || !notice.unit) {
     return blocked("NOTICE_PERIOD_INCOMPLETE");
   }
+  if (notice.unit === "business_days") {
+    return blocked("NOTICE_TIMING_AMBIGUOUS");
+  }
   if (notice.anchor === "unknown") {
     return blocked("NOTICE_ANCHOR_UNKNOWN");
   }
@@ -202,7 +207,7 @@ export function computeContractDates(
   if (!anchorDate) {
     return blocked("NOTICE_ANCHOR_UNRESOLVED");
   }
-  const noticeDeadline = addPeriod(anchorDate, notice, -1);
+  const noticeDeadline = addPeriod(anchorDate, notice as Period, -1);
   const actionDate = addDays(noticeDeadline, -(contract.assignment.negotiationBufferDays ?? 0));
   const daysRemaining = Math.round((actionDate.getTime() - today.getTime()) / DAY_MS);
   const status = statusFor(today, actionDate, noticeDeadline, exitDate, renewal);

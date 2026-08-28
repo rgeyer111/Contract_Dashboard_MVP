@@ -701,7 +701,7 @@ components:
         amount: { type: number, minimum: 1, multipleOf: 1 }
         unit:
           type: string
-          enum: [days, weeks, months, years]
+          enum: [days, weeks, months, years, business_days]
         anchor:
           type: string
           enum: [term_end, renewal_date, anniversary, period_end_month, period_end_quarter, period_end_year, any_time, unknown]

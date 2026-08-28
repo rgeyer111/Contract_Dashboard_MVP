@@ -201,6 +201,170 @@ describe("normalizeExtraction", () => {
     });
   });
 
+  it("preserves integrated body and annex notice conflicts instead of collapsing them", () => {
+    const body = {
+      amount: 3,
+      unit: "months",
+      anchor: "term_end",
+      purpose: "non_renewal",
+    };
+    const annex = {
+      amount: 6,
+      unit: "months",
+      anchor: "term_end",
+      purpose: "non_renewal",
+    };
+    const result = normalizeExtraction({
+      fields: {
+        noticePeriod: {
+          ...found(
+            [body, annex],
+            1,
+            "Either party may give written notice of non-renewal not less than three months prior to term end.",
+          ),
+          status: "conflicting",
+          confidence: "high",
+          note: "The integrated annex requires six months while the body requires three months.",
+          alternatives: [
+            {
+              value: body,
+              page: 1,
+              clause: "11.2",
+              quote: "notice of non-renewal not less than three months prior to term end",
+            },
+            {
+              value: annex,
+              page: 2,
+              clause: "Annex C.4",
+              quote: "notice of non-renewal no later than six months prior to term end",
+            },
+          ],
+        },
+      },
+    });
+
+    expect(result.contract.fields.noticePeriod).toMatchObject({
+      value: [body, annex],
+      status: "conflicting",
+      alternatives: [
+        expect.objectContaining({ value: body, clause: "11.2" }),
+        expect.objectContaining({ value: annex, clause: "Annex C.4" }),
+      ],
+    });
+  });
+
+  it("recovers a notice conflict from complete alternatives when the primary value is unusable", () => {
+    const body = {
+      amount: 3,
+      unit: "months",
+      anchor: "term_end",
+      purpose: "non_renewal",
+    };
+    const annex = {
+      amount: 6,
+      unit: "months",
+      anchor: "term_end",
+      purpose: "non_renewal",
+    };
+    const result = normalizeExtraction({
+      fields: {
+        noticePeriod: {
+          value: null,
+          status: "conflicting",
+          confidence: "high",
+          page: null,
+          clause: null,
+          quote: null,
+          note: "The integrated body and annex specify incompatible notice periods.",
+          alternatives: [
+            {
+              value: body,
+              page: 1,
+              clause: "11.2",
+              quote: "notice of non-renewal not less than three months prior to term end",
+            },
+            {
+              value: annex,
+              page: 2,
+              clause: "Annex C.4",
+              quote: "notice of non-renewal no later than six months prior to term end",
+            },
+          ],
+        },
+      },
+    });
+
+    expect(result.contract.fields.noticePeriod).toMatchObject({
+      value: [body, annex],
+      status: "conflicting",
+      page: 1,
+      clause: "11.2",
+      alternatives: [
+        expect.objectContaining({ value: body }),
+        expect.objectContaining({ value: annex }),
+      ],
+    });
+  });
+
+  it("preserves literal business-day notices as ambiguous and never converts them", () => {
+    const result = normalizeExtraction({
+      fields: {
+        initialTermEndDate: found("2026-12-31"),
+        noticePeriod: {
+          ...found(
+            {
+              amount: 30,
+              unit: "business_days",
+              anchor: "term_end",
+              purpose: "non_renewal",
+            },
+            1,
+            "Die Kündigung hat spätestens 30 Werktage vor Ablauf zu erfolgen.",
+          ),
+          status: "ambiguous",
+          confidence: "high",
+          note: "Werktage cannot be safely converted to calendar days.",
+          alternatives: [],
+        },
+      },
+    });
+
+    expect(result.contract.fields.noticePeriod).toMatchObject({
+      value: {
+        amount: 30,
+        unit: "business_days",
+        anchor: "term_end",
+        purpose: "non_renewal",
+      },
+      status: "ambiguous",
+      confidence: "medium",
+    });
+    expect(result.contract.computed).toMatchObject({
+      status: "blocked",
+      reasonCode: "NOTICE_TIMING_AMBIGUOUS",
+      noticeDeadline: null,
+    });
+  });
+
+  it("turns a business-day notice marked found into a safe ambiguity", () => {
+    const result = normalizeExtraction({
+      fields: {
+        noticePeriod: found({
+          amount: 10,
+          unit: "business_days",
+          anchor: "term_end",
+          purpose: "non_renewal",
+        }),
+      },
+    });
+
+    expect(result.contract.fields.noticePeriod).toMatchObject({
+      status: "ambiguous",
+      confidence: "medium",
+      note: expect.stringMatching(/cannot be safely converted/i),
+    });
+  });
+
   it("rejects a competing reading that does not match the field type", () => {
     const result = normalizeExtraction({
       fields: {
@@ -365,7 +529,8 @@ describe("OCR extraction metadata", () => {
     await extractContractFromText("--- Page 1 --- Contract text with sufficient evidence.", "prompt.pdf");
 
     const systemPrompt = mocks.create.mock.calls[0][0].messages[0].content as string;
-    expect(systemPrompt).toContain("provenance-v3");
+    expect(systemPrompt).toContain("provenance-v4");
+    expect(systemPrompt).toContain("unit business_days");
     expect(systemPrompt).toContain('"zum Quartalsende"');
     expect(systemPrompt).toContain("Never convert months or weeks into days");
     expect(systemPrompt).toContain("Do not return noticeDeadline");

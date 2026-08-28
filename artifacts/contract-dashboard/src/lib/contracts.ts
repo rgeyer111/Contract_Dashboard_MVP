@@ -77,6 +77,6 @@ export const languageOptions = ['en', 'de', 'fr', 'it', 'other'] as const;
 export const contractTypeOptions = ['maintenance', 'software_license', 'saas_subscription', 'real_estate', 'infrastructure', 'professional_services', 'data_services', 'equipment_lease', 'other'] as const;
 export const renewalMechanismOptions = ['auto_renew', 'expires', 'by_mutual_agreement', 'indefinite', 'unknown'] as const;
 export const billingFrequencyOptions = ['annual', 'quarterly', 'monthly', 'one_time', 'milestone', 'usage'] as const;
-export const periodUnitOptions = ['days', 'weeks', 'months', 'years'] as const;
+export const periodUnitOptions = ['days', 'business_days', 'weeks', 'months', 'years'] as const;
 export const contractValueBasisOptions = ['total_contract_value', 'annual', 'monthly', 'per_unit', 'not_to_exceed', 'variable'] as const;
 export const assignmentStatusOptions = ['At Risk', 'Review Open', 'In Negotiation'] as const;

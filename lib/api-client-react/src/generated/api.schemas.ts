@@ -296,6 +296,7 @@ export const NoticePeriodValueUnit = {
   weeks: 'weeks',
   months: 'months',
   years: 'years',
+  business_days: 'business_days',
 } as const;
 
 export type NoticePeriodValueAnchor = typeof NoticePeriodValueAnchor[keyof typeof NoticePeriodValueAnchor];

@@ -16,6 +16,7 @@ const extractionConfidence = ["High", "Medium", "Low"] as const;
 const provenanceStatuses = ["found", "not_found", "ambiguous", "conflicting"] as const;
 const provenanceConfidences = ["high", "medium", "low"] as const;
 const periodUnits = ["days", "weeks", "months", "years"] as const;
+const noticePeriodUnits = [...periodUnits, "business_days"] as const;
 const noticeAnchors = [
   "term_end",
   "renewal_date",
@@ -116,7 +117,10 @@ function normalizeAlternatives(raw: unknown) {
   });
 }
 
-function normalizeMetadata(raw: unknown) {
+function normalizeMetadata(
+  raw: unknown,
+  options: { allowLiteralUnsupportedUnitAmbiguity?: boolean } = {},
+) {
   const field = asRecord(raw);
   const status = provenanceStatuses.includes(field.status as never)
     ? (field.status as (typeof provenanceStatuses)[number])
@@ -135,15 +139,24 @@ function normalizeMetadata(raw: unknown) {
 
   if (status === "not_found") return notFound();
   if (!quote || !page) return notFound("The model did not provide complete page and quote evidence.");
-  if ((status === "ambiguous" || status === "conflicting") && alternatives.length < 2) {
+  const permitsLiteralUnsupportedUnitAmbiguity =
+    status === "ambiguous" && options.allowLiteralUnsupportedUnitAmbiguity;
+  if (
+    (status === "conflicting" || (status === "ambiguous" && !permitsLiteralUnsupportedUnitAmbiguity)) &&
+    alternatives.length < 2
+  ) {
     return notFound("The model did not provide two evidence-backed competing readings.");
   }
   return { status, confidence, page, clause, quote, note, alternatives };
 }
 
-function normalizeField<T>(raw: unknown, parseValue: (value: unknown) => T | null) {
+function normalizeField<T>(
+  raw: unknown,
+  parseValue: (value: unknown) => T | null,
+  options: { allowLiteralUnsupportedUnitAmbiguity?: boolean } = {},
+) {
   const field = asRecord(raw);
-  const metadata = normalizeMetadata(raw);
+  const metadata = normalizeMetadata(raw, options);
   if (metadata.status === "not_found") return metadata;
   const value = parseValue(field.value);
   if (value === null) return notFound("The extracted value did not match the required field type.");
@@ -187,11 +200,11 @@ function noticePeriodValue(value: unknown) {
     return typeof candidate.amount === "number" &&
       Number.isInteger(candidate.amount) &&
       candidate.amount > 0 &&
-      periodUnits.includes(candidate.unit as never) &&
+      noticePeriodUnits.includes(candidate.unit as never) &&
       noticeAnchors.includes(candidate.anchor as never)
       ? {
           amount: candidate.amount,
-          unit: candidate.unit as (typeof periodUnits)[number],
+          unit: candidate.unit as (typeof noticePeriodUnits)[number],
           anchor: candidate.anchor as (typeof noticeAnchors)[number],
           purpose,
         }
@@ -202,6 +215,76 @@ function noticePeriodValue(value: unknown) {
     return values.length > 0 && values.every(Boolean) ? values : null;
   }
   return parseOne(value);
+}
+
+function containsBusinessDays(value: unknown) {
+  const values = Array.isArray(value) ? value : value ? [value] : [];
+  return values.some((item) => asRecord(item).unit === "business_days");
+}
+
+function normalizeNoticePeriodField(raw: unknown) {
+  const field = asRecord(raw);
+  const rawAlternatives = normalizeAlternatives(field.alternatives);
+  const evidenceFallback = rawAlternatives[0];
+  const metadata = normalizeMetadata({
+    ...field,
+    page: field.page ?? evidenceFallback?.page,
+    clause: field.clause ?? evidenceFallback?.clause,
+    quote: field.quote ?? evidenceFallback?.quote,
+  }, {
+    allowLiteralUnsupportedUnitAmbiguity: true,
+  });
+  if (metadata.status === "not_found") return metadata;
+
+  const alternatives = metadata.alternatives.map((alternative) => {
+    const parsedValue = noticePeriodValue(alternative.value);
+    return parsedValue === null ? null : { ...alternative, value: parsedValue };
+  });
+  if (alternatives.some((alternative) => alternative === null)) {
+    return notFound("A competing reading did not match the required notice-period type.");
+  }
+
+  let value = noticePeriodValue(field.value);
+  if (
+    value === null &&
+    (metadata.status === "ambiguous" || metadata.status === "conflicting") &&
+    alternatives.length >= 2
+  ) {
+    value = alternatives.flatMap((alternative) => {
+      const candidate = alternative!.value;
+      return Array.isArray(candidate) ? candidate : [candidate];
+    });
+  }
+  if (value === null) {
+    return notFound("The extracted value did not match the required field type.");
+  }
+
+  const normalized = {
+    value,
+    ...metadata,
+    alternatives: alternatives as Array<NonNullable<(typeof alternatives)[number]>>,
+  };
+
+  const hasBusinessDays =
+    containsBusinessDays(normalized.value) ||
+    normalized.alternatives.some((alternative) => containsBusinessDays(alternative.value));
+
+  if (normalized.status === "ambiguous" && normalized.alternatives.length < 2 && !hasBusinessDays) {
+    return notFound("The model did not provide two evidence-backed competing readings.");
+  }
+
+  if (hasBusinessDays && normalized.status !== "conflicting") {
+    return {
+      ...normalized,
+      status: "ambiguous" as const,
+      confidence: normalized.confidence === "high" ? "medium" as const : normalized.confidence,
+      note:
+        normalized.note ??
+        "The notice period uses business days and cannot be safely converted to calendar days.",
+    };
+  }
+
+  return normalized;
 }
 
 function noticeDeliveryValue(value: unknown) {
@@ -285,7 +368,7 @@ export function normalizeExtraction(raw: unknown) {
           enumValue(["auto_renew", "expires", "by_mutual_agreement", "indefinite", "unknown"] as const),
         ),
         renewalTermLength: normalizeField(fields.renewalTermLength, periodValue),
-        noticePeriod: normalizeField(fields.noticePeriod, noticePeriodValue),
+        noticePeriod: normalizeNoticePeriodField(fields.noticePeriod),
         noticeDeadline: notFound("Computed by the application; never extracted from model output."),
         noticeDelivery: normalizeField(fields.noticeDelivery, noticeDeliveryValue),
         contractValue: normalizeField(fields.contractValue, contractValue),

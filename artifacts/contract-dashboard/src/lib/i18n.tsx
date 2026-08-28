@@ -7,6 +7,7 @@ import type {
   ContractComputedReasonCode,
   ContractValueValueBasis,
   NoticePeriodValueAnchor,
+  NoticePeriodValueUnit,
   PeriodValueUnit,
   ProvenanceBillingFrequencyFieldValue,
   ProvenanceContractTypeFieldValue,
@@ -303,6 +304,7 @@ const en = {
   "ui.months": () => "months",
   "ui.month": () => "month",
   "ui.days.2": () => "days",
+  "ui.business.days": () => "business days",
   "ui.day": () => "day",
   "ui.years": () => "years",
   "ui.year": () => "year",
@@ -723,6 +725,7 @@ const de = {
   "ui.months": () => "Monate",
   "ui.month": () => "Monat",
   "ui.days.2": () => "Tage",
+  "ui.business.days": () => "Werktage",
   "ui.day": () => "Tag",
   "ui.years": () => "Jahre",
   "ui.year": () => "Jahr",
@@ -931,10 +934,11 @@ const computedReasonMessageIds = {
 
 const periodUnitMessageIds = {
   days: "ui.days.2",
+  business_days: "ui.business.days",
   weeks: "ui.weeks",
   months: "ui.months",
   years: "ui.years",
-} as const satisfies Record<PeriodValueUnit, MessageId>;
+} as const satisfies Record<PeriodValueUnit | NoticePeriodValueUnit, MessageId>;
 
 const billingMessageIds = {
   annual: "ui.annual",
