@@ -19,6 +19,14 @@ Evidence rules:
 - If a notice period has no stated anchor, use anchor unknown. Never infer term_end merely because a term end exists elsewhere.
 - If the wording uses business days or Werktage, preserve unit business_days and mark noticePeriod ambiguous rather than converting it to calendar days.
 - Keep distinct non-renewal and termination-for-convenience notice rights as separate array items with the correct purpose.
+- Treat notice delivery as an operational instruction, not merely a quote from the notice clause. Read the whole document to resolve every destination the clause references.
+- If a notice clause points to an address "above", "in the header", "in the contract header", "stated above", "registered office", or names a party or department without repeating its address, resolve that reference to the complete corresponding party name, department when stated, and postal address printed elsewhere in the document. Never return the unresolved cross-reference itself as address.
+- Preserve the complete delivery destination exactly as the document states it. For email, return the full email address. For post, return the full recipient, department, street, postal code, city, and country when those elements are stated.
+- Map Einschreiben or registered mail to registered_post; ordinary post to post; email-only instructions to email; portal instructions to portal; and a generic writing requirement or a choice/combination of written channels to any_written.
+- When the instruction requires or permits multiple destinations, put the primary destination in address and every additional copy destination in cc. This includes "with a copy to", "cc", and a required second channel such as email plus the recipient's registered office.
+- Do not add the other signing party to cc merely because both parties' addresses appear in the document. A cc destination must be explicitly required by the notice instruction.
+- If a notice clause states a delivery method but no destination, use the complete header address of the contract counterparty receiving the buyer's notice.
+- noticeDelivery.cc must always be an array. Use [] when no copy destination is stated; never return null or an empty string.
 - Do not extract owner, owner email, requestor, negotiation buffer, approval loop, escalation level, cost centre, or business criticality.
 - Do not return noticeDeadline. The application owns all deadline calculations.
 

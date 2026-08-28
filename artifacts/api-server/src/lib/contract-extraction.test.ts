@@ -63,6 +63,11 @@ const extractedContract = {
     vendorLegalName: found("Acme Ltd."),
     contractTitle: found("Support Agreement"),
     contractType: found("maintenance"),
+    noticeDelivery: found({
+      method: "email",
+      address: "legal@acme.example",
+      cc: [],
+    }),
   },
 };
 
@@ -450,6 +455,71 @@ describe("normalizeExtraction", () => {
       alternatives: [],
     });
   });
+
+  it.each([
+    { input: null, expected: [] },
+    { input: "", expected: [] },
+    { input: "registered office of the recipient", expected: ["registered office of the recipient"] },
+    {
+      input: [" legal@example.com ", "", "legal@example.com"],
+      expected: ["legal@example.com"],
+    },
+  ])("normalizes optional notice-delivery CC value $input", ({ input, expected }) => {
+    const result = normalizeExtraction({
+      fields: {
+        noticeDelivery: found({
+          method: "any_written",
+          address: "contracts@example.com",
+          cc: input,
+        }),
+      },
+    });
+
+    expect(result.contract.fields.noticeDelivery.value).toEqual({
+      method: "any_written",
+      address: "contracts@example.com",
+      cc: expected,
+    });
+  });
+
+  it.each([
+    {
+      label: "generic written delivery",
+      value: {
+        method: "any_written",
+        address: "Helvetic Partners AG, Rheinstrasse 92, 4133 Pratteln",
+        cc: null,
+      },
+      expectedCc: [],
+    },
+    {
+      label: "email plus required postal copy",
+      value: {
+        method: "any_written",
+        address: "contracts@example.com",
+        cc: "Acme Ltd., 1 Main Street, London",
+      },
+      expectedCc: ["Acme Ltd., 1 Main Street, London"],
+    },
+    {
+      label: "registered post to a resolved header address",
+      value: {
+        method: "registered_post",
+        address: "Acme Ltd., Legal Department, 1 Main Street, London",
+        cc: [],
+      },
+      expectedCc: [],
+    },
+  ])("retains complete $label details", ({ value, expectedCc }) => {
+    const result = normalizeExtraction({
+      fields: { noticeDelivery: found(value) },
+    });
+
+    expect(result.contract.fields.noticeDelivery.value).toEqual({
+      ...value,
+      cc: expectedCc,
+    });
+  });
 });
 
 describe("embedded PDF text recovery", () => {
@@ -803,6 +873,8 @@ describe("OCR extraction metadata", () => {
     expect(systemPrompt).toContain("unit business_days");
     expect(systemPrompt).toContain('"zum Quartalsende"');
     expect(systemPrompt).toContain("Never convert months or weeks into days");
+    expect(systemPrompt).toContain("Never return the unresolved cross-reference itself as address");
+    expect(systemPrompt).toContain("noticeDelivery.cc must always be an array");
     expect(systemPrompt).toContain("Do not return noticeDeadline");
     expect(systemPrompt).toContain("Do not extract owner");
   });
@@ -941,6 +1013,346 @@ describe("OCR extraction metadata", () => {
         expect.objectContaining({ value: sixMonths, page: 5 }),
       ],
     });
+  });
+
+  it("recovers a missing notice instruction with complete resolved delivery details", async () => {
+    mockOpenAiResponse({
+      ...extractedContract,
+      fields: {
+        ...extractedContract.fields,
+        noticeDelivery: {
+          value: null,
+          status: "not_found",
+          confidence: "low",
+          page: null,
+          clause: null,
+          quote: null,
+          note: null,
+          alternatives: [],
+        },
+      },
+    });
+    mockOpenAiResponse({
+      noticeDelivery: found(
+        {
+          method: "registered_post",
+          address: "Acme Ltd., Legal Department, 1 Main Street, London",
+          cc: "legal@acme.example",
+        },
+        2,
+        "Notices must be sent by registered post to Acme's address above.",
+      ),
+    });
+
+    const result = await extractContractFromText(
+      "--- Page 1 --- Acme Ltd., Legal Department, 1 Main Street, London\n--- Page 2 --- Notices must be sent by registered post to Acme's address above.",
+      "notice.pdf",
+    );
+
+    expect(result.extraction.contract.fields.noticeDelivery).toMatchObject({
+      status: "found",
+      page: 2,
+      value: {
+        method: "registered_post",
+        address: "Acme Ltd., Legal Department, 1 Main Street, London",
+        cc: ["legal@acme.example"],
+      },
+    });
+    expect(mocks.create).toHaveBeenCalledTimes(3);
+    expect(mocks.create.mock.calls[2][0].messages[0].content).toContain(
+      "Extract only the operational notice-delivery instruction",
+    );
+  });
+
+  it("keeps the primary extraction when the focused recovery request fails", async () => {
+    mockOpenAiResponse({
+      ...extractedContract,
+      fields: {
+        ...extractedContract.fields,
+        noticeDelivery: {
+          value: null,
+          status: "not_found",
+          confidence: "low",
+          page: null,
+          clause: null,
+          quote: null,
+          note: null,
+          alternatives: [],
+        },
+      },
+    });
+    mocks.create.mockRejectedValueOnce(new Error("temporary rate limit"));
+
+    const result = await extractContractFromText(
+      "--- Page 1 --- Contract text without a resolved notice destination.",
+      "fallback.pdf",
+    );
+
+    expect(result.extraction.contract.fields.noticeDelivery).toMatchObject({
+      value: null,
+      status: "not_found",
+    });
+    expect(mocks.create).toHaveBeenCalledTimes(3);
+  });
+
+  it("resolves a referenced postal-copy destination while retaining the email primary", async () => {
+    mockOpenAiResponse({
+      ...extractedContract,
+      fields: {
+        ...extractedContract.fields,
+        noticeDelivery: found({
+          method: "any_written",
+          address: "contracts@acme.example",
+          cc: ["registered office of the recipient"],
+        }),
+      },
+    });
+    mockOpenAiResponse({
+      noticeDelivery: found({
+        method: "any_written",
+        address: "contracts@acme.example",
+        cc: ["Acme Ltd., 1 Main Street, London"],
+      }),
+    });
+
+    const result = await extractContractFromText(
+      "--- Page 1 --- Acme Ltd., 1 Main Street, London. Notices go by email to contracts@acme.example and by post to the registered office of the recipient.",
+      "copy-address.pdf",
+    );
+
+    expect(result.extraction.contract.fields.noticeDelivery.value).toEqual({
+      method: "any_written",
+      address: "contracts@acme.example",
+      cc: ["Acme Ltd., 1 Main Street, London"],
+    });
+    expect(mocks.create).toHaveBeenCalledTimes(3);
+  });
+
+  it.each([
+    {
+      label: "explicit email instruction",
+      text: "--- Page 1 --- Bergmann GmbH Hauptstrasse 1, 50679 Köln Customer AG Nebenstrasse 2, 50670 Köln. Die Kündigung muss mit 90 Tagen Frist in Textform erfolgen. Mitteilungen erfolgen per E-Mail an vertrag@bergmann.example.",
+      vendor: "Bergmann GmbH",
+      buyer: "Customer AG",
+      expected: {
+        method: "email",
+        address: "vertrag@bergmann.example",
+        cc: [],
+      },
+    },
+  ])(
+    "deterministically recovers an $label when both model passes miss it",
+    async ({ text, vendor, buyer, expected }) => {
+      mockOpenAiResponse({
+        ...extractedContract,
+        fields: {
+          ...extractedContract.fields,
+          vendorLegalName: found(vendor),
+          buyerLegalEntity: found(buyer),
+          noticeDelivery: {
+            value: null,
+            status: "not_found",
+            confidence: "low",
+            page: null,
+            clause: null,
+            quote: null,
+            note: null,
+            alternatives: [],
+          },
+        },
+      });
+      mockOpenAiResponse({
+        noticeDelivery: {
+          value: null,
+          status: "not_found",
+          confidence: "low",
+          page: null,
+          clause: null,
+          quote: null,
+          note: null,
+          alternatives: [],
+        },
+      });
+
+      const result = await extractContractFromText(text, "deterministic.pdf");
+
+      expect(result.extraction.contract.fields.noticeDelivery).toMatchObject({
+        status: "found",
+        confidence: "medium",
+        page: 1,
+        value: expected,
+      });
+      expect(mocks.create).toHaveBeenCalledTimes(3);
+    },
+  );
+
+  it.each([
+    {
+      label: "an unresolved repeated recovery response",
+      text: "--- Page 1 --- Vendor Ltd., 1 Main Street. Buyer Ltd., 2 Side Street. Notices shall be sent to the address stated above.",
+      recoveredValue: {
+        method: "any_written",
+        address: "address stated above",
+        cc: [],
+      },
+    },
+    {
+      label: "a bilateral generic notice clause",
+      text: "--- Page 1 --- Vendor Ltd., 1 Main Street. Buyer Ltd., 2 Side Street. Any notice shall be in writing and sent to the addresses stated above.",
+      recoveredValue: null,
+    },
+    {
+      label: "an email with an unresolved required postal copy",
+      text: "--- Page 1 --- Vendor Ltd., 1 Main Street. Buyer Ltd., 2 Side Street. Notices shall be sent by email to legal@vendor.example and by post to the registered office of the recipient.",
+      recoveredValue: {
+        method: "any_written",
+        address: "Vendor Ltd., 1 Main Street",
+        cc: [],
+      },
+    },
+    {
+      label: "unrelated nearby notice and post wording",
+      text: "--- Page 1 --- Fees may change on 30 days notice. Product samples are available at the post office.",
+      recoveredValue: null,
+    },
+  ])(
+    "does not fabricate a destination for $label",
+    async ({ text, recoveredValue }) => {
+      mockOpenAiResponse({
+        ...extractedContract,
+        fields: {
+          ...extractedContract.fields,
+          noticeDelivery: {
+            value: null,
+            status: "not_found",
+            confidence: "low",
+            page: null,
+            clause: null,
+            quote: null,
+            note: null,
+            alternatives: [],
+          },
+        },
+      });
+      mockOpenAiResponse(
+        recoveredValue
+          ? { noticeDelivery: found(recoveredValue) }
+          : {
+              noticeDelivery: {
+                value: null,
+                status: "not_found",
+                confidence: "low",
+                page: null,
+                clause: null,
+                quote: null,
+                note: null,
+                alternatives: [],
+              },
+            },
+      );
+
+      const result = await extractContractFromText(text, "unsafe-fallback.pdf");
+
+      expect(result.extraction.contract.fields.noticeDelivery).toMatchObject({
+        status: "not_found",
+        value: null,
+      });
+    },
+  );
+
+  it.each(["ambiguous", "conflicting"] as const)(
+    "preserves a valid %s notice-delivery finding without recovery",
+    async (status) => {
+      const alternatives = [
+        {
+          value: {
+            method: "email",
+            address: "legal@acme.example",
+            cc: [],
+          },
+          page: 1,
+          clause: "Notices",
+          quote: "Notices must be emailed to legal@acme.example.",
+        },
+        {
+          value: {
+            method: "registered_post",
+            address: "Acme Ltd., 1 Main Street, London",
+            cc: [],
+          },
+          page: 2,
+          clause: "Annex",
+          quote: "All notices must be sent by registered post.",
+        },
+      ];
+      mockOpenAiResponse({
+        ...extractedContract,
+        fields: {
+          ...extractedContract.fields,
+          noticeDelivery: {
+            ...found(alternatives[0].value),
+            status,
+            confidence: "low",
+            alternatives,
+          },
+        },
+      });
+
+      const result = await extractContractFromText(
+        "--- Page 1 --- Notices must be emailed. --- Page 2 --- All notices must be posted.",
+        "conflicting-delivery.pdf",
+      );
+
+      expect(result.extraction.contract.fields.noticeDelivery).toMatchObject({
+        status,
+        alternatives: [
+          expect.objectContaining({ value: alternatives[0].value }),
+          expect.objectContaining({ value: alternatives[1].value }),
+        ],
+      });
+      expect(mocks.create).toHaveBeenCalledTimes(2);
+    },
+  );
+
+  it("recovers when an ambiguous primary result is not evidence-backed or schema-valid", async () => {
+    mockOpenAiResponse({
+      ...extractedContract,
+      fields: {
+        ...extractedContract.fields,
+        noticeDelivery: {
+          value: { method: "written", address: "address above", cc: [] },
+          status: "ambiguous",
+          confidence: "low",
+          page: 1,
+          clause: "Notices",
+          quote: "Notices shall be sent to the address above.",
+          note: "The destination is unclear.",
+          alternatives: [],
+        },
+      },
+    });
+    mockOpenAiResponse({
+      noticeDelivery: found({
+        method: "any_written",
+        address: "Acme Ltd., 1 Main Street, London",
+        cc: [],
+      }),
+    });
+
+    const result = await extractContractFromText(
+      "--- Page 1 --- Acme Ltd., 1 Main Street, London. Notices shall be sent to Acme's address above.",
+      "invalid-ambiguity.pdf",
+    );
+
+    expect(result.extraction.contract.fields.noticeDelivery).toMatchObject({
+      status: "found",
+      value: {
+        method: "any_written",
+        address: "Acme Ltd., 1 Main Street, London",
+        cc: [],
+      },
+    });
+    expect(mocks.create).toHaveBeenCalledTimes(3);
   });
 
   it("passes text beyond the previous 60,000-character cutoff to field extraction", async () => {

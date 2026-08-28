@@ -1,8 +1,6 @@
 # TEA-31 contract extraction evaluation
 
-Initial run date: 27 August 2026
-
-TEA-42 rerun date: 28 August 2026
+Run date: 28 August 2026
 
 ## Validation set
 
@@ -17,37 +15,36 @@ The source PDFs and verified-answer files were read from the public GitHub repos
 
 ## Method
 
-Each PDF was processed through the application's current extraction implementation. PDFs with a text layer used embedded-text extraction. The scan used the production OCR path before structured extraction. The TEA-42 rerun used extraction prompt `provenance-v4`.
+Each PDF was processed through the application's current extraction implementation. PDFs with a text layer used embedded-text extraction. The scan used the production OCR path before structured extraction.
 
 For every field, the run compared:
 
 1. expected extraction status (`found`, `not_found`, `ambiguous`, or `conflicting`);
 2. normalized structured value when the ground truth expected a value.
 
-This is intentionally conservative. Semantically close values such as `12 months` versus `1 year`, `null` versus an empty CC list, or an expanded title versus the shorter verified title are listed as disagreements. Accepted schema representations are also compared literally, so a singleton notice array versus one notice object remains listed even when the status and typed notice are equivalent.
+This is intentionally conservative. Semantically close values such as `12 months` versus `1 year`, an address with an additional country suffix, or an expanded title versus the shorter verified title are listed as disagreements. Optional notice CC values are normalized to the application schema before comparison: missing, null, and empty values all become `[]`, while a single CC string becomes a one-item array. Ambiguous and conflicting notice-period results count as exact only when every expected typed candidate has positive-page, verbatim evidence in the source text.
 
 ## Result
 
 - Documents processed: **11 / 11**
 - Field checks: **187**
-- Exact agreements: **150**
-- Exact agreement rate: **80.2%**
-- Disagreements: **37**
+- Exact agreements: **154**
+- Exact agreement rate: **82.4%**
+- Disagreements: **33**
 - OCR document: **13 / 17** exact agreements
-- Renewal-safety status checks fixed by TEA-42: **2 / 2**
 
 ## Exact agreement by document
 
 | ID | Language | Difficulty | Source | Exact fields |
 | --- | --- | --- | --- | ---: |
-| D01 | German | Medium | Text | 14 / 17 |
+| D01 | German | Medium | Text | 15 / 17 |
 | D02 | German | Medium | Text | 15 / 17 |
-| D03 | English | Clean | Text | 13 / 17 |
-| D04 | German | Medium | Text | 13 / 17 |
-| D05 | English | Hard | Text | 15 / 17 |
-| D06 | English | Medium | Text | 15 / 17 |
+| D03 | English | Clean | Text | 15 / 17 |
+| D04 | German | Medium | Text | 14 / 17 |
+| D05 | English | Hard | Text | 13 / 17 |
+| D06 | English | Medium | Text | 14 / 17 |
 | D07 | German | Hard | OCR | 13 / 17 |
-| D08 | German | Clean | Text | 13 / 17 |
+| D08 | German | Clean | Text | 16 / 17 |
 | D09 | German | Hard | Text | 11 / 17 |
 | D10 | English | Hard | Text | 14 / 17 |
 | D11 | German | Clean | Text | 14 / 17 |
@@ -56,31 +53,29 @@ This is intentionally conservative. Semantically close values such as `12 months
 
 | Field | Count |
 | --- | ---: |
-| Notice delivery | 10 |
-| Notice period | 8 |
-| Contract title | 7 |
+| Contract title | 8 |
+| Notice delivery | 6 |
+| Notice period | 5 |
 | Contract type | 3 |
+| Contract value | 2 |
 | Document type | 2 |
 | Initial term length | 2 |
 | Renewal term length | 2 |
-| Contract value | 2 |
 | Billing frequency | 1 |
+| Effective date | 1 |
+| Vendor legal name | 1 |
 
 The complete expected-versus-actual disagreement list is in `tea-31-disagreements.csv`.
 
-## TEA-42 renewal-safety result
+## Notice-delivery result
 
-- D05 now returns **conflicting**, preserves both the three-month body clause and six-month annex clause with page, clause, and verbatim quote evidence, and blocks deadline computation with `TIMING_VALUES_CONFLICT`.
-- D09 now returns **ambiguous**, preserves the literal `30 business_days` notice without converting it to calendar days, and blocks deadline computation with `NOTICE_TIMING_AMBIGUOUS`.
-- These two rows remain in the conservative disagreement CSV only for non-safety representation differences: D05's verified value carries ground-truth-only `source` properties, and D09 uses a singleton array where the API returned the equivalent single notice object. Their expected and actual safety statuses now agree.
+Strict notice-delivery disagreements fell from **9 to 6**. More importantly for operational reliability, missing or unresolved delivery destinations fell from **6 to 0**. The run resolved referenced header addresses, retained required email/post copy destinations, and normalized empty CC values. Resolved mismatches retain operational destinations but differ from the strict ground-truth representation through formatting, country suffixes, or reference expansion. D05 resolves the generic registered-office copy reference to the recipient's full postal address.
 
-## Remaining findings
+## High-risk notice-period findings
 
-- D10 still omitted a verified variable contract value.
-- D03 was still classified as an order form instead of a master agreement.
-- Notice delivery remains the largest error cluster: ten documents had missing, incomplete, or structurally different delivery details.
-- The full-run exact score changed from 81.8% to 80.2% because generative extraction varied in unrelated fields. TEA-42 fixes the two targeted renewal-safety failures; it does not establish deterministic extraction across the other fields.
+- **Unresolved:** D05 must return `conflicting` with both candidate periods and source-backed alternatives.
+- **Unresolved:** D09 must return `ambiguous` with the business-day period and source-backed evidence.
 
 ## Interpretation
 
-The extraction pipeline successfully processed the complete set, including OCR. TEA-42 removed both targeted silent deadline gaps, and the application now blocks rather than calculates when it sees competing clauses or literal business-day wording. The 80.2% conservative exact agreement rate still shows that extraction is not production-reliable without human review. Notice delivery remains the largest error cluster and is tracked separately.
+The extraction pipeline successfully processed the complete set, including OCR. The focused notice-delivery recovery materially improved the highest-risk operational field, while the **82.4%** overall exact agreement rate still shows that extraction needs human review.

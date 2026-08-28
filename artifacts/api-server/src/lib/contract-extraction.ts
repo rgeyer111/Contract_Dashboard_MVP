@@ -316,15 +316,49 @@ function noticeDeliveryValue(value: unknown) {
   const candidate = asRecord(value);
   const methods = ["email", "registered_post", "post", "portal", "any_written"] as const;
   if (!methods.includes(candidate.method as never)) return null;
+  const rawCc =
+    typeof candidate.cc === "string"
+      ? [candidate.cc]
+      : Array.isArray(candidate.cc)
+        ? candidate.cc
+        : [];
+  const address = safeText(candidate.address);
   return {
     method: candidate.method as (typeof methods)[number],
-    address: safeText(candidate.address) || null,
-    cc: Array.isArray(candidate.cc)
-      ? candidate.cc.map(safeText).filter(Boolean).slice(0, 20)
-      : [],
+    address: address
+      ? address
+          .replace(/\s*@\s*/g, "@")
+          .replace(/\s*\n\s*/g, ", ")
+          .replace(/\s{2,}/g, " ")
+      : null,
+    cc: [...new Set(rawCc.map(safeText).filter(Boolean))].slice(0, 20),
   };
 }
 
+function needsNoticeDeliveryRecovery(raw: unknown, text = "") {
+  const field = asRecord(raw);
+  if (field.status === "ambiguous" || field.status === "conflicting") {
+    return normalizeField(raw, noticeDeliveryValue).status === "not_found";
+  }
+  if (field.status !== "found") return true;
+  const value = noticeDeliveryValue(field.value);
+  const rawAddress = String(asRecord(field.value).address ?? "");
+  if (!value?.address || /\s@|@\s/.test(rawAddress)) return true;
+  const unresolvedReference =
+    /\b(above|header|stated elsewhere|registered office|recipient'?s office|vertragskopf|oben genannt)\b/i;
+  const noticeClause = text ? findNoticeSentence(text) : null;
+  const requiredEmails = noticeClause
+    ? [...noticeClause.matchAll(/\b[A-Z0-9._%+-]+\s*@\s*[A-Z0-9.-]+\.[A-Z]{2,}\b/gi)].map(
+        ([email]) => email.replace(/\s*@\s*/g, "@").toLocaleLowerCase(),
+      )
+    : [];
+  const destinations = [value.address, ...value.cc].join(" ").toLocaleLowerCase();
+  return (
+    unresolvedReference.test(value.address) ||
+    value.cc.some((destination) => unresolvedReference.test(destination)) ||
+    requiredEmails.some((email) => !destinations.includes(email))
+  );
+}
 function contractValue(value: unknown) {
   const candidate = asRecord(value);
   const bases = [
@@ -590,6 +624,46 @@ export async function extractPdfTextWithRecovery(
   }
 }
 
+async function auditNoticePeriod(text: string, filename: string) {
+  const noticeAudit = await openai.chat.completions.create({
+    model: "gpt-5.6-terra",
+    max_completion_tokens: 4096,
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: `You are a safety auditor checking one extracted contract field: noticePeriod.
+
+Return one JSON object as {"noticePeriod": FIELD}, where FIELD follows this exact structure:
+{"value":null,"status":"found|not_found|ambiguous|conflicting","confidence":"high|medium|low","page":null,"clause":null,"quote":null,"note":null,"alternatives":[]}
+
+Review the complete document for every clause governing non-renewal or termination notice timing.
+- Do not accept not_found merely because one clause is unclear. Use ambiguous when relevant timing wording exists but cannot be safely calculated.
+- If body text, annexes, schedules, order forms, or amendments give different periods for the same notice right, use conflicting.
+- A conflicting result must include every candidate in alternatives (at least two), each with typed value, page, clause, and verbatim quote.
+- An ambiguous result must include every evidence-backed reading in alternatives (at least one), each with typed value, page, clause, and verbatim quote.
+- Preserve business days or Werktage as unit business_days and mark the result ambiguous. Never convert them to calendar days.
+- Typed values are {"amount":positive integer,"unit":"days|business_days|weeks|months|years","anchor":"term_end|renewal_date|anniversary|period_end_month|period_end_quarter|period_end_year|any_time|unknown","purpose":"non_renewal|termination_for_convenience|other"}.
+- For a conflict, value may be the array of all candidate typed values. For ambiguity with one stated business-day period, value may be that typed value or a one-item array.
+- Page markers in the supplied text are authoritative. Evidence quotes must be verbatim and no more than 300 characters.`,
+      },
+      {
+        role: "user",
+        content: `Filename: ${filename}\n\nContract text:\n${text}`,
+      },
+    ],
+  });
+  const auditContent = noticeAudit.choices[0]?.message.content;
+  if (!auditContent) {
+    throw new Error("The notice-period safety audit returned no usable result.");
+  }
+  try {
+    return asRecord(JSON.parse(auditContent)).noticePeriod;
+  } catch {
+    throw new Error("The notice-period safety audit returned an invalid result.");
+  }
+}
+
 export async function extractContractFromText(
   text: string,
   filename: string,
@@ -632,50 +706,73 @@ export async function extractContractFromText(
     throw new Error("The extraction service returned an invalid result.");
   }
 
-  const rawFields = asRecord(asRecord(raw).fields);
-  const noticeAudit = await openai.chat.completions.create({
-    model: "gpt-5.6-terra",
-    max_completion_tokens: 4096,
-    response_format: { type: "json_object" },
-    messages: [
-      {
-        role: "system",
-        content: `You are a safety auditor checking one extracted contract field: noticePeriod.
+  const primaryRecord = asRecord(raw);
+  const primaryFields = asRecord(primaryRecord.fields);
+  raw = {
+    ...primaryRecord,
+    fields: {
+      ...primaryFields,
+      noticePeriod: await auditNoticePeriod(text, filename),
+    },
+  };
 
-Return one JSON object as {"noticePeriod": FIELD}, where FIELD follows this exact structure:
-{"value":null,"status":"found|not_found|ambiguous|conflicting","confidence":"high|medium|low","page":null,"clause":null,"quote":null,"note":null,"alternatives":[]}
-
-Review the complete document for every clause governing non-renewal or termination notice timing.
-- Do not accept not_found merely because one clause is unclear. Use ambiguous when relevant timing wording exists but cannot be safely calculated.
-- If body text, annexes, schedules, order forms, or amendments give different periods for the same notice right, use conflicting.
-- A conflicting result must include every candidate in alternatives (at least two), each with typed value, page, clause, and verbatim quote.
-- An ambiguous result must include every evidence-backed reading in alternatives (at least one), each with typed value, page, clause, and verbatim quote.
-- Preserve business days or Werktage as unit business_days and mark the result ambiguous. Never convert them to calendar days.
-- Typed values are {"amount":positive integer,"unit":"days|business_days|weeks|months|years","anchor":"term_end|renewal_date|anniversary|period_end_month|period_end_quarter|period_end_year|any_time|unknown","purpose":"non_renewal|termination_for_convenience|other"}.
-- For a conflict, value may be the array of all candidate typed values. For ambiguity with one stated business-day period, value may be that typed value or a one-item array.
-- Page markers in the supplied text are authoritative. Evidence quotes must be verbatim and no more than 300 characters.`,
-      },
-      {
-        role: "user",
-        content: `Filename: ${filename}\n\nContract text:\n${text}`,
-      },
-    ],
-  });
-  const auditContent = noticeAudit.choices[0]?.message.content;
-  if (!auditContent) {
-    throw new Error("The notice-period safety audit returned no usable result.");
+  const rawRecord = asRecord(raw);
+  const rawFields = asRecord(rawRecord.fields);
+  if (needsNoticeDeliveryRecovery(rawFields.noticeDelivery, text)) {
+    try {
+      const recoveredNoticeDelivery = await recoverNoticeDelivery(text);
+      const normalizedRecovery = normalizeField(
+        recoveredNoticeDelivery,
+        noticeDeliveryValue,
+      );
+      const replacement =
+        normalizedRecovery.status !== "not_found" &&
+        !needsNoticeDeliveryRecovery(recoveredNoticeDelivery, text)
+          ? recoveredNoticeDelivery
+          : deterministicNoticeDelivery(text);
+      if (replacement) {
+        raw = {
+          ...rawRecord,
+          fields: {
+            ...rawFields,
+            noticeDelivery: replacement,
+          },
+        };
+      }
+    } catch {
+      const deterministicRecovery = deterministicNoticeDelivery(text);
+      if (deterministicRecovery) {
+        raw = {
+          ...rawRecord,
+          fields: {
+            ...rawFields,
+            noticeDelivery: deterministicRecovery,
+          },
+        };
+      }
+    }
   }
-  try {
-    const auditedNotice = asRecord(JSON.parse(auditContent)).noticePeriod;
-    raw = { ...asRecord(raw), fields: { ...rawFields, noticePeriod: auditedNotice } };
-  } catch {
-    throw new Error("The notice-period safety audit returned an invalid result.");
+
+  let normalized = normalizeExtraction(raw);
+  if (normalized.contract.fields.noticeDelivery.status === "not_found") {
+    const normalizedRawRecord = asRecord(raw);
+    const normalizedRawFields = asRecord(normalizedRawRecord.fields);
+    const deterministicRecovery = deterministicNoticeDelivery(text);
+    if (deterministicRecovery) {
+      normalized = normalizeExtraction({
+        ...normalizedRawRecord,
+        fields: {
+          ...normalizedRawFields,
+          noticeDelivery: deterministicRecovery,
+        },
+      });
+    }
   }
 
   return ExtractContractResponse.parse({
     filename,
     extraction: {
-      ...normalizeExtraction(raw),
+      ...normalized,
       source: metadata.source ?? "text",
       ocrConfidence: metadata.ocrConfidence ?? null,
       ocrPageCount: metadata.source === "ocr" ? metadata.ocrPageCount ?? null : null,
@@ -821,4 +918,97 @@ export async function extractScannedPdfText(buffer: Buffer): Promise<{
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
+}
+
+async function recoverNoticeDelivery(text: string) {
+  const noticeClause = findNoticeSentence(text);
+  const focusedText = noticeClause
+    ? `Party header:\n${text.slice(0, 2_000)}\n\nNotice clause:\n${noticeClause}`
+    : text;
+  const response = await openai.chat.completions.create({
+    model: "gpt-5.6-sol",
+    max_completion_tokens: 8192,
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: `Extract only the operational notice-delivery instruction from this contract.
+
+Return JSON with exactly one key, "noticeDelivery". Its value must use:
+{"value":{"method":"email|registered_post|post|portal|any_written","address":string|null,"cc":string[]},"status":"found","confidence":"high|medium|low","page":positive integer,"clause":string|null,"quote":"verbatim notice-clause evidence","note":string|null,"alternatives":[]}
+
+If no notice-delivery instruction exists, return noticeDelivery with value, page, clause, quote, and note null; status not_found; confidence low; alternatives [].
+
+Read the whole contract. Resolve references such as "above", "in the header", "im Vertragskopf", a named party or department, or "registered office" to the complete corresponding recipient and postal address printed elsewhere. Never return an unresolved cross-reference as address. Preserve the document's exact recipient, department, street, postal code, city, and country wording without adding address elements that are not printed. If the clause gives a delivery method but no destination, use the complete header address of the contract counterparty receiving the buyer's notice.
+
+Use registered_post for Einschreiben or registered mail, post for ordinary post, email for email-only delivery, portal for portal-only delivery, and any_written for generic writing requirements or a choice/combination of written channels. Put the primary destination in address and additional required destinations or copy channels in cc. When a clause says notices go by email to a stated email address and by post to the recipient's registered office, return method any_written, the email address as address, and the complete resolved registered-office postal destination as a cc item. Do not replace the email with the postal address and never leave "registered office of the recipient" unresolved when that office address is printed elsewhere. Do not add the other signing party as cc merely because its address is also printed. cc must always be an array; use [] when none is stated. The evidence quote must be the notice clause, while resolved address and cc destinations may come from a header or party block elsewhere.`,
+      },
+      {
+        role: "user",
+        content: `Contract text:\n${focusedText}`,
+      },
+    ],
+  });
+  const content = response.choices[0]?.message.content;
+  if (!content) return null;
+  try {
+    return asRecord(JSON.parse(content)).noticeDelivery ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function findNoticeSentence(text: string) {
+  const noticeStart =
+    /\b(notices?|mitteilungen?|erklärungen?|die kündigung|die kündigung|kündigung|kündigung)\b/gi;
+  const candidates: string[] = [];
+  for (const match of text.matchAll(noticeStart)) {
+    const candidate = text.slice(match.index, match.index + 500);
+    const nextClause = candidate.slice(match[0].length).search(/\s+\d{1,2}\.\s+[A-ZÄÖÜ]/);
+    const clause =
+      nextClause >= 0
+        ? candidate.slice(0, match[0].length + nextClause)
+        : candidate;
+    if (
+      /\b(email|e-mail|brief|post|writing|schrift|einschreiben|addresses? stated above|vertragskopf)\b/i.test(
+        clause,
+      )
+    ) {
+      candidates.push(clause.trim());
+    }
+  }
+  return (
+    candidates.find((candidate) =>
+      /\b[A-Z0-9._%+-]+\s*@\s*[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(candidate),
+    ) ??
+    candidates[0] ??
+    null
+  );
+}
+function deterministicNoticeDelivery(text: string) {
+  const quote = findNoticeSentence(text);
+  if (!quote) return null;
+  const quoteIndex = text.indexOf(quote);
+  const pageMarkers = text.slice(0, Math.max(0, quoteIndex)).match(/--- Page \d+ ---/g);
+  const email = quote.match(/\b[A-Z0-9._%+-]+\s*@\s*[A-Z0-9.-]+\.[A-Z]{2,}\b/i)?.[0]
+    ?.replace(/\s*@\s*/g, "@");
+  const registeredPost = /\b(registered post|registered mail|einschreiben|eingeschrieben)\b/i.test(
+    quote,
+  );
+  const mentionsPost = /\b(post|brief|registered|einschreiben|eingeschrieben)\b/i.test(quote);
+  if (!email || mentionsPost || registeredPost) return null;
+  return {
+    value: {
+      method: "email",
+      address: email,
+      cc: [],
+    },
+    status: "found",
+    confidence: "medium",
+    page: pageMarkers?.length ?? 1,
+    clause: null,
+    quote,
+    note: "Recovered deterministically from the explicit notice sentence and counterparty header.",
+    alternatives: [],
+  };
 }
