@@ -1,0 +1,2273 @@
+{
+  "schema": "vendor-contract-extraction MVP (18 fields) — ground truth / verified answers",
+  "purpose": "Eval set. Ground truth records the EXPECTED outcome per field, including not_found, ambiguous and conflicting. An extraction that returns a confident value where this file says ambiguous/conflicting/not_found has FAILED, even though the output looks complete.",
+  "as_of": "2026-08-28",
+  "register_primary_language": "de",
+  "counts": {
+    "pdfs": 11,
+    "families": 10,
+    "tiers": {
+      "clean": 3,
+      "medium": 3,
+      "hard": 4
+    }
+  },
+  "renewal_critical_fields": [
+    "renewal_mechanism",
+    "initial_term_end_date",
+    "notice_period",
+    "contract_value"
+  ],
+  "provenance": "All documents are fabricated for the xMBA Team05 simulation. Companies, vendors, persons, contract numbers and figures are invented. Buyer entities derive from the five simulated interview personas.",
+  "documents": [
+    {
+      "document_id": "D01",
+      "source_filename": "01_KellerForm_Bogner_Wartungsvertrag_DE.pdf",
+      "family_id": "FAM-01",
+      "difficulty_tier": "medium",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Markus Keller",
+      "review_status": "clean",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "de",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Bogner Maschinenservice AG",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "KellerForm GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Wartungs- und Servicevertrag",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "WV-2023-0417",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "maintenance",
+          "status": "found",
+          "confidence": "high",
+          "clause": "1"
+        },
+        "signature_date": {
+          "value": "2023-04-17",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Unterschriften",
+          "quote": "KellerForm GmbH",
+          "note": "Letzte Unterschrift; Auftragnehmerin unterzeichnete am 12. April 2023.",
+          "page": 1
+        },
+        "effective_date": {
+          "value": "2023-05-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Dieser Vertrag tritt am 1. Mai 2023 in Kraft. Die feste Vertragslaufzeit beträgt 36 Monate und endet am 30. April 2026.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 36,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Dieser Vertrag tritt am 1. Mai 2023 in Kraft. Die feste Vertragslaufzeit beträgt 36 Monate und endet am 30. April 2026.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": "2026-04-30",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Dieser Vertrag tritt am 1. Mai 2023 in Kraft. Die feste Vertragslaufzeit beträgt 36 Monate und endet am 30. April 2026.",
+          "page": 1
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Nach Ablauf der festen Vertragslaufzeit verlängert sich der Vertrag automatisch um jeweils weitere zwölf (12) Monate, sofern er nicht fristgerecht gekündigt wird.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Nach Ablauf der festen Vertragslaufzeit verlängert sich der Vertrag automatisch um jeweils weitere zwölf (12) Monate, sofern er nicht fristgerecht gekündigt wird.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 6,
+              "unit": "months",
+              "anchor": "term_end",
+              "purpose": "non_renewal"
+            }
+          ],
+          "status": "found",
+          "confidence": "high",
+          "clause": "3",
+          "quote": "Die Kündigung muss spätestens sechs (6) Monate vor Ablauf der jeweiligen Vertragslaufzeit schriftlich erfolgen.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "registered_post",
+            "address": "Bogner Maschinenservice AG, Rorschacher Strasse 210, 9016 St. Gallen",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "5",
+          "quote": "Mitteilungen im Rahmen dieses Vertrages sind schriftlich per eingeschriebenem Brief an die im Vertragskopf genannte Adresse zu richten.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 18400,
+            "currency": "CHF",
+            "basis": "annual"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die jährliche Wartungspauschale beträgt CHF 18'400.00 zuzüglich Mehrwertsteuer.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "annual",
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die Rechnungsstellung erfolgt jährlich im Voraus jeweils per 1. Mai.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "Vertrag ist Teil einer Familie: der Preis in Ziffer 4 ist durch Nachtrag Nr. 1 überholt. Das Dokumentprotokoll muss CHF 18'400 zeigen, das Effektiv-Protokoll CHF 21'700."
+      ]
+    },
+    {
+      "document_id": "D02",
+      "source_filename": "02_KellerForm_Bogner_Nachtrag_Nr1_DE.pdf",
+      "family_id": "FAM-01",
+      "difficulty_tier": "medium",
+      "has_text_layer": true,
+      "page_count": 1,
+      "buyer_persona": "Markus Keller",
+      "review_status": "review",
+      "fields": {
+        "document_type": {
+          "value": "amendment",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "de",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Bogner Maschinenservice AG",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "KellerForm GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Nachtrag Nr. 1",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "WV-2023-0417-N1",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "maintenance",
+          "status": "found",
+          "confidence": "medium",
+          "note": "Aus dem Bezugsvertrag abgeleitet, nicht im Nachtrag genannt."
+        },
+        "signature_date": {
+          "value": "2025-12-02",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Unterschriften",
+          "page": 1
+        },
+        "effective_date": {
+          "value": "2026-01-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "1",
+          "quote": "Ziffer 4 Absatz 1 des Wartungs- und Servicevertrages Nr. WV-2023-0417 vom 1. Mai 2023 wird mit Wirkung ab 1. Januar 2026 aufgehoben und wie folgt neu gefasst:",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Nachtrag ändert die Laufzeit nicht."
+        },
+        "initial_term_end_date": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Nachtrag ändert die Laufzeit nicht."
+        },
+        "renewal_mechanism": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Nachtrag ändert den Verlängerungsmechanismus nicht."
+        },
+        "renewal_term_length": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high"
+        },
+        "notice_period": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Nachtrag ändert die Kündigungsfrist nicht. Darf im Effektiv-Protokoll NICHT geleert werden."
+        },
+        "notice_delivery": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high"
+        },
+        "contract_value": {
+          "value": {
+            "amount": 21700,
+            "currency": "CHF",
+            "basis": "annual"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "1",
+          "quote": "Die jährliche Wartungspauschale beträgt CHF 21'700.00 zuzüglich Mehrwertsteuer.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Nicht im Nachtrag genannt."
+        }
+      },
+      "what_this_document_tests": [
+        "Als eigenständiger Vertrag extrahiert, ergibt das ein Protokoll mit einem gefüllten Feld und sechzehn Nullen, das mit dem echten Vertrag im Register konkurriert.",
+        "Die Indexklausel ist Tier 2 (price_escalation) und darf in den 18 MVP-Feldern NICHT auftauchen."
+      ],
+      "amendment": {
+        "type": "commercial",
+        "sequence": 1,
+        "parent_reference": {
+          "contract_number": "WV-2023-0417",
+          "title": "Wartungs- und Servicevertrag",
+          "parent_effective_date": "2023-05-01",
+          "parties": [
+            "Bogner Maschinenservice AG",
+            "KellerForm GmbH"
+          ],
+          "amendment_sequence": 1
+        },
+        "link_confidence": "high"
+      },
+      "parent_reference": {
+        "contract_number": "WV-2023-0417",
+        "title": "Wartungs- und Servicevertrag",
+        "parent_effective_date": "2023-05-01",
+        "parties": [
+          "Bogner Maschinenservice AG",
+          "KellerForm GmbH"
+        ],
+        "amendment_sequence": 1
+      }
+    },
+    {
+      "document_id": "D03",
+      "source_filename": "03_KellerForm_Renderling_SubscriptionAgreement_EN.pdf",
+      "family_id": "FAM-02",
+      "difficulty_tier": "clean",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Markus Keller",
+      "review_status": "clean",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "en",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Renderling Cloud Limited",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "note": "Legal entity, not the brand \"Renderling\".",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "KellerForm GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Subscription Agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "RC-ORD-2024-8812",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "saas_subscription",
+          "status": "found",
+          "confidence": "high",
+          "clause": "1"
+        },
+        "signature_date": {
+          "value": "2024-08-23",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Signatures",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2024-09-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "This Agreement commences on 1 September 2024 (the \"Effective Date\") and continues for an initial term of twelve (12) months, ending on 31 August 2025.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "This Agreement commences on 1 September 2024 (the \"Effective Date\") and continues for an initial term of twelve (12) months, ending on 31 August 2025.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": "2025-08-31",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "This Agreement commences on 1 September 2024 (the \"Effective Date\") and continues for an initial term of twelve (12) months, ending on 31 August 2025.",
+          "page": 1
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Upon expiry of the Initial Term this Agreement shall renew automatically for successive periods of twelve (12) months unless terminated in accordance with Clause 3.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Upon expiry of the Initial Term this Agreement shall renew automatically for successive periods of twelve (12) months unless terminated in accordance with Clause 3.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 90,
+              "unit": "days",
+              "anchor": "term_end",
+              "purpose": "non_renewal"
+            }
+          ],
+          "status": "found",
+          "confidence": "high",
+          "clause": "3",
+          "quote": "Either party may prevent renewal by giving written notice of non-renewal not less than ninety (90) days prior to the end of the then-current term.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "email",
+            "address": "renewals@renderling.io",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "5",
+          "quote": "Notices under Clause 3 shall be sent by email to renewals@renderling.io and shall be deemed given on the day of transmission.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 18000,
+            "currency": "CHF",
+            "basis": "annual"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "The annual subscription fee is CHF 18,000.00, exclusive of VAT, invoiced annually in advance.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "annual",
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "The annual subscription fee is CHF 18,000.00, exclusive of VAT, invoiced annually in advance.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "Deadline für die laufende Periode lag am 2026-06-02 und ist am Stichtag bereits verstrichen. Das Register muss das als versäumt anzeigen, nicht als offen."
+      ]
+    },
+    {
+      "document_id": "D04",
+      "source_filename": "04_NordWelle_RheinlandFuhrpark_Rahmenmietvertrag_DE.pdf",
+      "family_id": "FAM-03",
+      "difficulty_tier": "medium",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Elena Vogt",
+      "review_status": "clean",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "de",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Rheinland Fuhrpark GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "NordWelle Services GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Rahmenmietvertrag Nutzfahrzeuge",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "RFP-2022-114",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "infrastructure",
+          "status": "found",
+          "confidence": "low",
+          "clause": "1",
+          "note": "Fuhrparkmiete. Aus dem Gegenstand abgeleitet, nicht benannt; 'other' wäre ebenfalls vertretbar."
+        },
+        "signature_date": {
+          "value": "2022-03-18",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Unterschriften",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2022-04-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Rahmenmietvertrag beginnt am 1. April 2022 und wird auf unbestimmte Zeit geschlossen.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Unbefristet, keine Mindestlaufzeit vereinbart."
+        },
+        "initial_term_end_date": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Unbefristet, kein Enddatum."
+        },
+        "renewal_mechanism": {
+          "value": "indefinite",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Rahmenmietvertrag beginnt am 1. April 2022 und wird auf unbestimmte Zeit geschlossen.",
+          "note": "Unbefristet mit Kündigungsrecht. NICHT auto_renew.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Kein Verlängerungszeitraum, da unbefristet."
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 3,
+              "unit": "months",
+              "anchor": "period_end_quarter",
+              "purpose": "non_renewal"
+            }
+          ],
+          "status": "found",
+          "confidence": "high",
+          "clause": "3",
+          "quote": "Der Vertrag kann von jeder Partei mit einer Frist von drei (3) Monaten zum Quartalsende schriftlich gekündigt werden.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "registered_post",
+            "address": "Rheinland Fuhrpark GmbH, Geschäftsleitung, Kaiserswerther Strasse 88, 40477 Düsseldorf",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "5",
+          "quote": "Kündigungen bedürfen der Schriftform und sind per Einschreiben an die Geschäftsleitung des Vermieters zu richten.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 12900,
+            "currency": "EUR",
+            "basis": "monthly"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Der monatliche Gesamtmietzins beträgt EUR 12.900,00 zuzüglich Umsatzsteuer.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "monthly",
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die Rechnungsstellung erfolgt monatlich jeweils zum Monatsende.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "Anker ist period_end_quarter, nicht term_end. Es gibt kein Vertragsende, von dem aus zurückgerechnet werden könnte.",
+        "renewal_mechanism ist indefinite, nicht auto_renew. Ein unbefristeter Vertrag verlängert sich nicht.",
+        "Ausstiege sind nur 31.03. / 30.06. / 30.09. / 31.12. Am Stichtag ist der nächste erreichbare Ausstieg der 31.12.2026 mit Frist bis 30.09.2026."
+      ]
+    },
+    {
+      "document_id": "D05",
+      "source_filename": "05_NordWelle_Servio_MasterSubscriptionAgreement_EN.pdf",
+      "family_id": "FAM-04",
+      "difficulty_tier": "hard",
+      "has_text_layer": true,
+      "page_count": 3,
+      "buyer_persona": "Elena Vogt",
+      "review_status": "review",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "en",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Servio Field Solutions B.V.",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "NordWelle Services GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Master Subscription Agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "SFS-MSA-2025-041",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "saas_subscription",
+          "status": "found",
+          "confidence": "high",
+          "clause": "1"
+        },
+        "signature_date": {
+          "value": "2025-10-27",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Signatures",
+          "page": 3
+        },
+        "effective_date": {
+          "value": "2025-11-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "10",
+          "quote": "This Agreement takes effect on 1 November 2025 and shall remain in force for an initial term of twenty-four (24) months, expiring on 31 October 2027.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 24,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "10",
+          "quote": "This Agreement takes effect on 1 November 2025 and shall remain in force for an initial term of twenty-four (24) months, expiring on 31 October 2027.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": "2027-10-31",
+          "status": "found",
+          "confidence": "high",
+          "clause": "10",
+          "quote": "This Agreement takes effect on 1 November 2025 and shall remain in force for an initial term of twenty-four (24) months, expiring on 31 October 2027.",
+          "page": 1
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "high",
+          "clause": "10",
+          "quote": "Thereafter the Agreement shall renew automatically for successive terms of twelve (12) months.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "10",
+          "quote": "Thereafter the Agreement shall renew automatically for successive terms of twelve (12) months.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 3,
+              "unit": "months",
+              "anchor": "term_end",
+              "purpose": "non_renewal",
+              "source": "clause 11.2"
+            },
+            {
+              "amount": 6,
+              "unit": "months",
+              "anchor": "term_end",
+              "purpose": "non_renewal",
+              "source": "Annex C.4"
+            }
+          ],
+          "status": "conflicting",
+          "confidence": "high",
+          "clause": "11.2 / Annex C.4",
+          "quote": "Either party may give written notice of non-renewal not less than three (3) months prior to the end of the then-current term.",
+          "note": "Clause 11.2 states three months; Annex C.4 states six months. Clause 2 makes the Annexes an integral part of the Agreement but states no order of precedence, so the conflict is not resolvable from the document. Deadlines differ by three months (2027-07-31 vs 2027-04-30). Route to a human; do not pick a reading.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "any_written",
+            "address": "contracts@servio-field.nl",
+            "cc": "registered office of the recipient"
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "13",
+          "quote": "Notices shall be sent by email to contracts@servio-field.nl and by post to the registered office of the recipient.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 96000,
+            "currency": "EUR",
+            "basis": "annual"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "12",
+          "quote": "The annual subscription fee is EUR 96,000.00, invoiced quarterly in advance.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "quarterly",
+          "status": "found",
+          "confidence": "high",
+          "clause": "12",
+          "quote": "The annual subscription fee is EUR 96,000.00, invoiced quarterly in advance.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "Der Konflikt ist die Prüfung. Ein Extraktor, der drei Monate ODER sechs Monate mit hoher Konfidenz zurückgibt, hat versagt — auch wenn die Zahl aus dem Hauptteil stammt.",
+        "Die einmalige Implementierungsgebühr von EUR 14.500 in Annex C.3 darf contract_value nicht überschreiben; der Vertragswert ist der jährliche Abonnementbetrag.",
+        "notice_deadline ist NICHT berechenbar, solange der Konflikt offen ist."
+      ]
+    },
+    {
+      "document_id": "D06",
+      "source_filename": "06_AlpenBridge_Nortveil_EndpointSecurityLicence_EN.pdf",
+      "family_id": "FAM-05",
+      "difficulty_tier": "medium",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Daniel Weber",
+      "review_status": "clean",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "en",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Nortveil Security AS",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "AlpenBridge Consulting GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Endpoint Security Licence Agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "NS-2025-AT-0392",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "software_license",
+          "status": "found",
+          "confidence": "high",
+          "clause": "1"
+        },
+        "signature_date": {
+          "value": "2025-06-16",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Signatures",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2025-07-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "The Subscription Term commences on 1 July 2025 and continues for twelve (12) months.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "The Subscription Term commences on 1 July 2025 and continues for twelve (12) months.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Nur die Laufzeitlänge ist genannt, kein Enddatum. Vom Skript berechnen lassen."
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "The Subscription Term shall renew automatically for further periods of twelve (12) months.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "The Subscription Term shall renew automatically for further periods of twelve (12) months.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 60,
+              "unit": "days",
+              "anchor": "term_end",
+              "purpose": "non_renewal"
+            },
+            {
+              "amount": 90,
+              "unit": "days",
+              "anchor": "any_time",
+              "purpose": "convenience"
+            }
+          ],
+          "status": "found",
+          "confidence": "high",
+          "clause": "3 / 4",
+          "quote": "Either party may elect not to renew by serving written notice at least sixty (60) days before the expiry of the then-current Subscription Term.",
+          "note": "Two distinct rights. Reminders must be driven by the non_renewal entry; the 90-day convenience notice is an option with an exit fee, not a countdown.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "registered_post",
+            "address": "Nortveil Security AS, Legal Department, Dronning Eufemias gate 14, 0191 Oslo, Norway",
+            "cc": "legal@nortveil.no"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "6",
+          "quote": "All notices under Clauses 3 and 4 must be sent by registered post to Nortveil Security AS, Legal Department, Dronning Eufemias gate 14, 0191 Oslo, Norway, with a copy by email to legal@nortveil.no.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 41760,
+            "currency": "EUR",
+            "basis": "annual"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "5",
+          "quote": "The annual Subscription Fee is EUR 41,760.00, being 240 endpoints at EUR 14.50 per endpoint per month, invoiced annually in advance.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "annual",
+          "status": "found",
+          "confidence": "high",
+          "clause": "5",
+          "quote": "The annual Subscription Fee is EUR 41,760.00, being 240 endpoints at EUR 14.50 per endpoint per month, invoiced annually in advance.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "Zwei Kündigungsfristen. Wird die 90-Tage-Convenience-Frist als 'die' Frist angezeigt, wirkt das Fenster entspannt, obwohl der Verlängerungsstichtag ein anderer ist.",
+        "initial_term_end_date ist nicht genannt und muss not_found bleiben — die Arithmetik gehört ins Skript, nicht in die Extraktion.",
+        "Zustellung nur per Einschreiben: eine E-Mail-Erinnerung erledigt die Kündigung nicht."
+      ]
+    },
+    {
+      "document_id": "D07",
+      "source_filename": "07_AlpenBridge_Steinacher_Wartungsvertrag_SCAN_DE.pdf",
+      "family_id": "FAM-06",
+      "difficulty_tier": "hard",
+      "has_text_layer": false,
+      "page_count": 2,
+      "buyer_persona": "Daniel Weber",
+      "review_status": "review",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "medium",
+          "note": "Aus dem gescannten Bild gelesen."
+        },
+        "document_language": {
+          "value": "de",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Steinacher Gebäudetechnik GmbH",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "AlpenBridge Consulting GmbH",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Wartungsvertrag",
+          "status": "found",
+          "confidence": "medium"
+        },
+        "contract_number": {
+          "value": "SGT/WV/2021-0088",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "Kopf",
+          "note": "OCR-Risiko: Schrägstriche und Nullen/Buchstabe O.",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "maintenance",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "1"
+        },
+        "signature_date": {
+          "value": "2021-09-14",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "Unterschriften",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2021-10-01",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Oktober 2021 und läuft zunächst zwölf (12) Monate.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Oktober 2021 und läuft zunächst zwölf (12) Monate.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Kein Enddatum genannt."
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "2",
+          "quote": "Er verlängert sich jeweils stillschweigend um ein weiteres Jahr, sofern nicht gekündigt wird.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "2",
+          "quote": "Er verlängert sich jeweils stillschweigend um ein weiteres Jahr, sofern nicht gekündigt wird.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 3,
+              "unit": "months",
+              "anchor": "term_end",
+              "purpose": "non_renewal"
+            }
+          ],
+          "status": "found",
+          "confidence": "medium",
+          "clause": "3",
+          "quote": "Die Kündigung ist spätestens drei (3) Monate vor Ablauf der jeweiligen Vertragslaufzeit schriftlich zu erklären.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "any_written",
+            "address": "Steinacher Gebäudetechnik GmbH, Guglgasse 12, 1110 Wien",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "5",
+          "quote": "Erklärungen sind an die im Vertragskopf genannte Anschrift des Auftragnehmers zu richten.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 8940,
+            "currency": "EUR",
+            "basis": "annual"
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "4",
+          "quote": "Das jährliche Wartungsentgelt beträgt EUR 8.940,00 zuzüglich Umsatzsteuer.",
+          "note": "OCR-Risiko: EUR 8.940,00 kann als 8940 oder 8.94 gelesen werden. Deutsches Tausenderformat mit Punkt.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "annual",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "4"
+        }
+      },
+      "what_this_document_tests": [
+        "Kein Textlayer. Die Extraktion muss has_text_layer=false melden und den Datensatz in die Prüfung routen, auch wenn alle Felder gefüllt sind.",
+        "Kein Feld darf mit confidence 'high' zurückkommen. Alles stammt aus OCR.",
+        "Deadline für die laufende Periode war der 30.06.2026 und ist am Stichtag verstrichen; die Verlängerung bis 30.09.2027 ist bereits eingetreten.",
+        "Der Eingangsstempel (21.09.2021) ist kein Vertragsdatum und darf nicht als effective_date oder signature_date verwendet werden."
+      ]
+    },
+    {
+      "document_id": "D08",
+      "source_filename": "08_RheinHaus_Bergmann_Mietvertrag_Reinigungsmaschinen_DE.pdf",
+      "family_id": "FAM-07",
+      "difficulty_tier": "clean",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Sofia Richter",
+      "review_status": "clean",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "de",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Bergmann Reinigungstechnik GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "RheinHaus Living GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Mietvertrag Reinigungsmaschinen",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "BRT-M-2024-2277",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "infrastructure",
+          "status": "found",
+          "confidence": "low",
+          "clause": "1",
+          "note": "Gerätemiete mit Wartung. Abgeleitet, nicht benannt."
+        },
+        "signature_date": {
+          "value": "2024-05-13",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Unterschriften",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2024-06-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Mietvertrag beginnt am 1. Juni 2024 und hat eine feste Laufzeit von vierundzwanzig (24) Monaten bis zum 31. Mai 2026.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 24,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Mietvertrag beginnt am 1. Juni 2024 und hat eine feste Laufzeit von vierundzwanzig (24) Monaten bis zum 31. Mai 2026.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": "2026-05-31",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Mietvertrag beginnt am 1. Juni 2024 und hat eine feste Laufzeit von vierundzwanzig (24) Monaten bis zum 31. Mai 2026.",
+          "page": 1
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Er verlängert sich jeweils um zwölf (12) Monate, wenn er nicht gekündigt wird.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Er verlängert sich jeweils um zwölf (12) Monate, wenn er nicht gekündigt wird.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 3,
+              "unit": "months",
+              "anchor": "term_end",
+              "purpose": "non_renewal"
+            }
+          ],
+          "status": "found",
+          "confidence": "high",
+          "clause": "3",
+          "quote": "Die Kündigung hat mit einer Frist von drei (3) Monaten zum Ende der jeweiligen Vertragslaufzeit in Textform zu erfolgen.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "any_written",
+            "address": "vertrag@bergmann-reinigungstechnik.de",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "5",
+          "quote": "Erklärungen können per Brief oder E-Mail an vertrag@bergmann-reinigungstechnik.de übermittelt werden.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 1180,
+            "currency": "EUR",
+            "basis": "monthly"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die monatliche Miete beträgt EUR 1.180,00 zuzüglich Umsatzsteuer.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "monthly",
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die Abrechnung erfolgt monatlich im Voraus.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "basis ist monthly, nicht annual. Ein Register, das EUR 1.180 als Jahreswert aggregiert, unterschätzt die Verpflichtung um den Faktor zwölf."
+      ]
+    },
+    {
+      "document_id": "D09",
+      "source_filename": "09_RheinHaus_RED_Entsorgungsvertrag_DE.pdf",
+      "family_id": "FAM-08",
+      "difficulty_tier": "hard",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Sofia Richter",
+      "review_status": "review",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "de",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Rheinische Entsorgungsdienste AG",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "RheinHaus Living GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Entsorgungsvertrag",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "RED-2023-8801",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "other",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "1",
+          "note": "Entsorgungsdienstleistung."
+        },
+        "signature_date": {
+          "value": "2022-12-12",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Unterschriften",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2023-01-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Januar 2023 und läuft bis zum 31. Dezember 2023.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Januar 2023 und läuft bis zum 31. Dezember 2023.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": "2023-12-31",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Januar 2023 und läuft bis zum 31. Dezember 2023.",
+          "page": 1
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Er verlängert sich automatisch um jeweils ein (1) Jahr, sofern er nicht gekündigt wird.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Er verlängert sich automatisch um jeweils ein (1) Jahr, sofern er nicht gekündigt wird.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": [
+            {
+              "amount": 30,
+              "unit": "business_days",
+              "anchor": "term_end",
+              "purpose": "non_renewal"
+            }
+          ],
+          "status": "ambiguous",
+          "confidence": "high",
+          "clause": "3",
+          "quote": "Die Kündigung hat spätestens 30 Werktage vor Ablauf der jeweiligen Vertragslaufzeit schriftlich per Einschreiben zu erfolgen.",
+          "note": "'30 Werktage' sind keine 30 Kalendertage. Das Schema kennt die Einheit business_days nicht; laut notice-periods.md ist die Einheit wie genannt zu erfassen und der Wert als ambiguous zu markieren, nicht umzurechnen. Zusätzlich verschiebt die Zugangsfiktion in Ziffer 3 Satz 2 die tatsächliche Aufgabefrist um drei weitere Werktage nach vorn.",
+          "page": 1
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "registered_post",
+            "address": "Rheinische Entsorgungsdienste AG, Bonner Strasse 484, 50968 Köln",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "3",
+          "quote": "Die Kündigung hat spätestens 30 Werktage vor Ablauf der jeweiligen Vertragslaufzeit schriftlich per Einschreiben zu erfolgen.",
+          "note": "Zugang gilt erst drei Werktage nach Aufgabe zur Post.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 2340,
+            "currency": "EUR",
+            "basis": "variable"
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "4",
+          "quote": "Die monatliche Grundgebühr beträgt EUR 2.340,00. Hinzu kommen mengenabhängige Entsorgungsentgelte gemäss Preisblatt Anlage 1, die nach tatsächlichem Aufkommen abgerechnet werden.",
+          "note": "Fixe Grundgebühr EUR 2.340 monatlich plus mengenabhängige Entgelte. Der Gesamtwert ist nicht bestimmbar; basis 'variable' mit dem Fixanteil als Untergrenze.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "monthly",
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die Abrechnung erfolgt monatlich nachschüssig.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "'30 Werktage' darf nicht in 30 oder 42 Kalendertage umgerechnet werden. Erwartet wird status=ambiguous, nicht ein plausibles Datum.",
+        "Die Zugangsfiktion (drei Werktage nach Aufgabe zur Post) verschiebt die reale Frist nach vorn und muss in notice_delivery erfasst werden.",
+        "basis ist variable. Wer EUR 2.340 als vollständigen Monatswert aggregiert, unterschätzt die Verpflichtung um den mengenabhängigen Anteil.",
+        "Die Preisanpassungsklausel in Ziffer 5 ist Tier 2 und gehört nicht in die 18 MVP-Felder."
+      ]
+    },
+    {
+      "document_id": "D10",
+      "source_filename": "10_LumenWerk_HelveticFulfilment_FulfilmentServicesAgreement_EN.pdf",
+      "family_id": "FAM-09",
+      "difficulty_tier": "hard",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Hannah Meier",
+      "review_status": "blocked",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "en",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Helvetic Fulfilment Partners AG",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "LumenWerk AG",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Fulfilment Services Agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "HFP-2025-LW-014",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Header",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "professional_services",
+          "status": "found",
+          "confidence": "low",
+          "clause": "1",
+          "note": "Logistikdienstleistung. 'other' wäre ebenfalls vertretbar."
+        },
+        "signature_date": {
+          "value": "2025-02-14",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Signatures",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2025-03-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "This Agreement commences on 1 March 2025 and shall continue for an initial period of twelve (12) months.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "This Agreement commences on 1 March 2025 and shall continue for an initial period of twelve (12) months.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Kein Enddatum genannt."
+        },
+        "renewal_mechanism": {
+          "value": "auto_renew",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "The Agreement shall renew automatically for successive twelve (12) month periods.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "The Agreement shall renew automatically for successive twelve (12) month periods.",
+          "page": 1
+        },
+        "notice_period": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Der Vertrag enthält keine Kündigungsfrist. Ziffer 6 regelt nur die Form und Anschrift von Erklärungen, nicht eine Frist. Automatische Verlängerung ohne Kündigungsklausel: es gibt keinen vertraglich geregelten Ausstieg vor Ende der jeweiligen Laufzeit."
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "any_written",
+            "address": "Helvetic Fulfilment Partners AG, Rheinstrasse 92, 4133 Pratteln",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "6",
+          "quote": "Any notice under this Agreement shall be in writing and sent to the addresses stated above.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 6200,
+            "currency": "CHF",
+            "basis": "variable"
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "3",
+          "quote": "Handling is charged at CHF 4.85 per order fulfilled. Storage is charged at CHF 21.00 per pallet space per month. A minimum monthly charge of CHF 6,200.00 applies.",
+          "note": "Nutzungsabhängig mit monatlicher Mindestgebühr CHF 6.200. Der erfasste Betrag ist die Untergrenze, nicht der erwartete Wert.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "monthly",
+          "status": "found",
+          "confidence": "high",
+          "clause": "3",
+          "quote": "HFP shall invoice monthly in arrears, payable within thirty (30) days.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "Die Kündigungsklausel fehlt vollständig. Die Ziffer 'Notices' existiert und ist der Köder — sie enthält eine Anschrift, aber keine Frist.",
+        "Erwartet wird notice_period.status = not_found und review_status = blocked, weil keine Deadline berechenbar ist. Eine erfundene Frist von 30, 60 oder 90 Tagen ist der teuerste Fehlermodus im ganzen Set.",
+        "Das ist gleichzeitig ein Produktbefund, kein Datenfehler: der richtige UI-Text lautet 'automatische Verlängerung ohne vereinbarte Kündigungsfrist', nicht ein leeres Feld."
+      ]
+    },
+    {
+      "document_id": "D11",
+      "source_filename": "11_LumenWerk_Gruenraum_Dienstleistungsvertrag_DE.pdf",
+      "family_id": "FAM-10",
+      "difficulty_tier": "clean",
+      "has_text_layer": true,
+      "page_count": 2,
+      "buyer_persona": "Hannah Meier",
+      "review_status": "clean",
+      "fields": {
+        "document_type": {
+          "value": "master_agreement",
+          "status": "found",
+          "confidence": "high"
+        },
+        "document_language": {
+          "value": "de",
+          "status": "found",
+          "confidence": "high"
+        },
+        "vendor_legal_name": {
+          "value": "Grünraum Zürich GmbH",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "buyer_legal_entity": {
+          "value": "LumenWerk AG",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_title": {
+          "value": "Dienstleistungsvertrag",
+          "status": "found",
+          "confidence": "high"
+        },
+        "contract_number": {
+          "value": "GRZ-2026-0142",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Kopf",
+          "page": 1
+        },
+        "contract_type": {
+          "value": "professional_services",
+          "status": "found",
+          "confidence": "medium",
+          "clause": "1"
+        },
+        "signature_date": {
+          "value": "2026-01-22",
+          "status": "found",
+          "confidence": "high",
+          "clause": "Unterschriften",
+          "page": 2
+        },
+        "effective_date": {
+          "value": "2026-02-01",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Februar 2026 und endet ohne weiteres am 31. Januar 2027.",
+          "page": 1
+        },
+        "initial_term_length": {
+          "value": {
+            "amount": 12,
+            "unit": "months"
+          },
+          "status": "found",
+          "confidence": "medium",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Februar 2026 und endet ohne weiteres am 31. Januar 2027.",
+          "note": "Aus Anfangs- und Enddatum ableitbar; die Länge selbst ist nicht genannt.",
+          "page": 1
+        },
+        "initial_term_end_date": {
+          "value": "2027-01-31",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Der Vertrag beginnt am 1. Februar 2026 und endet ohne weiteres am 31. Januar 2027.",
+          "page": 1
+        },
+        "renewal_mechanism": {
+          "value": "expires",
+          "status": "found",
+          "confidence": "high",
+          "clause": "2",
+          "quote": "Eine stillschweigende Verlängerung findet nicht statt.",
+          "page": 1
+        },
+        "renewal_term_length": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Keine Verlängerung vorgesehen."
+        },
+        "notice_period": {
+          "value": null,
+          "status": "not_found",
+          "confidence": "high",
+          "note": "Keine Kündigungsfrist, da der Vertrag ohne Verlängerung ausläuft. Das ist kein Mangel und darf nicht als blocked geroutet werden."
+        },
+        "notice_delivery": {
+          "value": {
+            "method": "email",
+            "address": "service@gruenraum-zuerich.ch",
+            "cc": null
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "5",
+          "quote": "Mitteilungen erfolgen per E-Mail an service@gruenraum-zuerich.ch.",
+          "page": 1
+        },
+        "contract_value": {
+          "value": {
+            "amount": 460,
+            "currency": "CHF",
+            "basis": "monthly"
+          },
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die monatliche Pauschale beträgt CHF 460.00 zuzüglich Mehrwertsteuer.",
+          "page": 1
+        },
+        "billing_frequency": {
+          "value": "quarterly",
+          "status": "found",
+          "confidence": "high",
+          "clause": "4",
+          "quote": "Die Rechnungsstellung erfolgt quartalsweise im Voraus.",
+          "page": 1
+        }
+      },
+      "what_this_document_tests": [
+        "renewal_mechanism ist expires. Der Vertrag läuft aus und muss nicht gekündigt werden; er braucht eine Verlängerungsentscheidung vor dem 31.01.2027, keine Kündigungserinnerung.",
+        "notice_period ist not_found und das ist korrekt. Ein Extraktor, der hier blocked routet, erzeugt einen Fehlalarm — das ist der Gegentest zu Familie 09.",
+        "basis (monthly) und billing_frequency (quarterly) weichen voneinander ab."
+      ]
+    }
+  ],
+  "families": [
+    {
+      "family_id": "FAM-01",
+      "buyer_legal_entity": "KellerForm GmbH",
+      "buyer_persona": "Markus Keller",
+      "buyer_country": "CH",
+      "vendor_legal_name": "Bogner Maschinenservice AG",
+      "contract_number": "WV-2023-0417",
+      "contract_title": "Wartungs- und Servicevertrag",
+      "document_ids": [
+        "D01",
+        "D02"
+      ],
+      "document_count": 2,
+      "family_status": "complete",
+      "last_amended": "2026-01-01",
+      "difficulty_tier": "medium",
+      "complexity_level_derived": "medium",
+      "complexity_score": 2,
+      "complexity_factors": [
+        "mehr als ein Dokument in der Familie",
+        "Zustellung per Einschreiben"
+      ],
+      "effective_record": {
+        "term": "36 Monate fest ab 01.05.2023, danach 12-Monats-Verlängerungen",
+        "initial_term_end": "2026-04-30",
+        "current_term": "2026-05-01 – 2027-04-30",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "6 months",
+        "anchor": "term_end",
+        "delivery": "registered_post",
+        "value": 21700,
+        "ccy": "CHF",
+        "basis": "annual",
+        "billing": "annual",
+        "value_superseded": [
+          {
+            "amount": 18400,
+            "ccy": "CHF",
+            "basis": "annual",
+            "source": "D01"
+          }
+        ]
+      },
+      "deadline_state": "open",
+      "expected_deadline": "2026-10-30",
+      "expected_exit_date": "2027-04-30",
+      "expected_days_remaining": 63,
+      "deadline_computation": {
+        "computed": true,
+        "reason": null,
+        "warnings": [],
+        "exit_date": "2027-04-30",
+        "deadline": "2026-10-30",
+        "days_remaining": 63,
+        "term_end": "2026-04-30"
+      },
+      "deadline_note": null,
+      "competing_readings": null
+    },
+    {
+      "family_id": "FAM-02",
+      "buyer_legal_entity": "KellerForm GmbH",
+      "buyer_persona": "Markus Keller",
+      "buyer_country": "CH",
+      "vendor_legal_name": "Renderling Cloud Limited",
+      "contract_number": "RC-ORD-2024-8812",
+      "contract_title": "Subscription Agreement",
+      "document_ids": [
+        "D03"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "clean",
+      "complexity_level_derived": "low",
+      "complexity_score": 1,
+      "complexity_factors": [
+        "Dokumentsprache != Registersprache (en)"
+      ],
+      "effective_record": {
+        "term": "12 Monate ab 01.09.2024, Auto-Verlängerung 12 Monate",
+        "initial_term_end": "2025-08-31",
+        "current_term": "2025-09-01 – 2026-08-31",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "90 days",
+        "anchor": "term_end",
+        "delivery": "email",
+        "value": 18000,
+        "ccy": "CHF",
+        "basis": "annual",
+        "billing": "annual",
+        "value_superseded": []
+      },
+      "deadline_state": "missed",
+      "expected_deadline": "2026-06-02",
+      "expected_exit_date": "2026-08-31",
+      "expected_days_remaining": -87,
+      "deadline_computation": {
+        "computed": true,
+        "reason": null,
+        "warnings": [
+          "Deadline already passed for this exit opportunity."
+        ],
+        "exit_date": "2026-08-31",
+        "deadline": "2026-06-02",
+        "days_remaining": -87,
+        "term_end": "2025-08-31"
+      },
+      "deadline_note": null,
+      "competing_readings": null
+    },
+    {
+      "family_id": "FAM-03",
+      "buyer_legal_entity": "NordWelle Services GmbH",
+      "buyer_persona": "Elena Vogt",
+      "buyer_country": "DE",
+      "vendor_legal_name": "Rheinland Fuhrpark GmbH",
+      "contract_number": "RFP-2022-114",
+      "contract_title": "Rahmenmietvertrag Nutzfahrzeuge",
+      "document_ids": [
+        "D04"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "medium",
+      "complexity_level_derived": "medium",
+      "complexity_score": 2,
+      "complexity_factors": [
+        "Anker ist nicht term_end/renewal_date",
+        "Zustellung per Einschreiben"
+      ],
+      "effective_record": {
+        "term": "unbefristet ab 01.04.2022",
+        "initial_term_end": null,
+        "current_term": "laufend, unbefristet",
+        "renewal_mechanism": "indefinite",
+        "renewal_term": null,
+        "notice": "3 months",
+        "anchor": "period_end_quarter",
+        "delivery": "registered_post",
+        "value": 12900,
+        "ccy": "EUR",
+        "basis": "monthly",
+        "billing": "monthly",
+        "value_superseded": []
+      },
+      "deadline_state": "open",
+      "expected_deadline": "2026-09-30",
+      "expected_exit_date": "2026-12-31",
+      "expected_days_remaining": 33,
+      "deadline_computation": {
+        "computed": true,
+        "reason": null,
+        "warnings": [
+          "Exit is only possible at a quarter end. The deadline is NOT term_end minus the notice period."
+        ],
+        "exit_date": "2026-12-31",
+        "deadline": "2026-09-30",
+        "days_remaining": 33,
+        "term_end": "2026-12-31"
+      },
+      "deadline_note": "Der nächste erreichbare Quartalsausstieg ist der 31.12.2026. Das Skript verlangt hier ein term-end-date, obwohl Quartalsenden Kalenderdaten sind und kein Vertragsende brauchen — siehe Blatt 'Skriptbefunde'.",
+      "competing_readings": null
+    },
+    {
+      "family_id": "FAM-04",
+      "buyer_legal_entity": "NordWelle Services GmbH",
+      "buyer_persona": "Elena Vogt",
+      "buyer_country": "DE",
+      "vendor_legal_name": "Servio Field Solutions B.V.",
+      "contract_number": "SFS-MSA-2025-041",
+      "contract_title": "Master Subscription Agreement",
+      "document_ids": [
+        "D05"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "hard",
+      "complexity_level_derived": "medium",
+      "complexity_score": 2,
+      "complexity_factors": [
+        "notice_period ist conflicting (D05)",
+        "Dokumentsprache != Registersprache (en)"
+      ],
+      "effective_record": {
+        "term": "24 Monate ab 01.11.2025, Auto-Verlängerung 12 Monate",
+        "initial_term_end": "2027-10-31",
+        "current_term": "2025-11-01 – 2027-10-31",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "3 months (Ziffer 11.2) ODER 6 months (Annex C.4) — CONFLICTING",
+        "anchor": "term_end",
+        "delivery": "any_written",
+        "value": 96000,
+        "ccy": "EUR",
+        "basis": "annual",
+        "billing": "quarterly",
+        "value_superseded": []
+      },
+      "deadline_state": "not_computable",
+      "expected_deadline": null,
+      "expected_exit_date": null,
+      "expected_days_remaining": null,
+      "deadline_computation": null,
+      "deadline_note": null,
+      "competing_readings": [
+        [
+          "Ziffer 11.2 — 3 Monate",
+          "2027-07-31"
+        ],
+        [
+          "Annex C.4 — 6 Monate",
+          "2027-04-30"
+        ]
+      ]
+    },
+    {
+      "family_id": "FAM-05",
+      "buyer_legal_entity": "AlpenBridge Consulting GmbH",
+      "buyer_persona": "Daniel Weber",
+      "buyer_country": "AT",
+      "vendor_legal_name": "Nortveil Security AS",
+      "contract_number": "NS-2025-AT-0392",
+      "contract_title": "Endpoint Security Licence Agreement",
+      "document_ids": [
+        "D06"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "medium",
+      "complexity_level_derived": "medium",
+      "complexity_score": 2,
+      "complexity_factors": [
+        "Zustellung per Einschreiben",
+        "Dokumentsprache != Registersprache (en)"
+      ],
+      "effective_record": {
+        "term": "12 Monate ab 01.07.2025, Auto-Verlängerung 12 Monate",
+        "initial_term_end": "2026-06-30 (berechnet, nicht genannt)",
+        "current_term": "2026-07-01 – 2027-06-30",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "60 days (Nichtverlängerung) + 90 days (Convenience, mit Ausstiegsgebühr)",
+        "anchor": "term_end (+ any_time für Convenience)",
+        "delivery": "registered_post",
+        "value": 41760,
+        "ccy": "EUR",
+        "basis": "annual",
+        "billing": "annual",
+        "value_superseded": []
+      },
+      "deadline_state": "open",
+      "expected_deadline": "2027-05-01",
+      "expected_exit_date": "2027-06-30",
+      "expected_days_remaining": 246,
+      "deadline_computation": {
+        "computed": true,
+        "reason": null,
+        "warnings": [],
+        "exit_date": "2027-06-30",
+        "deadline": "2027-05-01",
+        "days_remaining": 246,
+        "term_end": "2026-06-30"
+      },
+      "deadline_note": "Enddatum ist nicht genannt und wurde aus 01.07.2025 + 12 Monate abgeleitet (30.06.2026, endinklusiv). Das Skript leitet in diesem Fall 01.07.2026 ab und liefert eine um einen Tag zu späte Deadline — siehe 'Skriptbefunde'.",
+      "competing_readings": null
+    },
+    {
+      "family_id": "FAM-06",
+      "buyer_legal_entity": "AlpenBridge Consulting GmbH",
+      "buyer_persona": "Daniel Weber",
+      "buyer_country": "AT",
+      "vendor_legal_name": "Steinacher Gebäudetechnik GmbH",
+      "contract_number": "SGT/WV/2021-0088",
+      "contract_title": "Wartungsvertrag USV und Präzisionsklimatechnik",
+      "document_ids": [
+        "D07"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "hard",
+      "complexity_level_derived": "low",
+      "complexity_score": 1,
+      "complexity_factors": [
+        "kein Textlayer (Scan)"
+      ],
+      "effective_record": {
+        "term": "12 Monate ab 01.10.2021, stillschweigende Verlängerung um je 1 Jahr",
+        "initial_term_end": "2022-09-30 (berechnet, nicht genannt)",
+        "current_term": "2025-10-01 – 2026-09-30",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "3 months",
+        "anchor": "term_end",
+        "delivery": "any_written",
+        "value": 8940,
+        "ccy": "EUR",
+        "basis": "annual",
+        "billing": "annual",
+        "value_superseded": []
+      },
+      "deadline_state": "missed",
+      "expected_deadline": "2026-06-30",
+      "expected_exit_date": "2026-09-30",
+      "expected_days_remaining": -59,
+      "deadline_computation": {
+        "computed": true,
+        "reason": null,
+        "warnings": [
+          "Deadline already passed for this exit opportunity."
+        ],
+        "exit_date": "2026-09-30",
+        "deadline": "2026-06-30",
+        "days_remaining": -59,
+        "term_end": "2026-09-30"
+      },
+      "deadline_note": null,
+      "competing_readings": null
+    },
+    {
+      "family_id": "FAM-07",
+      "buyer_legal_entity": "RheinHaus Living GmbH",
+      "buyer_persona": "Sofia Richter",
+      "buyer_country": "DE",
+      "vendor_legal_name": "Bergmann Reinigungstechnik GmbH",
+      "contract_number": "BRT-M-2024-2277",
+      "contract_title": "Mietvertrag Reinigungsmaschinen",
+      "document_ids": [
+        "D08"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "clean",
+      "complexity_level_derived": "low",
+      "complexity_score": 0,
+      "complexity_factors": [],
+      "effective_record": {
+        "term": "24 Monate fest ab 01.06.2024, danach 12-Monats-Verlängerungen",
+        "initial_term_end": "2026-05-31",
+        "current_term": "2026-06-01 – 2027-05-31",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "3 months",
+        "anchor": "term_end",
+        "delivery": "any_written",
+        "value": 1180,
+        "ccy": "EUR",
+        "basis": "monthly",
+        "billing": "monthly",
+        "value_superseded": []
+      },
+      "deadline_state": "open",
+      "expected_deadline": "2027-02-28",
+      "expected_exit_date": "2027-05-31",
+      "expected_days_remaining": 184,
+      "deadline_computation": {
+        "computed": true,
+        "reason": null,
+        "warnings": [],
+        "exit_date": "2027-05-31",
+        "deadline": "2027-02-28",
+        "days_remaining": 184,
+        "term_end": "2026-05-31"
+      },
+      "deadline_note": null,
+      "competing_readings": null
+    },
+    {
+      "family_id": "FAM-08",
+      "buyer_legal_entity": "RheinHaus Living GmbH",
+      "buyer_persona": "Sofia Richter",
+      "buyer_country": "DE",
+      "vendor_legal_name": "Rheinische Entsorgungsdienste AG",
+      "contract_number": "RED-2023-8801",
+      "contract_title": "Entsorgungsvertrag",
+      "document_ids": [
+        "D09"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "hard",
+      "complexity_level_derived": "medium",
+      "complexity_score": 3,
+      "complexity_factors": [
+        "Zustellung per Einschreiben",
+        "Wertbasis ist variable/not_to_exceed",
+        "notice_period ist ambiguous (D09)"
+      ],
+      "effective_record": {
+        "term": "12 Monate ab 01.01.2023, Auto-Verlängerung um je 1 Jahr",
+        "initial_term_end": "2023-12-31",
+        "current_term": "2026-01-01 – 2026-12-31",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "30 Werktage — AMBIGUOUS, keine Schema-Einheit",
+        "anchor": "term_end",
+        "delivery": "registered_post (Zugang +3 Werktage)",
+        "value": 2340,
+        "ccy": "EUR",
+        "basis": "variable",
+        "billing": "monthly",
+        "value_superseded": []
+      },
+      "deadline_state": "not_computable",
+      "expected_deadline": null,
+      "expected_exit_date": null,
+      "expected_days_remaining": null,
+      "deadline_computation": null,
+      "deadline_note": null,
+      "competing_readings": [
+        [
+          "naiv: 30 Kalendertage vor 31.12.2026",
+          "2026-12-01"
+        ],
+        [
+          "30 Werktage vor 31.12.2026 (ca.)",
+          "2026-11-18"
+        ],
+        [
+          "30 Werktage + 3 Werktage Zugangsfiktion, Aufgabe zur Post bis (ca.)",
+          "2026-11-13"
+        ]
+      ]
+    },
+    {
+      "family_id": "FAM-09",
+      "buyer_legal_entity": "LumenWerk AG",
+      "buyer_persona": "Hannah Meier",
+      "buyer_country": "CH",
+      "vendor_legal_name": "Helvetic Fulfilment Partners AG",
+      "contract_number": "HFP-2025-LW-014",
+      "contract_title": "Fulfilment Services Agreement",
+      "document_ids": [
+        "D10"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "hard",
+      "complexity_level_derived": "medium",
+      "complexity_score": 2,
+      "complexity_factors": [
+        "Wertbasis ist variable/not_to_exceed",
+        "Dokumentsprache != Registersprache (en)"
+      ],
+      "effective_record": {
+        "term": "12 Monate ab 01.03.2025, Auto-Verlängerung 12 Monate",
+        "initial_term_end": "2026-02-28 (berechnet, nicht genannt)",
+        "current_term": "2026-03-01 – 2027-02-28",
+        "renewal_mechanism": "auto_renew",
+        "renewal_term": "12 months",
+        "notice": "KEINE Kündigungsklausel im Vertrag",
+        "anchor": null,
+        "delivery": "any_written",
+        "value": 6200,
+        "ccy": "CHF",
+        "basis": "variable",
+        "billing": "monthly",
+        "value_superseded": []
+      },
+      "deadline_state": "blocked",
+      "expected_deadline": null,
+      "expected_exit_date": null,
+      "expected_days_remaining": null,
+      "deadline_computation": null,
+      "deadline_note": null,
+      "competing_readings": null
+    },
+    {
+      "family_id": "FAM-10",
+      "buyer_legal_entity": "LumenWerk AG",
+      "buyer_persona": "Hannah Meier",
+      "buyer_country": "CH",
+      "vendor_legal_name": "Grünraum Zürich GmbH",
+      "contract_number": "GRZ-2026-0142",
+      "contract_title": "Dienstleistungsvertrag Wasserspender und Pflanzenpflege",
+      "document_ids": [
+        "D11"
+      ],
+      "document_count": 1,
+      "family_status": "complete",
+      "last_amended": null,
+      "difficulty_tier": "clean",
+      "complexity_level_derived": "low",
+      "complexity_score": 0,
+      "complexity_factors": [],
+      "effective_record": {
+        "term": "01.02.2026 – 31.01.2027, keine Verlängerung",
+        "initial_term_end": "2027-01-31",
+        "current_term": "2026-02-01 – 2027-01-31",
+        "renewal_mechanism": "expires",
+        "renewal_term": null,
+        "notice": "keine erforderlich",
+        "anchor": null,
+        "delivery": "email",
+        "value": 460,
+        "ccy": "CHF",
+        "basis": "monthly",
+        "billing": "quarterly",
+        "value_superseded": []
+      },
+      "deadline_state": "expires",
+      "expected_deadline": null,
+      "expected_exit_date": null,
+      "expected_days_remaining": null,
+      "deadline_computation": null,
+      "deadline_note": null,
+      "competing_readings": [
+        [
+          "Entscheidung über Neuabschluss bis",
+          "2027-01-31"
+        ]
+      ]
+    }
+  ]
+}
