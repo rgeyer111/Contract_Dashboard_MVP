@@ -3,6 +3,7 @@ import { ArrowRight, FileText, ShieldCheck, Zap } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
+import { formatSwissNumber } from "@/lib/registry";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -122,7 +123,7 @@ export default function Home() {
           {/* Floating element 2 */}
           <div className="absolute -right-8 bottom-32 bg-card border shadow-xl rounded-xl p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500 fill-mode-both z-20">
              <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
-                <span className="text-sm font-bold text-primary">CHF 12'000</span>
+                 <span className="text-sm font-bold text-primary">CHF {formatSwissNumber(12000)}</span>
              </div>
              <div>
                <p className="text-sm font-bold text-foreground">{t("home.savingsCaptured")}</p>

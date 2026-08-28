@@ -35,6 +35,23 @@ export type ComputedContractAlert = {
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+const SWISS_TIME_ZONE = "Europe/Zurich";
+const swissDatePartsFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: SWISS_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function swissCalendarDay(value: Date) {
+  const parts = Object.fromEntries(
+    swissDatePartsFormatter
+      .formatToParts(value)
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, Number(part.value)]),
+  );
+  return new Date(Date.UTC(parts.year, parts.month - 1, parts.day));
+}
 
 function parseDate(value: unknown): Date | null {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
@@ -148,7 +165,7 @@ export function computeContractDates(
   },
   now = new Date(),
 ): ComputedContractDates {
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const today = swissCalendarDay(now);
   const fields = contract.fields;
   const effectiveDate = parseDate(fields.effectiveDate?.value);
   const explicitEndDate = parseDate(fields.initialTermEndDate?.value);
@@ -237,7 +254,7 @@ export function computeContractAlert(
   ) {
     return null;
   }
-  const today = formatDate(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())));
+  const today = formatDate(swissCalendarDay(now));
   const sameDeadline =
     previous?.actionDate === computed.actionDate &&
     previous.noticeDeadline === computed.noticeDeadline &&

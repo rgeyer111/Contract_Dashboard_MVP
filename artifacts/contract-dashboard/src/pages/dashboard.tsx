@@ -38,6 +38,7 @@ import {
 import { contractTypeOptions, documentTypeOptions, getDocumentTypeCounts } from "@/lib/contracts";
 import {
   formatContractType,
+  formatCurrencyTotals,
   formatDocumentType,
   formatContractValue,
   formatDaysRemaining,
@@ -107,6 +108,9 @@ export default function Dashboard() {
     copyFilteredViewLink,
     openSavedView,
   } = useRegistryFilters(contracts, location);
+  const visibleContractValueTotals = formatCurrencyTotals(
+    filteredContracts.map((saved) => saved.contract.fields.contractValue.value),
+  );
   const savedViewState = useSavedRegistryViews(searchTerm, documentTypeFilter, !isDemo);
   const {
     registryViewsQuery,
@@ -463,6 +467,9 @@ export default function Dashboard() {
               </div>
                <div data-testid="active-contract-count" className="text-4xl font-extrabold mb-1 relative z-10">{filteredContracts.length}</div>
               <p className="text-sm font-medium text-muted-foreground relative z-10">{t("ui.total.active.contracts")}</p>
+               <p data-testid="contract-value-totals" className="mt-2 text-xs font-bold text-foreground relative z-10">
+                 {visibleContractValueTotals || t("ui.value.not.stated")}
+               </p>
             </div>
             
               {/* Card 3 */}

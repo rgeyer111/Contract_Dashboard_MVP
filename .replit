@@ -41,7 +41,7 @@ timeoutMs = 20000
 
 [nix]
 channel = "stable-25_05"
-packages = ["glib", "nss", "nspr", "atk", "cups", "dbus", "expat", "libdrm", "gtk3", "pango", "cairo", "alsa-lib", "xorg.libX11", "xorg.libXcomposite", "xorg.libXdamage", "xorg.libXext", "xorg.libXfixes", "xorg.libXrandr", "xorg.libxcb", "xorg.libxshmfence", "mesa", "libgbm", "libxkbcommon"]
+packages = ["glib", "nss", "nspr", "atk", "cups", "dbus", "expat", "libdrm", "gtk3", "pango", "cairo", "alsa-lib", "xorg.libX11", "xorg.libXcomposite", "xorg.libXdamage", "xorg.libXext", "xorg.libXfixes", "xorg.libXrandr", "xorg.libxcb", "xorg.libxshmfence", "mesa", "libgbm", "libxkbcommon", "poppler-utils", "qpdf"]
 
 [objectStorage]
 defaultBucketID = "replit-objstore-588a61d6-8fd8-4ae9-914f-207b256a9a7e"

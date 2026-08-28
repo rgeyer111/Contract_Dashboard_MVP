@@ -110,7 +110,7 @@ test("shows Swiss sample contract content on the landing page", async ({ page })
   await page.goto("/");
 
   await expect(page.getByText("Alpine Cloud AG", { exact: true })).toBeVisible();
-  await expect(page.getByText("CHF 12'000", { exact: true })).toBeVisible();
+  await expect(page.getByText("CHF 12'000.00", { exact: true })).toBeVisible();
   await expect(page.getByText("Acme Corp Services", { exact: true })).toHaveCount(0);
   await expect(page.getByText("-$12k", { exact: true })).toHaveCount(0);
 });
@@ -965,25 +965,98 @@ test("formats Swiss contract values and dates across dashboard and review", asyn
 
   await page.goto("/dashboard");
   const row = page.getByRole("row").filter({ hasText: "Zürich Digital Services AG" });
-  await expect(row).toContainText("CHF 1'234'567.5 · annual");
+  await expect(row).toContainText("CHF 1'234'567.50 · annual");
   await expect(row).toContainText("31.12.2026");
   await expect(row).toContainText("02.10.2026");
   await expect(row).toContainText("01.11.2026");
 
   await row.getByRole("button", { name: "Zürich Digital Services AG", exact: true }).click();
   await expect(page).toHaveURL(/\/contracts\/swiss-format-contract$/);
-  await expect(page.getByTestId("decision-primary-tier")).toContainText("CHF 1'234'567.5 · annual");
+  await expect(page.getByTestId("decision-primary-tier")).toContainText("CHF 1'234'567.50 · annual");
   await expect(page.getByTestId("decision-primary-tier")).toContainText("01.11.2026");
   await expect(page.getByTestId("decision-primary-tier")).toContainText("02.10.2026");
+});
+
+test("groups register totals by currency without conversion", async ({ page }) => {
+  const chfContract = makeContract({
+    vendor: "Zürich Technik AG",
+    contractValue: { amount: 412000, currency: "CHF", basis: "annual" },
+  });
+  const eurContract = makeContract({
+    vendor: "Microsoft Ireland Operations Limited",
+    contractValue: { amount: 38000, currency: "EUR", basis: "annual" },
+  });
+  const unknownContract = makeContract({ vendor: "Unresolved Currency Vendor" });
+  unknownContract.fields.contractValue = provenance(null);
+
+  await page.route("**/api/contracts", async (route) => {
+    await route.fulfill({
+      json: [
+        savedResponse({
+          id: "chf-total-contract",
+          filename: "chf.pdf",
+          contract: chfContract,
+          createdAt: "2026-01-01T00:00:00.000Z",
+          updatedAt: "2026-01-01T00:00:00.000Z",
+        }),
+        savedResponse({
+          id: "eur-total-contract",
+          filename: "eur.pdf",
+          contract: eurContract,
+          createdAt: "2026-01-01T00:00:00.000Z",
+          updatedAt: "2026-01-01T00:00:00.000Z",
+        }),
+        savedResponse({
+          id: "unknown-total-contract",
+          filename: "unknown.pdf",
+          contract: unknownContract,
+          createdAt: "2026-01-01T00:00:00.000Z",
+          updatedAt: "2026-01-01T00:00:00.000Z",
+        }),
+      ],
+    });
+  });
+
+  await page.goto("/dashboard");
+
+  await expect(page.getByTestId("contract-value-totals")).toHaveText(
+    "CHF 412'000.00 · EUR 38'000.00",
+  );
+  await expect(
+    page.getByRole("row").filter({ hasText: "Microsoft Ireland Operations Limited" }),
+  ).toContainText("EUR 38'000.00 · annual");
+  await expect(
+    page.getByRole("row").filter({ hasText: "Unresolved Currency Vendor" }),
+  ).toContainText("Value not stated");
 });
 
 test("defaults an unresolved contract value currency to CHF", async ({ page }) => {
   const contract = makeContract({ vendor: "Basel Facility Services AG" });
   contract.fields.contractValue = provenance(null);
+  let savedCurrency: string | undefined;
 
   await page.route("**/api/contracts", async (route) => {
-    if (route.request().method() === "GET") {
+    const request = route.request();
+    if (request.method() === "GET") {
       await route.fulfill({ json: [] });
+      return;
+    }
+    if (request.method() === "POST") {
+      const body = request.postDataJSON() as {
+        filename: string;
+        contract: ReturnType<typeof makeContract>;
+      };
+      savedCurrency = body.contract.fields.contractValue.value?.currency;
+      await route.fulfill({
+        status: 201,
+        json: savedResponse({
+          id: "swiss-default-saved",
+          filename: body.filename,
+          contract: body.contract,
+          createdAt: "2026-08-28T00:00:00.000Z",
+          updatedAt: "2026-08-28T00:00:00.000Z",
+        }),
+      });
       return;
     }
     await route.continue();
@@ -1015,6 +1088,10 @@ test("defaults an unresolved contract value currency to CHF", async ({ page }) =
   const valueIssue = page.getByRole("heading", { name: "Contract value", exact: true }).locator("xpath=ancestor::article");
   await expect(valueIssue.getByLabel("Currency")).toHaveValue("CHF");
   await expect(valueIssue.getByLabel("Currency")).toHaveAttribute("placeholder", "CHF");
+  await valueIssue.getByPlaceholder("Amount").fill("38000");
+  await valueIssue.getByLabel("Currency").fill("EUR");
+  await page.getByRole("button", { name: "Confirm review" }).click();
+  await expect.poll(() => savedCurrency).toBe("EUR");
 });
 
 test("keeps independent contract rows reachable on narrow screens", async ({ page }) => {
@@ -1120,9 +1197,9 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   const amendmentRow = page.getByRole("row").filter({ hasText: "Limmat Software GmbH" });
   await expect(agreementRow).toHaveCount(1);
   await expect(amendmentRow).toHaveCount(1);
-  await expect(agreementRow).toContainText("CHF 120'000 · annual");
+  await expect(agreementRow).toContainText("CHF 120'000.00 · annual");
   await expect(amendmentRow).toContainText("Software Amendment");
-  await expect(amendmentRow).toContainText("CHF 240'000 · annual");
+  await expect(amendmentRow).toContainText("CHF 240'000.00 · annual");
   await expect(amendmentRow).toContainText("31.12.2027");
   await expect(amendmentRow).toContainText("auto renew");
   await expect(amendmentRow).toContainText("90 days");
@@ -1273,7 +1350,7 @@ test("keeps independent contract rows reachable on narrow screens", async ({ pag
   await expect(page.getByRole("row").filter({ hasText: "Bern Telecom AG" })).toHaveCount(0);
   const reloadedAmendmentRow = page.getByRole("row").filter({ hasText: "Limmat Software GmbH" });
   await expect(reloadedAmendmentRow).toHaveCount(1);
-  await expect(reloadedAmendmentRow).toContainText("CHF 240'000 · annual");
+  await expect(reloadedAmendmentRow).toContainText("CHF 240'000.00 · annual");
   await expect(reloadedAmendmentRow).toContainText("02.10.2027");
   await expect(reloadedAmendmentRow).toContainText("Avery Stone");
   expect(listRequests).toBeGreaterThanOrEqual(2);
@@ -1327,7 +1404,7 @@ test("switches the dashboard to Swiss German and persists the language", async (
   await expect(page.locator("main h1")).toHaveText("Willkommen zurück, John");
   await expect(page.getByRole("heading", { name: "Vertragsregister" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Neuer Vertrag" })).toBeVisible();
-  await expect(page.getByText("CHF 1'234'567.5 · jährlich", { exact: true })).toBeVisible();
+  await expect(page.getByText("CHF 1'234'567.50 · jährlich", { exact: true })).toBeVisible();
   await expect(page.getByText("31.12.2026", { exact: true }).first()).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("contract-dashboard.language"))).toBe("de-CH");
 
@@ -1398,7 +1475,7 @@ test("keeps Swiss German through the review flow and translates issue definition
   await expect(page.getByRole("heading", { name: "Rechtlicher Anbietername" })).toBeVisible();
   await expect(page.getByText("Welche Rechtseinheit ist der Anbieter?", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Prüfung bestätigen" })).toBeVisible();
-  await expect(page.getByText("CHF 12'000", { exact: true })).toBeVisible();
+  await expect(page.getByText("CHF 12'000.00", { exact: true })).toBeVisible();
   await expect(page.getByText("31.12.2026", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Seite 2 · Klausel 4.2", { exact: true })).toBeVisible();
   await expect(page.getByText("Frist nicht verfügbar", { exact: true }).first()).toBeVisible();
@@ -1457,7 +1534,7 @@ test("localizes active public routes while preserving contract example data", as
   await expect(page.getByRole("heading", { name: "Behalten Sie Vertragsverlängerungen im Blick." })).toBeVisible();
   await expect(page.getByRole("link", { name: "Weiter zu Contract Dashboard" })).toBeVisible();
   await expect(page.getByText("Alpine Cloud AG", { exact: true })).toBeVisible();
-  await expect(page.getByText("CHF 12'000", { exact: true })).toBeVisible();
+  await expect(page.getByText("CHF 12'000.00", { exact: true })).toBeVisible();
 
   await page.goto("/missing-route");
   await expect(page.getByRole("heading", { name: "404 Seite nicht gefunden" })).toBeVisible();

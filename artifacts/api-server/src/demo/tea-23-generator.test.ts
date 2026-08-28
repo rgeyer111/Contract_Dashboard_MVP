@@ -45,4 +45,29 @@ describe("TEA-23 deterministic fixture", () => {
     expect(records["tea23-overdue"].contract.computed.status).toBe("red");
     expect(records["tea23-overdue"].contract.alert?.state).toBe("overdue");
   });
+
+  it("uses Swiss companies, people, cantons, and CHF without imposing validation rules", () => {
+    const fixture = generateTea23Fixtures();
+
+    expect(fixture.records.every((record) => record.contract.fields.contractValue.value.currency === "CHF")).toBe(true);
+    expect(fixture.records.every((record) => record.contract.fields.documentLanguage.value === "de")).toBe(true);
+    expect(fixture.records.every((record) => record.contract.fields.buyerLegalEntity.value === "Alpenblick Industrie AG")).toBe(true);
+    expect(fixture.records.map((record) => record.contract.assignment.owner)).toEqual([
+      "Nina Keller",
+      "Lukas Meier",
+      "Sabrina Schmid",
+      "Anaïs Rochat",
+      "Mathieu Girard",
+      "Simon Aebischer",
+      "Giulia Bernasconi",
+    ]);
+    expect(fixture.records.map((record) => record.demoScenario)).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("Zürich"),
+        expect.stringContaining("Basel-Stadt"),
+        expect.stringContaining("Bern"),
+        expect.stringContaining("Tessin"),
+      ]),
+    );
+  });
 });

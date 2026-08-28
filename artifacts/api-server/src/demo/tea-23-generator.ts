@@ -46,6 +46,8 @@ type Scenario = {
   id: string;
   label: string;
   vendor: string;
+  canton: string;
+  owner: string;
   documentType?: string;
   contractType?: string;
   effectiveDate?: string | null;
@@ -63,6 +65,8 @@ const scenarios: Scenario[] = [
     id: "tea23-quarter-end",
     label: "Quarter-end notice",
     vendor: "Helvetic Analytics AG",
+    canton: "Zürich",
+    owner: "Nina Keller",
     documentType: "master_agreement",
     contractType: "data_services",
     effectiveDate: dateAtOffset(-350),
@@ -77,6 +81,8 @@ const scenarios: Scenario[] = [
     id: "tea23-evergreen",
     label: "Evergreen / indefinite",
     vendor: "Alpine Network GmbH",
+    canton: "Basel-Stadt",
+    owner: "Lukas Meier",
     documentType: "order_form",
     contractType: "saas_subscription",
     effectiveDate: dateAtOffset(-720),
@@ -90,6 +96,8 @@ const scenarios: Scenario[] = [
     id: "tea23-conflicting-timing",
     label: "Conflicting timing",
     vendor: "Rigi Facilities AG",
+    canton: "Schwyz",
+    owner: "Sabrina Schmid",
     documentType: "amendment",
     contractType: "maintenance",
     effectiveDate: dateAtOffset(-400),
@@ -105,6 +113,8 @@ const scenarios: Scenario[] = [
     id: "tea23-unknown-anchor",
     label: "Unknown notice anchor",
     vendor: "Limmat Security SA",
+    canton: "Waadt",
+    owner: "Anaïs Rochat",
     documentType: "master_agreement",
     contractType: "infrastructure",
     effectiveDate: dateAtOffset(-500),
@@ -119,6 +129,8 @@ const scenarios: Scenario[] = [
     id: "tea23-expired",
     label: "Expired fixed term",
     vendor: "Jura Advisory Sàrl",
+    canton: "Jura",
+    owner: "Mathieu Girard",
     documentType: "sow",
     contractType: "professional_services",
     effectiveDate: dateAtOffset(-400),
@@ -132,6 +144,8 @@ const scenarios: Scenario[] = [
     id: "tea23-blocked",
     label: "Blocked missing end",
     vendor: "Bern Mobility AG",
+    canton: "Bern",
+    owner: "Simon Aebischer",
     documentType: "quote_or_proposal",
     contractType: "equipment_lease",
     effectiveDate: null,
@@ -145,6 +159,8 @@ const scenarios: Scenario[] = [
     id: "tea23-overdue",
     label: "Overdue notice",
     vendor: "Gotthard Cloud AG",
+    canton: "Tessin",
+    owner: "Giulia Bernasconi",
     documentType: "order_form",
     contractType: "saas_subscription",
     effectiveDate: dateAtOffset(-300),
@@ -181,9 +197,9 @@ function buildRecord(scenario: Scenario) {
   const contract: any = {
     fields: {
       documentType: found(scenario.documentType ?? "unknown"),
-      documentLanguage: found("en"),
+      documentLanguage: found("de"),
       vendorLegalName: found(scenario.vendor),
-      buyerLegalEntity: found("TEA Demo Buyer AG"),
+      buyerLegalEntity: found("Alpenblick Industrie AG"),
       contractTitle: found(scenario.label),
       contractNumber: found(scenario.id.toUpperCase()),
       contractType: found(scenario.contractType ?? "other"),
@@ -200,7 +216,7 @@ function buildRecord(scenario: Scenario) {
       billingFrequency: found("annual"),
     },
     assignment: {
-      owner: "Demo Contract Owner",
+      owner: scenario.owner,
       ownerEmail: "owner@example.test",
       negotiationBufferDays: scenario.buffer,
       negotiationBufferSource: "contract_override",
@@ -217,7 +233,7 @@ function buildRecord(scenario: Scenario) {
     contract,
     createdAt: `${TODAY}T09:00:00.000Z`,
     updatedAt: `${TODAY}T09:00:00.000Z`,
-    demoScenario: scenario.label,
+    demoScenario: `${scenario.label} · ${scenario.canton}`,
   };
 }
 

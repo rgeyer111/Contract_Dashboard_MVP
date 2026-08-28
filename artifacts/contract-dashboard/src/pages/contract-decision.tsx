@@ -31,7 +31,9 @@ import {
   formatContractValue,
   formatDaysRemaining,
   formatRegistryDate,
+  formatSwissDateTime,
   formatSwissNumber,
+  getSwissDateOnly,
 } from "@/lib/registry";
 import { detailGroups, getBlockedReasonTargets, getField, displayValue, displayEvidenceValue, statusLabel, hasValue, reviewerEditNote } from "@/lib/review";
 import { LanguageSwitch } from "@/lib/i18n";
@@ -83,11 +85,7 @@ export default function ContractDecisionPage() {
   const [referenceExpanded, setReferenceExpanded] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  const todayStr = useMemo(() => {
-    const d = new Date();
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    return new Date(d.getTime() - tzOffset).toISOString().split('T')[0];
-  }, []);
+  const todayStr = useMemo(() => getSwissDateOnly(), []);
 
   // Set default actor
   useEffect(() => {
@@ -368,7 +366,7 @@ export default function ContractDecisionPage() {
                       <span className="text-muted-foreground">{t("decision.by")} {latestDecision.actor}</span>
                     </div>
                     <div className="mt-1 text-[11px] font-medium text-muted-foreground">
-                      {t("decision.savedAt", { time: new Date(latestDecision.decidedAt).toLocaleString(language === 'de-CH' ? 'de-CH' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }) })}
+                      {t("decision.savedAt", { time: formatSwissDateTime(latestDecision.decidedAt) })}
                       {latestDecision.snoozeUntil && ` · ${t("decision.snoozeDate")}: ${formatRegistryDate(latestDecision.snoozeUntil, language)}`}
                     </div>
                   </div>

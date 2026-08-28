@@ -10,6 +10,7 @@
       "id": "tea23-quarter-end",
       "filename": "tea23-quarter-end.pdf",
       "documentType": "master_agreement",
+      "sourceAvailable": false,
       "contract": {
         "fields": {
           "documentType": {
@@ -22,7 +23,7 @@
             "note": null
           },
           "documentLanguage": {
-            "value": "en",
+            "value": "de",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -40,7 +41,7 @@
             "note": null
           },
           "buyerLegalEntity": {
-            "value": "TEA Demo Buyer AG",
+            "value": "Alpenblick Industrie AG",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -192,7 +193,7 @@
           }
         },
         "assignment": {
-          "owner": "Demo Contract Owner",
+          "owner": "Nina Keller",
           "ownerEmail": "owner@example.test",
           "negotiationBufferDays": 14,
           "negotiationBufferSource": "contract_override",
@@ -208,7 +209,7 @@
           "reason": null
         },
         "alert": {
-          "owner": "Demo Contract Owner",
+          "owner": "Nina Keller",
           "ownerEmail": "owner@example.test",
           "actionDate": "2026-08-17",
           "noticeDeadline": "2026-08-31",
@@ -218,12 +219,13 @@
       },
       "createdAt": "2026-06-15T09:00:00.000Z",
       "updatedAt": "2026-06-15T09:00:00.000Z",
-      "demoScenario": "Quarter-end notice"
+      "demoScenario": "Quarter-end notice · Zürich"
     },
     {
       "id": "tea23-evergreen",
       "filename": "tea23-evergreen.pdf",
       "documentType": "order_form",
+      "sourceAvailable": false,
       "contract": {
         "fields": {
           "documentType": {
@@ -236,7 +238,7 @@
             "note": null
           },
           "documentLanguage": {
-            "value": "en",
+            "value": "de",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -254,7 +256,7 @@
             "note": null
           },
           "buyerLegalEntity": {
-            "value": "TEA Demo Buyer AG",
+            "value": "Alpenblick Industrie AG",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -403,7 +405,7 @@
           }
         },
         "assignment": {
-          "owner": "Demo Contract Owner",
+          "owner": "Lukas Meier",
           "ownerEmail": "owner@example.test",
           "negotiationBufferDays": 30,
           "negotiationBufferSource": "contract_override",
@@ -422,12 +424,13 @@
       },
       "createdAt": "2026-06-15T09:00:00.000Z",
       "updatedAt": "2026-06-15T09:00:00.000Z",
-      "demoScenario": "Evergreen / indefinite"
+      "demoScenario": "Evergreen / indefinite · Basel-Stadt"
     },
     {
       "id": "tea23-conflicting-timing",
       "filename": "tea23-conflicting-timing.pdf",
       "documentType": "amendment",
+      "sourceAvailable": false,
       "contract": {
         "fields": {
           "documentType": {
@@ -440,7 +443,7 @@
             "note": null
           },
           "documentLanguage": {
-            "value": "en",
+            "value": "de",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -458,7 +461,7 @@
             "note": null
           },
           "buyerLegalEntity": {
-            "value": "TEA Demo Buyer AG",
+            "value": "Alpenblick Industrie AG",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -634,7 +637,7 @@
           }
         },
         "assignment": {
-          "owner": "Demo Contract Owner",
+          "owner": "Sabrina Schmid",
           "ownerEmail": "owner@example.test",
           "negotiationBufferDays": 21,
           "negotiationBufferSource": "contract_override",
@@ -653,12 +656,13 @@
       },
       "createdAt": "2026-06-15T09:00:00.000Z",
       "updatedAt": "2026-06-15T09:00:00.000Z",
-      "demoScenario": "Conflicting timing"
+      "demoScenario": "Conflicting timing · Schwyz"
     },
     {
       "id": "tea23-unknown-anchor",
       "filename": "tea23-unknown-anchor.pdf",
       "documentType": "master_agreement",
+      "sourceAvailable": false,
       "contract": {
         "fields": {
           "documentType": {
@@ -671,7 +675,7 @@
             "note": null
           },
           "documentLanguage": {
-            "value": "en",
+            "value": "de",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -689,7 +693,7 @@
             "note": null
           },
           "buyerLegalEntity": {
-            "value": "TEA Demo Buyer AG",
+            "value": "Alpenblick Industrie AG",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -841,7 +845,7 @@
           }
         },
         "assignment": {
-          "owner": "Demo Contract Owner",
+          "owner": "Anaïs Rochat",
           "ownerEmail": "owner@example.test",
           "negotiationBufferDays": 30,
           "negotiationBufferSource": "contract_override",
@@ -860,12 +864,13 @@
       },
       "createdAt": "2026-06-15T09:00:00.000Z",
       "updatedAt": "2026-06-15T09:00:00.000Z",
-      "demoScenario": "Unknown notice anchor"
+      "demoScenario": "Unknown notice anchor · Waadt"
     },
     {
       "id": "tea23-expired",
       "filename": "tea23-expired.pdf",
       "documentType": "sow",
+      "sourceAvailable": false,
       "contract": {
         "fields": {
           "documentType": {
@@ -878,7 +883,7 @@
             "note": null
           },
           "documentLanguage": {
-            "value": "en",
+            "value": "de",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -896,7 +901,7 @@
             "note": null
           },
           "buyerLegalEntity": {
-            "value": "TEA Demo Buyer AG",
+            "value": "Alpenblick Industrie AG",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -1045,7 +1050,7 @@
           }
         },
         "assignment": {
-          "owner": "Demo Contract Owner",
+          "owner": "Mathieu Girard",
           "ownerEmail": "owner@example.test",
           "negotiationBufferDays": 14,
           "negotiationBufferSource": "contract_override",
@@ -1064,12 +1069,13 @@
       },
       "createdAt": "2026-06-15T09:00:00.000Z",
       "updatedAt": "2026-06-15T09:00:00.000Z",
-      "demoScenario": "Expired fixed term"
+      "demoScenario": "Expired fixed term · Jura"
     },
     {
       "id": "tea23-blocked",
       "filename": "tea23-blocked.pdf",
       "documentType": "quote_or_proposal",
+      "sourceAvailable": false,
       "contract": {
         "fields": {
           "documentType": {
@@ -1082,7 +1088,7 @@
             "note": null
           },
           "documentLanguage": {
-            "value": "en",
+            "value": "de",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -1100,7 +1106,7 @@
             "note": null
           },
           "buyerLegalEntity": {
-            "value": "TEA Demo Buyer AG",
+            "value": "Alpenblick Industrie AG",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -1249,7 +1255,7 @@
           }
         },
         "assignment": {
-          "owner": "Demo Contract Owner",
+          "owner": "Simon Aebischer",
           "ownerEmail": "owner@example.test",
           "negotiationBufferDays": 30,
           "negotiationBufferSource": "contract_override",
@@ -1268,12 +1274,13 @@
       },
       "createdAt": "2026-06-15T09:00:00.000Z",
       "updatedAt": "2026-06-15T09:00:00.000Z",
-      "demoScenario": "Blocked missing end"
+      "demoScenario": "Blocked missing end · Bern"
     },
     {
       "id": "tea23-overdue",
       "filename": "tea23-overdue.pdf",
       "documentType": "order_form",
+      "sourceAvailable": false,
       "contract": {
         "fields": {
           "documentType": {
@@ -1286,7 +1293,7 @@
             "note": null
           },
           "documentLanguage": {
-            "value": "en",
+            "value": "de",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -1304,7 +1311,7 @@
             "note": null
           },
           "buyerLegalEntity": {
-            "value": "TEA Demo Buyer AG",
+            "value": "Alpenblick Industrie AG",
             "status": "found",
             "confidence": "high",
             "page": 1,
@@ -1456,7 +1463,7 @@
           }
         },
         "assignment": {
-          "owner": "Demo Contract Owner",
+          "owner": "Giulia Bernasconi",
           "ownerEmail": "owner@example.test",
           "negotiationBufferDays": 14,
           "negotiationBufferSource": "contract_override",
@@ -1472,7 +1479,7 @@
           "reason": null
         },
         "alert": {
-          "owner": "Demo Contract Owner",
+          "owner": "Giulia Bernasconi",
           "ownerEmail": "owner@example.test",
           "actionDate": "2026-05-18",
           "noticeDeadline": "2026-06-01",
@@ -1482,7 +1489,7 @@
       },
       "createdAt": "2026-06-15T09:00:00.000Z",
       "updatedAt": "2026-06-15T09:00:00.000Z",
-      "demoScenario": "Overdue notice"
+      "demoScenario": "Overdue notice · Tessin"
     }
   ]
 }

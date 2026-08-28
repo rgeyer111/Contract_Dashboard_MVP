@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeContractDates } from "./contract-computation";
+import { computeContractAlert, computeContractDates } from "./contract-computation";
 
 const field = (value: unknown, status = "found", confidence = "high") => ({ value, status, confidence });
 const contract = (overrides: Record<string, unknown> = {}) => ({
@@ -57,6 +57,20 @@ describe("computeContractDates", () => {
     expect(actionDay).toMatchObject({ status: "amber", daysRemaining: 0 });
     expect(overdue.status).toBe("red");
     expect(overdue.daysRemaining).toBeLessThan(0);
+  });
+
+  it("uses the Europe/Zurich calendar day around the UTC midnight boundary", () => {
+    const zurichAugustFirst = new Date("2026-07-31T22:30:00.000Z");
+    const computed = computeContractDates(contract(), zurichAugustFirst);
+    const alert = computeContractAlert(
+      computed,
+      { owner: "Nina Keller", ownerEmail: "nina.keller@example.test" },
+      null,
+      zurichAugustFirst,
+    );
+
+    expect(computed).toMatchObject({ actionDate: "2026-08-01", daysRemaining: 0, status: "amber" });
+    expect(alert?.state).toBe("due");
   });
 
   it("refuses to invent a date for an unknown anchor", () => {

@@ -19,11 +19,54 @@ import {
 export const DOCUMENT_TYPE_QUERY_PARAM = "documentType";
 export const SEARCH_QUERY_PARAM = "search";
 export const SWISS_LOCALE = "de-CH";
+export const SWISS_TIME_ZONE = "Europe/Zurich";
 
 export function formatSwissNumber(value: number) {
   return new Intl.NumberFormat(SWISS_LOCALE, {
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);
+}
+
+export function formatCurrencyTotals(values: Array<ContractValueValue | null>) {
+  const totals = new Map<string, number>();
+  for (const value of values) {
+    if (!value) continue;
+    totals.set(value.currency, (totals.get(value.currency) ?? 0) + value.amount);
+  }
+  return [...totals.entries()]
+    .sort(([left], [right]) => left.localeCompare(right, SWISS_LOCALE))
+    .map(([currency, amount]) => `${currency} ${formatSwissNumber(amount)}`)
+    .join(" · ");
+}
+
+export function formatSwissDateTime(value: string | Date) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return new Intl.DateTimeFormat(SWISS_LOCALE, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: SWISS_TIME_ZONE,
+  }).format(date);
+}
+
+export function getSwissDateOnly(value = new Date()) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: SWISS_TIME_ZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+      .formatToParts(value)
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value]),
+  );
+  return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
 export function formatContractType(value: ProvenanceContractTypeFieldValue, language: UiLanguage = "en") {

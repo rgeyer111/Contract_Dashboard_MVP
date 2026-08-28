@@ -107,12 +107,12 @@ test("records and reloads recurring decisions while keeping evidence secondary",
   await page.goto("/contracts/decision-contract");
   const primary = page.getByTestId("decision-primary-tier");
   await expect(primary).toContainText("Alpine Platform AG");
-  await expect(primary).toContainText("CHF 42'000 · annual");
+  await expect(primary).toContainText("CHF 42'000.00 · annual");
   await expect(primary).toContainText("30.09.2026");
   await expect(primary).toContainText("31.08.2026");
   await expect(primary).toContainText("3 days until action");
   await expect(primary).toContainText(
-    "If nothing is done by 30.09.2026, this renews for 12 months at CHF 42'000.",
+    "If nothing is done by 30.09.2026, this renews for 12 months at CHF 42'000.00.",
   );
   const primaryBox = await primary.boundingBox();
   expect(primaryBox).not.toBeNull();
@@ -147,7 +147,7 @@ test("records and reloads recurring decisions while keeping evidence secondary",
 
   await page.getByLabel("Interface language").selectOption("de-CH");
   await expect(primary).toContainText(
-    "Wenn bis zum 30.09.2026 nichts unternommen wird, verlängert sich der Vertrag um 12 Monate für CHF 42'000.",
+    "Wenn bis zum 30.09.2026 nichts unternommen wird, verlängert sich der Vertrag um 12 Monate für CHF 42'000.00.",
   );
   await expect(page.getByTestId("link-source-pdf")).toHaveText("Quell-PDF anzeigen");
 });
